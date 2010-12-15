@@ -55,7 +55,8 @@ namespace MineWorld
                                         if (newPlayer.Handle.Length == 0 || newPlayer.Handle.ToLower() == "player")
                                         {
                                             //newPlayer.Handle = "";
-                                            msgSender.Disapprove("You didnt changed you name in the client.config");
+                                            //
+                                            //msgSender.Disapprove("You didnt changed you name in the client.config");
                                         }
 
                                         if (IServer.admins.ContainsKey(newPlayer.IP))
