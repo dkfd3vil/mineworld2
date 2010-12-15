@@ -1,0 +1,3 @@
+C:\Users\Oeds\Downloads\Arcanos-Infiniminer-c5088a5\Arcanos-Infiniminer-c5088a5\code\InfiniminerClient\Content\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\code\InfiniminerClient\Content\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\code\InfiniminerClient\Content\obj\x86\Debug\ResolveAssemblyReference.cache

@@ -1,0 +1,12 @@
+C:\Users\Oeds\Downloads\Arcanos-Infiniminer-c5088a5\Arcanos-Infiniminer-c5088a5\code\InfiniminerShared\bin\x86\Debug\InfiniminerShared.dll.config
+C:\Users\Oeds\Downloads\Arcanos-Infiniminer-c5088a5\Arcanos-Infiniminer-c5088a5\code\InfiniminerShared\bin\x86\Debug\InfiniminerShared.dll
+C:\Users\Oeds\Downloads\Arcanos-Infiniminer-c5088a5\Arcanos-Infiniminer-c5088a5\code\InfiniminerShared\bin\x86\Debug\InfiniminerShared.pdb
+C:\Users\Oeds\Downloads\Arcanos-Infiniminer-c5088a5\Arcanos-Infiniminer-c5088a5\code\InfiniminerShared\bin\x86\Debug\Lidgren.Network.dll
+C:\Users\Oeds\Downloads\Arcanos-Infiniminer-c5088a5\Arcanos-Infiniminer-c5088a5\code\InfiniminerShared\bin\x86\Debug\Lidgren.Network.Xna.dll
+C:\Users\Oeds\Downloads\Arcanos-Infiniminer-c5088a5\Arcanos-Infiniminer-c5088a5\code\InfiniminerShared\bin\x86\Debug\Lidgren.Network.Xna.pdb
+C:\Users\Oeds\Downloads\Arcanos-Infiniminer-c5088a5\Arcanos-Infiniminer-c5088a5\code\InfiniminerShared\bin\x86\Debug\Lidgren.Network.pdb
+C:\Users\Oeds\Downloads\Arcanos-Infiniminer-c5088a5\Arcanos-Infiniminer-c5088a5\code\InfiniminerShared\bin\x86\Debug\Lidgren.Network.xml
+C:\Users\Oeds\Downloads\Arcanos-Infiniminer-c5088a5\Arcanos-Infiniminer-c5088a5\code\InfiniminerShared\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\Oeds\Downloads\Arcanos-Infiniminer-c5088a5\Arcanos-Infiniminer-c5088a5\code\InfiniminerShared\obj\x86\Debug\Microsoft.Xna.Framework.RuntimeProfile.txt
+C:\Users\Oeds\Downloads\Arcanos-Infiniminer-c5088a5\Arcanos-Infiniminer-c5088a5\code\InfiniminerShared\obj\x86\Debug\InfiniminerShared.dll
+C:\Users\Oeds\Downloads\Arcanos-Infiniminer-c5088a5\Arcanos-Infiniminer-c5088a5\code\InfiniminerShared\obj\x86\Debug\InfiniminerShared.pdb
