@@ -104,7 +104,8 @@ namespace MineWorld
         TriggerConstructionGunAnimation,
         SetBeacon,              // vector3 position, string text ("" means remove)
 
-        //Update by Dkfd3vil
+        //Update by Oeds
+        Hearthbeat,
         PlayerCommand,         // uint id, string command  This is sent by client
         PlayerCommandEnable,   // byte Playercommands this is sent by the server
     }

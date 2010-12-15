@@ -453,6 +453,10 @@ namespace MineWorld
                                                 propertyBag.PlaySound(sound);
                                         }
                                         break;
+                                    case MineWorldMessage.Hearthbeat:
+                                        {
+                                            break;
+                                        }
                                     case MineWorldMessage.PlayerCommandEnable:
                                         {
                                             PlayerCommands command = (PlayerCommands)msgBuffer.ReadByte();
