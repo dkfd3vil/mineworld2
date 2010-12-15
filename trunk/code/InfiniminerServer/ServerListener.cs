@@ -54,8 +54,11 @@ namespace MineWorld
                                         newPlayer.Handle = temphandle;
                                         if (newPlayer.Handle.Length == 0 || newPlayer.Handle.ToLower() == "player")
                                         {
+                                            //Todo Fix me
+                                            // Figure a way out that if a player connects with the name "player",
+                                            // that he will be informed
                                             //newPlayer.Handle = "";
-                                            msgSender.Disapprove("You didnt changed you name in the client.config");
+                                            //msgSender.Disapprove("You didnt changed you name in the client.config");
                                         }
 
                                         if (IServer.admins.ContainsKey(newPlayer.IP))
