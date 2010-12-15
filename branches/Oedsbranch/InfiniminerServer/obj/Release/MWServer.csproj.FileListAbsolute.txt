@@ -1,0 +1,12 @@
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\MWServer.exe
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\MWServer.pdb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\code\InfiniminerServer\obj\Release\ResolveAssemblyReference.cache
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\code\InfiniminerServer\obj\Release\MWServer.exe
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\code\InfiniminerServer\obj\Release\MWServer.pdb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\ServerConfigs\admins.txt
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\ServerConfigs\banlist.txt
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\ClientConfigs\client.config.txt
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\ClientConfigs\keymap.txt
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\ServerConfigs\server.config.txt
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World Public\MineWorld\code\InfiniminerServer\obj\Release\MWServer.exe
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World Public\MineWorld\code\InfiniminerServer\obj\Release\MWServer.pdb
