@@ -1,0 +1,259 @@
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\code\InfiniminerClient\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\code\InfiniminerClient\obj\x86\Debug\Microsoft.Xna.Framework.RuntimeProfile.txt
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\code\InfiniminerClient\obj\x86\Debug\Infiniminer.exe
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\effect_basic.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\effect_skyplane.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\effect_spritemodel.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\effect_particle.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\BloomCombine.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\BloomExtract.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\GaussianBlur.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\blocks\tex_block_ore.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\blocks\tex_block_rock.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\blocks\tex_block_silver.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\blocks\tex_block_dirt.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\blocks\tex_block_home_red.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\blocks\tex_block_diamond.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\blocks\tex_block_blue.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\blocks\tex_block_red.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\blocks\tex_block_trans_blue.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\blocks\tex_block_trans_red.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\blocks\tex_block_ladder.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\blocks\tex_block_spikes.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\blocks\tex_block_ladder_top.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\blocks\tex_block_home_blue.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\ui\tex_ui_crosshair.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\blocks\tex_block_explosive.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\menus\tex_menu_class_blue.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\menus\tex_menu_class_red.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\menus\tex_menu_team.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\menus\tex_menu_server.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\sprites\tex_sprite_blue_construction.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\sprites\tex_sprite_blue_detonator.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\sprites\tex_sprite_blue_pickaxe.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\sprites\tex_sprite_blue_radar.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\sprites\tex_sprite_red_construction.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\sprites\tex_sprite_red_detonator.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\sprites\tex_sprite_red_pickaxe.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\sprites\tex_sprite_red_radar.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\menus\tex_menu_title.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\ui\tex_radar_background.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\ui\tex_radar_foreground.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\menus\tex_menu_loading.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\blocks\tex_block_metal.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\sprites\tex_sprite_blue_drill.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\sprites\tex_sprite_red_drill.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\menus\tex_menu_help.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\blocks\tex_block_dirt_sign.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\tools\tex_tool_detonator_down_blue.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\tools\tex_tool_detonator_down_red.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\tools\tex_tool_detonator_up_blue.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\tools\tex_tool_detonator_up_red.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\tools\tex_tool_radar_blue.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\tools\tex_tool_radar_led.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\tools\tex_tool_radar_pointer.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\tools\tex_tool_radar_red.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\tools\tex_tool_radar_screen_diamond.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\tools\tex_tool_radar_screen_gold.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\tools\tex_tool_radar_flash.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\blocks\tex_block_bank_back_blue.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\blocks\tex_block_bank_back_red.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\blocks\tex_block_bank_front_blue.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\blocks\tex_block_bank_front_red.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\blocks\tex_block_bank_left_blue.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\blocks\tex_block_bank_left_red.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\blocks\tex_block_bank_right_blue.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\blocks\tex_block_bank_right_red.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\blocks\tex_block_bank_top_blue.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\blocks\tex_block_bank_top_red.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\icons\tex_icon_bank_blue.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\icons\tex_icon_bank_red.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\icons\tex_icon_explosive.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\icons\tex_icon_jump.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\icons\tex_icon_ladder.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\icons\tex_icon_solid_blue.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\icons\tex_icon_solid_red.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\icons\tex_icon_spikes.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\icons\tex_icon_teleporter.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\icons\tex_icon_translucent_blue.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\icons\tex_icon_translucent_red.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\tools\tex_tool_build.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\tools\tex_tool_build_blast.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\tools\tex_tool_build_charge.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\tools\tex_tool_build_smoke.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\icons\tex_icon_deconstruction.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\blocks\tex_block_teleporter_a.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\blocks\tex_block_teleporter_b.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\blocks\tex_block_teleporter_bottom.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\blocks\tex_block_teleporter_top.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\blocks\tex_block_lava.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\blocks\tex_block_jump.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\blocks\tex_block_jump_top.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\blocks\tex_block_road.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\ui\tex_radar_player_above.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\ui\tex_radar_player_below.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\ui\tex_radar_player_ping.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\ui\tex_radar_player_same.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\blocks\tex_block_beacon_top_blue.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\blocks\tex_block_beacon_top_red.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\icons\tex_icon_beacon.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\icons\tex_icon_road.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\ui\tex_radar_north.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\menus\tex_menu_settings.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\blocks\tex_block_road_top.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\blocks\tex_block_road_bottom.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\font_04b08.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\font_04b03b.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\sounds\build.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\sounds\cash.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\sounds\click-loud.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\sounds\click-quiet.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\sounds\death.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\sounds\dig-dirt.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\sounds\dig-metal.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\sounds\explosion.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\sounds\hitground.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\sounds\jumpblock.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\sounds\ping.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\sounds\switch.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\sounds\teleport.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\sounds\radar-high.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\sounds\radar-low.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\song_title.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\song_title.wma
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Infiniminer.exe
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Infiniminer.pdb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\code\InfiniminerClient\obj\x86\Debug\Infiniminer.pdb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\bin\Content\blocks\tex_block_adminblock.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\effect_basic.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\effect_skyplane.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\effect_spritemodel.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\effect_particle.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\BloomCombine.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\BloomExtract.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\GaussianBlur.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\blocks\tex_block_ore.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\blocks\tex_block_rock.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\blocks\tex_block_silver.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\blocks\tex_block_dirt.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\blocks\tex_block_home_red.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\blocks\tex_block_diamond.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\blocks\tex_block_blue.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\blocks\tex_block_red.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\blocks\tex_block_trans_blue.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\blocks\tex_block_trans_red.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\blocks\tex_block_ladder.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\blocks\tex_block_spikes.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\blocks\tex_block_ladder_top.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\blocks\tex_block_home_blue.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\ui\tex_ui_crosshair.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\blocks\tex_block_explosive.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\menus\tex_menu_class_blue.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\menus\tex_menu_class_red.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\menus\tex_menu_team.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\menus\tex_menu_server.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\sprites\tex_sprite_blue_construction.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\sprites\tex_sprite_blue_detonator.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\sprites\tex_sprite_blue_pickaxe.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\sprites\tex_sprite_blue_radar.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\sprites\tex_sprite_red_construction.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\sprites\tex_sprite_red_detonator.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\sprites\tex_sprite_red_pickaxe.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\sprites\tex_sprite_red_radar.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\menus\tex_menu_title.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\ui\tex_radar_background.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\ui\tex_radar_foreground.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\menus\tex_menu_loading.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\blocks\tex_block_metal.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\sprites\tex_sprite_blue_drill.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\sprites\tex_sprite_red_drill.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\menus\tex_menu_help.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\blocks\tex_block_dirt_sign.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\tools\tex_tool_detonator_down_blue.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\tools\tex_tool_detonator_down_red.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\tools\tex_tool_detonator_up_blue.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\tools\tex_tool_detonator_up_red.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\tools\tex_tool_radar_blue.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\tools\tex_tool_radar_led.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\tools\tex_tool_radar_pointer.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\tools\tex_tool_radar_red.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\tools\tex_tool_radar_screen_diamond.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\tools\tex_tool_radar_screen_gold.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\tools\tex_tool_radar_flash.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\blocks\tex_block_bank_back_blue.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\blocks\tex_block_bank_back_red.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\blocks\tex_block_bank_front_blue.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\blocks\tex_block_bank_front_red.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\blocks\tex_block_bank_left_blue.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\blocks\tex_block_bank_left_red.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\blocks\tex_block_bank_right_blue.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\blocks\tex_block_bank_right_red.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\blocks\tex_block_bank_top_blue.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\blocks\tex_block_bank_top_red.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\icons\tex_icon_bank_blue.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\icons\tex_icon_bank_red.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\icons\tex_icon_explosive.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\icons\tex_icon_jump.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\icons\tex_icon_ladder.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\icons\tex_icon_solid_blue.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\icons\tex_icon_solid_red.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\icons\tex_icon_spikes.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\icons\tex_icon_teleporter.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\icons\tex_icon_translucent_blue.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\icons\tex_icon_translucent_red.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\tools\tex_tool_build.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\tools\tex_tool_build_blast.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\tools\tex_tool_build_charge.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\tools\tex_tool_build_smoke.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\icons\tex_icon_deconstruction.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\blocks\tex_block_teleporter_a.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\blocks\tex_block_teleporter_b.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\blocks\tex_block_teleporter_bottom.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\blocks\tex_block_teleporter_top.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\blocks\tex_block_lava.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\blocks\tex_block_jump.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\blocks\tex_block_jump_top.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\blocks\tex_block_road.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\ui\tex_radar_player_above.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\ui\tex_radar_player_below.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\ui\tex_radar_player_ping.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\ui\tex_radar_player_same.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\blocks\tex_block_beacon_top_blue.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\blocks\tex_block_beacon_top_red.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\icons\tex_icon_beacon.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\icons\tex_icon_road.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\ui\tex_radar_north.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\menus\tex_menu_settings.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\blocks\tex_block_road_top.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\blocks\tex_block_road_bottom.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\blocks\tex_block_adminblock.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\font_04b08.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\font_04b03b.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\sounds\build.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\sounds\cash.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\sounds\click-loud.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\sounds\click-quiet.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\sounds\death.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\sounds\dig-dirt.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\sounds\dig-metal.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\sounds\explosion.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\sounds\hitground.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\sounds\jumpblock.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\sounds\ping.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\sounds\switch.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\sounds\teleport.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\sounds\radar-high.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\sounds\radar-low.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\song_title.xnb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Content\song_title.wma
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Infiniminer.exe
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\Infiniminer.pdb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\code\InfiniminerClient\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\code\InfiniminerClient\obj\x86\Debug\Microsoft.Xna.Framework.RuntimeProfile.txt
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\code\InfiniminerClient\obj\x86\Debug\Infiniminer.exe
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\code\InfiniminerClient\obj\x86\Debug\Infiniminer.pdb
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\admins.txt
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\banlist.txt
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\client.config.txt
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\keymap.txt
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\bin\server.config.txt
