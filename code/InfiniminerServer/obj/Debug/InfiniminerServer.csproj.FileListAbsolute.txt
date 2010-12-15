@@ -1,0 +1,9 @@
+C:\Users\Oeds\Downloads\Arcanos-Infiniminer-c5088a5\Arcanos-Infiniminer-c5088a5\bin\InfiniminerServer.exe
+C:\Users\Oeds\Downloads\Arcanos-Infiniminer-c5088a5\Arcanos-Infiniminer-c5088a5\bin\InfiniminerServer.pdb
+C:\Users\Oeds\Downloads\Arcanos-Infiniminer-c5088a5\Arcanos-Infiniminer-c5088a5\code\InfiniminerServer\obj\Debug\ResolveAssemblyReference.cache
+C:\Users\Oeds\Downloads\Arcanos-Infiniminer-c5088a5\Arcanos-Infiniminer-c5088a5\code\InfiniminerServer\obj\Debug\Infiniminer.ServerCP.resources
+C:\Users\Oeds\Downloads\Arcanos-Infiniminer-c5088a5\Arcanos-Infiniminer-c5088a5\code\InfiniminerServer\obj\Debug\InfiniminerServer.csproj.GenerateResource.Cache
+C:\Users\Oeds\Downloads\Arcanos-Infiniminer-c5088a5\Arcanos-Infiniminer-c5088a5\code\InfiniminerServer\obj\Debug\InfiniminerServer.exe
+C:\Users\Oeds\Downloads\Arcanos-Infiniminer-c5088a5\Arcanos-Infiniminer-c5088a5\code\InfiniminerServer\obj\Debug\InfiniminerServer.pdb
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\code\InfiniminerServer\obj\Debug\InfiniminerServer.exe
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\code\InfiniminerServer\obj\Debug\InfiniminerServer.pdb
