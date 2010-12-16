@@ -35,18 +35,18 @@ namespace MineWorld
                             case NetMessageType.ConnectionApproval:
                                 {
                                     string temphandle = Defines.Sanitize(msgBuffer.ReadString()).Trim();
-                                    int authcode = msgBuffer.ReadInt32();
-                                    if (authcode != Defines.MINEWORLD_AUTH)
+                                    double authcode = msgBuffer.ReadDouble();
+                                    if (authcode != Defines.MINEWORLD_VER)
                                     {
-                                        msgSender.Disapprove("VER;" + Defines.MINEWORLDSERVER_VERSION + " Required consider updating MineWorld");
+                                        msgSender.Disapprove("versionwrong");
                                     }
                                     else if (IServer.banList.Contains(msgSender.RemoteEndpoint.Address.ToString()))
                                     {
-                                        msgSender.Disapprove("You are banned from this server");
+                                        msgSender.Disapprove("banned");
                                     }
                                     else if (IServer.playerList.Count == IServer.Ssettings.Maxplayers)
                                     {
-                                        msgSender.Disapprove("The server is full");
+                                        msgSender.Disapprove("serverfull");
                                     }
                                     else
                                     {
@@ -54,9 +54,7 @@ namespace MineWorld
                                         newPlayer.Handle = temphandle;
                                         if (newPlayer.Handle.Length == 0 || newPlayer.Handle.ToLower() == "player")
                                         {
-                                            //newPlayer.Handle = "";
-                                            //
-                                            //msgSender.Disapprove("You didnt changed you name in the client.config");
+                                            msgSender.Disapprove("changename");
                                         }
 
                                         if (IServer.admins.ContainsKey(newPlayer.IP))

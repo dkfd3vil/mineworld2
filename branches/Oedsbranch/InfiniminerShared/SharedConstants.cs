@@ -5,7 +5,7 @@ namespace MineWorld
     public class Defines
     {
         public const string MINEWORLDSERVER_VERSION = "Alpha 1.0";
-        public const int MINEWORLD_AUTH = 123678;
+        public const double MINEWORLD_VER = 1.0;
 
         public const int GROUND_LEVEL = 8;
 
@@ -15,6 +15,7 @@ namespace MineWorld
         public const string deathByFall = "WAS KILLED BY GRAVITY!";
         public const string deathByMiss = "WAS KILLED BY MISADVENTURE!";
         public const string deathBySuic = "HAS COMMITED PIXELCIDE!";
+
         public static Color IM_BLUE = new Color(80, 150, 255);
         public static Color IM_RED = new Color(222, 24, 24);
 

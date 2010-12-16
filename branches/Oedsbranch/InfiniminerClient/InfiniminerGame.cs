@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.IO;
 using System.Threading;
+using System.Windows.Forms;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
@@ -61,7 +62,7 @@ namespace MineWorld
             // Create our connect message.
             NetBuffer connectBuffer = propertyBag.netClient.CreateBuffer();
             connectBuffer.Write(propertyBag.playerHandle);
-            connectBuffer.Write(Defines.MINEWORLD_AUTH);
+            connectBuffer.Write(Defines.MINEWORLD_VER);
 
             //Compression - will be ignored by regular servers
             connectBuffer.Write(true);
@@ -153,15 +154,47 @@ namespace MineWorld
                     case NetMessageType.ConnectionRejected:
                         {
                             anyPacketsReceived = false;
+                            string message = "";
                             try
                             {
-                                string[] reason = msgBuffer.ReadString().Split(";".ToCharArray());
-                                if (reason.Length < 2 || reason[0] == "VER")
-                                    System.Windows.Forms.MessageBox.Show("Error: client/server version incompability!\r\nServer: " + msgBuffer.ReadString() + "\r\nClient: " + Defines.MINEWORLDSERVER_VERSION);
-                                else
-                                    System.Windows.Forms.MessageBox.Show("Error: you are banned from this server!");
+                                string reason = msgBuffer.ReadString();
+                                if (reason.Length != 0)
+                                {
+                                    switch (reason)
+                                    {
+                                        case "changename":
+                                            {
+                                                message = "Error: You need to change your name you cannot choose name (player)";
+                                                break;
+                                            }
+                                        case "versionwrong":
+                                            {
+                                                message = "Error: Your client is out of date consider updating";
+                                                break;
+                                            }
+                                        case "banned":
+                                            {
+                                                message = "You are banned from this server";
+                                                break;
+                                            }
+                                        case "serverisfull":
+                                            {
+                                                message = "The server is full";
+                                                break;
+                                            }
+                                        default:
+                                            {
+                                                message = "Error: Unknow error";
+                                                break;
+                                            }
+                                    }
+                                }
                             }
-                            catch { }
+                            catch 
+                            {
+                                message = "Error: Unknow error";
+                            }
+                            MessageBox.Show(message);
                             ChangeState("MineWorld.States.ServerBrowserState");
                         }
                         break;
