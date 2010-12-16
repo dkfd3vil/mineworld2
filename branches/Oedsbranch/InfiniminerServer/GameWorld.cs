@@ -262,9 +262,14 @@ namespace MineWorld
                     y = (ushort)explosive.Y;
                     z = (ushort)explosive.Z;
                     // OH the HORROr !!!
-                    if (blockList[x + 1, y, z] == BlockType.Lava || blockList[x - 1, y, z] == BlockType.Lava || blockList[x, y, z + 1] == BlockType.Lava || blockList[x, y, z - 1] == BlockType.Lava || blockList[x, y + 1, z] == BlockType.Lava || blockList[x, y - 1, z] == BlockType.Lava)
+                    // Hacky
+                    if (blockList[x, y, z] == BlockType.Explosive)
                     {
-                        DetonateAtPoint(x, y, z);
+                        if (blockList[x + 1, y, z] == BlockType.Lava || blockList[x - 1, y, z] == BlockType.Lava || blockList[x, y, z + 1] == BlockType.Lava || blockList[x, y, z - 1] == BlockType.Lava || blockList[x, y + 1, z] == BlockType.Lava || blockList[x, y - 1, z] == BlockType.Lava)
+                        {
+                            SetBlock(x, y, z, BlockType.None, PlayerTeam.None);
+                            DetonateAtPoint(x, y, z);
+                        }
                     }
                 }
             }
