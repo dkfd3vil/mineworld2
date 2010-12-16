@@ -362,18 +362,21 @@ namespace MineWorld
                                             // Figure out what the effect is.
                                             float distFromExplosive = (blockPos + 0.5f * Vector3.One - propertyBag.playerPosition).Length();
                                             if (distFromExplosive < 3)
-                                                propertyBag.KillPlayer(Defines.deathByExpl);//"WAS KILLED IN AN EXPLOSION!");
-                                            else if (distFromExplosive < 8)
-                                            {
-                                                // If we're not in explosion mode, turn it on with the minimum ammount of shakiness.
-                                                if (propertyBag.screenEffect != ScreenEffect.Explosion)
+                                                if (propertyBag.godmode == false)
                                                 {
-                                                    propertyBag.screenEffect = ScreenEffect.Explosion;
-                                                    propertyBag.screenEffectCounter = 2;
+                                                    propertyBag.KillPlayer(Defines.deathByExpl);//"WAS KILLED IN AN EXPLOSION!");
                                                 }
-                                                // If this bomb would result in a bigger shake, use its value.
-                                                propertyBag.screenEffectCounter = Math.Min(propertyBag.screenEffectCounter, (distFromExplosive - 2) / 5);
-                                            }
+                                                else if (distFromExplosive < 8)
+                                                {
+                                                    // If we're not in explosion mode, turn it on with the minimum ammount of shakiness.
+                                                    if (propertyBag.screenEffect != ScreenEffect.Explosion)
+                                                    {
+                                                        propertyBag.screenEffect = ScreenEffect.Explosion;
+                                                        propertyBag.screenEffectCounter = 2;
+                                                    }
+                                                    // If this bomb would result in a bigger shake, use its value.
+                                                    propertyBag.screenEffectCounter = Math.Min(propertyBag.screenEffectCounter, (distFromExplosive - 2) / 5);
+                                                }
                                         }
                                         break;
 

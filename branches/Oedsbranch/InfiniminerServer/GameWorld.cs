@@ -440,7 +440,16 @@ namespace MineWorld
 
                 // If it's an explosive block, add it to our list.
                 if (blockType == BlockType.Explosive)
-                    player.ExplosiveList.Add(buildPoint);
+                    // Todo better solution for this :S this is pure HORROR !!!!!
+                    if (blockList[x + 1, y, z] == BlockType.Lava || blockList[x - 1, y, z] == BlockType.Lava || blockList[x,y,z+1] == BlockType.Lava || blockList[x,y,z-1] == BlockType.Lava || blockList[x,y+1,z] == BlockType.Lava || blockList[x,y-1,z] == BlockType.Lava)
+                    {
+                        // If you build tnt on lava it explodes on contact ;)
+                        DetonateAtPoint(x, y, z);
+                    }
+                    else
+                    {
+                        player.ExplosiveList.Add(buildPoint);
+                    }
             }
         }
 
@@ -669,7 +678,7 @@ namespace MineWorld
 
                     player.ExplosiveList.RemoveAt(0);
                     DetonateAtPoint(x, y, z);
-                    ExplosionEffectAtPoint(x, y, z);
+                    //ExplosionEffectAtPoint(x, y, z);
                     // Remove the block that is detonating.
                     SetBlock(x, y, z, BlockType.None, PlayerTeam.None);
             }
