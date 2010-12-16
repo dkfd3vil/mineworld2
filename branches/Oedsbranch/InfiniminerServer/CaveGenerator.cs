@@ -193,7 +193,7 @@ namespace MineWorld
             int x = 0;
             int y = 0;
             int z = 62;
-            int zt = 0;
+            //int zt = 0;
             //size = size - 1;
             for (x = 0; x < size; x++)
             {

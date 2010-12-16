@@ -114,8 +114,8 @@ namespace MineWorld
             
 
             // Store the last time that we did a flow calculation.
-            DateTime lastFlowCalc = DateTime.Now;
-            DateTime lastMapeaterCalc = DateTime.Now;
+            DateTime lastCalc = DateTime.Now;
+            //DateTime lastMapeaterCalc = DateTime.Now;
 
             //Check if we should autoload a level
             if (Ssettings.Autoload)
@@ -172,11 +172,12 @@ namespace MineWorld
                 //DepositForPlayers();
 
                 // Is it time to do a lava calculation? If so, do it!
-                TimeSpan timeSpan = DateTime.Now - lastFlowCalc;
+                TimeSpan timeSpan = DateTime.Now - lastCalc;
                 if (timeSpan.TotalMilliseconds > 500)
                 {
-                    DoLavaStuff();
-                    lastFlowCalc = DateTime.Now;
+                    CalcLava();
+                    CalcBlockRoutine();
+                    lastCalc = DateTime.Now;
                 }
 
                 // Handle console keypresses.
@@ -578,8 +579,8 @@ namespace MineWorld
                 player.AddQueMsg(msgBuffer, NetChannel.ReliableUnordered);
         }
 
-        Thread updater;
-        bool updated = true;
+        //Thread updater;
+        //bool updated = true;
 
         /*
         public void CommitUpdate()

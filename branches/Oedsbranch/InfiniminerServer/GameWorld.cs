@@ -92,7 +92,7 @@ namespace MineWorld
                         blockCreatorTeam[i, j, k] = PlayerTeam.None;
                     }
             for (int i = 0; i < MAPSIZE * 2; i++)
-                DoLavaStuff();
+                CalcLava();
             return lavaBlockCount;
         }
 
@@ -168,7 +168,7 @@ namespace MineWorld
                 winningTeam = PlayerTeam.Red;
         }
 
-        public void DoLavaStuff()
+        public void CalcLava()
         {
             bool[, ,] flowSleep = new bool[MAPSIZE, MAPSIZE, MAPSIZE]; //if true, do not calculate this turn
 
@@ -245,6 +245,29 @@ namespace MineWorld
                                 }
                             }
                         }
+        }
+
+        public void CalcBlockRoutine()
+        {
+            ushort x;
+            ushort y;
+            ushort z;
+            // Explode TNT if lava touches it
+            foreach (IClient p in playerList.Values)
+            {
+                foreach (Vector3 explosive in p.ExplosiveList)
+                {
+                    //Todo fix me Oh the horror
+                    x = (ushort)explosive.X;
+                    y = (ushort)explosive.Y;
+                    z = (ushort)explosive.Z;
+                    // OH the HORROr !!!
+                    if (blockList[x + 1, y, z] == BlockType.Lava || blockList[x - 1, y, z] == BlockType.Lava || blockList[x, y, z + 1] == BlockType.Lava || blockList[x, y, z - 1] == BlockType.Lava || blockList[x, y + 1, z] == BlockType.Lava || blockList[x, y - 1, z] == BlockType.Lava)
+                    {
+                        DetonateAtPoint(x, y, z);
+                    }
+                }
+            }
         }
 
         public BlockType BlockAtPoint(Vector3 point)
