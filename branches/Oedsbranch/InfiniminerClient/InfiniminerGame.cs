@@ -170,6 +170,7 @@ namespace MineWorld
                                         case "noname":
                                             {
                                                 message = "Error: You didnt choose a name";
+                                                break;
                                             }
                                         case "changename":
                                             {
