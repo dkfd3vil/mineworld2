@@ -162,6 +162,15 @@ namespace MineWorld
                                 {
                                     switch (reason)
                                     {
+                                        case "bannedname":
+                                            {
+                                                message = "Error: The name you choosed is banned from the server";
+                                                break;
+                                            }
+                                        case "noname":
+                                            {
+                                                message = "Error: You didnt choose a name";
+                                            }
                                         case "changename":
                                             {
                                                 message = "Error: You need to change your name you cannot choose name (player)";
@@ -174,12 +183,12 @@ namespace MineWorld
                                             }
                                         case "banned":
                                             {
-                                                message = "You are banned from this server";
+                                                message = "Error: You are banned from this server";
                                                 break;
                                             }
                                         case "serverisfull":
                                             {
-                                                message = "The server is full";
+                                                message = "Error: The server is full";
                                                 break;
                                             }
                                         default:

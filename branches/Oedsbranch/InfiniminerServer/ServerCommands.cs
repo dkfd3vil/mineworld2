@@ -27,9 +27,9 @@ namespace MineWorld
 
             try
             {
-                if (!File.Exists("admins.txt"))
+                if (!File.Exists("ServerConfigs/admins.txt"))
                 {
-                    FileStream fs = File.Create("admins.txt");
+                    FileStream fs = File.Create("ServerConfigs/admins.txt");
                     StreamWriter sr = new StreamWriter(fs);
                     sr.WriteLine("#A list of all admins - just add one ip per line");
                     sr.Close();
@@ -37,7 +37,7 @@ namespace MineWorld
                 }
                 else
                 {
-                    FileStream file = new FileStream("admins.txt", FileMode.Open, FileAccess.Read);
+                    FileStream file = new FileStream("ServerConfigs/admins.txt", FileMode.Open, FileAccess.Read);
                     StreamReader sr = new StreamReader(file);
                     string line = sr.ReadLine();
                     while (line != null)
@@ -62,7 +62,7 @@ namespace MineWorld
         {
             try
             {
-                FileStream file = new FileStream("admins.txt", FileMode.Create, FileAccess.Write);
+                FileStream file = new FileStream("ServerConfigs/admins.txt", FileMode.Create, FileAccess.Write);
                 StreamWriter sw = new StreamWriter(file);
                 sw.WriteLine("#A list of all admins - just add one ip per line\n");
                 foreach (string ip in banList)
@@ -81,9 +81,9 @@ namespace MineWorld
 
             try
             {
-                if (!File.Exists("banlist.txt"))
+                if (!File.Exists("ServerConfigs/banlist.txt"))
                 {
-                    FileStream fs = File.Create("banlist.txt");
+                    FileStream fs = File.Create("ServerConfigs/banlist.txt");
                     StreamWriter sr = new StreamWriter(fs);
                     sr.WriteLine("#A list of all banned people - just add one ip per line");
                     sr.Close();
@@ -91,13 +91,13 @@ namespace MineWorld
                 }
                 else
                 {
-                    FileStream file = new FileStream("banlist.txt", FileMode.Open, FileAccess.Read);
+                    FileStream file = new FileStream("ServerConfigs/banlist.txt", FileMode.Open, FileAccess.Read);
                     StreamReader sr = new StreamReader(file);
                     string line = sr.ReadLine();
                     while (line != null)
                     {
                         if (line.Trim().Length != 0 && line.Trim().ToCharArray()[0] != '#')
-                            retList.Add(line.Trim()); //This will be changed to note authority too
+                            retList.Add(line.Trim());
                         line = sr.ReadLine();
                     }
                     sr.Close();
@@ -117,7 +117,7 @@ namespace MineWorld
         {
             try
             {
-                FileStream file = new FileStream("banlist.txt", FileMode.Create, FileAccess.Write);
+                FileStream file = new FileStream("ServerConfigs/banlist.txt", FileMode.Create, FileAccess.Write);
                 StreamWriter sw = new StreamWriter(file);
                 foreach (string ip in banList)
                     sw.WriteLine(ip);
@@ -125,6 +125,44 @@ namespace MineWorld
                 file.Close();
             }
             catch { }
+        }
+
+        public List<string> LoadBannedNames()
+        {
+            List<string> retList = new List<string>();
+
+            try
+            {
+                if (!File.Exists("ServerConfigs/bannednames.txt"))
+                {
+                    FileStream fs = File.Create("ServerConfigs/bannednames.txt");
+                    StreamWriter sr = new StreamWriter(fs);
+                    sr.WriteLine("#A list of all banned names - just add one name per line");
+                    sr.Close();
+                    fs.Close();
+                }
+                else
+                {
+                    FileStream file = new FileStream("ServerConfigs/bannednames.txt", FileMode.Open, FileAccess.Read);
+                    StreamReader sr = new StreamReader(file);
+                    string line = sr.ReadLine();
+                    while (line != null)
+                    {
+                        if (line.Trim().Length != 0 && line.Trim().ToCharArray()[0] != '#')
+                            retList.Add(line.Trim());
+                        line = sr.ReadLine();
+                    }
+                    sr.Close();
+                    file.Close();
+
+                }
+            }
+            catch
+            {
+                ConsoleWrite("Unable to load bannednames");
+            }
+
+            return retList;
         }
 
         public void KickPlayer(string ip)

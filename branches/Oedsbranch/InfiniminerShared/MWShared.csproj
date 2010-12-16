@@ -150,6 +150,7 @@
     <Content Include="ClientConfigs\keymap.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="ServerConfigs\bannednames.txt" />
     <Content Include="ServerConfigs\server.config.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

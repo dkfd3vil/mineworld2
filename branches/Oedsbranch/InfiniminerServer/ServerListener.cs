@@ -52,9 +52,26 @@ namespace MineWorld
                                     {
                                         IClient newPlayer = new IClient(msgSender, null);
                                         newPlayer.Handle = temphandle;
-                                        if (newPlayer.Handle.Length == 0 || newPlayer.Handle.ToLower() == "player")
+                                        if (newPlayer.Handle.Length != 0)
                                         {
-                                            msgSender.Disapprove("changename");
+                                            if (newPlayer.Handle.ToLower() == "player")
+                                            {
+                                                msgSender.Disapprove("changename");
+                                            }
+                                            else
+                                            {
+                                                foreach(string name in IServer.bannednames)
+                                                {
+                                                    if (name.ToLower() == newPlayer.Handle.ToLower())
+                                                    {
+                                                        msgSender.Disapprove("bannedname");
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            msgSender.Disapprove("noname");
                                         }
 
                                         if (IServer.admins.ContainsKey(newPlayer.IP))

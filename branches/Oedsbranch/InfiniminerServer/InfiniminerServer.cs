@@ -15,6 +15,7 @@ namespace MineWorld
         public Dictionary<NetConnection, IClient> playerList = new Dictionary<NetConnection, IClient>();
         public List<NetConnection> toGreet = new List<NetConnection>();
         public Dictionary<string, short> admins = new Dictionary<string, short>(); //Short represents power - 1 for mod, 2 for full admin
+        public List<string> bannednames = new List<string>(); // List of strings with all names that cannot be chosen
         //public Dictionary<PlayerCommands, string> commands = new Dictionary<PlayerCommands, string>();
 
         DateTime lastServerListUpdate = DateTime.Now;
@@ -94,6 +95,9 @@ namespace MineWorld
 
             // Load the admin-list
             admins = LoadAdminList();
+
+            // Load the bannednames-list
+            bannednames = LoadBannedNames();
 
             // Initialize the server.
             NetConfiguration netConfig = new NetConfiguration("MineWorldPlus");
@@ -242,7 +246,7 @@ namespace MineWorld
             Ssettings.Includelava = true;
 
             // Read in from the config file.
-            DatafileWriter dataFile = new DatafileWriter("Serverconfigs/server.config.txt");
+            DatafileWriter dataFile = new DatafileWriter("ServerConfigs/server.config.txt");
             if (dataFile.Data.ContainsKey("maxplayers"))
                 Ssettings.Maxplayers = int.Parse(dataFile.Data["maxplayers"]);
             else
