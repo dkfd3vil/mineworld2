@@ -527,6 +527,16 @@ namespace MineWorld
                                                         }
                                                         break;
                                                     }
+                                                case PlayerCommands.Stopfluids:
+                                                    {
+                                                        propertyBag.addChatMessage("Stop fluids enabled", ChatMessageType.SayAll, 10);
+                                                        break;
+                                                    }
+                                                case PlayerCommands.Startfluids:
+                                                    {
+                                                        propertyBag.addChatMessage("Start fluids enabled", ChatMessageType.SayAll, 10);
+                                                        break;
+                                                    }
                                                 default:
                                                     break;
                                             }

@@ -116,6 +116,7 @@ namespace MineWorld
         Help,
         Godmode,
         Stopfluids,
+        Startfluids,
     }
 
     public enum ChatMessageType

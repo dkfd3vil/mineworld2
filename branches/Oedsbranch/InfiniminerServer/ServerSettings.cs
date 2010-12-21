@@ -24,6 +24,8 @@ namespace MineWorld
             public string MOTD;
             //Not used in the configs ATM
             public bool Includelava;
+            //Not used by configs
+            public bool StopFluids;
         }
         
         

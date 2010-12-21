@@ -56,7 +56,7 @@ namespace MineWorld
                                         {
                                             if (newPlayer.Handle.ToLower() == "player")
                                             {
-                                                msgSender.Disapprove("changename");
+                                                //msgSender.Disapprove("changename");
                                             }
                                             else
                                             {
@@ -160,6 +160,17 @@ namespace MineWorld
                                                                     //chatstring = "Godmode disabled";
                                                                 //}
                                                                 break;
+                                                            }
+                                                        case "/stopfluids":
+                                                            {
+                                                                command = PlayerCommands.Stopfluids;
+                                                                IServer.Ssettings.StopFluids = true;
+                                                                break;
+                                                            }
+                                                        case "/startfluids":
+                                                            {
+                                                                command = PlayerCommands.Startfluids;
+                                                                IServer.Ssettings.StopFluids = false;
                                                             }
                                                         default:
                                                             {
