@@ -1,0 +1,11 @@
+C:\Users\Oeds\Desktop\SVN\Public MW\branches\Oedsbranch\InfiniminerShared\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\Oeds\Desktop\SVN\Public MW\branches\Oedsbranch\InfiniminerShared\obj\x86\Debug\Microsoft.Xna.Framework.RuntimeProfile.txt
+C:\Users\Oeds\Desktop\SVN\Public MW\branches\bin\debug\ServerConfigs\admins.txt
+C:\Users\Oeds\Desktop\SVN\Public MW\branches\bin\debug\ServerConfigs\banlist.txt
+C:\Users\Oeds\Desktop\SVN\Public MW\branches\bin\debug\ClientConfigs\client.config.txt
+C:\Users\Oeds\Desktop\SVN\Public MW\branches\bin\debug\ClientConfigs\keymap.txt
+C:\Users\Oeds\Desktop\SVN\Public MW\branches\bin\debug\ServerConfigs\server.config.txt
+C:\Users\Oeds\Desktop\SVN\Public MW\branches\bin\debug\MWShared.dll
+C:\Users\Oeds\Desktop\SVN\Public MW\branches\bin\debug\MWShared.pdb
+C:\Users\Oeds\Desktop\SVN\Public MW\branches\Oedsbranch\InfiniminerShared\obj\x86\Debug\MWShared.dll
+C:\Users\Oeds\Desktop\SVN\Public MW\branches\Oedsbranch\InfiniminerShared\obj\x86\Debug\MWShared.pdb
