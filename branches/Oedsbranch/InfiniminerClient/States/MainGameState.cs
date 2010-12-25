@@ -131,29 +131,34 @@ namespace MineWorld.States
                 BlockType hittingHeadOnBlock = _P.blockEngine.BlockAtPoint(headPosition);
 
                 // If we"re hitting the ground with a high velocity, die!
-                if (standingOnBlock != BlockType.None && _P.playerVelocity.Y < 0)
+                // Except if we have godmode ;)
+                if (!_P.godmode)
                 {
-                    float fallDamage = Math.Abs(_P.playerVelocity.Y) / DIEVELOCITY;
-                    if (fallDamage >= 1)
+                    if (standingOnBlock != BlockType.None && _P.playerVelocity.Y < 0)
                     {
-                        _P.PlaySoundForEveryone(MineWorldSound.GroundHit, _P.playerPosition);
-                        if (_P.godmode == false)
+                        float fallDamage = Math.Abs(_P.playerVelocity.Y) / DIEVELOCITY;
+                        if (fallDamage >= 1)
                         {
-                            _P.KillPlayer(Defines.deathByFall);//"WAS KILLED BY GRAVITY!");
-                        }
-                        return;
-                    }
-                    else if (fallDamage > 0.5)
-                    {
-                        // Fall damage of 0.5 maps to a screenEffectCounter value of 2, meaning that the effect doesn't appear.
-                        // Fall damage of 1.0 maps to a screenEffectCounter value of 0, making the effect very strong.
-                        if (standingOnBlock != BlockType.Jump)
-                        {
-                            _P.screenEffect = ScreenEffect.Fall;
-                            _P.screenEffectCounter = 2 - (fallDamage - 0.5) * 4;
                             _P.PlaySoundForEveryone(MineWorldSound.GroundHit, _P.playerPosition);
+                            _P.KillPlayer(Defines.deathByFall);//"WAS KILLED BY GRAVITY!");
+                            return;
+                        }
+                        else if (fallDamage > 0.5)
+                        {
+                            // Fall damage of 0.5 maps to a screenEffectCounter value of 2, meaning that the effect doesn't appear.
+                            // Fall damage of 1.0 maps to a screenEffectCounter value of 0, making the effect very strong.
+                            if (standingOnBlock != BlockType.Jump)
+                            {
+                                _P.screenEffect = ScreenEffect.Fall;
+                                _P.screenEffectCounter = 2 - (fallDamage - 0.5) * 4;
+                                _P.PlaySoundForEveryone(MineWorldSound.GroundHit, _P.playerPosition);
+                            }
                         }
                     }
+                }
+                else
+                {
+                    _P.PlaySoundForEveryone(MineWorldSound.GroundHit, _P.playerPosition);
                 }
 
                 // If the player has their head stuck in a block, push them down.

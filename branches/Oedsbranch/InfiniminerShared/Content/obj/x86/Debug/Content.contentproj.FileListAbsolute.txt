@@ -1,1 +1,5 @@
-C:\Users\Oeds\Desktop\SVN\Public MW\branches\Oedsbranch\InfiniminerShared\Content\obj\x86\Debug\ResolveAssemblyReference.cache
+D:\Testing Items\infiniminer\source3\Infiniminer\code\InfiniminerShared\Content\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\Administrator\Desktop\Infiniminer Source\Prtotocol 1\code\InfiniminerShared\Content\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\Oeds\Downloads\Arcanos-Infiniminer-c5088a5\Arcanos-Infiniminer-c5088a5\code\InfiniminerShared\Content\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\code\InfiniminerShared\Content\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\code\InfiniminerShared\Content\obj\x86\Debug\ResolveAssemblyReference.cache

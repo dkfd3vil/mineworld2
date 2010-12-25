@@ -50,11 +50,9 @@ namespace MineWorld
                                     }
                                     else
                                     {
-                                        IClient newPlayer = new IClient(msgSender, null);
-                                        newPlayer.Handle = temphandle;
-                                        if (newPlayer.Handle.Length != 0)
+                                        if (temphandle.Length != 0)
                                         {
-                                            if (newPlayer.Handle.ToLower() == "player")
+                                            if (temphandle.ToLower() == "player")
                                             {
                                                 msgSender.Disapprove("changename");
                                             }
@@ -62,7 +60,7 @@ namespace MineWorld
                                             {
                                                 foreach(string name in IServer.bannednames)
                                                 {
-                                                    if (name.ToLower() == newPlayer.Handle.ToLower())
+                                                    if (name.ToLower() == temphandle.ToLower())
                                                     {
                                                         msgSender.Disapprove("bannedname");
                                                     }
@@ -73,6 +71,9 @@ namespace MineWorld
                                         {
                                             msgSender.Disapprove("noname");
                                         }
+
+                                        IClient newPlayer = new IClient(msgSender, null);
+                                        newPlayer.Handle = temphandle;
 
                                         if (IServer.admins.ContainsKey(newPlayer.IP))
                                             newPlayer.admin = IServer.admins[newPlayer.IP];

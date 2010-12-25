@@ -1,6 +1,7 @@
 # This value specifies your name - please change it to something unique!
 handle = Player
 
+# These values specifies your resolution
 width = 1024
 height = 780
 fullscreen = false

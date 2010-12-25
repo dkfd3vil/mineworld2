@@ -6,15 +6,15 @@
       <TargetPlatform>Windows</TargetPlatform>
       <BuildConfiguration>Debug</BuildConfiguration>
       <CompressContent>false</CompressContent>
-      <RootDirectory>C:\Users\Oeds\Desktop\SVN\Public MW\branches\Oedsbranch\InfiniminerShared\Content\</RootDirectory>
-      <LoggerRootDirectory>C:\Users\Oeds\Desktop\SVN\Public MW\branches\Oedsbranch\InfiniminerShared\</LoggerRootDirectory>
-      <IntermediateDirectory>C:\Users\Oeds\Desktop\SVN\Public MW\branches\Oedsbranch\InfiniminerShared\Content\obj\x86\Debug\</IntermediateDirectory>
-      <OutputDirectory>C:\Users\Oeds\Desktop\SVN\Public MW\branches\bin\debug\Content\</OutputDirectory>
+      <RootDirectory>C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\code\InfiniminerShared\Content\</RootDirectory>
+      <LoggerRootDirectory>C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\code\InfiniminerShared\</LoggerRootDirectory>
+      <IntermediateDirectory>C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\code\InfiniminerShared\Content\obj\x86\Debug\</IntermediateDirectory>
+      <OutputDirectory>C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\code\InfiniminerShared\bin\x86\Debug\Content\</OutputDirectory>
     </Settings>
     <Assemblies>
       <Assembly>
         <Key>C:\Windows\assembly\GAC_32\Microsoft.Xna.Framework.Content.Pipeline\3.0.0.0__6d5c3888ef60e27d\Microsoft.Xna.Framework.Content.Pipeline.dll</Key>
-        <Value>2010-12-21T13:03:49.0719625+01:00</Value>
+        <Value>2010-10-18T13:04:30.7854+02:00</Value>
       </Assembly>
     </Assemblies>
   </Asset>

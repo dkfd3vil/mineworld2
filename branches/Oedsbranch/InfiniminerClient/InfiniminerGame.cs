@@ -709,7 +709,7 @@ namespace MineWorld
                 propertyBag.netClient.Shutdown("");
 
             propertyBag = new MineWorld.PropertyBag(this);
-            propertyBag.playerHandle = playerHandle;
+            //propertyBag.playerHandle = playerHandle;
             propertyBag.volumeLevel = volumeLevel;
             propertyBag.mouseSensitivity = mouseSensitivity;
             propertyBag.keyBinds = keyBinds;
