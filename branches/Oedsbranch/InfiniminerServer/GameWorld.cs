@@ -37,8 +37,12 @@ namespace MineWorld
             return newId;
         }
 
+        // TODO
+        // Refactor this into 2 functions 
+        // Setblock and Removeblock
         public void SetBlock(ushort x, ushort y, ushort z, BlockType blockType, PlayerTeam team)
         {
+
             if (x <= 0 || y <= 0 || z <= 0 || (int)x >= MAPSIZE - 1 || (int)y >= MAPSIZE - 1 || (int)z >= MAPSIZE - 1)
                 return;
 
@@ -88,11 +92,14 @@ namespace MineWorld
                 for (ushort j = 0; j < MAPSIZE; j++)
                     for (ushort k = 0; k < MAPSIZE; k++)
                     {
+                        if (worldData[i, j, k] == BlockType.Lava)
+                        {
+                            lavaBlockCount++;
+                        }
                         blockList[i, (ushort)(MAPSIZE - 1 - k), j] = worldData[i, j, k];
                         blockCreatorTeam[i, j, k] = PlayerTeam.None;
                     }
-            for (int i = 0; i < MAPSIZE * 2; i++)
-                CalcLava();
+
             return lavaBlockCount;
         }
 
@@ -185,11 +192,15 @@ namespace MineWorld
                             // RULES FOR LAVA EXPANSION:
                             // if the block below is lava, do nothing
                             // if the block below is empty space, add lava there
-                            // if the block below is something solid (or insane lava is on), add lava to the sides
-                            // if shock block spreading is enabled and there is a schock block in any direction...
-                            // if road block above and roadabsorbs is enabled then contract
+                            // if the block below is something solid add lava to the sides
+
                             BlockType typeBelow = (j == 0) ? BlockType.Lava : blockList[i, j - 1, k];
-                            BlockType typeTop = (j == 0) ? BlockType.Lava : blockList[i, j + 1, k];
+                            BlockType typeIincr = (i == 63) ? BlockType.Lava : blockList[i + 1, j, k];
+                            BlockType typeIdesc = (i == 0) ? BlockType.Lava : blockList[i - 1, j, k];
+                            BlockType typeKincr = (k == 63) ? BlockType.Lava : blockList[i, j, k + 1];
+                            BlockType typeKdesc = (k == 0) ? BlockType.Lava : blockList[i, j, k - 1];
+
+
                             if (typeBelow == BlockType.None)
                             {
                                 if (j > 0)
@@ -198,27 +209,68 @@ namespace MineWorld
                                     flowSleep[i, j - 1, k] = true;
                                 }
                             }
+                            if(typeIdesc == BlockType.None)
+                            {
+                                if(i > 0)
+                                {
+                                    SetBlock((ushort)(i - 1), j, k, BlockType.Lava, PlayerTeam.None);
+                                    flowSleep[i - 1, j, k] = true;
+                                }
+                            }
+                            if (typeIincr == BlockType.None)
+                            {
+                                if (i < MAPSIZE)
+                                {
+                                    SetBlock((ushort)(i + 1), j, k, BlockType.Lava, PlayerTeam.None);
+                                    flowSleep[i + 1, j, k] = true;
+                                }
+                            }
+                            if (typeKdesc == BlockType.None)
+                            {
+                                if (k > 0)
+                                {
+                                    SetBlock(i, j, (ushort)(k - 1), BlockType.Lava, PlayerTeam.None);
+                                    flowSleep[i, j, k - 1] = true;
+                                }
+                            }
+                            if (typeKincr == BlockType.None)
+                            {
+                                if (k < MAPSIZE)
+                                {
+                                    SetBlock(i, j, (ushort)(k + 1), BlockType.Lava, PlayerTeam.None);
+                                    flowSleep[i, j, k + 1] = true;
+                                }
+                            }
+                            /*
+                            if (typeBelow == BlockType.None)
+                            {
+                                if (j > 0)
+                                {
+                                    SetBlock(i, (ushort)(j - 1), k, BlockType.Lava, PlayerTeam.None);
+                                    //flowSleep[i, j - 1, k] = true;
+                                }
+                            }
                             if (typeBelow != BlockType.Lava)
                             {
                                 if (i > 0 && blockList[i - 1, j, k] == BlockType.None)
                                 {
                                     SetBlock((ushort)(i - 1), j, k, BlockType.Lava, PlayerTeam.None);
-                                    flowSleep[i - 1, j, k] = true;
+                                    //flowSleep[i - 1, j, k] = true;
                                 }
                                 if (k > 0 && blockList[i, j, k - 1] == BlockType.None)
                                 {
                                     SetBlock(i, j, (ushort)(k - 1), BlockType.Lava, PlayerTeam.None);
-                                    flowSleep[i, j, k - 1] = true;
+                                    //flowSleep[i, j, k - 1] = true;
                                 }
                                 if ((int)i < MAPSIZE - 1 && blockList[i + 1, j, k] == BlockType.None)
                                 {
                                     SetBlock((ushort)(i + 1), j, k, BlockType.Lava, PlayerTeam.None);
-                                    flowSleep[i + 1, j, k] = true;
+                                    //flowSleep[i + 1, j, k] = true;
                                 }
                                 if ((int)k < MAPSIZE - 1 && blockList[i, j, k + 1] == BlockType.None)
                                 {
                                     SetBlock(i, j, (ushort)(k + 1), BlockType.Lava, PlayerTeam.None);
-                                    flowSleep[i, j, k + 1] = true;
+                                    //flowSleep[i, j, k + 1] = true;
                                 }
                             }
                             if (typeTop != BlockType.Lava)
@@ -226,28 +278,73 @@ namespace MineWorld
                                 if (i > 0 && blockList[i - 1, j, k] == BlockType.None)
                                 {
                                     SetBlock((ushort)(i - 1), j, k, BlockType.Lava, PlayerTeam.None);
-                                    flowSleep[i - 1, j, k] = true;
+                                    //flowSleep[i - 1, j, k] = true;
                                 }
                                 if (k > 0 && blockList[i, j, k - 1] == BlockType.None)
                                 {
                                     SetBlock(i, j, (ushort)(k - 1), BlockType.Lava, PlayerTeam.None);
-                                    flowSleep[i, j, k - 1] = true;
+                                    //flowSleep[i, j, k - 1] = true;
                                 }
                                 if ((int)i < MAPSIZE - 1 && blockList[i + 1, j, k] == BlockType.None)
                                 {
                                     SetBlock((ushort)(i + 1), j, k, BlockType.Lava, PlayerTeam.None);
-                                    flowSleep[i + 1, j, k] = true;
+                                    //flowSleep[i + 1, j, k] = true;
                                 }
                                 if ((int)k < MAPSIZE - 1 && blockList[i, j, k + 1] == BlockType.None)
                                 {
                                     SetBlock(i, j, (ushort)(k + 1), BlockType.Lava, PlayerTeam.None);
-                                    flowSleep[i, j, k + 1] = true;
+                                    //flowSleep[i, j, k + 1] = true;
                                 }
                             }
+                             */
                         }
         }
 
         public void CalcBlockRoutine()
+        {
+            if (!Ssettings.StopFluids)
+            {
+                CalcLava();
+            }
+            CalcTnt();
+            CalcGrass();
+        }
+
+        public void CalcGrass()
+        {
+            // More horror code :S
+            for (ushort i = 0; i < MAPSIZE; i++)
+                for (ushort j = 0; j < MAPSIZE; j++)
+                    for (ushort k = 0; k < MAPSIZE; k++)
+                        if (blockList[i, j, k] == BlockType.Dirt)
+                        {
+                            if (InDirectSunLight(i,j,k))
+                            {
+                                SetBlock(i, j, k, BlockType.Grass, PlayerTeam.None);
+                            }
+                        }
+        }
+
+        public bool InDirectSunLight(ushort i, ushort j , ushort k)
+        {
+            ushort s;
+            j++;
+            if (j == 63)
+            {
+                return true;
+            }
+            for (s = j; s < MAPSIZE; s++)
+            {
+                BlockType blockatloc = blockList[i,s,k];
+                if (blockatloc != BlockType.None)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        public void CalcTnt()
         {
             ushort x;
             ushort y;
@@ -366,6 +463,10 @@ namespace MineWorld
                 
                 case BlockType.Adminblock:
                     removeBlock = false;
+                    break;
+
+                case BlockType.Grass:
+                    removeBlock = true;
                     break;
             }
 

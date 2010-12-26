@@ -118,6 +118,8 @@ Content\sounds\teleport.xnb
 Content\sounds\radar-high.xnb
 Content\sounds\radar-low.xnb
 Content\song_title.xnb
+Content\blocks\tex_block_grass.xnb
+Content\blocks\tex_block_grass_side.xnb
 Content\song_title.wma
 ServerConfigs\admins.txt
 ServerConfigs\banlist.txt

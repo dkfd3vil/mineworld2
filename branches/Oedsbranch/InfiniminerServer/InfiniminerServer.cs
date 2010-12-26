@@ -175,10 +175,6 @@ namespace MineWorld
                 TimeSpan timeSpan = DateTime.Now - lastCalc;
                 if (timeSpan.TotalMilliseconds > 500)
                 {
-                    if (Ssettings.StopFluids == false)
-                    {
-                        CalcLava();
-                    }
                     CalcBlockRoutine();
                     lastCalc = DateTime.Now;
                 }

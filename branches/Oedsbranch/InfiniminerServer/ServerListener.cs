@@ -54,7 +54,7 @@ namespace MineWorld
                                         {
                                             if (temphandle.ToLower() == "player")
                                             {
-                                                msgSender.Disapprove("changename");
+                                                //msgSender.Disapprove("changename");
                                             }
                                             else
                                             {

@@ -135,6 +135,8 @@ namespace MineWorld
             // Load the textures we'll use.
             blockTextures = new IMTexture[(byte)BlockTexture.MAXIMUM];
             blockTextures[(byte)BlockTexture.None] = new IMTexture(null);
+            blockTextures[(byte)BlockTexture.GrassSide] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_grass_side"));
+            blockTextures[(byte)BlockTexture.Grass] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_grass"));
             blockTextures[(byte)BlockTexture.Adminblock] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_adminblock"));
             blockTextures[(byte)BlockTexture.Dirt] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_dirt"));
             blockTextures[(byte)BlockTexture.Rock] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_rock"));
