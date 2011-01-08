@@ -37,13 +37,33 @@ namespace MineWorld
             return newId;
         }
 
-        // TODO
-        // Refactor this into 2 functions 
-        // Setblock and Removeblock
+        public void RemoveBlock(ushort x, ushort y, ushort z)
+        {
+            if (!SaneBlockPosition(x, y, z))
+                return;
+
+            blockList[x, y, z] = BlockType.None;
+            blockCreatorTeam[x, y, z] = PlayerTeam.None;
+
+            // x, y, z, type, all bytes
+            NetBuffer msgBuffer = netServer.CreateBuffer();
+            msgBuffer.Write((byte)MineWorldMessage.BlockSet);
+            msgBuffer.Write((byte)x);
+            msgBuffer.Write((byte)y);
+            msgBuffer.Write((byte)z);
+            msgBuffer.Write((byte)BlockType.None);
+            foreach (IClient player in playerList.Values)
+                //if (netConn.Status == NetConnectionStatus.Connected)
+                player.AddQueMsg(msgBuffer, NetChannel.ReliableUnordered);
+        }
+
         public void SetBlock(ushort x, ushort y, ushort z, BlockType blockType, PlayerTeam team)
         {
 
             if (x <= 0 || y <= 0 || z <= 0 || (int)x >= MAPSIZE - 1 || (int)y >= MAPSIZE - 1 || (int)z >= MAPSIZE - 1)
+                return;
+
+            if(!SaneBlockPosition(x,y,z))
                 return;
 
             if (blockType == BlockType.BeaconRed || blockType == BlockType.BeaconBlue)
@@ -78,8 +98,6 @@ namespace MineWorld
 
             if (blockType == BlockType.Lava)
                 lavaBlockCount += 1;
-
-            //ConsoleWrite("BLOCKSET: " + x + " " + y + " " + z + " " + blockType.ToString());
         }
 
         public int newMap()
@@ -110,55 +128,6 @@ namespace MineWorld
             int dz = z2 - z1;
             double distance = Math.Sqrt(dx * dx + dy * dy + dz * dz);
             return distance;
-        }
-        /*
-        public string GetExplosionPattern(int n)
-        {
-            string output = "";
-            int radius = (int)Math.Ceiling((double)tntExplosionPattern);
-            int size = radius * 2 + 1;
-            int center = radius; //Not adding one because arrays start from 0
-            for (int z = n; z == n && z < size; z++)
-            {
-                ConsoleWrite("Z" + z + ": ");
-                output += "Z" + z + ": ";
-                for (int x = 0; x < size; x++)
-                {
-                    string output1 = "";
-                    for (int y = 0; y < size; y++)
-                    {
-                        output1 += tntExplosionPattern[x, y, z] ? "1, " : "0, ";
-                    }
-                    ConsoleWrite(output1);
-                }
-                output += "\n";
-            }
-            return "";
-        }
-        */
-        public void CalculateExplosionPattern()
-        {
-            /*
-            int radius = (int)Math.Ceiling((double)varGetI("explosionradius"));
-            int size = radius * 2 + 1;
-            tntExplosionPattern = new bool[size, size, size];
-            int center = radius; //Not adding one because arrays start from 0
-            for (int x = 0; x < size; x++)
-                for (int y = 0; y < size; y++)
-                    for (int z = 0; z < size; z++)
-                    {
-                        if (x == y && y == z && z == center)
-                            tntExplosionPattern[x, y, z] = true;
-                        else
-                        {
-                            double distance = Get3DDistance(center, center, center, x, y, z);//Use center of blocks
-                            if (distance <= (double)varGetI("explosionradius"))
-                                tntExplosionPattern[x, y, z] = true;
-                            else
-                                tntExplosionPattern[x, y, z] = false;
-                        }
-                    }
-             */
         }
 
         public void DepositForPlayers()
@@ -193,7 +162,6 @@ namespace MineWorld
                             // if the block below is lava, do nothing
                             // if the block below is empty space, add lava there
                             // if the block below is something solid add lava to the sides
-
                             BlockType typeBelow = (j == 0) ? BlockType.Lava : blockList[i, j - 1, k];
                             BlockType typeIincr = (i == 63) ? BlockType.Lava : blockList[i + 1, j, k];
                             BlockType typeIdesc = (i == 0) ? BlockType.Lava : blockList[i - 1, j, k];
@@ -241,62 +209,6 @@ namespace MineWorld
                                     flowSleep[i, j, k + 1] = true;
                                 }
                             }
-                            /*
-                            if (typeBelow == BlockType.None)
-                            {
-                                if (j > 0)
-                                {
-                                    SetBlock(i, (ushort)(j - 1), k, BlockType.Lava, PlayerTeam.None);
-                                    //flowSleep[i, j - 1, k] = true;
-                                }
-                            }
-                            if (typeBelow != BlockType.Lava)
-                            {
-                                if (i > 0 && blockList[i - 1, j, k] == BlockType.None)
-                                {
-                                    SetBlock((ushort)(i - 1), j, k, BlockType.Lava, PlayerTeam.None);
-                                    //flowSleep[i - 1, j, k] = true;
-                                }
-                                if (k > 0 && blockList[i, j, k - 1] == BlockType.None)
-                                {
-                                    SetBlock(i, j, (ushort)(k - 1), BlockType.Lava, PlayerTeam.None);
-                                    //flowSleep[i, j, k - 1] = true;
-                                }
-                                if ((int)i < MAPSIZE - 1 && blockList[i + 1, j, k] == BlockType.None)
-                                {
-                                    SetBlock((ushort)(i + 1), j, k, BlockType.Lava, PlayerTeam.None);
-                                    //flowSleep[i + 1, j, k] = true;
-                                }
-                                if ((int)k < MAPSIZE - 1 && blockList[i, j, k + 1] == BlockType.None)
-                                {
-                                    SetBlock(i, j, (ushort)(k + 1), BlockType.Lava, PlayerTeam.None);
-                                    //flowSleep[i, j, k + 1] = true;
-                                }
-                            }
-                            if (typeTop != BlockType.Lava)
-                            {
-                                if (i > 0 && blockList[i - 1, j, k] == BlockType.None)
-                                {
-                                    SetBlock((ushort)(i - 1), j, k, BlockType.Lava, PlayerTeam.None);
-                                    //flowSleep[i - 1, j, k] = true;
-                                }
-                                if (k > 0 && blockList[i, j, k - 1] == BlockType.None)
-                                {
-                                    SetBlock(i, j, (ushort)(k - 1), BlockType.Lava, PlayerTeam.None);
-                                    //flowSleep[i, j, k - 1] = true;
-                                }
-                                if ((int)i < MAPSIZE - 1 && blockList[i + 1, j, k] == BlockType.None)
-                                {
-                                    SetBlock((ushort)(i + 1), j, k, BlockType.Lava, PlayerTeam.None);
-                                    //flowSleep[i + 1, j, k] = true;
-                                }
-                                if ((int)k < MAPSIZE - 1 && blockList[i, j, k + 1] == BlockType.None)
-                                {
-                                    SetBlock(i, j, (ushort)(k + 1), BlockType.Lava, PlayerTeam.None);
-                                    //flowSleep[i, j, k + 1] = true;
-                                }
-                            }
-                             */
                         }
         }
 
@@ -344,6 +256,21 @@ namespace MineWorld
             return true;
         }
 
+        public bool SaneBlockPosition(ushort x, ushort y, ushort z)
+        {
+            bool goodspot = false;
+
+            if (x <= 0 || y <= 0 || z <= 0 || (int)x >= MAPSIZE - 1 || (int)y >= MAPSIZE - 1 || (int)z >= MAPSIZE - 1)
+            {
+                goodspot = false;
+            }
+            else
+            {
+                goodspot = true;
+            }
+            return goodspot;
+        }
+
         public void CalcTnt()
         {
             ushort x;
@@ -364,7 +291,7 @@ namespace MineWorld
                     {
                         if (blockList[x + 1, y, z] == BlockType.Lava || blockList[x - 1, y, z] == BlockType.Lava || blockList[x, y, z + 1] == BlockType.Lava || blockList[x, y, z - 1] == BlockType.Lava || blockList[x, y + 1, z] == BlockType.Lava || blockList[x, y - 1, z] == BlockType.Lava)
                         {
-                            SetBlock(x, y, z, BlockType.None, PlayerTeam.None);
+                            RemoveBlock(x, y, z);
                             DetonateAtPoint(x, y, z);
                         }
                     }
@@ -410,18 +337,8 @@ namespace MineWorld
             ushort x = (ushort)hitPoint.X;
             ushort y = (ushort)hitPoint.Y;
             ushort z = (ushort)hitPoint.Z;
-            //SetBlock(x, y, z, BlockType.Lava, PlayerTeam.None);
             
             player.QueueAnimationBreak = true;
-
-            // Figure out what we're hitting.
-            //Vector3 hitPoint = Vector3.Zero;
-            //Vector3 buildPoint = Vector3.Zero;
-            //if (!RayCollision(playerPosition, playerHeading, 2, 10, ref hitPoint, ref buildPoint))
-                //return;
-            //ushort x = (ushort)hitPoint.X;
-            //ushort y = (ushort)hitPoint.Y;
-            //ushort z = (ushort)hitPoint.Z;
 
             // Figure out what the result is.
             bool removeBlock = false;
@@ -493,7 +410,7 @@ namespace MineWorld
 
             if (removeBlock)
             {
-                SetBlock(x, y, z, BlockType.None, PlayerTeam.None);
+                RemoveBlock(x, y, z);
                 PlaySound(sound, player.Position);
             }
         }
@@ -522,11 +439,6 @@ namespace MineWorld
             if (!RayCollision(playerPosition, playerHeading, 6, 25, ref hitPoint, ref buildPoint))
                 actionFailed = true;
 
-            // If the block is too expensive, bail.
-            //uint blockCost = BlockInformation.GetCost(blockType);
-            //if (blockCost > player.Ore)
-                //actionFailed = true;
-
             // If there's someone there currently, bail.
             ushort x = (ushort)buildPoint.X;
             ushort y = (ushort)buildPoint.Y;
@@ -538,16 +450,8 @@ namespace MineWorld
             }
 
             // If it's out of bounds, bail.
-            if (x <= 0 || y <= 0 || z <= 0 || (int)x >= MAPSIZE - 1 || (int)y >= MAPSIZE - 1 || (int)z >= MAPSIZE - 1)
+            if (!SaneBlockPosition(x,y,z))
                 actionFailed = true;
-
-            // If it's near a base, bail.
-            //if (LocationNearBase(x, y, z))
-            //    actionFailed = true;
-
-            // If it's lava, don't let them build off of lava.
-            //if (blockList[(ushort)hitPoint.X, (ushort)hitPoint.Y, (ushort)hitPoint.Z] == BlockType.Lava)
-            //    actionFailed = true;
 
             if (actionFailed)
             {
@@ -625,7 +529,7 @@ namespace MineWorld
                 TriggerConstructionGunAnimation(player, 0.5f);
 
                 // Remove the block.
-                SetBlock(x, y, z, BlockType.None, PlayerTeam.None);
+                RemoveBlock(x, y, z);
                 PlaySound(MineWorldSound.ConstructionGun, player.Position);
             }
         }
@@ -680,31 +584,12 @@ namespace MineWorld
         public void DetonateAtPoint(int x, int y, int z)
         {
             // Remove the block that is detonating.
-            SetBlock((ushort)(x), (ushort)(y), (ushort)(z), BlockType.None, PlayerTeam.None);
+            RemoveBlock((ushort)x, (ushort)y, (ushort)z);
 
             // Remove this from any explosive lists it may be in.
             foreach (IClient p in playerList.Values)
                 p.ExplosiveList.Remove(new Vector3(x, y, z));
-            /*
-            SetBlock((ushort)(x+1), (ushort)(y), (ushort)(z), BlockType.None, PlayerTeam.None);
-            SetBlock((ushort)(x+2), (ushort)(y), (ushort)(z), BlockType.None, PlayerTeam.None);
-            SetBlock((ushort)(x+3), (ushort)(y), (ushort)(z), BlockType.None, PlayerTeam.None);
-            SetBlock((ushort)(x), (ushort)(y+1), (ushort)(z), BlockType.None, PlayerTeam.None);
-            SetBlock((ushort)(x), (ushort)(y+2), (ushort)(z), BlockType.None, PlayerTeam.None);
-            SetBlock((ushort)(x), (ushort)(y+3), (ushort)(z), BlockType.None, PlayerTeam.None);
-            SetBlock((ushort)(x), (ushort)(y), (ushort)(z+1), BlockType.None, PlayerTeam.None);
-            SetBlock((ushort)(x), (ushort)(y), (ushort)(z+2), BlockType.None, PlayerTeam.None);
-            SetBlock((ushort)(x), (ushort)(y), (ushort)(z+3), BlockType.None, PlayerTeam.None);
-            SetBlock((ushort)(x - 1), (ushort)(y), (ushort)(z), BlockType.None, PlayerTeam.None);
-            SetBlock((ushort)(x - 2), (ushort)(y), (ushort)(z), BlockType.None, PlayerTeam.None);
-            SetBlock((ushort)(x - 3), (ushort)(y), (ushort)(z), BlockType.None, PlayerTeam.None);
-            SetBlock((ushort)(x), (ushort)(y - 1), (ushort)(z), BlockType.None, PlayerTeam.None);
-            SetBlock((ushort)(x), (ushort)(y - 2), (ushort)(z), BlockType.None, PlayerTeam.None);
-            SetBlock((ushort)(x), (ushort)(y - 3), (ushort)(z), BlockType.None, PlayerTeam.None);
-            SetBlock((ushort)(x), (ushort)(y), (ushort)(z - 1), BlockType.None, PlayerTeam.None);
-            SetBlock((ushort)(x), (ushort)(y), (ushort)(z - 2), BlockType.None, PlayerTeam.None);
-            SetBlock((ushort)(x), (ushort)(y), (ushort)(z - 3), BlockType.None, PlayerTeam.None);
-             */
+
             // Detonate the block.
                 for (int dx = -4; dx <= 4; dx++)
                     for (int dy = -4; dy <= 4; dy++)
@@ -740,56 +625,8 @@ namespace MineWorld
                                     break;
                             }
                             if (destroyBlock)
-                                SetBlock((ushort)(x + dx), (ushort)(y + dy), (ushort)(z + dz), BlockType.None, PlayerTeam.None);
+                                RemoveBlock((ushort)(x + dx), (ushort)(y + dy), (ushort)(z + dz));
                         }
-            /*
-            else
-            {
-                int radius = (int)Math.Ceiling((double)varGetI("explosionradius"));
-                int size = radius * 2 + 1;
-                int center = radius + 1;
-                //ConsoleWrite("Radius: " + radius + ", Size: " + size + ", Center: " + center);
-                for (int dx = -center + 1; dx < center; dx++)
-                    for (int dy = -center + 1; dy < center; dy++)
-                        for (int dz = -center + 1; dz < center; dz++)
-                        {
-                            if (tntExplosionPattern[dx + center - 1, dy + center - 1, dz + center - 1]) //Warning, code duplication ahead!
-                            {
-                                // Check that this is a sane block position.
-                                if (x + dx <= 0 || y + dy <= 0 || z + dz <= 0 || x + dx >= MAPSIZE - 1 || y + dy >= MAPSIZE - 1 || z + dz >= MAPSIZE - 1)
-                                    continue;
-
-                                // Chain reactions!
-                                if (blockList[x + dx, y + dy, z + dz] == BlockType.Explosive)
-                                    DetonateAtPoint(x + dx, y + dy, z + dz);
-
-                                // Detonation of normal blocks.
-                                bool destroyBlock = false;
-                                switch (blockList[x + dx, y + dy, z + dz])
-                                {
-                                    case BlockType.Rock:
-                                    case BlockType.Dirt:
-                                    case BlockType.DirtSign:
-                                    case BlockType.Ore:
-                                    case BlockType.SolidRed:
-                                    case BlockType.SolidBlue:
-                                    case BlockType.TransRed:
-                                    case BlockType.TransBlue:
-                                    case BlockType.Ladder:
-                                    case BlockType.Shock:
-                                    case BlockType.Jump:
-                                    case BlockType.Explosive:
-                                    case BlockType.Lava:
-                                    case BlockType.Road:
-                                        destroyBlock = true;
-                                        break;
-                                }
-                                if (destroyBlock)
-                                    SetBlock((ushort)(x + dx), (ushort)(y + dy), (ushort)(z + dz), BlockType.None, PlayerTeam.None);
-                            }
-                        }
-            }
-             */
             ExplosionEffectAtPoint(x, y, z);
         }
 
@@ -809,7 +646,7 @@ namespace MineWorld
                     DetonateAtPoint(x, y, z);
                     //ExplosionEffectAtPoint(x, y, z);
                     // Remove the block that is detonating.
-                    SetBlock(x, y, z, BlockType.None, PlayerTeam.None);
+                    RemoveBlock(x, y, z);
             }
         }
 
@@ -862,47 +699,3 @@ namespace MineWorld
         }
     }
 }
-
-
-//Old lava code
-/*
-if (varGetB("sspreads"))
-{
-    BlockType typeAbove = ((int)j == MAPSIZE - 1) ? BlockType.None : blockList[i, j + 1, k];
-    if (i > 0 && blockList[i - 1, j, k] == BlockType.Shock)
-    {
-        SetBlock((ushort)(i - 1), j, k, BlockType.Lava, PlayerTeam.None);
-        flowSleep[i - 1, j, k] = true;
-    }
-    if (k > 0 && blockList[i, j, k - 1] == BlockType.Shock)
-    {
-        SetBlock(i, j, (ushort)(k - 1), BlockType.Lava, PlayerTeam.None);
-        flowSleep[i, j, k - 1] = true;
-    }
-    if ((int)i < MAPSIZE - 1 && blockList[i + 1, j, k] == BlockType.Shock)
-    {
-        SetBlock((ushort)(i + 1), j, k, BlockType.Lava, PlayerTeam.None);
-        flowSleep[i + 1, j, k] = true;
-    }
-    if ((int)k < MAPSIZE - 1 && blockList[i, j, k + 1] == BlockType.Shock)
-    {
-        SetBlock(i, j, (ushort)(k + 1), BlockType.Lava, PlayerTeam.None);
-        flowSleep[i, j, k + 1] = true;
-    }
-    if (typeAbove == BlockType.Shock) //Spread up
-    {
-        SetBlock(i, (ushort)(j + 1), k, BlockType.Lava, PlayerTeam.None);
-        flowSleep[i, j + 1, k] = true;
-    }
-    //Don't spread down...
-}
-if (varGetB("roadabsorbs"))
-{
-    BlockType typeAbove = ((int)j == MAPSIZE - 1) ? BlockType.None : blockList[i, j + 1, k];
-    if (typeAbove == BlockType.Road)
-    {
-        SetBlock(i, j, k, BlockType.Road, PlayerTeam.None);
-        flowSleep[i, j, k] = true;
-    }
-}
-*/
