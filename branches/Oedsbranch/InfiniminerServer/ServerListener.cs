@@ -75,8 +75,8 @@ namespace MineWorld
                                         IClient newPlayer = new IClient(msgSender, null);
                                         newPlayer.Handle = temphandle;
 
-                                        if (IServer.admins.ContainsKey(newPlayer.IP))
-                                            newPlayer.admin = IServer.admins[newPlayer.IP];
+                                        //if (IServer.admins.Contains(newPlayer.IP))
+                                            //newPlayer.admin = IServer.admins[newPlayer.IP];
                                         IServer.playerList[msgSender] = newPlayer;
                                         //Check if we should compress the map for the client
                                         try
@@ -139,7 +139,7 @@ namespace MineWorld
                                             {
                                                 PlayerCommands command = PlayerCommands.None;
 
-                                                if(player.IsAdmin)
+                                                if(IServer.GetAdmin(player.IP))
                                                 {
                                                     string commandstring = Defines.Sanitize(msgBuffer.ReadString());
                                                     commandstring = commandstring.ToLower();
@@ -187,31 +187,28 @@ namespace MineWorld
                                                 // Read the data from the packet.
                                                 ChatMessageType chatType = (ChatMessageType)msgBuffer.ReadByte();
                                                 string chatString = Defines.Sanitize(msgBuffer.ReadString());
-                                                if (!IServer.ProcessCommand(chatString, IServer.GetAdmin(IServer.playerList[msgSender].IP), IServer.playerList[msgSender]))
+                                                //IServer.ConsoleWrite("CHAT: (" + player.Handle + ") " + chatString);
+
+                                                // Append identifier information.
+                                                if (chatType == ChatMessageType.SayAll)
+                                                    chatString = player.Handle + " (ALL): " + chatString;
+                                                else
+                                                    chatString = player.Handle + " (TEAM): " + chatString;
+
+                                                // Construct the message packet.
+                                                NetBuffer chatPacket = netServer.CreateBuffer();
+                                                chatPacket.Write((byte)MineWorldMessage.ChatMessage);
+                                                chatPacket.Write((byte)((player.Team == PlayerTeam.Red) ? ChatMessageType.SayRedTeam : ChatMessageType.SayBlueTeam));
+                                                chatPacket.Write(chatString);
+
+                                                // Send the packet to people who should recieve it.
+                                                foreach (IClient p in IServer.playerList.Values)
                                                 {
-                                                    IServer.ConsoleWrite("CHAT: (" + player.Handle + ") " + chatString);
-
-                                                    // Append identifier information.
-                                                    if (chatType == ChatMessageType.SayAll)
-                                                        chatString = player.Handle + " (ALL): " + chatString;
-                                                    else
-                                                        chatString = player.Handle + " (TEAM): " + chatString;
-
-                                                    // Construct the message packet.
-                                                    NetBuffer chatPacket = netServer.CreateBuffer();
-                                                    chatPacket.Write((byte)MineWorldMessage.ChatMessage);
-                                                    chatPacket.Write((byte)((player.Team == PlayerTeam.Red) ? ChatMessageType.SayRedTeam : ChatMessageType.SayBlueTeam));
-                                                    chatPacket.Write(chatString);
-
-                                                    // Send the packet to people who should recieve it.
-                                                    foreach (IClient p in IServer.playerList.Values)
-                                                    {
-                                                        if (chatType == ChatMessageType.SayAll ||
-                                                            chatType == ChatMessageType.SayBlueTeam && p.Team == PlayerTeam.Blue ||
-                                                            chatType == ChatMessageType.SayRedTeam && p.Team == PlayerTeam.Red)
-                                                            //if (p.NetConn.Status == NetConnectionStatus.Connected)
-                                                            p.AddQueMsg(chatPacket,  NetChannel.ReliableInOrder3);
-                                                    }
+                                                    if (chatType == ChatMessageType.SayAll ||
+                                                    chatType == ChatMessageType.SayBlueTeam && p.Team == PlayerTeam.Blue ||
+                                                    chatType == ChatMessageType.SayRedTeam && p.Team == PlayerTeam.Red)
+                                                    //if (p.NetConn.Status == NetConnectionStatus.Connected)
+                                                    p.AddQueMsg(chatPacket, NetChannel.ReliableInOrder3);
                                                 }
                                             }
                                             break;

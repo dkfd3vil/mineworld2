@@ -21,6 +21,7 @@ namespace MineWorld
         List<string> beaconIDList = new List<string>();
         Dictionary<Vector3, Beacon> beaconList = new Dictionary<Vector3, Beacon>();
         Random randGen = new Random();
+
         public string _GenerateBeaconID()
         {
             string id = "K";
@@ -28,6 +29,7 @@ namespace MineWorld
                 id += (char)randGen.Next(48, 58);
             return id;
         }
+
         public string GenerateBeaconID()
         {
             string newId = _GenerateBeaconID();
@@ -59,9 +61,8 @@ namespace MineWorld
 
         public void SetBlock(ushort x, ushort y, ushort z, BlockType blockType, PlayerTeam team)
         {
-
-            if (x <= 0 || y <= 0 || z <= 0 || (int)x >= MAPSIZE - 1 || (int)y >= MAPSIZE - 1 || (int)z >= MAPSIZE - 1)
-                return;
+            //if (x <= 0 || y <= 0 || z <= 0 || (int)x >= MAPSIZE - 1 || (int)y >= MAPSIZE - 1 || (int)z >= MAPSIZE - 1)
+                //return;
 
             if(!SaneBlockPosition(x,y,z))
                 return;
@@ -144,99 +145,6 @@ namespace MineWorld
                 winningTeam = PlayerTeam.Red;
         }
 
-        public void CalcLava()
-        {
-            bool[, ,] flowSleep = new bool[MAPSIZE, MAPSIZE, MAPSIZE]; //if true, do not calculate this turn
-
-            for (ushort i = 0; i < MAPSIZE; i++)
-                for (ushort j = 0; j < MAPSIZE; j++)
-                    for (ushort k = 0; k < MAPSIZE; k++)
-                        flowSleep[i, j, k] = false;
-
-            for (ushort i = 0; i < MAPSIZE; i++)
-                for (ushort j = 0; j < MAPSIZE; j++)
-                    for (ushort k = 0; k < MAPSIZE; k++)
-                        if (blockList[i, j, k] == BlockType.Lava && !flowSleep[i, j, k])
-                        {
-                            // RULES FOR LAVA EXPANSION:
-                            // if the block below is lava, do nothing
-                            // if the block below is empty space, add lava there
-                            // if the block below is something solid add lava to the sides
-                            BlockType typeBelow = (j == 0) ? BlockType.Lava : blockList[i, j - 1, k];
-                            BlockType typeIincr = (i == 63) ? BlockType.Lava : blockList[i + 1, j, k];
-                            BlockType typeIdesc = (i == 0) ? BlockType.Lava : blockList[i - 1, j, k];
-                            BlockType typeKincr = (k == 63) ? BlockType.Lava : blockList[i, j, k + 1];
-                            BlockType typeKdesc = (k == 0) ? BlockType.Lava : blockList[i, j, k - 1];
-
-
-                            if (typeBelow == BlockType.None)
-                            {
-                                if (j > 0)
-                                {
-                                    SetBlock(i, (ushort)(j - 1), k, BlockType.Lava, PlayerTeam.None);
-                                    flowSleep[i, j - 1, k] = true;
-                                }
-                            }
-                            if(typeIdesc == BlockType.None)
-                            {
-                                if(i > 0)
-                                {
-                                    SetBlock((ushort)(i - 1), j, k, BlockType.Lava, PlayerTeam.None);
-                                    flowSleep[i - 1, j, k] = true;
-                                }
-                            }
-                            if (typeIincr == BlockType.None)
-                            {
-                                if (i < MAPSIZE)
-                                {
-                                    SetBlock((ushort)(i + 1), j, k, BlockType.Lava, PlayerTeam.None);
-                                    flowSleep[i + 1, j, k] = true;
-                                }
-                            }
-                            if (typeKdesc == BlockType.None)
-                            {
-                                if (k > 0)
-                                {
-                                    SetBlock(i, j, (ushort)(k - 1), BlockType.Lava, PlayerTeam.None);
-                                    flowSleep[i, j, k - 1] = true;
-                                }
-                            }
-                            if (typeKincr == BlockType.None)
-                            {
-                                if (k < MAPSIZE)
-                                {
-                                    SetBlock(i, j, (ushort)(k + 1), BlockType.Lava, PlayerTeam.None);
-                                    flowSleep[i, j, k + 1] = true;
-                                }
-                            }
-                        }
-        }
-
-        public void CalcBlockRoutine()
-        {
-            if (!Ssettings.StopFluids)
-            {
-                CalcLava();
-            }
-            CalcTnt();
-            CalcGrass();
-        }
-
-        public void CalcGrass()
-        {
-            // More horror code :S
-            for (ushort i = 0; i < MAPSIZE; i++)
-                for (ushort j = 0; j < MAPSIZE; j++)
-                    for (ushort k = 0; k < MAPSIZE; k++)
-                        if (blockList[i, j, k] == BlockType.Dirt)
-                        {
-                            if (InDirectSunLight(i,j,k))
-                            {
-                                SetBlock(i, j, k, BlockType.Grass, PlayerTeam.None);
-                            }
-                        }
-        }
-
         public bool InDirectSunLight(ushort i, ushort j , ushort k)
         {
             ushort s;
@@ -269,34 +177,6 @@ namespace MineWorld
                 goodspot = true;
             }
             return goodspot;
-        }
-
-        public void CalcTnt()
-        {
-            ushort x;
-            ushort y;
-            ushort z;
-            // Explode TNT if lava touches it
-            foreach (IClient p in playerList.Values)
-            {
-                foreach (Vector3 explosive in p.ExplosiveList)
-                {
-                    //Todo fix me Oh the horror
-                    x = (ushort)explosive.X;
-                    y = (ushort)explosive.Y;
-                    z = (ushort)explosive.Z;
-                    // OH the HORROr !!!
-                    // Hacky
-                    if (blockList[x, y, z] == BlockType.Explosive)
-                    {
-                        if (blockList[x + 1, y, z] == BlockType.Lava || blockList[x - 1, y, z] == BlockType.Lava || blockList[x, y, z + 1] == BlockType.Lava || blockList[x, y, z - 1] == BlockType.Lava || blockList[x, y + 1, z] == BlockType.Lava || blockList[x, y - 1, z] == BlockType.Lava)
-                        {
-                            RemoveBlock(x, y, z);
-                            DetonateAtPoint(x, y, z);
-                        }
-                    }
-                }
-            }
         }
 
         public BlockType BlockAtPoint(Vector3 point)
@@ -621,6 +501,7 @@ namespace MineWorld
                                 case BlockType.Explosive:
                                 case BlockType.Lava:
                                 case BlockType.Road:
+                                case BlockType.Grass:
                                     destroyBlock = true;
                                     break;
                             }

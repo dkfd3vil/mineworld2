@@ -43,16 +43,6 @@ namespace MineWorld
     {
         public bool Kicked = false; // set to true when a player is kicked to let other clients know they were kicked
         public bool godmode = false;
-        public short admin = 0;
-        public bool IsAdmin
-        {
-            get
-            {
-                if (admin > 0)
-                    return true;
-                return false;
-            }
-        }
         public bool AltColours = false;
         public Color redTeam = new Color();
         public Color blueTeam = new Color();

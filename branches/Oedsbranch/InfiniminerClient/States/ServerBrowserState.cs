@@ -172,7 +172,7 @@ namespace MineWorld.States
             {
                 if (key == Keys.Escape)
                 {
-                    nextState = "MineWorld.States.TitleState";
+                    _SM.Exit();
                 }
             }
         }

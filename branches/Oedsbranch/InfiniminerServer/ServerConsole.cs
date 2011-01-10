@@ -32,23 +32,14 @@ namespace MineWorld
         {
             ConsoleWrite("> " + consoleInput);
 
-            ProcessCommand(consoleInput, (short)2, null);
+            ProcessCommand(consoleInput);
 
             consoleInput = "";
             ConsoleRedraw();
         }
 
-        public bool ProcessCommand(string chat)
+        public bool ProcessCommand(string input)
         {
-            return ProcessCommand(chat, (short)1, null);
-        }
-
-        public bool ProcessCommand(string input, short authority, IClient sender)
-        {
-            if (authority == 0)
-                return false;
-            if (sender != null)
-                sender.admin = GetAdmin(sender.IP);
             string[] args = input.Split(' '.ToString().ToCharArray(), 2);
             if (args[0].StartsWith("\\") && args[0].Length > 1)
                 args[0] = args[0].Substring(1);
@@ -56,124 +47,80 @@ namespace MineWorld
             {
                 case "help":
                     {
-                        if (sender == null)
-                        {
-                            ConsoleWrite("SERVER CONSOLE COMMANDS:");
-                            ConsoleWrite(" announce");
-                            ConsoleWrite(" players");
-                            ConsoleWrite(" kick <ip>");
-                            ConsoleWrite(" kickn <name>");
-                            ConsoleWrite(" ban <ip>");
-                            ConsoleWrite(" bann <name>");
-                            ConsoleWrite(" say <message>");
-                            ConsoleWrite(" save <mapfile>");
-                            ConsoleWrite(" load <mapfile>");
-                            ConsoleWrite(" toggle <var>");
-                            ConsoleWrite(" <var> <value>");
-                            ConsoleWrite(" <var>");
-                            ConsoleWrite(" listvars");
-                            ConsoleWrite(" status");
-                            ConsoleWrite(" restart");
-                            ConsoleWrite(" quit");
-                        }
-                        else
-                        {
-                            SendServerMessageToPlayer(sender.Handle + ", the " + args[0].ToLower() + " command is only for use in the server console.", sender.NetConn);
-                        }
+                        ConsoleWrite("SERVER CONSOLE COMMANDS:");
+                        ConsoleWrite(" announce");
+                        ConsoleWrite(" players");
+                        ConsoleWrite(" kick <ip>");
+                        ConsoleWrite(" kickn <name>");
+                        ConsoleWrite(" ban <ip>");
+                        ConsoleWrite(" bann <name>");
+                        ConsoleWrite(" say <message>");
+                        ConsoleWrite(" save <mapfile>");
+                        ConsoleWrite(" load <mapfile>");
+                        ConsoleWrite(" status");
+                        ConsoleWrite(" restart");
+                        ConsoleWrite(" quit");
                     }
                     break;
                 case "players":
                     {
-                        if (sender == null)
+                        ConsoleWrite("( " + playerList.Count + " / " + Ssettings.Maxplayers + " )");
+                        foreach (IClient p in playerList.Values)
                         {
-                            ConsoleWrite("( " + playerList.Count + " / " + Ssettings.Maxplayers + " )");
-                            foreach (IClient p in playerList.Values)
-                            {
-                                string teamIdent = "";
-                                if (p.Team == PlayerTeam.Red)
-                                    teamIdent = " (R)";
-                                else if (p.Team == PlayerTeam.Blue)
-                                    teamIdent = " (B)";
-                                if (p.IsAdmin)
-                                    teamIdent += " (Admin)";
-                                ConsoleWrite(p.Handle + teamIdent);
-                                ConsoleWrite("  - " + p.IP);
-                            }
-                        }
-                        else
-                        {
-                            SendServerMessageToPlayer(sender.Handle + ", the " + args[0].ToLower() + " command is only for use in the server console.", sender.NetConn);
+                            string teamIdent = "";
+                            if (p.Team == PlayerTeam.Red)
+                                teamIdent = " (R)";
+                            else if (p.Team == PlayerTeam.Blue)
+                                teamIdent = " (B)";
+                            if (GetAdmin(p.IP))
+                                teamIdent += " (Admin)";
+                            ConsoleWrite(p.Handle + teamIdent);
+                            ConsoleWrite("  - " + p.IP);
                         }
                     }
                     break;
                 case "admins":
                     {
                         ConsoleWrite("Admin list:");
-                        foreach (string ip in admins.Keys)
-                            ConsoleWrite(ip);
+                        //foreach (string ip in admins.ToString())
+                            //ConsoleWrite(ip);
                     }
                     break;
+
                 case "admin":
                     {
                         if (args.Length == 2)
                         {
-                            if (sender == null || sender.admin >= 2)
-                                AdminPlayer(args[1]);
-                            else
-                                SendServerMessageToPlayer("You do not have the authority to add admins.", sender.NetConn);
+                            AddAdmin(args[1]);
                         }
                     }
                     break;
+
                 case "adminn":
                     {
                         if (args.Length == 2)
                         {
-                            if (sender == null || sender.admin >= 2)
-                                AdminPlayer(args[1], true);
-                            else
-                                SendServerMessageToPlayer("You do not have the authority to add admins.", sender.NetConn);
+                            AddAdmin(args[1]);
                         }
                     }
                     break;
-                case "listvars":
-                    /*
-                    if (sender == null)
-                        varList(true);
-                    else
-                    {
-                        SendServerMessageToPlayer(sender.Handle + ", the " + args[0].ToLower() + " command is only for use in the server console.", sender.NetConn);
-                    }
-                     */
-                    ConsoleWrite("Listvars is not implented yet ;");
-                    break;
+
                 case "status":
-                    if (sender == null)
-                        status();
-                    else
-                        SendServerMessageToPlayer(sender.Handle + ", the " + args[0].ToLower() + " command is only for use in the server console.", sender.NetConn);
+                    status();
                     break;
-                /*case "announce":
-                    {
-                        PublicServerListUpdate(true);
-                    }
-                 */
-                    //break;
+
                 case "kick":
                     {
-                        if (authority >= 1 && args.Length == 2)
+                        if (args.Length == 2)
                         {
-                            if (sender != null)
-                                ConsoleWrite("SERVER: " + sender.Handle + " has kicked " + args[1]);
                             KickPlayer(args[1]);
                         }
                     }
                     break;
                 case "kickn":
                     {
-                        if (authority >= 1 && args.Length == 2)
+                        if (args.Length == 2)
                         {
-                            if (sender != null)
-                                ConsoleWrite("SERVER: " + sender.Handle + " has kicked " + args[1]);
                             KickPlayer(args[1], true);
                         }
                     }
@@ -181,69 +128,33 @@ namespace MineWorld
 
                 case "ban":
                     {
-                        if (authority >= 1 && args.Length == 2)
+                        if (args.Length == 2)
                         {
-                            if (sender != null)
-                                ConsoleWrite("SERVER: " + sender.Handle + " has banned " + args[1]);
                             BanPlayer(args[1]);
-                            KickPlayer(args[1]);
                         }
                     }
                     break;
 
                 case "bann":
                     {
-                        if (authority >= 1 && args.Length == 2)
+                        if (args.Length == 2)
                         {
-                            if (sender != null)
-                                ConsoleWrite("SERVER: " + sender.Handle + " has bannec " + args[1]);
-                            BanPlayer(args[1], true);
-                            KickPlayer(args[1], true);
+                            BanPlayer(args[1]);
                         }
                     }
                     break;
 
-                case "toggle":
-                    /*
-                    if (authority >= 1 && args.Length == 2)
-                    {
-                        int exists = varExists(args[1]);
-                        if (exists == 1)
-                        {
-                            bool val = varGetB(args[1]);
-                            varSet(args[1], !val);
-                        }
-                        else if (exists == 2)
-                            ConsoleWrite("Cannot toggle a string value.");
-                        else
-                            varReportStatus(args[1]);
-                    }
-                    else
-                        ConsoleWrite("Need variable name to toggle!");
-                     */
-                    ConsoleWrite("Toggle is not yet implented");
-                    break;
                 case "quit":
                     {
-                        if (authority >= 2)
-                        {
-                            if (sender != null)
-                                ConsoleWrite(sender.Handle + " is shutting down the server.");
-                            keepRunning = false;
-                        }
+                        keepRunning = false;
                     }
                     break;
 
                 case "restart":
                     {
-                        if (authority >= 2)
-                        {
-                            if (sender != null)
-                                ConsoleWrite(sender.Handle + " is restarting the server.");
-                            disconnectAll();
-                            restartTriggered = true;
-                            restartTime = DateTime.Now;
-                        }
+                        disconnectAll();
+                        restartTriggered = true;
+                        restartTime = DateTime.Now;
                     }
                     break;
 
@@ -261,8 +172,6 @@ namespace MineWorld
                     {
                         if (args.Length >= 2)
                         {
-                            if (sender != null)
-                                ConsoleWrite(sender.Handle + " is saving the map.");
                             SaveLevel(args[1]);
                         }
                     }
@@ -272,13 +181,7 @@ namespace MineWorld
                     {
                         if (args.Length >= 2)
                         {
-                            if (sender != null)
-                                ConsoleWrite(sender.Handle + " is loading a map.");
                             LoadLevel(args[1]);
-                            /*if (LoadLevel(args[1]))
-                                Console.WriteLine("Loaded level " + args[1]);
-                            else
-                                Console.WriteLine("Level file not found!");*/
                         }
                         else if (Ssettings.LevelName != "")
                         {
@@ -286,61 +189,9 @@ namespace MineWorld
                         }
                     }
                     break;
-                default: //Check / set var
+                default:
                     {
-                        /*
-                        string name = args[0];
-                        int exists = varExists(name);
-                        if (exists > 0)
-                        {
-                            if (args.Length == 2)
-                            {
-                                try
-                                {
-                                    if (exists == 1)
-                                    {
-                                        bool newVal = false;
-                                        newVal = bool.Parse(args[1]);
-                                        varSet(name, newVal);
-                                    }
-                                    else if (exists == 2)
-                                    {
-                                        varSet(name, args[1]);
-                                    }
-                                    else if (exists == 3)
-                                    {
-                                        varSet(name, Int32.Parse(args[1]));
-                                    }
-
-                                }
-                                catch { }
-                            }
-                            else
-                            {
-                                if (sender == null)
-                                    varReportStatus(name);
-                                else
-                                    SendServerMessageToPlayer(sender.Handle + ": The " + args[0].ToLower() + " command is only for use in the server console.", sender.NetConn);
-                            }
-                        }
-                        else
-                        {
-                            char first = args[0].ToCharArray()[0];
-                            if (first == 'y' || first == 'Y')
-                            {
-                                string message = "SERVER: " + args[0].Substring(1);
-                                if (args.Length > 1)
-                                    message += (message != "SERVER: " ? " " : "") + args[1];
-                                SendServerMessage(message);
-                            }
-                            else
-                            {
-                                if (sender == null)
-                                    ConsoleWrite("Unknown command/var.");
-                                return false;
-                            }
-                        }*/
-                        ConsoleWrite("Command not yet implented " + args[0]);
+                        ConsoleWrite("Command not reconized " + args[0]);
                     }
                     break;
             }

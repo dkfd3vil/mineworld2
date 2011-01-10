@@ -14,9 +14,8 @@ namespace MineWorld
         MineWorldNetServer netServer = null;
         public Dictionary<NetConnection, IClient> playerList = new Dictionary<NetConnection, IClient>();
         public List<NetConnection> toGreet = new List<NetConnection>();
-        public Dictionary<string, short> admins = new Dictionary<string, short>(); //Short represents power - 1 for mod, 2 for full admin
+        public List<string> admins = new List<string>(); //List of strings with all the admins
         public List<string> bannednames = new List<string>(); // List of strings with all names that cannot be chosen
-        //public Dictionary<PlayerCommands, string> commands = new Dictionary<PlayerCommands, string>();
 
         DateTime lastServerListUpdate = DateTime.Now;
         DateTime lastMapBackup = DateTime.Now;
@@ -29,7 +28,6 @@ namespace MineWorld
         bool restartTriggered = false;
 
         public ServerSettings Ssettings = new ServerSettings();
-        
 
         public MineWorldServer()
         {
@@ -37,66 +35,19 @@ namespace MineWorld
             Console.SetBufferSize(80, CONSOLE_SIZE + 4);
             Console.SetWindowSize(80, CONSOLE_SIZE + 4);
         }
-        /*
-        public string GetExtraInfo()
-        {
-            string extraInfo = "";
-            if (varGetB("sandbox"))
-                extraInfo += "sandbox";
-            else
-                extraInfo += string.Format("{0:#.##k}", winningCashAmount / 1000);
-            if (!includeLava)
-                extraInfo += ", !lava";
-            if (!varGetB("tnt"))
-                extraInfo += ", !tnt";
-            if (varGetB("insanelava") || varGetB("sspreads") || varGetB("stnt"))
-                extraInfo += ", MetMod";
-/*            if (varGetB("insanelava"))//insaneLava)
-                extraInfo += ", ~lava";
-            if (varGetB("sspreads"))
-                extraInfo += ", shock->lava";
-            if (varGetB("stnt"))//sphericalTnt && false)
-                extraInfo += ", stnt";*/
-            //return extraInfo;
-        //}
-        /*
-        public void PublicServerListUpdate()
-        {
-            //PublicServerListUpdate(false);
-        }
-         */
-        /*
-        public void PublicServerListUpdate(bool doIt)
-        {
-            if (!varGetB("public"))
-                return;
-
-            TimeSpan updateTimeSpan = DateTime.Now - lastServerListUpdate;
-            if (updateTimeSpan.TotalMinutes >= 1 || doIt)
-                CommitUpdate();
-        }
-         */
-
 
         public bool Start()
         {
-            //Setup the variable toggles
-            //varBindingsInitialize();
-
+            // Load the general-settings.
             LoadSettings();
-
-            //commands.Add(PlayerCommands.Help, "help");
-            //commands.Add(PlayerCommands.Godmode, "godmode");
-            //commands.Add(PlayerCommands.Stopfluids, "noflow");
-
 
             // Load the ban-list.
             banList = LoadBanList();
 
-            // Load the admin-list
+            // Load the admin-list.
             admins = LoadAdminList();
 
-            // Load the bannednames-list
+            // Load the bannednames-list.
             bannednames = LoadBannedNames();
 
             // Initialize the server.
@@ -111,11 +62,8 @@ namespace MineWorld
             //netServer.SimulatedDuplicates = 0.05f;
             netServer.Start();
 
-            
-
             // Store the last time that we did a flow calculation.
             DateTime lastCalc = DateTime.Now;
-            //DateTime lastMapeaterCalc = DateTime.Now;
 
             //Check if we should autoload a level
             if (Ssettings.Autoload)
@@ -131,28 +79,17 @@ namespace MineWorld
                 ConsoleWrite("TOTAL LAVA BLOCKS = " + newMap());
                 ConsoleWrite("TOTAL BLOCKS = " + 64 * 64 * 64);
             }
-            
-
-            //Caculate the shape of spherical tnt explosions
-            CalculateExplosionPattern();
-
-            // Send the initial server list update.
-            //if (Ssettings.AutoAnnouce)
-                //PublicServerListUpdate(true);
-
             lastMapBackup = DateTime.Now;
             ServerListener listener = new ServerListener(netServer,this);
             System.Threading.Thread listenerthread = new System.Threading.Thread(new ThreadStart(listener.start));
             listenerthread.Start();
+
+
             // Main server loop!
             ConsoleWrite("SERVER READY");
             Random randomizer = new Random(56235676);
             while (keepRunning)
             {
-                
-                // Process any messages that are here.
-                
-
                 //Time to backup map?
                 TimeSpan mapUpdateTimeSpan = DateTime.Now - lastMapBackup;
                 if (mapUpdateTimeSpan.TotalMinutes > 5)
@@ -161,23 +98,11 @@ namespace MineWorld
                     backupthread.Start();
                     lastMapBackup = DateTime.Now;
                 }
-
-                // Time to send a new server update?
-                //PublicServerListUpdate(); //It checks for public server / time span
-
                 //Time to terminate finished map sending threads?
                 TerminateFinishedThreads();
 
-                // Check for players who are in the zone to deposit.
-                //DepositForPlayers();
-
-                // Is it time to do a lava calculation? If so, do it!
-                TimeSpan timeSpan = DateTime.Now - lastCalc;
-                if (timeSpan.TotalMilliseconds > 500)
-                {
-                    CalcBlockRoutine();
-                    lastCalc = DateTime.Now;
-                }
+                //Do some world calculation
+                DoPhysics();
 
                 // Handle console keypresses.
                 while (Console.KeyAvailable)
@@ -220,29 +145,17 @@ namespace MineWorld
 
             MessageAll("Server going down NOW!");
 
+            //TODO
+            //Make sure the client handles this
             netServer.Shutdown("The server was terminated.");
             return false;
         }
 
-        
-        /*
-        public string GetTeamName(PlayerTeam team)
-        {
-            switch (team)
-            {
-                case PlayerTeam.Red:
-                    return "RED";
-                case PlayerTeam.Blue:
-                    return "BLUE";
-            }
-            return "";
-        }
-         */
-
         public void LoadSettings()
         {
-            //Lets override something
-            //Todo Fix me
+            //TODO
+            //Load them for a file
+            //For now we hardcode them
             Ssettings.Includelava = true;
             Ssettings.StopFluids = false;
             Ssettings.Directory = "ServerConfigs";
@@ -579,57 +492,5 @@ namespace MineWorld
                 //if (netConn.Status == NetConnectionStatus.Connected)
                 player.AddQueMsg(msgBuffer, NetChannel.ReliableUnordered);
         }
-
-        //Thread updater;
-        //bool updated = true;
-
-        /*
-        public void CommitUpdate()
-        {
-            try
-            {
-                if (updated)
-                {
-                    if (updater != null && !updater.IsAlive)
-                    {
-                        updater.Abort();
-                        updater.Join();
-                    }
-                    updated = false;
-                    updater = new Thread(new ThreadStart(this.RunUpdateThread));
-                    updater.Start();
-                }
-            }
-            catch { }
-        }
-         */
-        /*
-        public void RunUpdateThread()
-        {
-            if (!updated)
-            {
-                Dictionary<string, string> postDict = new Dictionary<string, string>();
-                postDict["name"] = varGetS("name");
-                postDict["game"] = "MineWorld";
-                postDict["player_count"] = "" + playerList.Keys.Count;
-                postDict["player_capacity"] = "" + varGetI("maxplayers");
-                postDict["extra"] = GetExtraInfo() + ";test";
-
-                lastServerListUpdate = DateTime.Now;
-
-                try
-                {
-                    HttpRequest.Post("http://apps.keithholman.net/post", postDict);
-                    ConsoleWrite("PUBLICLIST: UPDATING SERVER LISTING");
-                }
-                catch (Exception)
-                {
-                    ConsoleWrite("PUBLICLIST: ERROR CONTACTING SERVER");
-                }
-
-                updated = true;
-            }
-        }
-         */
     }
 }

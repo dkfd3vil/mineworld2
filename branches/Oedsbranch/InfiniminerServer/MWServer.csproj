@@ -73,6 +73,7 @@
     <Compile Include="InfiniminerNetServer.cs" />
     <Compile Include="InfiniminerServer.cs" />
     <Compile Include="MapSender.cs" />
+    <Compile Include="Physics.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServerCommands.cs" />

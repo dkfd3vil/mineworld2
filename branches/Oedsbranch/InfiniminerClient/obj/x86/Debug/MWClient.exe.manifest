@@ -67,14 +67,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="MWClient.exe" size="122880">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="MWClient.exe" size="123392">
       <assemblyIdentity name="MWClient" version="1.0.0.0" language="neutral" processorArchitecture="x86" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>H4Kj+9YCGZq8v9nNDA6n5eXWEDU=</dsig:DigestValue>
+        <dsig:DigestValue>UMJ7KcjLM4IA0Syn5nRMvX6Z0TU=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -86,17 +86,17 @@
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>ECBoOcWIQPMgHURAR02y0d1KgXk=</dsig:DigestValue>
+        <dsig:DigestValue>les+AaIhCYQ3V9bmNtG9SaU7aQw=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
-  <file name="ClientConfigs\client.config.txt" size="645">
+  <file name="ClientConfigs\client.config.txt" size="688">
     <hash>
       <dsig:Transforms>
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-      <dsig:DigestValue>UAtGuf4l+F8umY7Aj/8c4qHJiDw=</dsig:DigestValue>
+      <dsig:DigestValue>E3nh+FcOzzbldyOeiZIOhyolJ3Y=</dsig:DigestValue>
     </hash>
   </file>
   <file name="ClientConfigs\keymap.txt" size="385">
@@ -268,6 +268,24 @@
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
       <dsig:DigestValue>55brKIugB/9NmoXSt9UXTRpFpM4=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="Content\blocks\tex_block_grass.xnb" size="16469">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <dsig:DigestValue>h5uYczUQZy5SrVhP5O2G0ueD8U0=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="Content\blocks\tex_block_grass_side.xnb" size="16469">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+      <dsig:DigestValue>85Kq5xgVeDYbyBeiqmY+DioMcco=</dsig:DigestValue>
     </hash>
   </file>
   <file name="Content\blocks\tex_block_home_blue.xnb" size="14485">
@@ -468,58 +486,58 @@
       <dsig:DigestValue>JG1lPfNGPZHzMpovnNOiEATGFcc=</dsig:DigestValue>
     </hash>
   </file>
-  <file name="Content\BloomCombine.xnb" size="2406">
+  <file name="Content\BloomCombine.xnb" size="2422">
     <hash>
       <dsig:Transforms>
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-      <dsig:DigestValue>QNwNSTq+zVvv0qf2d7V0Kx9igAk=</dsig:DigestValue>
+      <dsig:DigestValue>WunNaxcdVTAXGmx/B90WGmVx8kg=</dsig:DigestValue>
     </hash>
   </file>
-  <file name="Content\BloomExtract.xnb" size="1434">
+  <file name="Content\BloomExtract.xnb" size="1450">
     <hash>
       <dsig:Transforms>
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-      <dsig:DigestValue>/brD8ZPjQLJ0v08NhR5gHB7kTTU=</dsig:DigestValue>
+      <dsig:DigestValue>qSf94aCCt3dRjS9fVrrzMpiuNsU=</dsig:DigestValue>
     </hash>
   </file>
-  <file name="Content\effect_basic.xnb" size="9722">
+  <file name="Content\effect_basic.xnb" size="9786">
     <hash>
       <dsig:Transforms>
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-      <dsig:DigestValue>TV0Pr3n+xsFz1krbC0QHnO1b34g=</dsig:DigestValue>
+      <dsig:DigestValue>IMwzSUDnrmlmQbUTjJC+pF3wiZA=</dsig:DigestValue>
     </hash>
   </file>
-  <file name="Content\effect_particle.xnb" size="4426">
+  <file name="Content\effect_particle.xnb" size="4458">
     <hash>
       <dsig:Transforms>
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-      <dsig:DigestValue>uSBlZItFq07jxF3absGurisp/ww=</dsig:DigestValue>
+      <dsig:DigestValue>yoMYfdFrv5o/tGwQ+uJeX3Ymd6Q=</dsig:DigestValue>
     </hash>
   </file>
-  <file name="Content\effect_skyplane.xnb" size="5754">
+  <file name="Content\effect_skyplane.xnb" size="5786">
     <hash>
       <dsig:Transforms>
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-      <dsig:DigestValue>aF3KoHFxf4tEDsSo2caOOnLeZus=</dsig:DigestValue>
+      <dsig:DigestValue>8u4ig+qiY4laDINcjn55P58TbBY=</dsig:DigestValue>
     </hash>
   </file>
-  <file name="Content\effect_spritemodel.xnb" size="4486">
+  <file name="Content\effect_spritemodel.xnb" size="4518">
     <hash>
       <dsig:Transforms>
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-      <dsig:DigestValue>n2iiAxBynB/mFYa0mx3OyqpNBJg=</dsig:DigestValue>
+      <dsig:DigestValue>fBaPMwz1VLflaVEQSDhc01mo4u8=</dsig:DigestValue>
     </hash>
   </file>
   <file name="Content\font_04b03b.xnb" size="9186">
@@ -540,13 +558,13 @@
       <dsig:DigestValue>EUb1HyaAAbpVfMiP7dZqTPeP47U=</dsig:DigestValue>
     </hash>
   </file>
-  <file name="Content\GaussianBlur.xnb" size="3182">
+  <file name="Content\GaussianBlur.xnb" size="3198">
     <hash>
       <dsig:Transforms>
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-      <dsig:DigestValue>gn2y/kKgKuMmmRIq0I9nL3JmGTs=</dsig:DigestValue>
+      <dsig:DigestValue>X9QDqSnGzSdHYQC8qXUbQ5L9ZwY=</dsig:DigestValue>
     </hash>
   </file>
   <file name="Content\icons\tex_icon_bank_blue.xnb" size="29569">
@@ -753,7 +771,7 @@
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-      <dsig:DigestValue>Y7rlRbLySiP+RqfMp7HmfSEa5Sc=</dsig:DigestValue>
+      <dsig:DigestValue>gBE2BKijSe35pVgve444AroVmCo=</dsig:DigestValue>
     </hash>
   </file>
   <file name="Content\song_title.xnb" size="128">
@@ -1224,13 +1242,13 @@
       <dsig:DigestValue>OVXbubO+gmT6czkS9HCiUmbqhqE=</dsig:DigestValue>
     </hash>
   </file>
-  <file name="ServerConfigs\banlist.txt" size="0">
+  <file name="ServerConfigs\banlist.txt" size="52">
     <hash>
       <dsig:Transforms>
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-      <dsig:DigestValue>2jmj7l5rSw0yVb/vlWAYkK/YBwk=</dsig:DigestValue>
+      <dsig:DigestValue>ywtd3t1PszGNHr8mQnC6ck7roJY=</dsig:DigestValue>
     </hash>
   </file>
   <file name="ServerConfigs\server.config.txt" size="761">

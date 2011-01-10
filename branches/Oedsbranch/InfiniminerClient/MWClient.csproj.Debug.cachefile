@@ -100,6 +100,8 @@ Content\menus\tex_menu_settings.xnb
 Content\blocks\tex_block_road_top.xnb
 Content\blocks\tex_block_road_bottom.xnb
 Content\blocks\tex_block_adminblock.xnb
+Content\blocks\tex_block_grass.xnb
+Content\blocks\tex_block_grass_side.xnb
 Content\font_04b08.xnb
 Content\font_04b03b.xnb
 Content\sounds\build.xnb
@@ -119,8 +121,8 @@ Content\sounds\radar-high.xnb
 Content\sounds\radar-low.xnb
 Content\song_title.xnb
 Content\song_title.wma
-admins.txt
-banlist.txt
-client.config.txt
-keymap.txt
-server.config.txt
+ServerConfigs\admins.txt
+ServerConfigs\banlist.txt
+ClientConfigs\client.config.txt
+ClientConfigs\keymap.txt
+ServerConfigs\server.config.txt

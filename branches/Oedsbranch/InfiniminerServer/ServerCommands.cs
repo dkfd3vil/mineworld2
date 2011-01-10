@@ -21,9 +21,9 @@ namespace MineWorld
         }
 
 
-        public Dictionary<string, short> LoadAdminList()
+        public List<string> LoadAdminList()
         {
-            Dictionary<string, short> temp = new Dictionary<string, short>();
+            List<string> temp = new List<string>();
 
             try
             {
@@ -43,7 +43,7 @@ namespace MineWorld
                     while (line != null)
                     {
                         if (line.Trim().Length != 0 && line.Trim().ToCharArray()[0] != '#')
-                            temp.Add(line.Trim(), (short)2); //This will be changed to note authority too
+                            temp.Add(line.Trim()); //This will be changed to note authority too
                         line = sr.ReadLine();
                     }
                     sr.Close();
@@ -113,7 +113,7 @@ namespace MineWorld
             return retList;
         }
 
-        public void SaveBanList(List<string> banList)
+        public void SaveBanList()
         {
             try
             {
@@ -187,68 +187,31 @@ namespace MineWorld
 
         public void BanPlayer(string ip)
         {
-            BanPlayer(ip, false);
-        }
-
-        public void BanPlayer(string ip, bool name)
-        {
-            string realIp = ip;
-            if (name)
+            if (!banList.Contains(ip))
             {
-                foreach (IClient p in playerList.Values)
-                {
-                    if ((p.Handle == ip && !name) || (p.Handle.ToLower().Contains(ip.ToLower()) && name))
-                    {
-                        realIp = p.IP;
-                        break;
-                    }
-                }
-            }
-            if (!banList.Contains(realIp))
-            {
-                banList.Add(realIp);
-                SaveBanList(banList);
+                banList.Add(ip);
+                KickPlayer(ip);
+                SaveBanList();
             }
         }
 
-        public short GetAdmin(string ip)
+        public bool GetAdmin(string ip)
         {
-            if (admins.ContainsKey(ip.Trim()))
-                return admins[ip.Trim()];
-            return (short)0;
-        }
-
-        public void AdminPlayer(string ip)
-        {
-            AdminPlayer(ip, false, (short)2);
-        }
-
-        public void AdminPlayer(string ip, bool name)
-        {
-            AdminPlayer(ip, name, (short)2);
-        }
-
-        public void AdminPlayer(string ip, bool name, short authority)
-        {
-            string realIp = ip;
-            if (name)
+            if (admins.Contains(ip))
             {
-                foreach (IClient p in playerList.Values)
-                {
-                    if ((p.Handle == ip && !name) || (p.Handle.ToLower().Contains(ip.ToLower()) && name))
-                    {
-                        realIp = p.IP;
-                        break;
-                    }
-                }
+                return true;
             }
-            if (!admins.ContainsKey(realIp))
+            return false;
+        }
+
+        public void AddAdmin(string ip)
+        {
+            if(!admins.Contains(ip))
             {
-                admins.Add(realIp, authority);
+                admins.Add(ip);
                 SaveAdminList();
             }
         }
-
 
         public void SaveLevel(string filename)
         {
