@@ -62,6 +62,7 @@ namespace MineWorld
         public uint Score = 0;
         public float Ping = 0;
         public string IP = "";
+        public Vector3 Velocity = Vector3.Zero;
 
         // This is used to force an update that says the player is not using their tool, thus causing a break
         // in their tool usage animation.

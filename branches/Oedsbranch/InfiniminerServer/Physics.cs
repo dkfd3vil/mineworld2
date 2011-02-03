@@ -16,12 +16,14 @@ namespace MineWorld
         DateTime lastCalcTnt = DateTime.Now;
         DateTime lastCalcLava = DateTime.Now;
         DateTime lastCalcGrass = DateTime.Now;
+        DateTime lastCalcWater = DateTime.Now;
 
         public void DoPhysics()
         {
             TimeSpan timeSpanCalcTnt = DateTime.Now - lastCalcTnt;
             TimeSpan timeSpanCalcLava = DateTime.Now - lastCalcLava;
             TimeSpan timeSpanCalcGrass = DateTime.Now - lastCalcGrass;
+            TimeSpan timeSpanCalcWater = DateTime.Now - lastCalcWater;
 
             // We calculate tnt every 500 milleseconds
             if (timeSpanCalcTnt.TotalMilliseconds > 500)
@@ -34,6 +36,12 @@ namespace MineWorld
             {
                 CalcLava();
                 lastCalcLava = DateTime.Now;
+            }
+            //We calculate water every 1000 milliseconds
+            if (timeSpanCalcWater.TotalMilliseconds > 1000)
+            {
+                CalcWater();
+                lastCalcWater = DateTime.Now;
             }
             // We calculate grass every 5000 milliseconds
             // so it doesnt grow to fast
@@ -147,15 +155,19 @@ namespace MineWorld
                     z = (ushort)explosive.Z;
                     // OH the HORROr !!!
                     // Hacky
-                    if (blockList[x, y, z] == BlockType.Explosive)
-                    {
+                    //if (blockList[x, y, z] == BlockType.Explosive)
+                    //{
                         if (blockList[x + 1, y, z] == BlockType.Lava || blockList[x - 1, y, z] == BlockType.Lava || blockList[x, y, z + 1] == BlockType.Lava || blockList[x, y, z - 1] == BlockType.Lava || blockList[x, y + 1, z] == BlockType.Lava || blockList[x, y - 1, z] == BlockType.Lava)
                         {
                             DetonateAtPoint(x, y, z);
                         }
-                    }
+                    //}
                 }
             }
+        }
+        public void CalcWater()
+        {
+            //Todo implent water :S
         }
     }
 }

@@ -507,11 +507,11 @@ namespace MineWorld.States
             }
 
             //Map saving!
-            if ((Keyboard.GetState().IsKeyDown(Keys.LeftControl) || Keyboard.GetState().IsKeyDown(Keys.RightControl)) && key == Keys.S)
-            {
-                _P.SaveMap();
-                return;
-            }
+            //if ((Keyboard.GetState().IsKeyDown(Keys.LeftControl) || Keyboard.GetState().IsKeyDown(Keys.RightControl)) && key == Keys.S)
+            //{
+                //_P.SaveMap();
+                //return;
+            //}
 
             if (_P.chatMode != ChatMessageType.None)
             {

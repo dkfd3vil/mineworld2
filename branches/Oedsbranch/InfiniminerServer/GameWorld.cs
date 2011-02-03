@@ -478,6 +478,11 @@ namespace MineWorld
                             // Check that this is a sane block position.
                             if (x + dx <= 0 || y + dy <= 0 || z + dz <= 0 || x + dx >= MAPSIZE - 1 || y + dy >= MAPSIZE - 1 || z + dz >= MAPSIZE - 1)
                                 continue;
+                            /*
+                            if (SaneBlockPosition((ushort)(x + dx), (ushort)y, (ushort)z))
+                            {
+                            }
+                             */
 
                             // Chain reactions!
                             if (blockList[x + dx, y + dy, z + dz] == BlockType.Explosive)
@@ -520,14 +525,21 @@ namespace MineWorld
                 ushort y = (ushort)blockPos.Y;
                 ushort z = (ushort)blockPos.Z;
 
+                // Todo wtf is this?
                 if (blockList[x, y, z] != BlockType.Explosive)
+                {
                     player.ExplosiveList.RemoveAt(0);
+                }
+                //Double for the win
+                // Why check this first and then remove it again ?
+                // Bit obvious
+                player.ExplosiveList.RemoveAt(0);
 
-                    player.ExplosiveList.RemoveAt(0);
-                    DetonateAtPoint(x, y, z);
-                    //ExplosionEffectAtPoint(x, y, z);
-                    // Remove the block that is detonating.
-                    RemoveBlock(x, y, z);
+                DetonateAtPoint(x, y, z);
+                //ExplosionEffectAtPoint(x, y, z);
+                // Remove the block that is detonating.
+                // Why do remove here? if its also removed at detonateatpoint ?
+                //RemoveBlock(x, y, z);
             }
         }
 

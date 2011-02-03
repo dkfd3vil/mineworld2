@@ -156,6 +156,7 @@ namespace MineWorld
             }
         }
 
+        /*
         public void SaveMap()
         {
             string filename = "saved_" + serverName.Replace(" ","") + "_" + (UInt64)DateTime.Now.ToBinary() + ".lvl";
@@ -169,6 +170,7 @@ namespace MineWorld
             fs.Close();
             addChatMessage("Map saved to " + filename, ChatMessageType.SayAll, 10f);//DateTime.Now.ToUniversalTime());
         }
+         */
 
         public void KillPlayer(string deathMessage)
         {
@@ -198,8 +200,8 @@ namespace MineWorld
             // Respawn a few blocks above a safe position above altitude 0.
             bool positionFound = false;
 
-            // Try 20 times; use a potentially invalid position if we fail.
-            for (int i = 0; i < 20; i++)
+            // Try 100 times; use a potentially invalid position if we fail.
+            for (int i = 0; i < 100; i++)
             {
                 // Pick a random starting point.
                 Vector3 startPos = new Vector3(randGen.Next(2, 62), 63, randGen.Next(2, 62));

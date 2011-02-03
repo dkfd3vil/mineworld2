@@ -68,6 +68,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CaveGenerator.cs" />
+    <Compile Include="ClientControl.cs" />
     <Compile Include="ClientSender.cs" />
     <Compile Include="GameWorld.cs" />
     <Compile Include="InfiniminerNetServer.cs" />
