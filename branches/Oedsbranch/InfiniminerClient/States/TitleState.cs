@@ -20,10 +20,12 @@ namespace MineWorld.States
         Texture2D texMenu;
         Rectangle drawRect;
         string nextState = null;
+        DateTime titlescreenseconds;
 
         public override void OnEnter(string oldState)
         {
             _SM.IsMouseVisible = true;
+            titlescreenseconds = DateTime.Now;
 
             texMenu = _SM.Content.Load<Texture2D>("menus/tex_menu_title");
 
@@ -42,6 +44,12 @@ namespace MineWorld.States
         {
             // Do network stuff.
             //(_SM as MineWorldGame).UpdateNetwork(gameTime);
+            TimeSpan titlescreenbetween = DateTime.Now - titlescreenseconds;
+            // After 3 seconds we go to the Serverbrowser state
+            if (titlescreenbetween.TotalMilliseconds > 3000)
+            {
+                nextState = "MineWorld.States.ServerBrowserState";
+            }
 
             return nextState;
         }
