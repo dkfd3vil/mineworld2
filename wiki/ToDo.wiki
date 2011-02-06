@@ -1,9 +1,14 @@
 Todo:
 
 Fix player names,
+
 Remove every team code,
+
 Reduce serverload,
+
 Rewrite Client and Server in such a way that the server checks all the handeling and not the client (Stops hacks and Clientmodification),
+
 Rewrite Client and Server so that they use configs and files right,
+
 Remove lots of unused code (Wtf arcanos :P),
 
