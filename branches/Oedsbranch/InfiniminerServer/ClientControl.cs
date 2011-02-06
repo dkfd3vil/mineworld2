@@ -88,7 +88,7 @@ namespace MineWorld
             msgBuffer.Write((byte)MineWorldMessage.RespawnPlayer);
             msgBuffer.Write(p.Position);
             p.AddQueMsg(msgBuffer, NetChannel.ReliableInOrder4);
-            foreach (
+            //foreach ()
         }
     }
 }

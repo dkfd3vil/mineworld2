@@ -4,3 +4,4 @@ C:\Users\Oeds\Downloads\Arcanos-Infiniminer-c5088a5\Arcanos-Infiniminer-c5088a5\
 C:\Users\Oeds\Desktop\Project Infiniminer\Branches\Arcanos\code\InfiniminerShared\Content\obj\x86\Debug\ResolveAssemblyReference.cache
 C:\Users\Oeds\Desktop\Project Infiniminer\Mine World\code\InfiniminerShared\Content\obj\x86\Debug\ResolveAssemblyReference.cache
 C:\Users\Oeds\Desktop\Project Infiniminer\Public MW\branches\Oedsbranch\InfiniminerShared\Content\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Oedsbranch\InfiniminerShared\Content\obj\x86\Debug\ResolveAssemblyReference.cache
