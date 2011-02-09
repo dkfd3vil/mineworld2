@@ -20,6 +20,7 @@ namespace MineWorld
 {
     public class MineWorldGame : StateMasher.StateMachine
     {
+        
         string Directory = "ClientConfigs";
         double timeSinceLastUpdate = 0;
         string playerHandle = "Player";
@@ -42,10 +43,16 @@ namespace MineWorld
 
         public bool anyPacketsReceived = false;
 
+        public IPAddress IPargument = null;
+
         public MineWorldGame(string[] args)
         {
+            if (args.Length > 0)
+            {
+                IPAddress.TryParse(args[0], out IPargument);
+            }
         }
-
+        
         public void setServername(string newName)
         {
             propertyBag.serverName = newName;

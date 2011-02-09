@@ -70,6 +70,15 @@ namespace MineWorld.States
 
         public override void OnRenderAtUpdate(GraphicsDevice graphicsDevice, GameTime gameTime)
         {
+            //check for IP in command line and skip server browser
+            if ((_SM as MineWorldGame).IPargument != null)
+            {
+                (_SM as MineWorldGame).propertyBag.serverName = (_SM as MineWorldGame).IPargument.ToString();
+                (_SM as MineWorldGame).JoinGame(new IPEndPoint((_SM as MineWorldGame).IPargument, 5565));
+                nextState = "MineWorld.States.LoadingState";
+            }
+
+            //begin server browser
             descWidths = new List<int>();
             SpriteBatch spriteBatch = new SpriteBatch(graphicsDevice);
             spriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Deferred, SaveStateMode.SaveState);
@@ -144,6 +153,7 @@ namespace MineWorld.States
                         catch (Exception)
                         {
                             // So, GetHostAddresses() might fail, but we don't really care. Just leave connectIp as null.
+                            // WTF or you inform the user....
                         }
                     }
                     if (connectIp != null)                   

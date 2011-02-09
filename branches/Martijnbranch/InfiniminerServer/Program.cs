@@ -31,7 +31,9 @@ namespace MineWorld.Server
                 }
                 catch (Exception e)
                 {
-                    System.Windows.Forms.MessageBox.Show(e.Message + "\r\n\r\n" + e.StackTrace);
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine(e.Message + "\r\n\r\n" + e.StackTrace);
+                    Console.ForegroundColor = ConsoleColor.Gray;
                 }
             }
         }
