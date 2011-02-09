@@ -355,7 +355,6 @@ namespace MineWorld
 
                 // If it's an explosive block, add it to our list.
                 if (blockType == BlockType.Explosive)
-                    // Todo better solution for this :S this is pure HORROR !!!!!
                     if (blockList[x + 1, y, z] == BlockType.Lava || blockList[x - 1, y, z] == BlockType.Lava || blockList[x,y,z+1] == BlockType.Lava || blockList[x,y,z-1] == BlockType.Lava || blockList[x,y+1,z] == BlockType.Lava || blockList[x,y-1,z] == BlockType.Lava)
                     {
                         // If you build tnt on lava it explodes on contact ;)
@@ -473,22 +472,19 @@ namespace MineWorld
                 p.ExplosiveList.Remove(new Vector3(x, y, z));
 
             // Detonate the block.
-                for (int dx = -4; dx <= 4; dx++)
-                    for (int dy = -4; dy <= 4; dy++)
-                        for (int dz = -4; dz <= 4; dz++)
+            for (int dx = -4; dx <= 4; dx++)
+            {
+                for (int dy = -4; dy <= 4; dy++)
+                {
+                    for (int dz = -4; dz <= 4; dz++)
+                    {
+                        // Check if it's inside the sphere
+                        if (Get3DDistance(dx + x, dy + y, dz + z, x, y, z) < 4)
                         {
-                            // Check that this is a sane block position.
                             if (x + dx <= 0 || y + dy <= 0 || z + dz <= 0 || x + dx >= MAPSIZE - 1 || y + dy >= MAPSIZE - 1 || z + dz >= MAPSIZE - 1)
-                                continue;
-                            /*
-                            if (SaneBlockPosition((ushort)(x + dx), (ushort)y, (ushort)z))
                             {
+                                break;
                             }
-                             */
-
-                            // Chain reactions!
-                            if (blockList[x + dx, y + dy, z + dz] == BlockType.Explosive)
-                                DetonateAtPoint(x + dx, y + dy, z + dz);
 
                             // Detonation of normal blocks.
                             bool destroyBlock = false;
@@ -515,6 +511,9 @@ namespace MineWorld
                             if (destroyBlock)
                                 RemoveBlock((ushort)(x + dx), (ushort)(y + dy), (ushort)(z + dz));
                         }
+                    }
+                }
+            }
             ExplosionEffectAtPoint(x, y, z);
         }
 

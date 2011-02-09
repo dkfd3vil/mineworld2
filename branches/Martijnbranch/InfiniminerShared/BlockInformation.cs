@@ -74,11 +74,11 @@ namespace MineWorld
         RoadBottom,
         BeaconRed,
         BeaconBlue,
-        TransRed,   // THESE MUST BE THE LAST TWO TEXTURES
-        TransBlue,
         Adminblock,
         Grass,
         GrassSide,
+        TransRed,   // THESE MUST BE THE LAST TWO TEXTURES
+        TransBlue,
         MAXIMUM
     }
 
