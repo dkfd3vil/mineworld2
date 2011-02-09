@@ -73,8 +73,11 @@ namespace MineWorld.States
             //check for IP in command line and skip server browser
             if ((_SM as MineWorldGame).IPargument != null)
             {
-                (_SM as MineWorldGame).propertyBag.serverName = (_SM as MineWorldGame).IPargument.ToString();
-                (_SM as MineWorldGame).JoinGame(new IPEndPoint((_SM as MineWorldGame).IPargument, 5565));
+                IPAddress IPtoJoin = (_SM as MineWorldGame).IPargument;
+                (_SM as MineWorldGame).IPargument = null;
+                (_SM as MineWorldGame).propertyBag.serverName = IPtoJoin.ToString();
+                (_SM as MineWorldGame).JoinGame(new IPEndPoint(IPtoJoin, 5565));
+
                 nextState = "MineWorld.States.LoadingState";
             }
 
