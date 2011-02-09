@@ -6,6 +6,9 @@ using System.Threading;
 using Lidgren.Network;
 using Lidgren.Network.Xna;
 using Microsoft.Xna.Framework;
+using System.Net;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace MineWorld
 {
@@ -35,7 +38,32 @@ namespace MineWorld
             Console.SetBufferSize(80, CONSOLE_SIZE + 4);
             Console.SetWindowSize(80, CONSOLE_SIZE + 4);
         }
-
+        public String GetExternalIp()
+        {
+            string whatIsMyIp = "http://whatismyip.com";
+            string getIpRegex = @"(?<=<TITLE>.*)\d*\.\d*\.\d*\.\d*(?=</TITLE>)";
+            WebClient wc = new WebClient();
+            wc.Proxy = null;
+            UTF8Encoding utf8 = new UTF8Encoding();
+            string requestHtml = "";
+            try
+            {
+                requestHtml = utf8.GetString(wc.DownloadData(whatIsMyIp));
+            }
+            catch (WebException we)
+            {
+                // do something with exception
+                Console.Write(we.ToString());
+            }
+            Regex r = new Regex(getIpRegex);
+            Match m = r.Match(requestHtml);
+            String externalIp = null;
+            if (m.Success)
+            {
+                externalIp = m.Value;
+            }
+            return externalIp;
+        }
         public bool Start()
         {
             // Load the general-settings.
@@ -64,6 +92,10 @@ namespace MineWorld
 
             // Store the last time that we did a flow calculation.
             DateTime lastCalc = DateTime.Now;
+
+            //Display external IP
+            String extIp = GetExternalIp();
+            ConsoleWrite("Your external IP Adress: " + extIp);
 
             //Check if we should autoload a level
             if (Ssettings.Autoload)
@@ -145,23 +177,21 @@ namespace MineWorld
 
             MessageAll("Server going down NOW!");
 
-            //TODO
-            //Make sure the client handles this
+            //TODO: Make client handle server terminate
             netServer.Shutdown("The server was terminated.");
             return false;
         }
 
         public void LoadSettings()
         {
-            //TODO
-            //Load them for a file
+            //TODO: Load settings from file
             //For now we hardcode them
             Ssettings.Includelava = true;
             Ssettings.StopFluids = false;
             Ssettings.Directory = "ServerConfigs";
 
             // Read in from the config file.
-            DatafileWriter dataFile = new DatafileWriter(Ssettings.Directory + "/server.config.txt");
+            Datafile dataFile = new Datafile(Ssettings.Directory + "/server.config.txt");
             if (dataFile.Data.ContainsKey("maxplayers"))
                 Ssettings.Maxplayers = int.Parse(dataFile.Data["maxplayers"]);
             else

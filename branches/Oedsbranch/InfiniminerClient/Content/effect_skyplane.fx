@@ -53,7 +53,10 @@ PixelToFrame TexturedPS(VertexToPixel PSIn)
     perlin += tex2D(NoiseSampler, 8 * (uv + 4 * t * direction)) / 4;
     perlin += tex2D(NoiseSampler, 16 * (uv + 2 * t * direction)) / 8;
     perlin += tex2D(NoiseSampler, 32 * (uv + 1 * t * direction)) / 16;
-	Output.Color = 1 - pow(1-perlin,2);
+	Output.Color.r=0.6784;
+	Output.Color.g=0.8470;
+	Output.Color.b=0.9019;
+	Output.Color.a=0;
 
 	//Output.Color = tex2D(NoiseSampler, PSIn.TextureCoords);
 	return Output;

@@ -18,7 +18,7 @@
     <ManifestCertificateThumbprint>8DE8084B9B7F66DA155E29CC42647F3B89AE5971</ManifestCertificateThumbprint>
     <ManifestKeyFile>MWClient_TemporaryKey.pfx</ManifestKeyFile>
     <GenerateManifests>true</GenerateManifests>
-    <SignManifests>true</SignManifests>
+    <SignManifests>false</SignManifests>
     <PublishUrl>C:\Users\Oeds\Desktop\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>

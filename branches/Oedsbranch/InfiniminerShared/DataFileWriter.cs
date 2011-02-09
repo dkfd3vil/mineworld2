@@ -9,7 +9,7 @@ namespace MineWorld
      * "key = value", which can be read out through the Data dictionary.
      */
 
-    public class DatafileWriter
+    public class Datafile
     {
         public string fullContent="";
         public Dictionary<string, string> Data = new Dictionary<string, string>();
@@ -18,7 +18,7 @@ namespace MineWorld
             get { return dataDict; }
         }*/
 
-        public DatafileWriter(string filename)
+        public Datafile(string filename)
         {
             Data = new Dictionary<string, string>();
             try

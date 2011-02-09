@@ -60,6 +60,7 @@ namespace MineWorld
 
         public void Render(GraphicsDevice graphicsDevice)
         {
+            graphicsDevice.Clear(Color.LightBlue);
             // If we don't have _P, grab it from the current gameInstance.
             // We can't do this in the constructor because we are created in the property bag's constructor!
             if (_P == null)
