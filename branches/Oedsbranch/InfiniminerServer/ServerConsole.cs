@@ -49,6 +49,8 @@ namespace MineWorld
                     {
                         ConsoleWrite("SERVER CONSOLE COMMANDS:");
                         ConsoleWrite(" announce");
+                        ConsoleWrite(" admins");
+                        ConsoleWrite(" admin <name>");
                         ConsoleWrite(" players");
                         ConsoleWrite(" kick <ip>");
                         ConsoleWrite(" kickn <name>");
@@ -60,8 +62,17 @@ namespace MineWorld
                         ConsoleWrite(" status");
                         ConsoleWrite(" restart");
                         ConsoleWrite(" quit");
+                        break;
                     }
-                    break;
+                case "announce":
+                    {
+                        if (args.Length == 2)
+                        {
+                            string message = "SERVER: " + args[1];
+                            SendServerMessage(message);
+                        }
+                        break;
+                    }
                 case "players":
                     {
                         ConsoleWrite("( " + playerList.Count + " / " + Ssettings.Maxplayers + " )");
@@ -77,15 +88,15 @@ namespace MineWorld
                             ConsoleWrite(p.Handle + teamIdent);
                             ConsoleWrite("  - " + p.IP);
                         }
+                        break;
                     }
-                    break;
                 case "admins":
                     {
                         ConsoleWrite("Admin list:");
                         //foreach (string ip in admins.ToString())
                             //ConsoleWrite(ip);
+                        break;
                     }
-                    break;
 
                 case "admin":
                     {
@@ -93,9 +104,9 @@ namespace MineWorld
                         {
                             AddAdmin(args[1]);
                         }
+                        break;
                     }
-                    break;
-
+                    /*
                 case "adminn":
                     {
                         if (args.Length == 2)
@@ -104,19 +115,21 @@ namespace MineWorld
                         }
                     }
                     break;
+                     */
 
                 case "status":
-                    status();
-                    break;
-
+                    {
+                        status();
+                        break;
+                    }
                 case "kick":
                     {
                         if (args.Length == 2)
                         {
                             KickPlayer(args[1]);
                         }
+                        break;
                     }
-                    break;
                 case "kickn":
                     {
                         if (args.Length == 2)
@@ -141,42 +154,28 @@ namespace MineWorld
                         {
                             BanPlayer(args[1]);
                         }
+                        break;
                     }
-                    break;
-
                 case "quit":
                     {
                         keepRunning = false;
+                        break;
                     }
-                    break;
-
                 case "restart":
                     {
                         disconnectAll();
                         restartTriggered = true;
                         restartTime = DateTime.Now;
+                        break;
                     }
-                    break;
-
-                case "say":
-                    {
-                        if (args.Length == 2)
-                        {
-                            string message = "SERVER: " + args[1];
-                            SendServerMessage(message);
-                        }
-                    }
-                    break;
-
                 case "save":
                     {
                         if (args.Length >= 2)
                         {
                             SaveLevel(args[1]);
                         }
+                        break;
                     }
-                    break;
-
                 case "load":
                     {
                         if (args.Length >= 2)
@@ -187,13 +186,14 @@ namespace MineWorld
                         {
                             LoadLevel(Ssettings.LevelName);
                         }
+                        break;
                     }
-                    break;
                 default:
                     {
                         ConsoleWrite("Command not reconized " + args[0]);
+                        break;
                     }
-                    break;
+                    
             }
             return true;
         }
