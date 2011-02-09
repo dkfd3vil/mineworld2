@@ -43,6 +43,7 @@ namespace MineWorld
             string whatIsMyIp = "http://whatismyip.com";
             string getIpRegex = @"(?<=<TITLE>.*)\d*\.\d*\.\d*\.\d*(?=</TITLE>)";
             WebClient wc = new WebClient();
+            wc.Proxy = null;
             UTF8Encoding utf8 = new UTF8Encoding();
             string requestHtml = "";
             try
