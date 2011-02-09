@@ -162,7 +162,7 @@ namespace MineWorld
 
         //Note that multiple binds to the same key won't work right now due to the way DatafileWriter handles input and how Dictionary works
         //Macro support is a future goal
-        public void SaveBinds(DatafileWriter output, string filename)
+        public void SaveBinds(Datafile output, string filename)
         {
             foreach (Keys key in keyBinds.Keys)
             {

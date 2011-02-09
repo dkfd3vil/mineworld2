@@ -20,10 +20,10 @@ namespace MineWorld.States
     public class MainGameState : State
     {
         const float MOVESPEED = 3.5f;
-        const float GRAVITY = -8.0f;
-        const float JUMPVELOCITY = 4.0f;
+        const float GRAVITY = -16.0f;
+        const float JUMPVELOCITY = 8.0f;
         const float CLIMBVELOCITY = 2.5f;
-        const float DIEVELOCITY = 15.0f;
+        const float DIEVELOCITY = 30.0f;
 
         string nextState = null;
         bool mouseInitialized = false;

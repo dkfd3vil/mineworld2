@@ -590,7 +590,7 @@ namespace MineWorld
             graphicsDeviceManager.PreferredDepthStencilFormat = DepthFormat.Depth24Stencil8;
 
             //Now moving to DatafileWriter only since it can read and write
-            DatafileWriter dataFile = new DatafileWriter(Directory + "client.config.txt");
+            Datafile dataFile = new Datafile(Directory + "client.config.txt");
             if (dataFile.Data.ContainsKey("width"))
                 graphicsDeviceManager.PreferredBackBufferWidth = int.Parse(dataFile.Data["width"], System.Globalization.CultureInfo.InvariantCulture);
             if (dataFile.Data.ContainsKey("height"))
@@ -666,7 +666,7 @@ namespace MineWorld
                 temp.Close();
                 Console.WriteLine("Keymap file does not exist, creating.");
             }
-            dataFile = new DatafileWriter("keymap.txt");
+            dataFile = new Datafile("keymap.txt");
             bool anyChanged = false;
             foreach (string key in dataFile.Data.Keys)
             {

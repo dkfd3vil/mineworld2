@@ -146,7 +146,7 @@ namespace MineWorld.States
                                                  1024);
 
             //Read the data from file
-            DatafileWriter dw = new DatafileWriter("client.config.txt");
+            Datafile dw = new Datafile("client.config.txt");
 
             currentPos = new Vector2(200, 100);
             originalY = (int)currentPos.Y;
@@ -221,7 +221,7 @@ namespace MineWorld.States
 
         public int saveData()
         {
-            DatafileWriter dw = new DatafileWriter("client.config.txt");
+            Datafile dw = new Datafile("client.config.txt");
             foreach (InterfaceElement element in elements)
             {
                 switch (element.text)
