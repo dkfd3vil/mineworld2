@@ -1,0 +1,5 @@
+ServerConfigs\admins.txt
+ServerConfigs\banlist.txt
+ClientConfigs\client.config.txt
+ClientConfigs\keymap.txt
+ServerConfigs\server.config.txt
