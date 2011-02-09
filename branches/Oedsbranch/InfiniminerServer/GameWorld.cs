@@ -64,6 +64,8 @@ namespace MineWorld
             //if (x <= 0 || y <= 0 || z <= 0 || (int)x >= MAPSIZE - 1 || (int)y >= MAPSIZE - 1 || (int)z >= MAPSIZE - 1)
                 //return;
 
+            Debug.Assert(blockType != BlockType.None, "GODVERDOMME Setblock wordt gebruikt als delete functie");
+
             if(!SaneBlockPosition(x,y,z))
                 return;
 

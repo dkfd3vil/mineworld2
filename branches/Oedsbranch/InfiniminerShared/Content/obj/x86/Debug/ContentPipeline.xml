@@ -9,7 +9,7 @@
       <RootDirectory>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Oedsbranch\InfiniminerShared\Content\</RootDirectory>
       <LoggerRootDirectory>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Oedsbranch\InfiniminerShared\</LoggerRootDirectory>
       <IntermediateDirectory>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Oedsbranch\InfiniminerShared\Content\obj\x86\Debug\</IntermediateDirectory>
-      <OutputDirectory>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\bin\debug\Content\</OutputDirectory>
+      <OutputDirectory>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Oedsbranch\Output\debug\Content\</OutputDirectory>
     </Settings>
     <Assemblies>
       <Assembly>

@@ -139,7 +139,7 @@ namespace MineWorld
                                             {
                                                 PlayerCommands command = PlayerCommands.None;
 
-                                                if(IServer.GetAdmin(player.IP))
+                                                if(true /*IServer.GetAdmin(player.IP)*/)
                                                 {
                                                     string commandstring = Defines.Sanitize(msgBuffer.ReadString());
                                                     commandstring = commandstring.ToLower();

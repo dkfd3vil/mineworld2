@@ -76,6 +76,8 @@ namespace MineWorld
             // Add lava.
             if (includeLava)
                 AddLava(ref caveData, size);
+
+            // Add Admin block to stop falling through the lvl
             AddAdminblocks(ref caveData, size);
 
             // Add starting positions.
