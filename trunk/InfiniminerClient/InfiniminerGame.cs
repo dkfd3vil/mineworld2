@@ -583,19 +583,18 @@ namespace MineWorld
             Csettings.redName = "Red";
             Csettings.blue = Defines.IM_BLUE;
             Csettings.blueName = "Blue";
-            graphicsDeviceManager.IsFullScreen = false;
-            graphicsDeviceManager.PreferredBackBufferWidth = 1024;
-            graphicsDeviceManager.PreferredBackBufferHeight = 768;
-            graphicsDeviceManager.PreferredDepthStencilFormat = DepthFormat.Depth24Stencil8;
+            Csettings.Width = 1024;
+            Csettings.Height = 768;
+            Csettings.Fullscreen = false;
 
             //Now moving to DatafileWriter only since it can read and write
             Datafile dataFile = new Datafile(Csettings.Directory + "/client.config.txt");
             if (dataFile.Data.ContainsKey("width"))
-                graphicsDeviceManager.PreferredBackBufferWidth = int.Parse(dataFile.Data["width"], System.Globalization.CultureInfo.InvariantCulture);
+                Csettings.Width = int.Parse(dataFile.Data["width"], System.Globalization.CultureInfo.InvariantCulture);
             if (dataFile.Data.ContainsKey("height"))
-                graphicsDeviceManager.PreferredBackBufferHeight = int.Parse(dataFile.Data["height"], System.Globalization.CultureInfo.InvariantCulture);
+                Csettings.Height = int.Parse(dataFile.Data["height"], System.Globalization.CultureInfo.InvariantCulture);
             if (dataFile.Data.ContainsKey("fullscreen"))
-                graphicsDeviceManager.IsFullScreen = bool.Parse(dataFile.Data["fullscreen"]);
+                Csettings.Fullscreen = bool.Parse(dataFile.Data["fullscreen"]);
             if (dataFile.Data.ContainsKey("handle"))
                 Csettings.playerHandle = dataFile.Data["handle"];
             if (dataFile.Data.ContainsKey("showfps"))
@@ -693,6 +692,10 @@ namespace MineWorld
                 keyBinds.SaveBinds(dataFile, "keymap.txt");
                 Console.WriteLine("Creating default keymap...");
             }
+            graphicsDeviceManager.IsFullScreen = Csettings.Fullscreen;
+            graphicsDeviceManager.PreferredBackBufferHeight = Csettings.Height;
+            graphicsDeviceManager.PreferredBackBufferWidth = Csettings.Width;
+            graphicsDeviceManager.PreferredDepthStencilFormat = DepthFormat.Depth24Stencil8;
             graphicsDeviceManager.ApplyChanges();
             base.Initialize();
         }
