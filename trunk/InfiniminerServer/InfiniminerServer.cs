@@ -43,7 +43,10 @@ namespace MineWorld
             string whatIsMyIp = "http://whatismyip.com";
             string getIpRegex = @"(?<=<TITLE>.*)\d*\.\d*\.\d*\.\d*(?=</TITLE>)";
             WebClient wc = new WebClient();
-            wc.Proxy = null;
+            if (Ssettings.Proxy == true)
+            {
+                wc.Proxy = null;
+            }
             UTF8Encoding utf8 = new UTF8Encoding();
             string requestHtml = "";
             try
@@ -53,7 +56,7 @@ namespace MineWorld
             catch (WebException we)
             {
                 // do something with exception
-                Console.Write(we.ToString());
+                ConsoleWrite(we.ToString());
             }
             Regex r = new Regex(getIpRegex);
             Match m = r.Match(requestHtml);
@@ -186,7 +189,6 @@ namespace MineWorld
         {
             //TODO: Load settings from file
             //For now we hardcode them
-            Ssettings.Includelava = true;
             Ssettings.StopFluids = false;
             Ssettings.Directory = "ServerConfigs";
 
@@ -206,6 +208,14 @@ namespace MineWorld
             {
                 Ssettings.Public = false;
                 ConsoleWrite("Couldnt find public setting so we use the default (FALSE)");
+            }
+
+            if (dataFile.Data.ContainsKey("proxy"))
+                Ssettings.Proxy = bool.Parse(dataFile.Data["proxy"]);
+            else
+            {
+                Ssettings.Proxy = false;
+                ConsoleWrite("Couldnt find proxy setting so we use the default (false)");
             }
 
             if (dataFile.Data.ContainsKey("servername"))
@@ -240,13 +250,23 @@ namespace MineWorld
                 ConsoleWrite("Couldnt find autoannounce setting so we use the default (false)");
             }
 
+            if (dataFile.Data.ContainsKey("includelava"))
+                Ssettings.Includelava = bool.Parse(dataFile.Data["includelava"]);
+            else
+            {
+                Ssettings.Includelava = true;
+                ConsoleWrite("Couldnt find includelava setting so we use the default (true)");
+            }
+
             if (Ssettings.Maxplayers > 1 && Ssettings.Maxplayers <= 16)
             {
-                //Nothing todo ;)
+                //TODO: Rewrite this.
             }
             else
             {
                 Ssettings.Maxplayers = 16;
+                ConsoleWrite("The value of maxplayers must be between 1 and 16 for now");
+                ConsoleWrite("Setting Maxplayers to 16");
             }
         }
 
