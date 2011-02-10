@@ -1,2 +1,0 @@
-C:\Users\Oeds\Desktop\Project Infiniminer\Public MW\branches\Oedsbranch\InfiniminerClient\Content\obj\x86\Debug\ResolveAssemblyReference.cache
-C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Oedsbranch\InfiniminerClient\Content\obj\x86\Debug\ResolveAssemblyReference.cache

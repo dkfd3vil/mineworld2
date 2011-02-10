@@ -485,6 +485,11 @@ namespace MineWorld
                             {
                                 break;
                             }
+							// Chain reactions!
+							if (blockList[x + dx, y + dy, z + dz] == BlockType.Explosive)
+							{
+								DetonateAtPoint(x + dx, y + dy, z + dz);
+							}
 
                             // Detonation of normal blocks.
                             bool destroyBlock = true;
@@ -499,7 +504,6 @@ namespace MineWorld
                             if (destroyBlock)
                             {
                                 RemoveBlock((ushort)(x + dx), (ushort)(y + dy), (ushort)(z + dz));
-                                ExplosionEffectAtPoint((ushort)(x + dx), (ushort)(y + dy), (ushort)(z + dz));
                             }
                         }
                     }
