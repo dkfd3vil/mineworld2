@@ -473,9 +473,9 @@ namespace MineWorld
 
             // Detonate the block.
                 for (int dx = -4; dx <= 4; dx++)
-            {
-                    for (int dy = -4; dy <= 4; dy++)
                 {
+                    for (int dy = -4; dy <= 4; dy++)
+                    {
                         for (int dz = -4; dz <= 4; dz++)
                         {
                         // Check if it's inside the sphere
@@ -487,29 +487,20 @@ namespace MineWorld
                             }
 
                             // Detonation of normal blocks.
-                            bool destroyBlock = false;
+                            bool destroyBlock = true;
                             switch (blockList[x + dx, y + dy, z + dz])
                             {
-                                case BlockType.Rock:
-                                case BlockType.Dirt:
-                                case BlockType.DirtSign:
-                                case BlockType.Ore:
-                                case BlockType.SolidRed:
-                                case BlockType.SolidBlue:
-                                case BlockType.TransRed:
-                                case BlockType.TransBlue:
-                                case BlockType.Ladder:
-                                case BlockType.Shock:
-                                case BlockType.Jump:
-                                case BlockType.Explosive:
-                                case BlockType.Lava:
-                                case BlockType.Road:
-                                case BlockType.Grass:
-                                    destroyBlock = true;
-                                    break;
+                                case BlockType.Adminblock:
+                                    {
+                                        destroyBlock = false;
+                                        break;
+                                    }
                             }
                             if (destroyBlock)
+                            {
                                 RemoveBlock((ushort)(x + dx), (ushort)(y + dy), (ushort)(z + dz));
+                                ExplosionEffectAtPoint((ushort)(x + dx), (ushort)(y + dy), (ushort)(z + dz));
+                            }
                         }
                     }
                 }
@@ -522,25 +513,14 @@ namespace MineWorld
             while (player.ExplosiveList.Count > 0)
             {
                 Vector3 blockPos = player.ExplosiveList[0];
+
                 ushort x = (ushort)blockPos.X;
                 ushort y = (ushort)blockPos.Y;
                 ushort z = (ushort)blockPos.Z;
 
-                // Todo wtf is this?
-                if (blockList[x, y, z] != BlockType.Explosive)
-                {
-                    player.ExplosiveList.RemoveAt(0);
-                }
-                //Double for the win
-                // Why check this first and then remove it again ?
-                // Bit obvious
                 player.ExplosiveList.RemoveAt(0);
 
                 DetonateAtPoint(x, y, z);
-                //ExplosionEffectAtPoint(x, y, z);
-                // Remove the block that is detonating.
-                // Why do remove here? if its also removed at detonateatpoint ?
-                //RemoveBlock(x, y, z);
             }
         }
 

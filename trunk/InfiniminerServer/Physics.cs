@@ -126,6 +126,7 @@ namespace MineWorld
 
         public void CalcGrass()
         {
+            //Todo: BLAAT
             // More horror code :S
             for (ushort i = 0; i < MAPSIZE; i++)
                 for (ushort j = 0; j < MAPSIZE; j++)
@@ -149,19 +150,13 @@ namespace MineWorld
             {
                 foreach (Vector3 explosive in p.ExplosiveList)
                 {
-                    //Todo fix me Oh the horror
                     x = (ushort)explosive.X;
                     y = (ushort)explosive.Y;
                     z = (ushort)explosive.Z;
-                    // OH the HORROr !!!
-                    // Hacky
-                    //if (blockList[x, y, z] == BlockType.Explosive)
-                    //{
-                        if (blockList[x + 1, y, z] == BlockType.Lava || blockList[x - 1, y, z] == BlockType.Lava || blockList[x, y, z + 1] == BlockType.Lava || blockList[x, y, z - 1] == BlockType.Lava || blockList[x, y + 1, z] == BlockType.Lava || blockList[x, y - 1, z] == BlockType.Lava)
-                        {
-                            DetonateAtPoint(x, y, z);
-                        }
-                    //}
+                    if (blockList[x + 1, y, z] == BlockType.Lava || blockList[x - 1, y, z] == BlockType.Lava || blockList[x, y, z + 1] == BlockType.Lava || blockList[x, y, z - 1] == BlockType.Lava || blockList[x, y + 1, z] == BlockType.Lava || blockList[x, y - 1, z] == BlockType.Lava)
+                    {
+                        DetonateAtPoint(x, y, z);
+                    }
                 }
             }
         }
