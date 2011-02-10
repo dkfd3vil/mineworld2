@@ -10,4 +10,4 @@ mkdir PublicBuild\ServerConfigs
 mkdir PublicBuild\Content
 copy Output\debug\ClientConfigs\* PublicBuild\ClientConfigs\
 copy Output\debug\ServerConfigs\* PublicBuild\ServerConfigs\
-copy Output\debug\Content\* PublicBuild\Content\
+xcopy Output\debug\Content\* PublicBuild\Content\ /S
