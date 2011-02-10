@@ -192,7 +192,7 @@ namespace MineWorld
             vertexDeclaration = new VertexDeclaration(gameInstance.GraphicsDevice, VertexPositionTextureShade.VertexElements);
 
             // Initialize the bloom engine.
-            if (gameInstance.RenderPretty)
+            if (gameInstance.Csettings.RenderPretty)
             {
                 bloomPosteffect = new BloomComponent();
                 bloomPosteffect.Load(gameInstance.GraphicsDevice, gameInstance.Content);

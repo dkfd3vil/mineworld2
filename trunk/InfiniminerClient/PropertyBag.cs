@@ -117,7 +117,7 @@ namespace MineWorld
             UpdateCamera();
 
             // Load sounds.
-            if (!gameInstance.NoSound)
+            if (!gameInstance.Csettings.NoSound)
             {
                 soundList[MineWorldSound.DigDirt] = gameInstance.Content.Load<SoundEffect>("sounds/dig-dirt");
                 soundList[MineWorldSound.DigMetal] = gameInstance.Content.Load<SoundEffect>("sounds/dig-metal");

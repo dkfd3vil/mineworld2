@@ -69,7 +69,7 @@ namespace MineWorld.States
                     int dx = mouseState.X - _SM.GraphicsDevice.Viewport.Width / 2;
                     int dy = mouseState.Y - _SM.GraphicsDevice.Viewport.Height / 2;
 
-                    if ((_SM as MineWorldGame).InvertMouseYAxis)
+                    if ((_SM as MineWorldGame).Csettings.InvertMouseYAxis)
                         dy = -dy;
 
                     _P.playerCamera.Yaw -= dx * _P.mouseSensitivity;

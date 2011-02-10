@@ -314,7 +314,7 @@ namespace MineWorld
                     break;
             }
 
-            if (gameInstance.DrawFrameRate)
+            if (gameInstance.Csettings.DrawFrameRate)
                 RenderMessageCenter(spriteBatch, String.Format("FPS: {0:000}", gameInstance.FrameRate), new Vector2(60, graphicsDevice.Viewport.Height - 20), Color.Gray, Color.Black);
 
             // Show the altimeter.

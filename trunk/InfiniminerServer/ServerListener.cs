@@ -173,7 +173,7 @@ namespace MineWorld
                                                 }
                                                 else
                                                 {
-                                                    command = PlayerCommands.Noadmin;
+                                                    //command = PlayerCommands.Noadmin;
                                                 }
 
                                                 NetBuffer chatPacket = netServer.CreateBuffer();
