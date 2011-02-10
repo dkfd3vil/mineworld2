@@ -19,7 +19,7 @@ namespace MineWorld
         public Vector3 Velocity;
         public float Size;
         public Color Color;
-        public int stepstolive=60;
+        public int StepsToLife=60;
         public bool FlaggedForDeletion = false;
     }
 
@@ -117,14 +117,14 @@ namespace MineWorld
                 p.Velocity.Y -= 8 * (float)gameTime.ElapsedGameTime.TotalSeconds;
                 if (_P.blockEngine.SolidAtPoint(p.Position))
                     p.FlaggedForDeletion = true;
-                if (p.stepstolive < 1)
+                if (p.StepsToLife < 1)
                 {
                     p.FlaggedForDeletion = true;
                 }
             }
             for (int i = 0; i < particleList.Count; i++)
             {
-                particleList[i].stepstolive--;
+                particleList[i].StepsToLife--;
             }
             particleList.RemoveAll(ParticleExpired);
         }
