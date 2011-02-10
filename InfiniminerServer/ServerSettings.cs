@@ -18,12 +18,11 @@ namespace MineWorld
             public string Servername;
             public int Maxplayers;
             public bool Public;
+            public bool Proxy;
             public string LevelName;
             public bool Autoload;
             public bool AutoAnnouce;
             public string MOTD;
-
-            //Not used in the configs ATM
             public bool Includelava;
 
             //Not used by configs
@@ -33,10 +32,7 @@ namespace MineWorld
 
         int lavaBlockCount = 0;
         uint oreFactor = 10;
-        //uint prevMaxPlayers = 16;
-        
 
-        public bool[, ,] tntExplosionPattern = new bool[0, 0, 0];
         bool announceChanges = true;
 
         uint teamCashRed = 0;
