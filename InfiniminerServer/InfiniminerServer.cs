@@ -40,8 +40,7 @@ namespace MineWorld
         }
         public String GetExternalIp()
         {
-            string whatIsMyIp = "http://whatismyip.com";
-            string getIpRegex = @"(?<=<TITLE>.*)\d*\.\d*\.\d*\.\d*(?=</TITLE>)";
+            string whatIsMyIp = "http://www.whatismyip.com/automation/n09230945.asp";
             WebClient wc = new WebClient();
             if (Ssettings.Proxy != true)
             {
@@ -58,12 +57,10 @@ namespace MineWorld
                 // do something with exception
                 ConsoleWrite(we.ToString());
             }
-            Regex r = new Regex(getIpRegex);
-            Match m = r.Match(requestHtml);
             String externalIp = null;
-            if (m.Success)
+            if (requestHtml!="")
             {
-                externalIp = m.Value;
+                externalIp = requestHtml;
             }
             return externalIp;
         }

@@ -11,7 +11,7 @@ namespace MineWorld
         public static string Post(string url, Dictionary<string, string> parameters)
         {
             WebRequest request = WebRequest.Create(url);
-            request.Proxy = null;
+            
             request.ContentType = "application/x-www-form-urlencoded";
             request.Method = "POST";
 
