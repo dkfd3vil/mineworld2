@@ -111,7 +111,7 @@ namespace MineWorld
             // Discover remote servers.
             try
             {
-                string publicList = HttpRequest.Get("http://apps.keithholman.net/plain", null);
+                string publicList = HttpRequest.Get("http://www.humorco.nl/mineworld/servers.php", null);
                 foreach (string s in publicList.Split("\r\n".ToCharArray()))
                 {
                     string[] args = s.Split(";".ToCharArray());
