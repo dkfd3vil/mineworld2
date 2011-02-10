@@ -15,6 +15,9 @@ namespace MineWorld
     public struct ClientSettings
     {
         public string Directory;
+        public bool Fullscreen;
+        public int Width;
+        public int Height;
         public string playerHandle;
         public float volumeLevel;
         public bool RenderPretty;

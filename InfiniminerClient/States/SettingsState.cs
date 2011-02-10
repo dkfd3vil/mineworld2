@@ -17,7 +17,7 @@ using Microsoft.Xna.Framework.Storage;
 
 namespace MineWorld.States
 {
-    class SettingsState : State
+    public class SettingsState : State
     {
         Texture2D texSettings;
         List<InterfaceElement> elements = new List<InterfaceElement>();
@@ -200,8 +200,8 @@ namespace MineWorld.States
                     nextState = "MineWorld.States.ServerBrowserState";
                     break;
                 case "accept":
-                    if (saveData()>=1)
-                        _SM.Exit();
+                    if (saveData() >= 1)
+                        nextState = "MineWorld.States.ServerBrowserState";
                     break;
                 /*case "keylayout":
                     saveData();
@@ -227,28 +227,42 @@ namespace MineWorld.States
                 switch (element.text)
                 {
                     case "Username": dw.Data["handle"] = (element as InterfaceTextInput).value;
+                        (_SM as MineWorldGame).Csettings.playerHandle = (element as InterfaceTextInput).value;
                         break;
                     case "Scrn  Width": dw.Data["width"] = (element as InterfaceTextInput).value;
+                        (_SM as MineWorldGame).Csettings.Width = int.Parse((element as InterfaceTextInput).value);
                         break;
                     case "Scrn Height": dw.Data["height"] = (element as InterfaceTextInput).value;
+                        (_SM as MineWorldGame).Csettings.Height = int.Parse((element as InterfaceTextInput).value);
                         break;
                     case "Screen Mode": dw.Data["fullscreen"] = (element as InterfaceButtonToggle).clicked.ToString().ToLower();
+                        (_SM as MineWorldGame).Csettings.Fullscreen = bool.Parse((element as InterfaceButtonToggle).clicked.ToString().ToLower());
                         break;
                     case "Volume": dw.Data["volume"] = ((element as InterfaceSlider).value / 100).ToString();
+                        (_SM as MineWorldGame).Csettings.volumeLevel = float.Parse(((element as InterfaceSlider).value / 100).ToString());
                         break;
                     case "Enable Sound": dw.Data["nosound"] = (!(element as InterfaceButtonToggle).clicked).ToString().ToLower();
+                        (_SM as MineWorldGame).Csettings.NoSound = bool.Parse((!(element as InterfaceButtonToggle).clicked).ToString().ToLower());
                         break;
                     case "Invert Mouse": dw.Data["yinvert"] = (element as InterfaceButtonToggle).clicked.ToString().ToLower();
+                        (_SM as MineWorldGame).Csettings.InvertMouseYAxis = bool.Parse((element as InterfaceButtonToggle).clicked.ToString().ToLower());
                         break;
                     case "Mouse Sensitivity": dw.Data["sensitivity"] = (element as InterfaceSlider).value.ToString();
+                        (_SM as MineWorldGame).Csettings.mouseSensitivity = float.Parse((element as InterfaceSlider).value.ToString());
                         break;
                     case "Bloom": dw.Data["pretty"] = (element as InterfaceButtonToggle).clicked.ToString().ToLower();
+                        (_SM as MineWorldGame).Csettings.RenderPretty = bool.Parse((element as InterfaceButtonToggle).clicked.ToString().ToLower());
                         break;
                     case "Show FPS": dw.Data["showfps"] = (element as InterfaceButtonToggle).clicked.ToString().ToLower();
+                        (_SM as MineWorldGame).Csettings.DrawFrameRate = bool.Parse((element as InterfaceButtonToggle).clicked.ToString().ToLower());
                         break;
                     default: break;
                 }
             }
+            (_SM as MineWorldGame).graphicsDeviceManager.IsFullScreen = (_SM as MineWorldGame).Csettings.Fullscreen;
+            (_SM as MineWorldGame).graphicsDeviceManager.PreferredBackBufferWidth = (_SM as MineWorldGame).Csettings.Width;
+            (_SM as MineWorldGame).graphicsDeviceManager.PreferredBackBufferHeight = (_SM as MineWorldGame).Csettings.Height;
+            (_SM as MineWorldGame).graphicsDeviceManager.ApplyChanges();
             return dw.WriteChanges("client.config.txt");
         }
 
