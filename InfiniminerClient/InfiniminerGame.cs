@@ -20,24 +20,10 @@ namespace MineWorld
 {
     public class MineWorldGame : StateMasher.StateMachine
     {
-        
-        string Directory = "ClientConfigs";
+        public ClientSettings Csettings = new ClientSettings();
         double timeSinceLastUpdate = 0;
-        string playerHandle = "Player";
-        float volumeLevel = 1.0f;
         NetBuffer msgBuffer = null;
         Song songTitle = null;
-
-        public bool RenderPretty = true;
-        public bool DrawFrameRate = false;
-        public bool InvertMouseYAxis = false;
-        public bool NoSound = false;
-        public float mouseSensitivity = 0.005f;
-        public bool customColours = false;
-        public Color red=Defines.IM_RED;
-        public string redName = "Red";
-        public Color blue = Defines.IM_BLUE;
-        public string blueName = "Blue";
 
         public KeyBindHandler keyBinds = new KeyBindHandler();
 
@@ -277,7 +263,7 @@ namespace MineWorld
                                                 if (downloadComplete)
                                                 {
                                                     ChangeState("MineWorld.States.TeamSelectionState");
-                                                    if (!NoSound)
+                                                    if (!Csettings.NoSound)
                                                         MediaPlayer.Stop();
                                                     propertyBag.blockEngine.DownloadComplete();
                                                 }
@@ -409,9 +395,9 @@ namespace MineWorld
                                             propertyBag.playerList[playerId].Handle = playerName;
                                             propertyBag.playerList[playerId].ID = playerId;
                                             propertyBag.playerList[playerId].Alive = playerAlive;
-                                            propertyBag.playerList[playerId].AltColours = customColours;
-                                            propertyBag.playerList[playerId].redTeam = red;
-                                            propertyBag.playerList[playerId].blueTeam = blue;
+                                            propertyBag.playerList[playerId].AltColours = Csettings.customColours;
+                                            propertyBag.playerList[playerId].redTeam = Csettings.red;
+                                            propertyBag.playerList[playerId].blueTeam = Csettings.blue;
                                             if (thisIsMe)
                                                 propertyBag.playerMyId = playerId;
                                         }
@@ -584,13 +570,26 @@ namespace MineWorld
 
         protected override void Initialize()
         {
+            Csettings.Directory = "ClientConfigs";
+            Csettings.playerHandle = "Player";
+            Csettings.volumeLevel = 1.0f;
+            Csettings.RenderPretty = true;
+            Csettings.DrawFrameRate = false;
+            Csettings.InvertMouseYAxis = false;
+            Csettings.NoSound = false;
+            Csettings.mouseSensitivity = 0.005f;
+            Csettings.customColours = false;
+            Csettings.red = Defines.IM_RED;
+            Csettings.redName = "Red";
+            Csettings.blue = Defines.IM_BLUE;
+            Csettings.blueName = "Blue";
             graphicsDeviceManager.IsFullScreen = false;
             graphicsDeviceManager.PreferredBackBufferWidth = 1024;
             graphicsDeviceManager.PreferredBackBufferHeight = 768;
             graphicsDeviceManager.PreferredDepthStencilFormat = DepthFormat.Depth24Stencil8;
 
             //Now moving to DatafileWriter only since it can read and write
-            Datafile dataFile = new Datafile(Directory + "client.config.txt");
+            Datafile dataFile = new Datafile(Csettings.Directory + "/client.config.txt");
             if (dataFile.Data.ContainsKey("width"))
                 graphicsDeviceManager.PreferredBackBufferWidth = int.Parse(dataFile.Data["width"], System.Globalization.CultureInfo.InvariantCulture);
             if (dataFile.Data.ContainsKey("height"))
@@ -598,23 +597,23 @@ namespace MineWorld
             if (dataFile.Data.ContainsKey("fullscreen"))
                 graphicsDeviceManager.IsFullScreen = bool.Parse(dataFile.Data["fullscreen"]);
             if (dataFile.Data.ContainsKey("handle"))
-                playerHandle = dataFile.Data["handle"];
+                Csettings.playerHandle = dataFile.Data["handle"];
             if (dataFile.Data.ContainsKey("showfps"))
-                DrawFrameRate = bool.Parse(dataFile.Data["showfps"]);
+                Csettings.DrawFrameRate = bool.Parse(dataFile.Data["showfps"]);
             if (dataFile.Data.ContainsKey("yinvert"))
-                InvertMouseYAxis = bool.Parse(dataFile.Data["yinvert"]);
+                Csettings.InvertMouseYAxis = bool.Parse(dataFile.Data["yinvert"]);
             if (dataFile.Data.ContainsKey("nosound"))
-                NoSound = bool.Parse(dataFile.Data["nosound"]);
+                Csettings.NoSound = bool.Parse(dataFile.Data["nosound"]);
             if (dataFile.Data.ContainsKey("pretty"))
-                RenderPretty = bool.Parse(dataFile.Data["pretty"]);
+                Csettings.RenderPretty = bool.Parse(dataFile.Data["pretty"]);
             if (dataFile.Data.ContainsKey("volume"))
-                volumeLevel = Math.Max(0,Math.Min(1,float.Parse(dataFile.Data["volume"], System.Globalization.CultureInfo.InvariantCulture)));
+                Csettings.volumeLevel = Math.Max(0, Math.Min(1, float.Parse(dataFile.Data["volume"], System.Globalization.CultureInfo.InvariantCulture)));
             if (dataFile.Data.ContainsKey("sensitivity"))
-                mouseSensitivity=Math.Max(0.001f,Math.Min(0.05f,float.Parse(dataFile.Data["sensitivity"], System.Globalization.CultureInfo.InvariantCulture)/1000f));
+                Csettings.mouseSensitivity = Math.Max(0.001f, Math.Min(0.05f, float.Parse(dataFile.Data["sensitivity"], System.Globalization.CultureInfo.InvariantCulture) / 1000f));
             if (dataFile.Data.ContainsKey("red_name"))
-                redName = dataFile.Data["red_name"].Trim();
+                Csettings.redName = dataFile.Data["red_name"].Trim();
             if (dataFile.Data.ContainsKey("blue_name"))
-                blueName = dataFile.Data["blue_name"].Trim();
+                Csettings.blueName = dataFile.Data["blue_name"].Trim();
 
 
             if (dataFile.Data.ContainsKey("red"))
@@ -633,8 +632,8 @@ namespace MineWorld
                 }
                 if (temp.A != 0)
                 {
-                    red = temp;
-                    customColours = true;
+                    Csettings.red = temp;
+                    Csettings.customColours = true;
                 }
             }
 
@@ -654,13 +653,13 @@ namespace MineWorld
                 }
                 if (temp.A != 0)
                 {
-                    blue = temp;
-                    customColours = true;
+                    Csettings.blue = temp;
+                    Csettings.customColours = true;
                 }
             }
 
             //Now to read the key bindings
-            if (!File.Exists(Directory + "keymap.txt"))
+            if (!File.Exists(Csettings.Directory + "/keymap.txt"))
             {
                 FileStream temp = File.Create("keymap.txt");
                 temp.Close();
@@ -716,14 +715,14 @@ namespace MineWorld
                 propertyBag.netClient.Shutdown("");
 
             propertyBag = new MineWorld.PropertyBag(this);
-            propertyBag.playerHandle = playerHandle;
-            propertyBag.volumeLevel = volumeLevel;
-            propertyBag.mouseSensitivity = mouseSensitivity;
+            propertyBag.playerHandle = Csettings.playerHandle;
+            propertyBag.volumeLevel = Csettings.volumeLevel;
+            propertyBag.mouseSensitivity = Csettings.mouseSensitivity;
             propertyBag.keyBinds = keyBinds;
-            propertyBag.blue = blue;
-            propertyBag.red = red;
-            propertyBag.blueName = blueName;
-            propertyBag.redName = redName;
+            propertyBag.blue = Csettings.blue;
+            propertyBag.red = Csettings.red;
+            propertyBag.blueName = Csettings.blueName;
+            propertyBag.redName = Csettings.redName;
             msgBuffer = propertyBag.netClient.CreateBuffer();
         }
 
@@ -736,7 +735,7 @@ namespace MineWorld
             ChangeState("MineWorld.States.TitleState");
 
             // Play the title music.
-            if (!NoSound)
+            if (!Csettings.NoSound)
             {
                 songTitle = Content.Load<Song>("song_title");
                 MediaPlayer.Play(songTitle);
