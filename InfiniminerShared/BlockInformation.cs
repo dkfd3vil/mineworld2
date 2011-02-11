@@ -122,6 +122,7 @@ namespace MineWorld
                 case BlockType.Shock:
                     return 50;
                 case BlockType.Explosive:
+                case BlockType.Lava:
                     return 100;
             }
 
