@@ -163,13 +163,17 @@ namespace MineWorld
                                                                 IServer.Ssettings.StopFluids = false;
                                                                 break;
                                                             }
+                                                        case "/nocost":
+                                                            {
+                                                                player.nocost = true;
+                                                            }
                                                         default:
                                                             {
                                                                 command = PlayerCommands.None;
                                                                 break;
                                                             }
                                                     }
-                                                    IServer.ConsoleWrite("COMMAND: (" + commandstring + ") has been used by (" + player.Handle); 
+                                                    IServer.ConsoleWrite("COMMAND: (" + commandstring + ") has been used by (" + player.Handle + ")"); 
                                                 }
                                                 else
                                                 {
@@ -305,10 +309,11 @@ namespace MineWorld
                                             {
                                                 if (IServer.toGreet.Contains(msgSender))
                                                 {
-                                                    string greeting = "Hello [name] welcome";
-                                                    greeting = greeting.Replace("[name]", IServer.playerList[msgSender].Handle);
-                                                    if (greeting != "")
+                                                    //string greeting = "Hello [name] welcome";
+                                                    if (IServer.Ssettings.MOTD != "")
                                                     {
+                                                        string greeting = IServer.Ssettings.MOTD;
+                                                        greeting = greeting.Replace("[name]", IServer.playerList[msgSender].Handle);
                                                         NetBuffer greetBuffer = netServer.CreateBuffer();
                                                         greetBuffer.Write((byte)MineWorldMessage.ChatMessage);
                                                         greetBuffer.Write((byte)ChatMessageType.SayAll);

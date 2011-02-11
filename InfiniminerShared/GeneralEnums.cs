@@ -120,6 +120,7 @@ namespace MineWorld
         Stopfluids,
         Startfluids,
         Noadmin,
+        Nocost,
     }
 
     public enum ChatMessageType
