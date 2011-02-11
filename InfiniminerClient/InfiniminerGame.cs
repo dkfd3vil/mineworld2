@@ -531,6 +531,20 @@ namespace MineWorld
                                                         propertyBag.addChatMessage("Stopfluids disabled", ChatMessageType.SayAll, 10);
                                                         break;
                                                     }
+                                                case PlayerCommands.Nocost:
+                                                    {
+                                                        if (propertyBag.nocost == true)
+                                                        {
+                                                            propertyBag.nocost = false;
+                                                            propertyBag.addChatMessage("Nocost disabled", ChatMessageType.SayAll, 10);
+                                                        }
+                                                        else
+                                                        {
+                                                            propertyBag.nocost = true;
+                                                            propertyBag.addChatMessage("Nocost enabled", ChatMessageType.SayAll, 10);
+                                                        }
+                                                        break;
+                                                    }
                                                 default:
                                                     break;
                                             }

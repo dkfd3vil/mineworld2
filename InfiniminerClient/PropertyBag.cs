@@ -60,6 +60,7 @@ namespace MineWorld
         public float radarValue = 0;
         public float constructionGunAnimation = 0;
         public bool godmode = false;
+        public bool nocost = false;
 
         public float mouseSensitivity = 0.005f;
 
