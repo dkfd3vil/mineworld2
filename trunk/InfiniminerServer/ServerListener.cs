@@ -165,7 +165,15 @@ namespace MineWorld
                                                             }
                                                         case "/nocost":
                                                             {
-                                                                player.nocost = true;
+                                                                command = PlayerCommands.Nocost;
+                                                                if (player.nocost == false)
+                                                                {
+                                                                    player.nocost = true;
+                                                                }
+                                                                else
+                                                                {
+                                                                    player.nocost = false;
+                                                                }
                                                                 break;
                                                             }
                                                         default:
