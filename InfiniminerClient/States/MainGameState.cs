@@ -72,8 +72,8 @@ namespace MineWorld.States
                     if ((_SM as MineWorldGame).Csettings.InvertMouseYAxis)
                         dy = -dy;
 
-                    _P.playerCamera.Yaw -= (float)dx * (_P.mouseSensitivity * (640.0f / (float)_SM.GraphicsDevice.Viewport.Width))*0.01f;
-                    _P.playerCamera.Pitch = (float)Math.Min(Math.PI * 0.49, Math.Max(-Math.PI * 0.49, _P.playerCamera.Pitch - dy * (_P.mouseSensitivity * (480.0f / (float)_SM.GraphicsDevice.Viewport.Height))))*0.1f;
+                    _P.playerCamera.Yaw -= (float)dx * (_P.mouseSensitivity);
+                    _P.playerCamera.Pitch = (float)Math.Min(Math.PI * 0.49, Math.Max(-Math.PI * 0.49, _P.playerCamera.Pitch - dy * (_P.mouseSensitivity)));
                 }
                 else
                 {
