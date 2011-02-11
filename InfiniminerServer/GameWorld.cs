@@ -337,13 +337,13 @@ namespace MineWorld
 
             // If the player is too poor, bail
             // But if the got the nocost command enabled then build
+            uint blockCost = BlockInformation.GetCost(blockType);
             if (player.nocost == true)
             {
                 actionFailed = false;
             }
             else
             {
-                uint blockCost = BlockInformation.GetCost(blockType);
                 if (blockCost > player.Ore)
                     actionFailed = true;
             }
@@ -362,8 +362,11 @@ namespace MineWorld
                 SetBlock(x, y, z, blockType, player.Team);
 
                 // Get the blockCost and substract it from the player
-                player.Ore -= blockCost;
-                SendResourceUpdate(player);
+                if (player.nocost == false)
+                {
+                    player.Ore -= blockCost;
+                    SendResourceUpdate(player);
+                }
 
                 // Play the sound.
                 PlaySound(MineWorldSound.ConstructionGun, player.Position);

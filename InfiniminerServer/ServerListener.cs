@@ -166,6 +166,7 @@ namespace MineWorld
                                                         case "/nocost":
                                                             {
                                                                 player.nocost = true;
+                                                                break;
                                                             }
                                                         default:
                                                             {
