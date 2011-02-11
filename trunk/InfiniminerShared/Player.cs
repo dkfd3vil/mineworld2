@@ -43,6 +43,7 @@ namespace MineWorld
     {
         public bool Kicked = false; // set to true when a player is kicked to let other clients know they were kicked
         public bool godmode = false;
+        public bool nocost = false;
         public bool AltColours = false;
         public Color redTeam = new Color();
         public Color blueTeam = new Color();

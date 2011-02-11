@@ -336,9 +336,17 @@ namespace MineWorld
                 actionFailed = true;
 
             // If the player is too poor, bail
-            uint blockCost = BlockInformation.GetCost(blockType);
-            if (blockCost > player.Ore)
-                actionFailed = true;
+            // But if the got the nocost command enabled then build
+            if (player.nocost == true)
+            {
+                actionFailed = false;
+            }
+            else
+            {
+                uint blockCost = BlockInformation.GetCost(blockType);
+                if (blockCost > player.Ore)
+                    actionFailed = true;
+            }
 
             if (actionFailed)
             {
