@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Windows.Forms;
+using System.Diagnostics;
 
 namespace MineWorld
 {
@@ -14,21 +15,28 @@ namespace MineWorld
         {
             using (MineWorldGame game = new MineWorldGame(args))
             {
-                try
+                if (!System.Diagnostics.Debugger.IsAttached)
+                {
+                    try
+                    {
+                        game.Run();
+                    }
+                    catch (Exception e)
+                    {
+                        String logtext = "";
+                        if (File.Exists("crashlog.log"))
+                        {
+                            logtext = File.ReadAllText("crashlog.log");
+                        }
+                        File.WriteAllText("crashlog.log", logtext + "\r\n" + e.Message + "\r\n\r\n" + e.StackTrace);
+                        MessageBox.Show("The game has crashed. The crash info has been written to the crashlog.", "Crash and Burn", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    }
+                }
+                else
                 {
                     game.Run();
+                }
             }
-                catch (Exception e)
-                {
-                    String logtext = "";
-                    if (File.Exists("crashlog.log"))
-                    {
-                        logtext = File.ReadAllText("crashlog.log");
-        }
-                    File.WriteAllText("crashlog.log", logtext + "\r\n" + e.Message + "\r\n\r\n" + e.StackTrace);
-                    MessageBox.Show("The game has crashed. The crash info has been written to the crashlog.", "Crash and Burn", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-    }
-}
         }
     }
 }
