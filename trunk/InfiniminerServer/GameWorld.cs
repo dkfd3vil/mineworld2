@@ -335,6 +335,11 @@ namespace MineWorld
             if (!SaneBlockPosition(x,y,z))
                 actionFailed = true;
 
+            // If the player is too poor, bail
+            uint blockCost = BlockInformation.GetCost(blockType);
+            if (blockCost > player.Ore)
+                actionFailed = true;
+
             if (actionFailed)
             {
                 // Decharge the player's gun.
@@ -347,7 +352,9 @@ namespace MineWorld
 
                 // Build the block.
                 SetBlock(x, y, z, blockType, player.Team);
-                //player.Ore -= blockCost;
+
+                // Get the blockCost and substract it from the player
+                player.Ore -= blockCost;
                 SendResourceUpdate(player);
 
                 // Play the sound.
