@@ -70,8 +70,8 @@ namespace MineWorld
                             if (blockList[i, j, k] == BlockType.Lava && !flowSleep[i, j, k])
                             {
                                 // RULES FOR LAVA EXPANSION:
-                                // if the block below is lava, do nothing
-                                // if the block below is empty space, add lava there
+                                // if the block below is lava, do nothing (not even horisontal)
+                                // if the block below is empty space, move itself down and disalow horisontal lava movement
                                 // if the block below is something solid add lava to the sides
                                 BlockType typeBelow = (j == 0) ? BlockType.Lava : blockList[i, j - 1, k];
                                 BlockType typeIincr = (i == 63) ? BlockType.Lava : blockList[i + 1, j, k];
@@ -79,45 +79,55 @@ namespace MineWorld
                                 BlockType typeKincr = (k == 63) ? BlockType.Lava : blockList[i, j, k + 1];
                                 BlockType typeKdesc = (k == 0) ? BlockType.Lava : blockList[i, j, k - 1];
 
-
+                                bool doHorisontal = true;
                                 if (typeBelow == BlockType.None)
                                 {
                                     if (j > 0)
                                     {
                                         SetBlock(i, (ushort)(j - 1), k, BlockType.Lava, PlayerTeam.None);
+                                        RemoveBlock(i, j, k);
                                         flowSleep[i, j - 1, k] = true;
+                                        //flowSleep[i, j, k] = true;
+                                        doHorisontal = false;
                                     }
                                 }
-                                if (typeIdesc == BlockType.None)
+                                if (typeBelow == BlockType.Lava)
                                 {
-                                    if (i > 0)
-                                    {
-                                        SetBlock((ushort)(i - 1), j, k, BlockType.Lava, PlayerTeam.None);
-                                        flowSleep[i - 1, j, k] = true;
-                                    }
+                                    doHorisontal = false;
                                 }
-                                if (typeIincr == BlockType.None)
+                                if (doHorisontal)
                                 {
-                                    if (i < MAPSIZE)
+                                    if (typeIdesc == BlockType.None)
                                     {
-                                        SetBlock((ushort)(i + 1), j, k, BlockType.Lava, PlayerTeam.None);
-                                        flowSleep[i + 1, j, k] = true;
+                                        if (i > 0)
+                                        {
+                                            SetBlock((ushort)(i - 1), j, k, BlockType.Lava, PlayerTeam.None);
+                                            flowSleep[i - 1, j, k] = true;
+                                        }
                                     }
-                                }
-                                if (typeKdesc == BlockType.None)
-                                {
-                                    if (k > 0)
+                                    if (typeIincr == BlockType.None)
                                     {
-                                        SetBlock(i, j, (ushort)(k - 1), BlockType.Lava, PlayerTeam.None);
-                                        flowSleep[i, j, k - 1] = true;
+                                        if (i < MAPSIZE)
+                                        {
+                                            SetBlock((ushort)(i + 1), j, k, BlockType.Lava, PlayerTeam.None);
+                                            flowSleep[i + 1, j, k] = true;
+                                        }
                                     }
-                                }
-                                if (typeKincr == BlockType.None)
-                                {
-                                    if (k < MAPSIZE)
+                                    if (typeKdesc == BlockType.None)
                                     {
-                                        SetBlock(i, j, (ushort)(k + 1), BlockType.Lava, PlayerTeam.None);
-                                        flowSleep[i, j, k + 1] = true;
+                                        if (k > 0)
+                                        {
+                                            SetBlock(i, j, (ushort)(k - 1), BlockType.Lava, PlayerTeam.None);
+                                            flowSleep[i, j, k - 1] = true;
+                                        }
+                                    }
+                                    if (typeKincr == BlockType.None)
+                                    {
+                                        if (k < MAPSIZE)
+                                        {
+                                            SetBlock(i, j, (ushort)(k + 1), BlockType.Lava, PlayerTeam.None);
+                                            flowSleep[i, j, k + 1] = true;
+                                        }
                                     }
                                 }
                             }
