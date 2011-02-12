@@ -91,7 +91,7 @@ namespace MineWorld
                                         IServer.toGreet.Add(msgSender);
                                         this.netServer.SanityCheck(msgSender);
                                         msgSender.Approve();
-                                        //IServer.PublicServerListUpdate(true);
+                                        IServer.updateMasterServer(IServer.Ssettings.Servername, IServer.serverIP, IServer.Ssettings.Maxplayers, IServer.playerList.Count);
                                     }
                                 }
                                 break;

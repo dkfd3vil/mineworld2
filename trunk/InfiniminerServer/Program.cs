@@ -13,6 +13,7 @@ namespace MineWorld.Server
                 MineWorldServer MineWorldServer = new MineWorldServer();
                 restartServer = MineWorldServer.Start();
             }
+            
         }
 
         static void Main(string[] args)
