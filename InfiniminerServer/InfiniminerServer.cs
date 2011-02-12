@@ -24,6 +24,8 @@ namespace MineWorld
         DateTime lastMapBackup = DateTime.Now;
         public List<string> banList = null;
 
+        public String serverIP;
+
         bool keepRunning = true;
 
         // Server restarting variables.
@@ -94,8 +96,8 @@ namespace MineWorld
             DateTime lastCalc = DateTime.Now;
 
             //Display external IP
-            String extIp = GetExternalIp();
-            ConsoleWrite("Your external IP Adress: " + extIp);
+            serverIP = GetExternalIp();
+            ConsoleWrite("Your external IP Adress: " + serverIP);
 
             //Check if we should autoload a level
             if (Ssettings.Autoload)
@@ -120,6 +122,14 @@ namespace MineWorld
             // Main server loop!
             ConsoleWrite("SERVER READY");
             Random randomizer = new Random(56235676);
+
+            //If public, announce server to public tracker
+            if (Ssettings.Public)
+            {
+                updateMasterServer(Ssettings.Servername, serverIP, Ssettings.Maxplayers, 0);
+            }
+
+
             while (keepRunning)
             {
                 //Time to backup map?
@@ -538,6 +548,16 @@ namespace MineWorld
             foreach (IClient player in playerList.Values)
                 //if (netConn.Status == NetConnectionStatus.Connected)
                 player.AddQueMsg(msgBuffer, NetChannel.ReliableUnordered);
+        }
+
+        public void updateMasterServer(String servername, String IP, int maxUsers, int currentUsers)
+        {
+            WebClient wc = new WebClient();
+            if (!Ssettings.Proxy)
+            {
+                wc.Proxy = null;
+            }
+            wc.DownloadString("http://www.humorco.nl/mineworld/updateServer.php?sn=" + servername + "&ip=" + IP + "&u=" + currentUsers + "&mu=" + maxUsers);
         }
     }
 }
