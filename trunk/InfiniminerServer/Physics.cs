@@ -145,7 +145,10 @@ namespace MineWorld
                         {
                             if (InDirectSunLight(i, j, k))
                             {
-                                SetBlock(i, j, k, BlockType.Grass, PlayerTeam.None);
+                                if (randGen.Next(0, 6) == 3)
+                                {
+                                    SetBlock(i, j, k, BlockType.Grass, PlayerTeam.None);
+                                }
                             }
                         }
         }
