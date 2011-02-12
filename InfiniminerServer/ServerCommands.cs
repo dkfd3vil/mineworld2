@@ -217,6 +217,10 @@ namespace MineWorld
         {
             FileStream fs = new FileStream(filename, FileMode.Create);
             StreamWriter sw = new StreamWriter(fs);
+            //Create level header with team info
+            sw.WriteLine(teamOreBlue+","+teamOreRed+","+teamCashBlue+","+teamCashRed);
+
+            //Save block info
             for (int x = 0; x < MAPSIZE; x++)
                 for (int y = 0; y < MAPSIZE; y++)
                     for (int z = 0; z < MAPSIZE; z++)
@@ -243,6 +247,15 @@ namespace MineWorld
 
                 FileStream fs = new FileStream(filename, FileMode.Open);
                 StreamReader sr = new StreamReader(fs);
+                //read level header
+                String header = sr.ReadLine().Trim();
+                String[] headerPart = header.Split(new char[] { ',' });
+                teamOreBlue = (uint)Int32.Parse(headerPart[0]);
+                teamOreRed = (uint)Int32.Parse(headerPart[1]);
+                teamCashBlue = (uint)Int32.Parse(headerPart[2]);
+                teamCashRed = (uint)Int32.Parse(headerPart[3]);
+
+                //read block info
                 for (int x = 0; x < MAPSIZE; x++)
                     for (int y = 0; y < MAPSIZE; y++)
                         for (int z = 0; z < MAPSIZE; z++)
