@@ -9,3 +9,5 @@ These are the commands that are currently implented in the client
 /stopfluids This stops all fluids from spreading like lava
 
 /startfluids This return the fluids in the old state
+
+/nocost (toggle) Blocks dont cost a thing when set
