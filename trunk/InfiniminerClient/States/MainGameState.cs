@@ -457,6 +457,11 @@ namespace MineWorld.States
                         _P.DepositOre();
                         _P.PlaySound(MineWorldSound.ClickHigh);
                     }
+                    if (_P.AtHomeBase())
+                    {
+                        _P.DepositLoot();
+                        _P.PlaySound(MineWorldSound.ClickHigh);
+                    }
                     break;
                 case Buttons.Withdraw:
                     if (_P.AtBankTerminal())

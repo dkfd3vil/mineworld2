@@ -81,8 +81,8 @@ namespace MineWorld
             AddAdminblocks(ref caveData, size);
 
             // Add starting positions.
-            //AddStartingPosition(ref caveData, size, size - 5, size - 5, MineWorldGame.GROUND_LEVEL, BlockType.HomeRed);
-            //AddStartingPosition(ref caveData, size, 5, 5, MineWorldGame.GROUND_LEVEL, BlockType.HomeBlue);
+            AddStartingPosition(ref caveData, size, size - 5, size - 5, Defines.GROUND_LEVEL, BlockType.HomeRed);
+            AddStartingPosition(ref caveData, size, 5, 5, Defines.GROUND_LEVEL, BlockType.HomeBlue);
 
             oreNoise = null;
             caveNoise = null;
@@ -92,25 +92,25 @@ namespace MineWorld
             return caveData;
         }
 
-        //public static void AddStartingPosition(ref BlockType[, ,] data, int size, int x, int y, int z, BlockType blockType)
-        //{
-        //    for (int i = 0; i < size; i++)
-        //        for (int j = 0; j < size; j++)
-        //            for (int k = 0; k < size; k++)
-        //            {
-        //                double dist = Math.Sqrt(Math.Pow(x - i, 2) + Math.Pow(y - j, 2) + Math.Pow(z - k, 2));
-        //                if (dist < 4)
-        //                {
-        //                    if (k <= z)
-        //                        data[i, j, k] = BlockType.None;
-        //                    else if (k == z+1)
-        //                        data[i, j, k] = BlockType.Metal;
-        //                    else
-        //                        data[i, j, k] = BlockType.Dirt;
-        //                }
-        //            }
-        //    data[x, y, z] = blockType;
-        //}
+        public static void AddStartingPosition(ref BlockType[, ,] data, int size, int x, int y, int z, BlockType blockType)
+        {
+            for (int i = 0; i < size; i++)
+                for (int j = 0; j < size; j++)
+                    for (int k = 0; k < size; k++)
+                    {
+                        double dist = Math.Sqrt(Math.Pow(x - i, 2) + Math.Pow(y - j, 2) + Math.Pow(z - k, 2));
+                        if (dist < 4)
+                        {
+                            if (k <= z)
+                                data[i, j, k] = BlockType.None;
+                            else if (k == z+1)
+                                data[i, j, k] = BlockType.Metal;
+                            else
+                                data[i, j, k] = BlockType.Dirt;
+                        }
+                    }
+            data[x, y, z] = blockType;
+        }
 
         public static void AddRocks(ref BlockType[, ,] data, int size)
         {
