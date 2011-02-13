@@ -359,6 +359,14 @@ namespace MineWorld
                                             }
                                             break;
 
+                                        case MineWorldMessage.DepositCash:
+                                            {
+                                                IServer.DepositCash(player);
+                                                foreach (IClient p in IServer.playerList.Values)
+                                                    IServer.SendResourceUpdate(p);
+                                            }
+                                            break;
+
                                         case MineWorldMessage.WithdrawOre:
                                             {
                                                 IServer.WithdrawOre(player);

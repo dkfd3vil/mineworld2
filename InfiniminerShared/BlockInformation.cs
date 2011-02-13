@@ -21,6 +21,8 @@ namespace MineWorld
         BankBlue,
         BeaconRed,
         BeaconBlue,
+        HomeRed,
+        HomeBlue,
         Road,
         SolidRed,
         SolidBlue,
@@ -186,6 +188,24 @@ namespace MineWorld
                         case BlockFaceDirection.ZIncreasing: return BlockTexture.BankLeftBlue;
                         case BlockFaceDirection.ZDecreasing: return BlockTexture.BankRightBlue;
                         default: return BlockTexture.BankTopBlue;
+                    }
+                case BlockType.HomeBlue:
+                    switch (faceDir)
+                    {
+                        case BlockFaceDirection.XIncreasing: return BlockTexture.HomeBlue;
+                        case BlockFaceDirection.XDecreasing: return BlockTexture.HomeBlue;
+                        case BlockFaceDirection.ZIncreasing: return BlockTexture.HomeBlue;
+                        case BlockFaceDirection.ZDecreasing: return BlockTexture.HomeBlue;
+                        default: return BlockTexture.Metal;
+                    }
+                case BlockType.HomeRed:
+                    switch (faceDir)
+                    {
+                        case BlockFaceDirection.XIncreasing: return BlockTexture.HomeRed;
+                        case BlockFaceDirection.XDecreasing: return BlockTexture.HomeRed;
+                        case BlockFaceDirection.ZIncreasing: return BlockTexture.HomeRed;
+                        case BlockFaceDirection.ZDecreasing: return BlockTexture.HomeRed;
+                        default: return BlockTexture.Metal;
                     }
 
                 case BlockType.BeaconRed:
