@@ -361,7 +361,8 @@ namespace MineWorld
 
                                         case MineWorldMessage.DepositCash:
                                             {
-                                                IServer.DepositCash(player);
+                                                //IServer.DepositCash(player);
+                                                IServer.DepositForPlayers();
                                                 foreach (IClient p in IServer.playerList.Values)
                                                     IServer.SendResourceUpdate(p);
                                             }

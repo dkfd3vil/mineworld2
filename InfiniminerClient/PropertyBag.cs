@@ -705,7 +705,7 @@ namespace MineWorld
             BlockType blockType = blockEngine.BlockAtPoint(hitPoint);
             if (blockType == BlockType.HomeRed && playerTeam == PlayerTeam.Red)
                 return true;
-            if (blockType == BlockType.HomeRed && playerTeam == PlayerTeam.Blue)
+            if (blockType == BlockType.HomeBlue && playerTeam == PlayerTeam.Blue)
                 return true;
             return false;
         }
