@@ -557,10 +557,12 @@ namespace MineWorld.States
                             //Its a player command :D?
                             if(_P.chatEntryBuffer.StartsWith("/"))
                             {
+                                //String[] splitted = _P.chatEntryBuffer.Split(new char[] { ' ' });
                                 //_P.chatEntryBuffer.Remove(1, 1);
                                 NetBuffer msgBuffer = _P.netClient.CreateBuffer();
                                 msgBuffer.Write((byte)MineWorldMessage.PlayerCommand);
                                 msgBuffer.Write(_P.chatEntryBuffer);
+                                //msgBuffer.Write(splitted[1]);
                                 _P.netClient.SendMessage(msgBuffer, NetChannel.ReliableInOrder6);
                             }
                             else

@@ -121,6 +121,7 @@ namespace MineWorld
         Startfluids,
         Noadmin,
         Nocost,
+        Teleportto,
     }
 
     public enum ChatMessageType

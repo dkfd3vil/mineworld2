@@ -138,12 +138,15 @@ namespace MineWorld
                                         case MineWorldMessage.PlayerCommand:
                                             {
                                                 PlayerCommands command = PlayerCommands.None;
+                                                UInt32 argplayer = 0;
 
                                                 if(true /*IServer.GetAdmin(player.IP)*/)
                                                 {
                                                     string commandstring = Defines.Sanitize(msgBuffer.ReadString());
-                                                    commandstring = commandstring.ToLower();
-                                                    switch (commandstring)
+                                                    String[] splitted = commandstring.Split(new char[] { ' ' });
+                                                    splitted[0] = splitted[0].ToLower();
+
+                                                    switch (splitted[0])
                                                     {
                                                         case "/godmode":
                                                             {
@@ -176,6 +179,25 @@ namespace MineWorld
                                                                 }
                                                                 break;
                                                             }
+                                                        case "/teleportto":
+                                                        case "/tpt":
+                                                            {
+                                                                if (splitted.Length > 1)
+                                                                {
+                                                                    command = PlayerCommands.Teleportto;
+
+                                                                    foreach (IClient dummy in IServer.playerList.Values)
+                                                                    {
+                                                                        if (dummy.Handle.ToLower() == splitted[1])
+                                                                        {
+                                                                            //We found the player woot
+                                                                            argplayer = dummy.ID;
+                                                                            break;
+                                                                        }
+                                                                    }
+                                                                }
+                                                                break;
+                                                            }
                                                         default:
                                                             {
                                                                 command = PlayerCommands.None;
@@ -192,6 +214,10 @@ namespace MineWorld
                                                 NetBuffer chatPacket = netServer.CreateBuffer();
                                                 chatPacket.Write((byte)MineWorldMessage.PlayerCommandEnable);
                                                 chatPacket.Write((byte)command);
+                                                //if (argument != "")
+                                                //{
+                                                    chatPacket.Write(argplayer);
+                                                //}
                                                 player.AddQueMsg(chatPacket, NetChannel.ReliableInOrder6);
                                                 break;
                                             }

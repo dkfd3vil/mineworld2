@@ -225,7 +225,6 @@ namespace MineWorld
                 Ssettings.Public = false;
                 ConsoleWrite("Couldnt find public setting so we use the default (FALSE)");
             }
-
             if (dataFile.Data.ContainsKey("proxy"))
                 Ssettings.Proxy = bool.Parse(dataFile.Data["proxy"]);
             else
