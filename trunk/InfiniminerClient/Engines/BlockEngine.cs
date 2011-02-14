@@ -10,6 +10,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using Microsoft.Xna.Framework.Net;
 using Microsoft.Xna.Framework.Storage;
+using System.IO;
 
 namespace MineWorld
 {
@@ -132,6 +133,12 @@ namespace MineWorld
                 for (BlockFaceDirection faceDir = BlockFaceDirection.XIncreasing; faceDir < BlockFaceDirection.MAXIMUM; faceDir++)
                     blockTextureMap[(byte)blockType,(byte)faceDir] = BlockInformation.GetTexture(blockType, faceDir);
 
+            // Check the textures
+            if (!checkTextures())
+            {
+                System.Environment.FailFast("Texture hack detected");
+            }
+
             // Load the textures we'll use.
             blockTextures = new IMTexture[(byte)BlockTexture.MAXIMUM];
             blockTextures[(byte)BlockTexture.None] = new IMTexture(null);
@@ -199,6 +206,61 @@ namespace MineWorld
             }
             else
                 bloomPosteffect = null;
+        }
+
+        // Check if someone removed some block textures (anti-hack)
+        public bool checkTextures()
+        {
+            if (!TextureExists("blocks/tex_block_grass_side")) { return false; }
+            if (!TextureExists("blocks/tex_block_grass")) { return false; }
+            if (!TextureExists("blocks/tex_block_adminblock")) { return false; }
+            if (!TextureExists("blocks/tex_block_dirt")) { return false; }
+            if (!TextureExists("blocks/tex_block_rock")) { return false; }
+            if (!TextureExists("blocks/tex_block_ore")) { return false; }
+            if (!TextureExists("blocks/tex_block_silver")) { return false; }
+            if (!TextureExists("blocks/tex_block_diamond")) { return false; }
+            if (!TextureExists("blocks/tex_block_home_red")) { return false; }
+            if (!TextureExists("blocks/tex_block_home_blue")) { return false; }
+            if (!TextureExists("blocks/tex_block_red")) { return false; }
+            if (!TextureExists("blocks/tex_block_blue")) { return false; }
+            if (!TextureExists("blocks/tex_block_ladder")) { return false; }
+            if (!TextureExists("blocks/tex_block_ladder_top")) { return false; }
+            if (!TextureExists("blocks/tex_block_spikes")) { return false; }
+            if (!TextureExists("blocks/tex_block_jump")) { return false; }
+            if (!TextureExists("blocks/tex_block_jump_top")) { return false; }
+            if (!TextureExists("blocks/tex_block_explosive")) { return false; }
+            if (!TextureExists("blocks/tex_block_metal")) { return false; }
+            if (!TextureExists("blocks/tex_block_dirt_sign")) { return false; }
+            if (!TextureExists("blocks/tex_block_bank_top_red")) { return false; }
+            if (!TextureExists("blocks/tex_block_bank_left_red")) { return false; }
+            if (!TextureExists("blocks/tex_block_bank_front_red")) { return false; }
+            if (!TextureExists("blocks/tex_block_bank_right_red")) { return false; }
+            if (!TextureExists("blocks/tex_block_bank_back_red")) { return false; }
+            if (!TextureExists("blocks/tex_block_bank_top_blue")) { return false; }
+            if (!TextureExists("blocks/tex_block_bank_left_blue")) { return false; }
+            if (!TextureExists("blocks/tex_block_bank_front_blue")) { return false; }
+            if (!TextureExists("blocks/tex_block_bank_right_blue")) { return false; }
+            if (!TextureExists("blocks/tex_block_bank_back_blue")) { return false; }
+            if (!TextureExists("blocks/tex_block_teleporter_a")) { return false; }
+            if (!TextureExists("blocks/tex_block_teleporter_b")) { return false; }
+            if (!TextureExists("blocks/tex_block_teleporter_top")) { return false; }
+            if (!TextureExists("blocks/tex_block_teleporter_bottom")) { return false; }
+            if (!TextureExists("blocks/tex_block_lava")) { return false; }
+            if (!TextureExists("blocks/tex_block_road")) { return false; }
+            if (!TextureExists("blocks/tex_block_road_top")) { return false; }
+            if (!TextureExists("blocks/tex_block_road_bottom")) { return false; }
+            if (!TextureExists("blocks/tex_block_beacon_top_red")) { return false; }
+            if (!TextureExists("blocks/tex_block_beacon_top_blue")) { return false; }
+            if (!TextureExists("blocks/tex_block_trans_red")) { return false; }
+            if (!TextureExists("blocks/tex_block_trans_blue")) { return false; }
+
+            return true;
+        }
+
+        // Check if a texture exists (anti-hack)
+        public bool TextureExists(String texture)
+        {
+            return File.Exists("content/" + texture + ".xnb");
         }
 
         // Returns true if we are solid at this point.
