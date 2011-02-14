@@ -112,6 +112,13 @@ namespace MineWorld.States
             // Update the camera regardless of if we're alive or not.
             _P.UpdateCamera(gameTime);
 
+            TimeSpan timespanhearthbeat = DateTime.Now - _P.lasthearthbeatreceived;
+            if (timespanhearthbeat.TotalMilliseconds > 5000)
+            {
+                // The server crashed lets exit
+                nextState = "MineWorld.States.ServerBrowserState";
+            }
+
             return nextState;
         }
 

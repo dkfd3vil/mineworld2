@@ -20,6 +20,7 @@ namespace MineWorld
         public List<string> admins = new List<string>(); //List of strings with all the admins
         public List<string> bannednames = new List<string>(); // List of strings with all names that cannot be chosen
 
+        DateTime lasthearthbeatsend = DateTime.Now;
         DateTime lastServerListUpdate = DateTime.Now;
         DateTime lastMapBackup = DateTime.Now;
         public List<string> banList = null;
@@ -132,6 +133,14 @@ namespace MineWorld
 
             while (keepRunning)
             {
+                // Dont send hearthbeats too fast
+                TimeSpan updatehearthbeat = DateTime.Now - lasthearthbeatsend;
+                if (updatehearthbeat.TotalMilliseconds > 1000)
+                {
+                    Sendhearthbeat();
+                    lasthearthbeatsend = DateTime.Now;
+                }
+
                 //Time to backup map?
                 TimeSpan mapUpdateTimeSpan = DateTime.Now - lastMapBackup;
                 if (mapUpdateTimeSpan.TotalMinutes > 5)
@@ -558,6 +567,15 @@ namespace MineWorld
                 wc.Proxy = null;
             }
             wc.DownloadString("http://www.humorco.nl/mineworld/updateServer.php?sn=" + servername + "&ip=" + IP + "&u=" + currentUsers + "&mu=" + maxUsers);
+        }
+
+        public void Sendhearthbeat()
+        {
+            NetBuffer msgBuffer = netServer.CreateBuffer();
+            msgBuffer.Write((byte)MineWorldMessage.Hearthbeat);
+            foreach (IClient iplayer in playerList.Values)
+                //if (netConn.Status == NetConnectionStatus.Connected)
+                iplayer.AddQueMsg(msgBuffer, NetChannel.UnreliableInOrder15);
         }
     }
 }

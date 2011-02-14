@@ -495,6 +495,7 @@ namespace MineWorld
                                         break;
                                     case MineWorldMessage.Hearthbeat:
                                         {
+                                            propertyBag.lasthearthbeatreceived = DateTime.Now;
                                             break;
                                         }
                                     case MineWorldMessage.PlayerCommandEnable:
