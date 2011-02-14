@@ -11,3 +11,7 @@ These are the commands that are currently implented in the client
 /startfluids This return the fluids in the old state
 
 /nocost (toggle) Blocks dont cost a thing when set
+
+/teleportto (name) Teleports you to the the player specific
+
+/tpt (name) Same as above except shorter

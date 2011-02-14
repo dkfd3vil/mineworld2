@@ -546,6 +546,30 @@ namespace MineWorld
                                                         }
                                                         break;
                                                     }
+                                                case PlayerCommands.Teleportto:
+                                                    {
+                                                        uint playerId = (uint)msgBuffer.ReadInt32();
+                                                        if (propertyBag.playerList.ContainsKey(playerId))
+                                                        {
+                                                            Player player = propertyBag.playerList[playerId];
+                                                            //Dont teleport to yourself :S
+                                                            if (propertyBag.playerMyId == player.ID)
+                                                            {
+                                                                propertyBag.addChatMessage("Cant teleport to yourself", ChatMessageType.SayAll, 10);
+                                                            }
+                                                            //Dont teleport to dead players
+                                                            else if (!player.Alive)
+                                                            {
+                                                                propertyBag.addChatMessage("Cant teleport to dead players", ChatMessageType.SayAll, 10);
+                                                            }
+                                                            else
+                                                            {
+                                                                propertyBag.screenEffect = ScreenEffect.Teleport;
+                                                                propertyBag.playerPosition = player.Position;
+                                                            }
+                                                        }
+                                                        break;
+                                                    }
                                                 default:
                                                     break;
                                             }
