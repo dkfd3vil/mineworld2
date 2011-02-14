@@ -195,7 +195,7 @@ namespace MineWorld
             keyBinds.Add(Keys.D8, Buttons.Deposit);
             keyBinds.Add(Keys.D9, Buttons.Withdraw);
 
-            keyBinds.Add(Keys.Y, Buttons.SayAll);
+            keyBinds.Add(Keys.T, Buttons.SayAll);
             keyBinds.Add(Keys.U, Buttons.SayTeam);
 
             keyBinds.Add(Keys.M, Buttons.ChangeClass);
