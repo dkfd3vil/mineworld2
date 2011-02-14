@@ -18,6 +18,9 @@ namespace MineWorld
 {
     public class PropertyBag
     {
+        // Hearthbeat.
+        public DateTime lasthearthbeatreceived = DateTime.Now;
+
         // Game engines.
         public BlockEngine blockEngine = null;
         public InterfaceEngine interfaceEngine = null;
