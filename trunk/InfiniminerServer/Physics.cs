@@ -43,9 +43,9 @@ namespace MineWorld
                 CalcWater();
                 lastCalcWater = DateTime.Now;
             }
-            // We calculate grass every 5000 milliseconds
+            // We calculate grass every 2500 milliseconds
             // so it doesnt grow to fast
-            if (timeSpanCalcGrass.TotalMilliseconds > 5000)
+            if (timeSpanCalcGrass.TotalMilliseconds > 2500)
             {
                 CalcGrass();
                 lastCalcGrass = DateTime.Now;
@@ -136,7 +136,7 @@ namespace MineWorld
 
         public void CalcGrass()
         {
-            //Todo: BLAAT
+            //Todo: Rework this CalcGrass()
             // More horror code :S
             for (ushort i = 0; i < MAPSIZE; i++)
                 for (ushort j = 0; j < MAPSIZE; j++)
