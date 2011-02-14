@@ -380,11 +380,17 @@ namespace MineWorld
                     }
                     else
                     {
-                        player.ExplosiveList.Add(buildPoint);
+                        player.ExplosiveList.Add(intifyVector(buildPoint));
                     }
             }
         }
-
+        public Vector3 intifyVector(Vector3 vector){
+            Vector3 cleanvector=new Vector3();
+            cleanvector.X = (int)vector.X;
+            cleanvector.Y = (int)vector.Y;
+            cleanvector.Z = (int)vector.Z;
+            return cleanvector;
+        }
         public void UseDeconstructionGun(IClient player, Vector3 playerPosition, Vector3 playerHeading)
         {
             bool actionFailed = false;
@@ -487,7 +493,9 @@ namespace MineWorld
 
             // Remove this from any explosive lists it may be in.
             foreach (IClient p in playerList.Values)
+            {
                 p.ExplosiveList.Remove(new Vector3(x, y, z));
+            }
 
             // Detonate the block.
                 for (int dx = -4; dx <= 4; dx++)
