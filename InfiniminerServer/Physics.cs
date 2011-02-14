@@ -161,15 +161,22 @@ namespace MineWorld
             // Explode TNT if lava touches it
             foreach (IClient p in playerList.Values)
             {
-                foreach (Vector3 explosive in p.ExplosiveList)
+                try
                 {
-                    x = (ushort)explosive.X;
-                    y = (ushort)explosive.Y;
-                    z = (ushort)explosive.Z;
-                    if (blockList[x + 1, y, z] == BlockType.Lava || blockList[x - 1, y, z] == BlockType.Lava || blockList[x, y, z + 1] == BlockType.Lava || blockList[x, y, z - 1] == BlockType.Lava || blockList[x, y + 1, z] == BlockType.Lava || blockList[x, y - 1, z] == BlockType.Lava)
+                    foreach (Vector3 explosive in p.ExplosiveList)
                     {
-                        DetonateAtPoint(x, y, z);
+                        x = (ushort)explosive.X;
+                        y = (ushort)explosive.Y;
+                        z = (ushort)explosive.Z;
+                        if (blockList[x + 1, y, z] == BlockType.Lava || blockList[x - 1, y, z] == BlockType.Lava || blockList[x, y, z + 1] == BlockType.Lava || blockList[x, y, z - 1] == BlockType.Lava || blockList[x, y + 1, z] == BlockType.Lava || blockList[x, y - 1, z] == BlockType.Lava)
+                        {
+                            DetonateAtPoint(x, y, z);
+                        }
                     }
+                }
+                catch
+                {
+                    //no more explosives in chain reaction
                 }
             }
         }
