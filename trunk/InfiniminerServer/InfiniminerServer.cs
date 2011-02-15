@@ -146,12 +146,16 @@ namespace MineWorld
                 }
 
                 //Time to backup map?
-                TimeSpan mapUpdateTimeSpan = DateTime.Now - lastMapBackup;
-                if (mapUpdateTimeSpan.TotalMinutes > 5)
+                // If Ssettings.autosavetimer is 0 then autosave is disabled
+                if (Ssettings.Autosavetimer == 0)
                 {
-                    System.Threading.Thread backupthread = new System.Threading.Thread(new ThreadStart(BackupLevel));
-                    backupthread.Start();
-                    lastMapBackup = DateTime.Now;
+                    TimeSpan mapUpdateTimeSpan = DateTime.Now - lastMapBackup;
+                    if (mapUpdateTimeSpan.TotalMinutes > Ssettings.Autosavetimer)
+                    {
+                        System.Threading.Thread backupthread = new System.Threading.Thread(new ThreadStart(BackupLevel));
+                        backupthread.Start();
+                        lastMapBackup = DateTime.Now;
+                    }
                 }
                 //Time to terminate finished map sending threads?
                 TerminateFinishedThreads();
@@ -277,15 +281,26 @@ namespace MineWorld
                 ConsoleWrite("Couldnt find includelava setting so we use the default (true)");
             }
 
-            if (Ssettings.Maxplayers > 1 && Ssettings.Maxplayers <= 16)
-            {
-                //TODO: Rewrite this.
-            }
+            if (dataFile.Data.ContainsKey("autosave"))
+                Ssettings.Autosavetimer = int.Parse(dataFile.Data["autosave"]);
             else
+            {
+                Ssettings.Autosavetimer = 5;
+                ConsoleWrite("Couldnt find autosave setting so we use the default (5)");
+            }
+
+            if (!(Ssettings.Maxplayers > 1 && Ssettings.Maxplayers <= 16))
             {
                 Ssettings.Maxplayers = 16;
                 ConsoleWrite("The value of maxplayers must be between 1 and 16 for now");
                 ConsoleWrite("Setting Maxplayers to 16");
+            }
+
+            if (!(Ssettings.Autosavetimer >= 0 && Ssettings.Autosavetimer <= 60))
+            {
+                Ssettings.Autosavetimer = 5;
+                ConsoleWrite("The value of autosave must be between 0 and 60 for now");
+                ConsoleWrite("Setting autosave to 5");
             }
         }
 
