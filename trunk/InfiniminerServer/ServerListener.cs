@@ -38,14 +38,17 @@ namespace MineWorld
                                     double authcode = msgBuffer.ReadDouble();
                                     if (authcode != Defines.MINEWORLD_VER)
                                     {
+                                        IServer.ConsoleWrite("CONNECTION REJECTED: " + temphandle + " VERSION WRONG");
                                         msgSender.Disapprove("versionwrong");
                                     }
                                     else if (IServer.banList.Contains(msgSender.RemoteEndpoint.Address.ToString()))
                                     {
+                                        IServer.ConsoleWrite("CONNECTION REJECTED: " + temphandle + " IP BANNED");
                                         msgSender.Disapprove("banned");
                                     }
                                     else if (IServer.playerList.Count == IServer.Ssettings.Maxplayers)
                                     {
+                                        IServer.ConsoleWrite("CONNECTION REJECTED: " + temphandle + " SERVER FULL");
                                         msgSender.Disapprove("serverfull");
                                     }
                                     else
@@ -54,6 +57,7 @@ namespace MineWorld
                                         {
                                             if (temphandle.ToLower() == "player")
                                             {
+                                                IServer.ConsoleWrite("CONNECTION REJECTED: " + temphandle + " CHANGE NAME");
                                                 //msgSender.Disapprove("changename");
                                             }
                                             else
@@ -62,13 +66,25 @@ namespace MineWorld
                                                 {
                                                     if (name.ToLower() == temphandle.ToLower())
                                                     {
+                                                        IServer.ConsoleWrite("CONNECTION REJECTED: " + temphandle + " BANNED NAME");
                                                         msgSender.Disapprove("bannedname");
                                                     }
                                                 }
+                                                //TODO: Make sure double names cant connect
+                                                /*
+                                                foreach ()
+                                                {
+                                                    if (dummy.Handle.ToLower() == temphandle.ToLower())
+                                                    {
+                                                        IServer.ConsoleWrite("CONNECTION REJECTED: " + temphandle + " NAME EXSISTS");
+                                                    }
+                                                }
+                                                 */
                                             }
                                         }
                                         else
                                         {
+                                            IServer.ConsoleWrite("CONNECTION REJECTED: NO NAME");
                                             msgSender.Disapprove("noname");
                                         }
 
@@ -91,7 +107,11 @@ namespace MineWorld
                                         IServer.toGreet.Add(msgSender);
                                         this.netServer.SanityCheck(msgSender);
                                         msgSender.Approve();
-                                        IServer.updateMasterServer(IServer.Ssettings.Servername, IServer.serverIP, IServer.Ssettings.Maxplayers, IServer.playerList.Count);
+                                        // Dont bother if the server isnt public
+                                        if(IServer.Ssettings.Public == true)
+                                        {
+                                            IServer.updateMasterServer();
+                                        }
                                     }
                                 }
                                 break;
@@ -117,9 +137,16 @@ namespace MineWorld
                                     {
                                         IServer.ConsoleWrite("DISCONNECT: " + IServer.playerList[msgSender].Handle);
                                         IServer.SendPlayerLeft(player, player.Kicked ? "WAS KICKED FROM THE GAME!" : "HAS ABANDONED THEIR DUTIES!");
+
                                         if (IServer.playerList.ContainsKey(msgSender))
+                                        {
                                             IServer.playerList.Remove(msgSender);
-                                        //IServer.PublicServerListUpdate();
+                                        }
+
+                                        if (IServer.Ssettings.Public == true)
+                                        {
+                                            IServer.updateMasterServer();
+                                        }
                                     }
                                 }
                                 break;
