@@ -97,8 +97,12 @@ namespace MineWorld
             DateTime lastCalc = DateTime.Now;
 
             //Display external IP
-            serverIP = GetExternalIp();
-            ConsoleWrite("Your external IP Adress: " + serverIP);
+            //Dont bother if it isnt public
+            if (Ssettings.Public == true)
+            {
+                serverIP = GetExternalIp();
+                ConsoleWrite("Your external IP Adress: " + serverIP);
+            }
 
             //Check if we should autoload a level
             if (Ssettings.Autoload)
@@ -127,7 +131,7 @@ namespace MineWorld
             //If public, announce server to public tracker
             if (Ssettings.Public)
             {
-                updateMasterServer(Ssettings.Servername, serverIP, Ssettings.Maxplayers, 0);
+                updateMasterServer();
             }
 
 
@@ -558,14 +562,25 @@ namespace MineWorld
                 player.AddQueMsg(msgBuffer, NetChannel.ReliableUnordered);
         }
 
-        public void updateMasterServer(String servername, String IP, int maxUsers, int currentUsers)
+        public void updateMasterServer()
         {
-            WebClient wc = new WebClient();
-            if (!Ssettings.Proxy)
-            {
-                wc.Proxy = null;
-            }
-            wc.DownloadString("http://www.humorco.nl/mineworld/updateServer.php?sn=" + servername + "&ip=" + IP + "&u=" + currentUsers + "&mu=" + maxUsers);
+            //WebClient wc = new WebClient();
+            //if (!Ssettings.Proxy)
+            //{
+                //wc.Proxy = null;
+            //}
+            // JOw martijn dit moet ff anders
+            // Ik zal je een voorbeeldje laten zien ;)
+            /*
+             De variablen leest de client op deze volgorde en dat ging fout bij jou :S
+             * IP
+             * NAME
+             * EXTRA INFO (ons geval null dacht ik weet niet zeker :P
+             * PLAYERCOUNT
+             * MAXPLAYERS
+             */
+            //wc.DownloadString("http://www.humorco.nl/mineworld/updateServer.php?sn=" + servername + "&ip=" + IP + "&u=" + currentUsers + "&mu=" + maxUsers);
+            ConsoleWrite("UPDATING MASTERSERVER");
         }
 
         public void Sendhearthbeat()
