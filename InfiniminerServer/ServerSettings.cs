@@ -24,6 +24,7 @@ namespace MineWorld
             public bool AutoAnnouce;
             public string MOTD;
             public bool Includelava;
+            public int Autosavetimer;
 
             //Not used by configs
             public bool StopFluids;

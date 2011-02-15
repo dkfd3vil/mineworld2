@@ -6,6 +6,7 @@ maxplayers = 16
 # Before making your server public, MAKE SURE THAT PORT 5565 (TCP/UDP) IS ACCESSIBLE FROM THE OUTSIDE OF YOUR NETWORK!
 # For most users, this means setting the port to be forwarded by your router through your router control interface.
 public = false
+
 #If you play over a proxy you can set this to true and it automatically detects the proxy from internet explorer
 proxy = false
 
@@ -23,3 +24,6 @@ motd = Welcome [name] to my server!
 
 # If set, Lava will be placed randomly in the level otherwise there is no lava
 includelava = true
+
+# Sets the number of minutes between autosaves (zero disables autosave)
+autosave = 5
