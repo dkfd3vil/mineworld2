@@ -418,7 +418,7 @@ namespace MineWorld
                                             {
                                                 Player player = propertyBag.playerList[playerId];
                                                 player.Alive = false;
-                                                propertyBag.particleEngine.CreateBloodSplatter(player.Position, player.Team == PlayerTeam.Red ? Color.Red : Color.Blue);
+                                                //propertyBag.particleEngine.CreateBloodSplatter(player.Position, player.Team == PlayerTeam.Red ? Color.Red : Color.Blue);
                                                 if (playerId != propertyBag.playerMyId)
                                                     propertyBag.PlaySound(MineWorldSound.Death, player.Position);
                                             }
