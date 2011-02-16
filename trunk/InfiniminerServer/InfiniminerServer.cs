@@ -371,10 +371,12 @@ namespace MineWorld
 
         public void SendCurrentMap(NetConnection client)
         {
-            MapSender ms = new MapSender(client, this, netServer, MAPSIZE,playerList[client].compression);
+            MapSender ms = new MapSender(client, this, netServer, MAPSIZE/*,playerList[client].compression*/);
             mapSendingProgress.Add(ms);
         }
 
+        //TODO: SendcurrentMapB is not used maybe remove it?
+        /*
         public void SendCurrentMapB(NetConnection client)
         {
             Debug.Assert(MAPSIZE == 64, "The BlockBulkTransfer message requires a map size of 64.");
@@ -393,6 +395,7 @@ namespace MineWorld
                         netServer.SendMessage(msgBuffer, client, NetChannel.ReliableUnordered);
                 }
         }
+         */
 
         public void SendPlayerPing(uint playerId)
         {

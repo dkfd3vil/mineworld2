@@ -95,6 +95,8 @@ namespace MineWorld
                                             //newPlayer.admin = IServer.admins[newPlayer.IP];
                                         IServer.playerList[msgSender] = newPlayer;
                                         //Check if we should compress the map for the client
+                                        //Removed for now
+                                        /*
                                         try
                                         {
                                             bool compression = msgBuffer.ReadBoolean();
@@ -102,6 +104,7 @@ namespace MineWorld
                                                 IServer.playerList[msgSender].compression = true;
                                         }
                                         catch { }
+                                         */
                                         System.Threading.Thread SenderThread = new System.Threading.Thread(new System.Threading.ThreadStart(newPlayer.start));
                                         SenderThread.Start();
                                         IServer.toGreet.Add(msgSender);
@@ -142,11 +145,11 @@ namespace MineWorld
                                         {
                                             IServer.playerList.Remove(msgSender);
                                         }
+                                    }
 
-                                        if (IServer.Ssettings.Public == true)
-                                        {
-                                            IServer.updateMasterServer();
-                                        }
+                                    if (IServer.Ssettings.Public == true)
+                                    {
+                                        IServer.updateMasterServer();
                                     }
                                 }
                                 break;

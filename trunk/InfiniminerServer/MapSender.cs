@@ -13,7 +13,7 @@ namespace MineWorld
         MineWorld.MineWorldServer infs;
         MineWorld.MineWorldNetServer infsN;
         int MAPSIZE = 64;
-        bool compression = false;
+        //bool compression = false;
         //bool finished = false;
         public bool finished
         {
@@ -23,13 +23,13 @@ namespace MineWorld
             }
         }
 
-        public MapSender(NetConnection nClient, MineWorld.MineWorldServer nInfs, MineWorld.MineWorldNetServer nInfsN, int nMAPSIZE, bool compress)
+        public MapSender(NetConnection nClient, MineWorld.MineWorldServer nInfs, MineWorld.MineWorldNetServer nInfsN, int nMAPSIZE/*, bool compress*/)
         {
             client = nClient;
             infs = nInfs;
             infsN = nInfsN;
             MAPSIZE = nMAPSIZE;
-            compression = compress;
+            //compression = compress;
             //finished = false;
             conn = new Thread(new ThreadStart(this.start));
             conn.Start();
@@ -50,16 +50,24 @@ namespace MineWorld
                 {
                     NetBuffer msgBuffer = infsN.CreateBuffer();
                     msgBuffer.Write((byte)MineWorld.MineWorldMessage.BlockBulkTransfer);
-                    if (!compression)
+                    //if (!compression)
+                    //{
+                    msgBuffer.Write(x);
+                    msgBuffer.Write(y);
+                    for (byte dy = 0; dy < 16; dy++)
                     {
-                        msgBuffer.Write(x);
-                        msgBuffer.Write(y);
-                        for (byte dy = 0; dy < 16; dy++)
-                            for (byte z = 0; z < MAPSIZE; z++)
-                                msgBuffer.Write((byte)(infs.blockList[x, y + dy, z]));
-                        if (client.Status == NetConnectionStatus.Connected)
-                            infsN.SendMessage(msgBuffer, client, NetChannel.ReliableUnordered);
+                        for (byte z = 0; z < MAPSIZE; z++)
+                        {
+                            msgBuffer.Write((byte)(infs.blockList[x, y + dy, z]));
+                        }
                     }
+                    if (client.Status == NetConnectionStatus.Connected)
+                    {
+                        infsN.SendMessage(msgBuffer, client, NetChannel.ReliableUnordered);
+                    }
+                    //}
+                    //TODO: Compression needs to be defaulted i guess
+                    /*
                     else
                     {
                         //Compress the data so we don't use as much bandwith - Xeio's work
@@ -88,6 +96,7 @@ namespace MineWorld
                         if (client.Status == NetConnectionStatus.Connected)
                             infsN.SendMessage(msgBuffer, client, NetChannel.ReliableUnordered);
                     }
+                     */
                 }
             conn.Abort();
         }

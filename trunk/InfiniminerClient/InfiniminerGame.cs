@@ -38,12 +38,12 @@ namespace MineWorld
                 IPAddress.TryParse(args[0], out IPargument);
         }
         }
-
+        /*
         public void setServername(string newName)
         {
             propertyBag.serverName = newName;
         }
-
+        */
         public void JoinGame(IPEndPoint serverEndPoint)
         {
             anyPacketsReceived = false;
@@ -59,7 +59,7 @@ namespace MineWorld
             connectBuffer.Write(Defines.MINEWORLD_VER);
 
             //Compression - will be ignored by regular servers
-            connectBuffer.Write(true);
+            //connectBuffer.Write(true);
 
             // Connect to the server.
             propertyBag.netClient.Connect(serverEndPoint, connectBuffer.ToArray());
@@ -217,11 +217,12 @@ namespace MineWorld
                                             try
                                             {
                                                 //This is either the compression flag or the x coordiante
-                                                byte isCompressed = msgBuffer.ReadByte();
+                                                //byte isCompressed = msgBuffer.ReadByte();
                                                 byte x;
                                                 byte y;
-
+                                                
                                                 //255 was used because it exceeds the map size - of course, bytes won't work anyway if map sizes are allowed to be this big, so this method is a non-issue
+                                                /*
                                                 if (isCompressed == 255)
                                                 {
                                                     var compressed = msgBuffer.ReadBytes(msgBuffer.LengthBytes - msgBuffer.Position / 8);
@@ -239,9 +240,10 @@ namespace MineWorld
                                                                 propertyBag.blockEngine.downloadList[x, y + dy, z] = blockType;
                                                         }
                                                 }
-                                                else
-                                                {
-                                                    x = isCompressed;
+                                                 */
+                                                //else
+                                                //{
+                                                    x = msgBuffer.ReadByte();
                                                     y = msgBuffer.ReadByte();
                                                     propertyBag.mapLoadProgress[x, y] = true;
                                                     for (byte dy = 0; dy < 16; dy++)
@@ -251,7 +253,7 @@ namespace MineWorld
                                                             if (blockType != BlockType.None)
                                                                 propertyBag.blockEngine.downloadList[x, y + dy, z] = blockType;
                                                         }
-                                                }
+                                                //}
                                                 bool downloadComplete = true;
                                                 for (x = 0; x < 64; x++)
                                                     for (y = 0; y < 64; y += 16)
@@ -565,6 +567,7 @@ namespace MineWorld
                                                             else
                                                             {
                                                                 propertyBag.screenEffect = ScreenEffect.Teleport;
+                                                                propertyBag.PlaySoundForEveryone(MineWorldSound.Teleporter, propertyBag.playerPosition);
                                                                 propertyBag.playerPosition = player.Position;
                                                             }
                                                         }
@@ -586,26 +589,6 @@ namespace MineWorld
             // Make sure our network thread actually gets to run.
             Thread.Sleep(1);
         }
-        /*
-        private void CheckForStandingInLava()
-        {
-            // Copied from TryToMoveTo; responsible for checking if lava has flowed over us.
-
-            Vector3 movePosition = propertyBag.playerPosition;
-            Vector3 midBodyPoint = movePosition + new Vector3(0, -0.7f, 0);
-            Vector3 lowerBodyPoint = movePosition + new Vector3(0, -1.4f, 0);
-            BlockType lowerBlock = propertyBag.blockEngine.BlockAtPoint(lowerBodyPoint);
-            BlockType midBlock = propertyBag.blockEngine.BlockAtPoint(midBodyPoint);
-            BlockType upperBlock = propertyBag.blockEngine.BlockAtPoint(movePosition);
-            if (upperBlock == BlockType.Lava || lowerBlock == BlockType.Lava || midBlock == BlockType.Lava)
-            {
-                if (propertyBag.godmode == false)
-                {
-                    propertyBag.KillPlayer(Defines.deathByLava);
-                }
-            }
-        }
-         */
 
         protected override void Initialize()
         {
