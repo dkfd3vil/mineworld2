@@ -522,10 +522,12 @@ namespace MineWorld
                             switch (blockList[x + dx, y + dy, z + dz])
                             {
                                 case BlockType.Adminblock:
+                                case BlockType.Metal:
                                     {
                                         destroyBlock = false;
                                         break;
                                     }
+                                
                             }
                             if (destroyBlock)
                             {
