@@ -213,10 +213,14 @@ namespace MineWorld
                 return;
 
             string textureName = "sprites/tex_sprite_";
-            /*if (team == PlayerTeam.Red&&(!AltColours||redTeam==Defines.IM_RED))
+            if (team == PlayerTeam.Red)
+            {
                 textureName += "red_";
-            else*/
+            }
+            else
+            {
                 textureName += "blue_";
+            }
             switch (tool)
             {
                 case PlayerTools.ConstructionGun:
