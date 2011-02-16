@@ -58,7 +58,7 @@ namespace MineWorld
             connectBuffer.Write(propertyBag.playerHandle);
             connectBuffer.Write(Defines.MINEWORLD_VER);
 
-            //Compression - will be ignored by regular servers
+            //Compression - will be ignored by regular servers.
             //connectBuffer.Write(true);
 
             // Connect to the server.
