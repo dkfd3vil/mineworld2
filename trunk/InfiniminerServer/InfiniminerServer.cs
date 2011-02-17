@@ -33,6 +33,10 @@ namespace MineWorld
         DateTime restartTime = DateTime.Now;
         bool restartTriggered = false;
 
+        // Server shutdown variables.
+        DateTime shutdownTime = DateTime.Now;
+        bool shutdownTriggerd = false;
+
         public ServerSettings Ssettings = new ServerSettings();
 
         public MineWorldServer()
@@ -152,9 +156,11 @@ namespace MineWorld
                     TimeSpan mapUpdateTimeSpan = DateTime.Now - lastMapBackup;
                     if (mapUpdateTimeSpan.TotalMinutes > Ssettings.Autosavetimer)
                     {
+                        ConsoleWrite("BACK-UP STARTED");
                         System.Threading.Thread backupthread = new System.Threading.Thread(new ThreadStart(BackupLevel));
                         backupthread.Start();
                         lastMapBackup = DateTime.Now;
+                        ConsoleWrite("BACK-UP DONE");
                     }
                 }
                 //Time to terminate finished map sending threads?
@@ -194,23 +200,25 @@ namespace MineWorld
                 if (restartTriggered && DateTime.Now > restartTime)
                 {
                     SaveLevel("autosave_" + (UInt64)DateTime.Now.ToBinary() + ".lvl");
-                    netServer.Shutdown("The server is restarting.");
+                    //netServer.Shutdown("The server is restarting.");
                     return true;
+                }
+
+                if (shutdownTriggerd && DateTime.Now > shutdownTime)
+                {
+                    SaveLevel("autosave_" + (UInt64)DateTime.Now.ToBinary() + ".lvl");
+                    return false;
                 }
 
                 // Pass control over to waiting threads.
                 Thread.Sleep(1);
             }
-
-            MessageAll("Server going down NOW!");
-
-            //TODO: Make client handle server terminate
-            netServer.Shutdown("The server was terminated.");
             return false;
         }
 
         public void LoadSettings()
         {
+            ConsoleWrite("LOADING SETTINGS");
             //TODO: Load settings from file
             //For now we hardcode them
             Ssettings.StopFluids = false;
@@ -302,6 +310,25 @@ namespace MineWorld
                 ConsoleWrite("The value of autosave must be between 0 and 60 for now");
                 ConsoleWrite("Setting autosave to 5");
             }
+            ConsoleWrite("SETTINGS LOADED");
+        }
+
+        public void Shutdownserver()
+        {
+            SendServerMessage("Server is shutting down");
+            disconnectAll();
+            shutdownTriggerd = true;
+            shutdownTime = DateTime.Now;
+            netServer.Shutdown("servershutdown");
+        }
+
+        public void Restartserver()
+        {
+            SendServerMessage("Server is restarting");
+            disconnectAll();
+            restartTriggered = true;
+            restartTime = DateTime.Now;
+            netServer.Shutdown("serverrestart");
         }
 
         public void SendServerMessageToPlayer(string message, NetConnection conn)

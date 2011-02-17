@@ -170,7 +170,7 @@ namespace MineWorld
                                                 PlayerCommands command = PlayerCommands.None;
                                                 UInt32 argplayer = 0;
 
-                                                if(true /*IServer.GetAdmin(player.IP)*/)
+                                                if(IServer.GetAdmin(player.IP))
                                                 {
                                                     string commandstring = Defines.Sanitize(msgBuffer.ReadString());
                                                     String[] splitted = commandstring.Split(new char[] { ' ' });
@@ -228,6 +228,18 @@ namespace MineWorld
                                                                 }
                                                                 break;
                                                             }
+                                                        case "/announce":
+                                                            {
+                                                                command = PlayerCommands.Announce;
+                                                                IServer.ProcessCommand(commandstring, true);
+                                                                break;
+                                                            }
+                                                        case "/restart":
+                                                            {
+                                                                command = PlayerCommands.Restart;
+                                                                IServer.ProcessCommand(commandstring,true);
+                                                                break;
+                                                            }
                                                         default:
                                                             {
                                                                 command = PlayerCommands.None;
@@ -238,16 +250,13 @@ namespace MineWorld
                                                 }
                                                 else
                                                 {
-                                                    //command = PlayerCommands.Noadmin;
+                                                    command = PlayerCommands.Noadmin;
                                                 }
 
                                                 NetBuffer chatPacket = netServer.CreateBuffer();
                                                 chatPacket.Write((byte)MineWorldMessage.PlayerCommandEnable);
                                                 chatPacket.Write((byte)command);
-                                                //if (argument != "")
-                                                //{
-                                                    chatPacket.Write(argplayer);
-                                                //}
+                                                chatPacket.Write(argplayer);
                                                 player.AddQueMsg(chatPacket, NetChannel.ReliableInOrder6);
                                                 break;
                                             }

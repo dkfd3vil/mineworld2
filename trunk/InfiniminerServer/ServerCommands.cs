@@ -13,12 +13,14 @@ namespace MineWorld
 {
     public partial class MineWorldServer
     {
+        /*
         public void MessageAll(string text)
         {
             if (announceChanges)
                 SendServerMessage(text);
             ConsoleWrite(text);
         }
+         */
 
 
         public List<string> LoadAdminList()

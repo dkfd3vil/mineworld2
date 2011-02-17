@@ -108,8 +108,8 @@ namespace MineWorld
         Hearthbeat,
         PlayerCommand,         // uint id, string command  This is sent by client
         PlayerCommandEnable,   // byte Playercommands this is sent by the server
-        KillPlayer,            // Send by the server to notify that the player has died
-        RespawnPlayer,         // vector 3 position, Send by the server to notify that the player has respawned
+        //KillPlayer,            // Send by the server to notify that the player has died
+        //RespawnPlayer,         // vector 3 position, Send by the server to notify that the player has respawned
     }
 
     public enum PlayerCommands : byte
@@ -122,6 +122,9 @@ namespace MineWorld
         Noadmin,
         Nocost,
         Teleportto,
+
+        Announce,
+        Restart,
     }
 
     public enum ChatMessageType

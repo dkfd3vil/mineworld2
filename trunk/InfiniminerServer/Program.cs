@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Windows.Forms;
 using System.Text;
 namespace MineWorld.Server
 {
@@ -21,6 +23,7 @@ namespace MineWorld.Server
 
             if (System.Diagnostics.Debugger.IsAttached)
             {
+                Console.ReadKey();
                 RunServer();
             }
             else
@@ -31,12 +34,16 @@ namespace MineWorld.Server
                 }
                 catch (Exception e)
                 {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine(e.Message + "\r\n\r\n" + e.StackTrace);
-                    Console.ForegroundColor = ConsoleColor.Gray;
-                    Console.ReadLine();
+                    String logtext = "";
+                    if (File.Exists("Servercrashlog.log"))
+                    {
+                        logtext = File.ReadAllText("Servercrashlog.log");
+                    }
+                    File.WriteAllText("Servercrashlog.log", logtext + "\r\n" + e.Message + "\r\n\r\n" + e.StackTrace);
+                    MessageBox.Show("The game has crashed. The crash info has been written to the crashlog.", "Crash and Burn", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 }
             }
+            return;
         }
 
     }

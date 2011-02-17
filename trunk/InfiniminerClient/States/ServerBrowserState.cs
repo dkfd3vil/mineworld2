@@ -99,7 +99,7 @@ namespace MineWorld.States
                 }
             }
 
-            spriteBatch.DrawString(uiFont, Defines.MINEWORLDSERVER_VERSION, new Vector2(10, _SM.GraphicsDevice.Viewport.Height - 20), Color.White);
+            spriteBatch.DrawString(uiFont, Defines.MINEWORLDCLIENT_VERSION, new Vector2(10, _SM.GraphicsDevice.Viewport.Height - 20), Color.White);
 
             if (directConnectIPEnter)
                 spriteBatch.DrawString(uiFont, "ENTER IP: " + directConnectIP, new Vector2(drawRect.X + 30, drawRect.Y + 690), Color.White);

@@ -32,17 +32,29 @@ namespace MineWorld
         {
             ConsoleWrite("> " + consoleInput);
 
-            ProcessCommand(consoleInput);
+            ProcessCommand(consoleInput,false);
 
             consoleInput = "";
             ConsoleRedraw();
         }
 
-        public bool ProcessCommand(string input)
+        public bool ProcessCommand(string input,bool clientcommand)
         {
-            string[] args = input.Split(' '.ToString().ToCharArray(), 2);
-            if (args[0].StartsWith("\\") && args[0].Length > 1)
+            //string[] args = input.Split(' '.ToString().ToCharArray(), 2);
+            String[] args = input.Split(new char[] { ' ' });
+            if (clientcommand == true)
+            {
                 args[0] = args[0].Substring(1);
+            }
+            else if (args[0].StartsWith("\\") && args[0].Length > 1)
+            {
+                args[0] = args[0].Substring(1);
+            }
+            else if(args[0].StartsWith("/") && args[0].Length > 1)
+            {
+                args[0] = args[0].Substring(1);
+            }
+
             switch (args[0].ToLower())
             {
                 case "help":
@@ -66,7 +78,7 @@ namespace MineWorld
                     }
                 case "announce":
                     {
-                        if (args.Length == 2)
+                        if (args.Length >= 2)
                         {
                             string message = "SERVER: " + args[1];
                             SendServerMessage(message);
@@ -158,14 +170,12 @@ namespace MineWorld
                     }
                 case "quit":
                     {
-                        keepRunning = false;
+                        Shutdownserver();
                         break;
                     }
                 case "restart":
                     {
-                        disconnectAll();
-                        restartTriggered = true;
-                        restartTime = DateTime.Now;
+                        Restartserver();
                         break;
                     }
                 case "save":
@@ -200,7 +210,7 @@ namespace MineWorld
         public void ConsoleRedraw()
         {
             Console.Clear();
-            ConsoleDrawCentered("MineWorld SERVER " + Defines.MINEWORLDSERVER_VERSION, 0);
+            ConsoleDrawCentered(Defines.MINEWORLDSERVER_VERSION + " SERVER", 0);
             ConsoleDraw("================================================================================", 0, 1);
             for (int i = 0; i < consoleText.Count; i++)
                 ConsoleDraw(consoleText[i], 0, i + 2);

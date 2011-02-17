@@ -15,3 +15,7 @@ These are the commands that are currently implented in the client
 /teleportto (name) Teleports you to the the player specific
 
 /tpt (name) Same as above except shorter
+
+/restart Restarts the server from the client
+
+/announce A server announce for all players

@@ -333,7 +333,7 @@ namespace MineWorld.States
             _P.playerEngine.RenderPlayerNames(graphicsDevice);
             _P.interfaceEngine.Render(graphicsDevice);
 
-            _SM.Window.Title = "MineWorld";
+            _SM.Window.Title = Defines.MINEWORLDCLIENT_VERSION;
         }
 
         DateTime startChat = DateTime.Now;
