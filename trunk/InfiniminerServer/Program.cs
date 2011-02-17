@@ -23,7 +23,6 @@ namespace MineWorld.Server
 
             if (System.Diagnostics.Debugger.IsAttached)
             {
-                Console.ReadKey();
                 RunServer();
             }
             else
