@@ -22,11 +22,10 @@ namespace MineWorld
         public SpriteFont uiFont, radarFont;
         Rectangle drawRect;
 
-        Texture2D texCrosshairs, texBlank, texHelp;
+        Texture2D texCrosshairs, texBlank, texHelpRed,texHelpBlue;
         Texture2D texRadarBackground, texRadarForeground, texRadarPlayerSame, texRadarPlayerAbove, texRadarPlayerBelow, texRadarPlayerPing, texRadarNorth;
         Texture2D texToolRadarRed, texToolRadarBlue, texToolRadarGold, texToolRadarDiamond, texToolRadarLED, texToolRadarPointer, texToolRadarFlash;
         Texture2D texToolDetonatorDownRed, texToolDetonatorUpRed, texToolDetonatorDownBlue, texToolDetonatorUpBlue;
-        Texture2D texToolPickaxeRed, texToolPickaxeBlue;
         Texture2D texToolBuild, texToolBuildCharge, texToolBuildBlast, texToolBuildSmoke;
 
         Dictionary<BlockType, Texture2D> blockIcons = new Dictionary<BlockType, Texture2D>();
@@ -47,7 +46,8 @@ namespace MineWorld
             texRadarPlayerBelow = gameInstance.Content.Load<Texture2D>("ui/tex_radar_player_below");
             texRadarPlayerPing = gameInstance.Content.Load<Texture2D>("ui/tex_radar_player_ping");
             texRadarNorth = gameInstance.Content.Load<Texture2D>("ui/tex_radar_north");
-            texHelp = gameInstance.Content.Load<Texture2D>("menus/tex_menu_help");
+            texHelpRed = gameInstance.Content.Load<Texture2D>("menus/tex_menu_help_red");
+            texHelpBlue = gameInstance.Content.Load<Texture2D>("menus/tex_menu_help_blue");
 
             texToolRadarRed = gameInstance.Content.Load<Texture2D>("tools/tex_tool_radar_red");
             texToolRadarBlue = gameInstance.Content.Load<Texture2D>("tools/tex_tool_radar_blue");
@@ -66,9 +66,6 @@ namespace MineWorld
             texToolDetonatorUpRed = gameInstance.Content.Load<Texture2D>("tools/tex_tool_detonator_up_red");
             texToolDetonatorDownBlue = gameInstance.Content.Load<Texture2D>("tools/tex_tool_detonator_down_blue");
             texToolDetonatorUpBlue = gameInstance.Content.Load<Texture2D>("tools/tex_tool_detonator_up_blue");
-
-            texToolPickaxeRed = gameInstance.Content.Load<Texture2D>("tools/tex_tool_drill_red");
-            texToolPickaxeBlue = gameInstance.Content.Load<Texture2D>("tools/tex_tool_drill_blue");
 
             drawRect = new Rectangle(gameInstance.GraphicsDevice.Viewport.Width / 2 - 1024 / 2,
                                      gameInstance.GraphicsDevice.Viewport.Height / 2 - 768 / 2,
@@ -203,24 +200,6 @@ namespace MineWorld
 
             spriteBatch.Draw(textureToUse, new Rectangle(screenWidth / 2 /*- 22 * 3*/, screenHeight - 77 * 3 + 14 * 3, 75 * 3, 77 * 3), Color.White);
         }
-        public void RenderPickAxe(GraphicsDevice graphicsDevice, SpriteBatch spriteBatch)
-        {
-            int screenWidth = graphicsDevice.Viewport.Width;
-            int screenHeight = graphicsDevice.Viewport.Height;
-            graphicsDevice.SamplerStates[0].MagFilter = TextureFilter.Point;
-            int drawX = screenWidth / 2 - 60 * 3;
-            int drawY = screenHeight - 91 * 3;
-            Texture2D toDraw;
-            if (_P.playerTeam == PlayerTeam.Red)
-            {
-                toDraw = texToolPickaxeRed;
-            }
-            else
-            {
-                toDraw = texToolRadarBlue;
-            }
-            spriteBatch.Draw(toDraw, new Rectangle(drawX, drawY, 120 * 3, 126 * 3), Color.White);
-        }
 
         public void RenderProspectron(GraphicsDevice graphicsDevice, SpriteBatch spriteBatch)
         {
@@ -322,10 +301,6 @@ namespace MineWorld
 
                 case PlayerTools.DeconstructionGun:
                     RenderConstructionGun(graphicsDevice, spriteBatch, BlockType.None);
-                    break;
-
-                case PlayerTools.Pickaxe:
-                    RenderPickAxe(graphicsDevice,spriteBatch);
                     break;
 
                 default:
@@ -483,7 +458,14 @@ namespace MineWorld
             if (Keyboard.GetState().IsKeyDown(Keys.F1))
             {
                 spriteBatch.Draw(texBlank, new Rectangle(0, 0, graphicsDevice.Viewport.Width, graphicsDevice.Viewport.Height), Color.Black);
-                spriteBatch.Draw(texHelp, drawRect, Color.White);
+                if (_P.playerTeam == PlayerTeam.Red)
+                {
+                    spriteBatch.Draw(texHelpRed, drawRect, Color.White);
+                }
+                else
+                {
+                    spriteBatch.Draw(texHelpBlue, drawRect, Color.White);
+                }
             }
 
             spriteBatch.End();

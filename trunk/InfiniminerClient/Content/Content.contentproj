@@ -379,13 +379,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="menus\tex_menu_help.png">
-      <Name>tex_menu_help</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="blocks\tex_block_dirt_sign.png">
       <Name>tex_block_dirt_sign</Name>
       <Importer>TextureImporter</Importer>
@@ -778,6 +771,18 @@
     </Compile>
     <Compile Include="tools\tex_tool_drill_red.png">
       <Name>tex_tool_drill_red</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="menus\tex_menu_help_blue.png">
+      <Name>tex_menu_help_blue</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="menus\tex_menu_help_red.png">
+      <Name>tex_menu_help_red</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
