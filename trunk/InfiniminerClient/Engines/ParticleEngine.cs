@@ -18,8 +18,11 @@ namespace MineWorld
         public Vector3 Position;
         public float Size;
         public Color Color;
-        public int StepsToLife=60;
+        public int StepsToLife=180;
+        public int StepsToLifeStatic = 180;
         public bool FlaggedForDeletion = false;
+        public float speed = 1;
+        public bool fadeOut=true;
     }
 
     public class ParticleEngine
@@ -71,7 +74,12 @@ namespace MineWorld
 
             foreach (Particle p in particleList)
             {
-                p.Position.Y += (float)gameTime.ElapsedGameTime.TotalSeconds;
+                p.Position.Y += (float)gameTime.ElapsedGameTime.TotalSeconds*p.speed;
+                if (p.fadeOut)
+                {
+                    
+                    p.Color.A = (byte)((p.StepsToLife / (p.StepsToLifeStatic + 0.001f))*255);
+                }
                 if (_P.blockEngine.SolidAtPoint(p.Position))
                     p.FlaggedForDeletion = true;
                 if (p.StepsToLife < 1)
@@ -89,8 +97,11 @@ namespace MineWorld
         public void CreateExplosionDebris(Vector3 explosionPosition)
         {
             Particle p = new Particle();
-            p.Color = new Color(128,128,128);
-            p.Size = 0.4f;
+            p.Color = new Color(255, 255, 255 - randGen.Next(0, 55));
+            p.Size = 0.4f + (float)((float)randGen.Next(0, 100)/(float)200);
+            p.speed = 4.0f+((float)randGen.Next(0, 100) / 200.0f);
+            p.StepsToLife = 80;
+            p.StepsToLifeStatic = 80;
             p.Position = explosionPosition;
             particleList.Add(p);
         }
@@ -109,6 +120,31 @@ namespace MineWorld
             }
         }*/
 
+        public VertexPositionColor[] GenerateVertices(Vector3 cameraPosition, Vector3 drawPosition, Vector3 drawHeading, float drawScale,Color particleColor)
+        {
+            VertexPositionColor[] vertices = new VertexPositionColor[6];
+
+            Vector2 vTexStart = new Vector2(0, 0);
+
+            Vector3 vToPlayer = cameraPosition - drawPosition;
+
+            float dotProduct = Vector3.Dot(vToPlayer, drawHeading);
+            Vector3 crossProduct = Vector3.Cross(vToPlayer, drawHeading);
+            
+            VertexPositionColor v1 = new VertexPositionColor(new Vector3(-0.375f * drawScale, 1 * drawScale, 0), particleColor);
+            VertexPositionColor v2 = new VertexPositionColor(new Vector3(0.375f * drawScale, 1 * drawScale, 0), particleColor);
+            VertexPositionColor v3 = new VertexPositionColor(new Vector3(-0.375f * drawScale, 0, 0), particleColor);
+            VertexPositionColor v4 = new VertexPositionColor(new Vector3(0.375f * drawScale, 0, 0), particleColor);
+
+            vertices[0] = v3;
+            vertices[1] = v2;
+            vertices[2] = v4;
+            vertices[3] = v3;
+            vertices[4] = v1;
+            vertices[5] = v2;
+            return vertices;
+        }
+
         public void Render(GraphicsDevice graphicsDevice)
         {
             // If we don't have _P, grab it from the current gameInstance.
@@ -118,8 +154,12 @@ namespace MineWorld
 
             foreach (Particle p in particleList)
             {
+                VertexPositionColor[] vertices = GenerateVertices(_P.playerCamera.Position, p.Position, Vector3.One, p.Size,p.Color);
                 Matrix worldMatrix = Matrix.CreateScale(p.Size / 2) * Matrix.CreateTranslation(p.Position);
-                particleEffect.Parameters["xWorld"].SetValue(worldMatrix);
+
+
+                Matrix world = Matrix.CreateBillboard(p.Position, _P.playerCamera.Position, Vector3.UnitY,null);
+                particleEffect.Parameters["xWorld"].SetValue(world);
                 particleEffect.Parameters["xView"].SetValue(_P.playerCamera.ViewMatrix);
                 particleEffect.Parameters["xProjection"].SetValue(_P.playerCamera.ProjectionMatrix);
                 particleEffect.Parameters["xColor"].SetValue(p.Color.ToVector4());
@@ -127,10 +167,11 @@ namespace MineWorld
                 particleEffect.Techniques[0].Passes[0].Begin();
 
                 graphicsDevice.RenderState.CullMode = CullMode.None;
+                graphicsDevice.RenderState.AlphaBlendEnable = true;
                 graphicsDevice.VertexDeclaration = vertexDeclaration;
                 graphicsDevice.Vertices[0].SetSource(vertexBuffer, 0, VertexPositionTextureShade.SizeInBytes);
-                graphicsDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, vertexBuffer.SizeInBytes / VertexPositionTextureShade.SizeInBytes / 3);
-
+                graphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleList, vertices, 0, vertices.Length / 3);
+                graphicsDevice.RenderState.AlphaBlendEnable = false;
                 particleEffect.Techniques[0].Passes[0].End();
                 particleEffect.End();  
             }

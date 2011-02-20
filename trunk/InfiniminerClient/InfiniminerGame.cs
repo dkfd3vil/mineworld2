@@ -304,15 +304,20 @@ namespace MineWorld
 
                                     case MineWorldMessage.BlockSet:
                                         {
+                                           
                                             // x, y, z, type, all bytes
                                             byte x = msgBuffer.ReadByte();
                                             byte y = msgBuffer.ReadByte();
                                             byte z = msgBuffer.ReadByte();
+                                            
                                             BlockType blockType = (BlockType)msgBuffer.ReadByte();
                                             if (blockType == BlockType.None)
                                             {
                                                 if (propertyBag.blockEngine.BlockAtPoint(new Vector3(x, y, z)) != BlockType.None)
+                                                {
                                                     propertyBag.blockEngine.RemoveBlock(x, y, z);
+                                                    propertyBag.particleEngine.CreateExplosionDebris(new Vector3(x, y, z));
+                                                }
                                             }
                                             else
                                             {
