@@ -58,7 +58,7 @@ namespace MineWorld
                                             if (temphandle.ToLower() == "player")
                                             {
                                                 IServer.ConsoleWrite("CONNECTION REJECTED: " + temphandle + " CHANGE NAME");
-                                                //msgSender.Disapprove("changename");
+                                                msgSender.Disapprove("changename");
                                             }
                                             else
                                             {

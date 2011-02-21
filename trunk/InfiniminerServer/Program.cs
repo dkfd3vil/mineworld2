@@ -42,7 +42,7 @@ namespace MineWorld.Server
                     MessageBox.Show("The game has crashed. The crash info has been written to the crashlog.", "Crash and Burn", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 }
             }
-            return;
+            Environment.Exit(0);
         }
 
     }

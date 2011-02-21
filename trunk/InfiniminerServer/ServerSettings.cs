@@ -30,11 +30,8 @@ namespace MineWorld
             public bool StopFluids;
             public string Directory;
         }
-
         int lavaBlockCount = 0;
         uint oreFactor = 10;
-
-        bool announceChanges = true;
 
         uint teamCashRed = 0;
         uint teamCashBlue = 0;
