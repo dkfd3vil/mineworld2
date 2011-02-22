@@ -248,7 +248,7 @@ namespace MineWorld.States
                         (_SM as MineWorldGame).Csettings.InvertMouseYAxis = bool.Parse((element as InterfaceButtonToggle).clicked.ToString().ToLower());
                         break;
                     case "Mouse Sensitivity": dw.Data["sensitivity"] = (element as InterfaceSlider).value.ToString();
-                        (_SM as MineWorldGame).Csettings.mouseSensitivity = float.Parse((element as InterfaceSlider).value.ToString());
+                        (_SM as MineWorldGame).Csettings.mouseSensitivity = Math.Max(0.001f, Math.Min(0.05f, float.Parse((element as InterfaceSlider).value.ToString(), System.Globalization.CultureInfo.InvariantCulture) / 1000f));
                         break;
                     case "Bloom": dw.Data["pretty"] = (element as InterfaceButtonToggle).clicked.ToString().ToLower();
                         (_SM as MineWorldGame).Csettings.RenderPretty = bool.Parse((element as InterfaceButtonToggle).clicked.ToString().ToLower());

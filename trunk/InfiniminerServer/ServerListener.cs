@@ -133,9 +133,7 @@ namespace MineWorld
                                         IServer.ConsoleWrite("CONNECT: " + IServer.playerList[msgSender].Handle + " ( " + IServer.playerList[msgSender].IP + " )");
                                         IServer.SendCurrentMap(msgSender);
                                         IServer.SendPlayerJoined(player);
-                                        //IServer.PublicServerListUpdate();
                                     }
-
                                     else if (msgSender.Status == NetConnectionStatus.Disconnected)
                                     {
                                         IServer.ConsoleWrite("DISCONNECT: " + IServer.playerList[msgSender].Handle);
@@ -146,7 +144,6 @@ namespace MineWorld
                                             IServer.playerList.Remove(msgSender);
                                         }
                                     }
-
                                     if (IServer.Ssettings.Public == true)
                                     {
                                         IServer.updateMasterServer();
