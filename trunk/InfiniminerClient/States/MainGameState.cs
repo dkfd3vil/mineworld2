@@ -327,10 +327,10 @@ namespace MineWorld.States
         public override void OnRenderAtUpdate(GraphicsDevice graphicsDevice, GameTime gameTime)
         {
             _P.skyplaneEngine.Render(graphicsDevice);
-            _P.particleEngine.Render(graphicsDevice);
             _P.playerEngine.Render(graphicsDevice);
             _P.blockEngine.Render(graphicsDevice, gameTime);
             _P.playerEngine.RenderPlayerNames(graphicsDevice);
+            _P.particleEngine.Render(graphicsDevice);
             _P.interfaceEngine.Render(graphicsDevice);
 
             _SM.Window.Title = Defines.MINEWORLDCLIENT_VERSION;
