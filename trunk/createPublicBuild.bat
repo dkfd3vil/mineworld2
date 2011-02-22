@@ -1,3 +1,6 @@
+rd /s/q PublicBuild
+mkdir PublicBuild
+
 copy Output\debug\MWClient.exe PublicBuild\MWClient.exe
 copy Output\debug\MWShared.dll PublicBuild\MWShared.dll
 copy Output\debug\Lidgren.Network.dll PublicBuild\Lidgren.Network.dll

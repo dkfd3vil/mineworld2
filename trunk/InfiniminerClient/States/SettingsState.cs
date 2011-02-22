@@ -259,6 +259,10 @@ namespace MineWorld.States
                     default: break;
                 }
             }
+            if((_SM as MineWorldGame).Csettings.NoSound == true)
+            {
+                MediaPlayer.Stop();
+            }
             (_SM as MineWorldGame).graphicsDeviceManager.IsFullScreen = (_SM as MineWorldGame).Csettings.Fullscreen;
             (_SM as MineWorldGame).graphicsDeviceManager.PreferredBackBufferWidth = (_SM as MineWorldGame).Csettings.Width;
             (_SM as MineWorldGame).graphicsDeviceManager.PreferredBackBufferHeight = (_SM as MineWorldGame).Csettings.Height;
