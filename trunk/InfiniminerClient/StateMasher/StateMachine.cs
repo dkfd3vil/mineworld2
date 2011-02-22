@@ -36,7 +36,6 @@ namespace StateMasher
         private State currentState = null;
         private bool needToRenderOnEnter = false;
 
-        private int frameCount = 0;
         private FPSCounter fpsCounter = new FPSCounter();
         public double FrameRate
         {
@@ -115,7 +114,11 @@ namespace StateMasher
 
         protected override void Update(GameTime gameTime)
         {
-            fpsCounter.frame((uint)gameTime.TotalRealTime.Milliseconds + (uint)gameTime.TotalRealTime.Seconds * 1000 + (uint)gameTime.TotalRealTime.Minutes * 60000 + (uint)gameTime.TotalRealTime.Hours * 3600000);
+            StateMachine _SM = currentState._SM;
+            if ((_SM as MineWorldGame).Csettings.DrawFrameRate)
+            {
+                fpsCounter.frame((uint)gameTime.TotalRealTime.Milliseconds + (uint)gameTime.TotalRealTime.Seconds * 1000 + (uint)gameTime.TotalRealTime.Minutes * 60000 + (uint)gameTime.TotalRealTime.Hours * 3600000);
+            }
 
             if (currentState != null && propertyBag != null)
             {
@@ -156,7 +159,6 @@ namespace StateMasher
             // Call OnRenderAtUpdate.
             if (currentState != null && propertyBag != null)
             {
-                frameCount += 1;
                 currentState.OnRenderAtUpdate(GraphicsDevice, gameTime);
             }
 

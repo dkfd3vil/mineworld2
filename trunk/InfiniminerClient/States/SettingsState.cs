@@ -146,7 +146,7 @@ namespace MineWorld.States
                                                  1024);
 
             //Read the data from file
-            Datafile dw = new Datafile("client.config.txt");
+            Datafile dw = new Datafile((_SM as MineWorldGame).Csettings.Directory + "/client.config.txt");
 
             currentPos = new Vector2(200, 100);
             originalY = (int)currentPos.Y;
@@ -221,7 +221,7 @@ namespace MineWorld.States
 
         public int saveData()
         {
-            Datafile dw = new Datafile("client.config.txt");
+            Datafile dw = new Datafile((_SM as MineWorldGame).Csettings.Directory + "/client.config.txt");
             foreach (InterfaceElement element in elements)
             {
                 switch (element.text)
@@ -263,7 +263,7 @@ namespace MineWorld.States
             (_SM as MineWorldGame).graphicsDeviceManager.PreferredBackBufferWidth = (_SM as MineWorldGame).Csettings.Width;
             (_SM as MineWorldGame).graphicsDeviceManager.PreferredBackBufferHeight = (_SM as MineWorldGame).Csettings.Height;
             (_SM as MineWorldGame).graphicsDeviceManager.ApplyChanges();
-            return dw.WriteChanges("client.config.txt");
+            return dw.WriteChanges((_SM as MineWorldGame).Csettings.Directory + "/client.config.txt");
         }
 
         public override void OnCharEntered(EventInput.CharacterEventArgs e)
