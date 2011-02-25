@@ -1,0 +1,29 @@
+# Set the servername
+servername = Unnamed Server
+# Max player for on your server dont set this too high
+maxplayers = 16
+
+# Before making your server public, MAKE SURE THAT PORT 5565 (TCP/UDP) IS ACCESSIBLE FROM THE OUTSIDE OF YOUR NETWORK!
+# For most users, this means setting the port to be forwarded by your router through your router control interface.
+public = false
+
+#If you play over a proxy you can set this to true and it automatically detects the proxy from internet explorer
+proxy = false
+
+# If true, the public server list will be notified immediately when your server goes up - otherwise it will take a couple mintes / you can use announce
+autoannounce = true
+
+# If set, a blank load command will load this level
+levelname = autoBK.lvl
+
+# If true, the above level will be loaded whenever the server is started
+autoload = false
+
+# If set, this message will be sent to newcomers - [name] will be replace with their name
+motd = Welcome [name] to my server!
+
+# If set, Lava will be placed randomly in the level otherwise there is no lava
+includelava = true
+
+# Sets the number of minutes between autosaves (zero disables autosave)
+autosave = 5
