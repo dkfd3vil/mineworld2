@@ -48,9 +48,9 @@ namespace MineWorld
         {
             anyPacketsReceived = false;
             // Clear out the map load progress indicator.
-            propertyBag.mapLoadProgress = new bool[64,64];
-            for (int i = 0; i < 64; i++)
-                for (int j=0; j<64; j++)
+            propertyBag.mapLoadProgress = new bool[Defines.MAPSIZE,Defines.MAPSIZE];
+            for (int i = 0; i < Defines.MAPSIZE; i++)
+                for (int j=0; j< Defines.MAPSIZE; j++)
                     propertyBag.mapLoadProgress[i,j] = false;
 
             // Create our connect message.
@@ -222,9 +222,9 @@ namespace MineWorld
                                                 x = msgBuffer.ReadByte();
                                                 y = msgBuffer.ReadByte();
                                                 propertyBag.mapLoadProgress[x, y] = true;
-                                                for (byte dy = 0; dy < 16; dy++)
+                                                for (byte dy = 0; dy < Defines.PACKETSIZE; dy++)
                                                 {
-                                                    for (byte z = 0; z < 64; z++)
+                                                    for (byte z = 0; z < Defines.MAPSIZE; z++)
                                                     {
                                                         BlockType blockType = (BlockType)msgBuffer.ReadByte();
                                                         if (blockType != BlockType.None)
@@ -234,8 +234,8 @@ namespace MineWorld
                                                     }
                                                 }
                                                 bool downloadComplete = true;
-                                                for (x = 0; x < 64; x++)
-                                                    for (y = 0; y < 64; y += 16)
+                                                for (x = 0; x < Defines.MAPSIZE; x++)
+                                                    for (y = 0; y < Defines.MAPSIZE; y += Defines.PACKETSIZE)
                                                         if (propertyBag.mapLoadProgress[x, y] == false)
                                                         {
                                                             downloadComplete = false;

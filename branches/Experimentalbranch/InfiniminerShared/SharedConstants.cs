@@ -8,6 +8,11 @@ namespace MineWorld
         public const string MINEWORLDCLIENT_VERSION = "Mine World Alpha 2.0";
         public const double MINEWORLD_VER = 2.0;
 
+        
+        public const int MAPSIZE = 128;
+        //Mapsize % Packetsize MUST EQUAL 0!!!
+        public const int PACKETSIZE = 128;
+
         public const int GROUND_LEVEL = 8;
 
         public const string deathByLava = "WAS INCINERATED BY LAVA!";

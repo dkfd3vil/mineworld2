@@ -92,16 +92,15 @@ namespace MineWorld
             vertexListDirty[texture, region] = true;
         }
 
-        public const int MAPSIZE = 64;
         const int REGIONSIZE = 16;
-        const int REGIONRATIO = MAPSIZE / REGIONSIZE;
+        const int REGIONRATIO = Defines.MAPSIZE / REGIONSIZE;
         const int NUMREGIONS = REGIONRATIO * REGIONRATIO * REGIONRATIO;
 
         public void DownloadComplete()
         {
-            for (ushort i = 0; i < MAPSIZE; i++)
-                for (ushort j = 0; j < MAPSIZE; j++)
-                    for (ushort k = 0; k < MAPSIZE; k++)
+            for (ushort i = 0; i < Defines.MAPSIZE; i++)
+                for (ushort j = 0; j < Defines.MAPSIZE; j++)
+                    for (ushort k = 0; k < Defines.MAPSIZE; k++)
                         if (downloadList[i, j, k] != BlockType.None)
                             AddBlock(i, j, k, downloadList[i, j, k]);
         }
@@ -111,11 +110,11 @@ namespace MineWorld
             this.gameInstance = gameInstance;
 
             // Initialize the block list.
-            downloadList = new BlockType[MAPSIZE, MAPSIZE, MAPSIZE];
-            blockList = new BlockType[MAPSIZE, MAPSIZE, MAPSIZE];
-            for (ushort i = 0; i < MAPSIZE; i++)
-                for (ushort j = 0; j < MAPSIZE; j++)
-                    for (ushort k = 0; k < MAPSIZE; k++)
+            downloadList = new BlockType[Defines.MAPSIZE, Defines.MAPSIZE, Defines.MAPSIZE];
+            blockList = new BlockType[Defines.MAPSIZE, Defines.MAPSIZE, Defines.MAPSIZE];
+            for (ushort i = 0; i < Defines.MAPSIZE; i++)
+                for (ushort j = 0; j < Defines.MAPSIZE; j++)
+                    for (ushort k = 0; k < Defines.MAPSIZE; k++)
                     {
                         downloadList[i, j, k] = BlockType.None;
                         blockList[i, j, k] = BlockType.None;
@@ -290,7 +289,7 @@ namespace MineWorld
             ushort x = (ushort)point.X;
             ushort y = (ushort)point.Y;
             ushort z = (ushort)point.Z;
-            if (x < 0 || y < 0 || z < 0 || x >= MAPSIZE || y >= MAPSIZE || z >= MAPSIZE)
+            if (x < 0 || y < 0 || z < 0 || x >= Defines.MAPSIZE || y >= Defines.MAPSIZE || z >= Defines.MAPSIZE)
                 return BlockType.None;
             return blockList[x, y, z]; 
         }
@@ -547,7 +546,7 @@ namespace MineWorld
 
         public void AddBlock(ushort x, ushort y, ushort z, BlockType blockType)
         {
-            if (x <= 0 || y <= 0 || z <= 0 || (int)x >= MAPSIZE - 1 || (int)y >= MAPSIZE - 1 || (int)z >= MAPSIZE - 1)
+            if (x <= 0 || y <= 0 || z <= 0 || (int)x >= Defines.MAPSIZE - 1 || (int)y >= Defines.MAPSIZE - 1 || (int)z >= Defines.MAPSIZE - 1)
                 return;
 
             blockList[x, y, z] = blockType;
@@ -572,7 +571,7 @@ namespace MineWorld
 
         public void RemoveBlock(ushort x, ushort y, ushort z)
         {
-            if (x <= 0 || y <= 0 || z <= 0 || (int)x >= MAPSIZE - 1 || (int)y >= MAPSIZE - 1 || (int)z >= MAPSIZE - 1)
+            if (x <= 0 || y <= 0 || z <= 0 || (int)x >= Defines.MAPSIZE - 1 || (int)y >= Defines.MAPSIZE - 1 || (int)z >= Defines.MAPSIZE - 1)
                 return;
 
             _RemoveBlock(x, y, z, BlockFaceDirection.XIncreasing, x + 1, y, z, BlockFaceDirection.XDecreasing);
@@ -588,17 +587,17 @@ namespace MineWorld
         private uint EncodeBlockFace(ushort x, ushort y, ushort z, BlockFaceDirection faceDir)
         {
             //TODO: OPTIMIZE BY HARD CODING VALUES IN
-            return (uint)(x + y * MAPSIZE + z * MAPSIZE * MAPSIZE + (byte)faceDir * MAPSIZE * MAPSIZE * MAPSIZE);
+            return (uint)(x + y * Defines.MAPSIZE + z * Defines.MAPSIZE * Defines.MAPSIZE + (byte)faceDir * Defines.MAPSIZE * Defines.MAPSIZE * Defines.MAPSIZE);
         }
 
         private void DecodeBlockFace(uint faceCode, ref ushort x, ref ushort y, ref ushort z, ref BlockFaceDirection faceDir)
         {
-            x = (ushort)(faceCode % MAPSIZE);
-            faceCode = (faceCode - x) / MAPSIZE;
-            y = (ushort)(faceCode % MAPSIZE);
-            faceCode = (faceCode - y) / MAPSIZE;
-            z = (ushort)(faceCode % MAPSIZE);
-            faceCode = (faceCode - z) / MAPSIZE;
+            x = (ushort)(faceCode % Defines.MAPSIZE);
+            faceCode = (faceCode - x) / Defines.MAPSIZE;
+            y = (ushort)(faceCode % Defines.MAPSIZE);
+            faceCode = (faceCode - y) / Defines.MAPSIZE;
+            z = (ushort)(faceCode % Defines.MAPSIZE);
+            faceCode = (faceCode - z) / Defines.MAPSIZE;
             faceDir = (BlockFaceDirection)faceCode;
         }
 
