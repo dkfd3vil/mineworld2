@@ -12,7 +12,7 @@ namespace MineWorld
         Thread conn;
         MineWorld.MineWorldServer infs;
         MineWorld.MineWorldNetServer infsN;
-        int MAPSIZE = 64;
+        //int MAPSIZE = 64;
         //bool compression = false;
         //bool finished = false;
         public bool finished
@@ -23,12 +23,12 @@ namespace MineWorld
             }
         }
 
-        public MapSender(NetConnection nClient, MineWorld.MineWorldServer nInfs, MineWorld.MineWorldNetServer nInfsN, int nMAPSIZE/*, bool compress*/)
+        public MapSender(NetConnection nClient, MineWorld.MineWorldServer nInfs, MineWorld.MineWorldNetServer nInfsN/*,int nMAPSIZE, bool compress*/)
         {
             client = nClient;
             infs = nInfs;
             infsN = nInfsN;
-            MAPSIZE = nMAPSIZE;
+            //MAPSIZE = nMAPSIZE;
             //compression = compress;
             //finished = false;
             conn = new Thread(new ThreadStart(this.start));
@@ -45,8 +45,8 @@ namespace MineWorld
         {
             //Debug.Assert(MAPSIZE == 64, "The BlockBulkTransfer message requires a map size of 64.");
 
-            for (byte x = 0; x < MAPSIZE; x++)
-                for (byte y = 0; y < MAPSIZE; y += 16)
+            for (byte x = 0; x < Defines.MAPSIZE; x++)
+                for (byte y = 0; y < Defines.MAPSIZE; y += Defines.PACKETSIZE)
                 {
                     NetBuffer msgBuffer = infsN.CreateBuffer();
                     msgBuffer.Write((byte)MineWorld.MineWorldMessage.BlockBulkTransfer);
@@ -54,9 +54,9 @@ namespace MineWorld
                     //{
                     msgBuffer.Write(x);
                     msgBuffer.Write(y);
-                    for (byte dy = 0; dy < 16; dy++)
+                    for (byte dy = 0; dy < Defines.PACKETSIZE; dy++)
                     {
-                        for (byte z = 0; z < MAPSIZE; z++)
+                        for (byte z = 0; z < Defines.MAPSIZE; z++)
                         {
                             msgBuffer.Write((byte)(infs.blockList[x, y + dy, z]));
                         }

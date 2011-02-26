@@ -91,7 +91,9 @@ namespace MineWorld.States
                         dataPacketsRecieved += 1;
             string progressText = "Connecting...";
             if ((_SM as MineWorldGame).anyPacketsReceived)
-                progressText = +String.Format("{0:00}% LOADED", dataPacketsRecieved * 100 / (Defines.MAPSIZE * Defines.MAPSIZE / Defines.PACKETSIZE));
+            {
+                progressText = String.Format("{0:00}% LOADED", dataPacketsRecieved * 100 / (Defines.MAPSIZE * Defines.MAPSIZE / Defines.PACKETSIZE));
+            }
 
             SpriteBatch spriteBatch = new SpriteBatch(graphicsDevice);
             spriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Deferred, SaveStateMode.SaveState);

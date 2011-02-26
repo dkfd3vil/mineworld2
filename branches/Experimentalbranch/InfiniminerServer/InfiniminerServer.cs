@@ -111,8 +111,8 @@ namespace MineWorld
             //Check if we should autoload a level
             if (Ssettings.Autoload)
             {
-                blockList = new BlockType[MAPSIZE, MAPSIZE, MAPSIZE];
-                blockCreatorTeam = new PlayerTeam[MAPSIZE, MAPSIZE, MAPSIZE];
+                blockList = new BlockType[Defines.MAPSIZE, Defines.MAPSIZE, Defines.MAPSIZE];
+                blockCreatorTeam = new PlayerTeam[Defines.MAPSIZE, Defines.MAPSIZE, Defines.MAPSIZE];
                 LoadLevel(Ssettings.LevelName);
             }
             else
@@ -120,7 +120,7 @@ namespace MineWorld
                 // Calculate initial lava flows.
                 ConsoleWrite("CALCULATING INITIAL LAVA FLOWS");
                 ConsoleWrite("TOTAL LAVA BLOCKS = " + newMap());
-                ConsoleWrite("TOTAL BLOCKS = " + 64 * 64 * 64);
+                ConsoleWrite("TOTAL BLOCKS = " + Defines.MAPSIZE * Defines.MAPSIZE * Defines.MAPSIZE);
             }
             lastMapBackup = DateTime.Now;
             ServerListener listener = new ServerListener(netServer,this);
@@ -398,7 +398,7 @@ namespace MineWorld
 
         public void SendCurrentMap(NetConnection client)
         {
-            MapSender ms = new MapSender(client, this, netServer, MAPSIZE/*,playerList[client].compression*/);
+            MapSender ms = new MapSender(client, this, netServer/*,Defines.MAPSIZE/*,playerList[client].compression*/);
             mapSendingProgress.Add(ms);
         }
 

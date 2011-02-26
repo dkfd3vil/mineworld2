@@ -15,7 +15,7 @@ namespace MineWorld
     {
         public BlockType[, ,] blockList = null;    // In game coordinates, where Y points up.
         PlayerTeam[, ,] blockCreatorTeam = null;
-        const int MAPSIZE = 64;
+        //const int MAPSIZE = 64;
 
 
         List<string> beaconIDList = new List<string>();
@@ -106,18 +106,18 @@ namespace MineWorld
         public int newMap()
         {
             // Create our block world, translating the coordinates out of the cave generator (where Z points down)
-            BlockType[, ,] worldData = CaveGenerator.GenerateCaveSystem(MAPSIZE, Ssettings.Includelava, oreFactor);
-            blockList = new BlockType[MAPSIZE, MAPSIZE, MAPSIZE];
-            blockCreatorTeam = new PlayerTeam[MAPSIZE, MAPSIZE, MAPSIZE];
-            for (ushort i = 0; i < MAPSIZE; i++)
-                for (ushort j = 0; j < MAPSIZE; j++)
-                    for (ushort k = 0; k < MAPSIZE; k++)
+            BlockType[, ,] worldData = CaveGenerator.GenerateCaveSystem(Defines.MAPSIZE, Ssettings.Includelava, oreFactor);
+            blockList = new BlockType[Defines.MAPSIZE, Defines.MAPSIZE, Defines.MAPSIZE];
+            blockCreatorTeam = new PlayerTeam[Defines.MAPSIZE, Defines.MAPSIZE, Defines.MAPSIZE];
+            for (ushort i = 0; i < Defines.MAPSIZE; i++)
+                for (ushort j = 0; j < Defines.MAPSIZE; j++)
+                    for (ushort k = 0; k < Defines.MAPSIZE; k++)
                     {
                         if (worldData[i, j, k] == BlockType.Lava)
                         {
                             lavaBlockCount++;
                         }
-                        blockList[i, (ushort)(MAPSIZE - 1 - k), j] = worldData[i, j, k];
+                        blockList[i, (ushort)(Defines.MAPSIZE - 1 - k), j] = worldData[i, j, k];
                         blockCreatorTeam[i, j, k] = PlayerTeam.None;
                     }
 
@@ -137,7 +137,7 @@ namespace MineWorld
         {
             foreach (IClient p in playerList.Values)
             {
-                if (p.Position.Y > MAPSIZE - Defines.GROUND_LEVEL)
+                if (p.Position.Y > Defines.MAPSIZE - Defines.GROUND_LEVEL)
                     DepositCash(p);
             }
 
@@ -151,11 +151,11 @@ namespace MineWorld
         {
             ushort s;
             j++;
-            if (j == 63)
+            if ((int)j == Defines.MAPSIZE - 1)
             {
                 return true;
             }
-            for (s = j; s < MAPSIZE; s++)
+            for (s = j; s < Defines.MAPSIZE; s++)
             {
                 BlockType blockatloc = blockList[i,s,k];
                 if (blockatloc != BlockType.None)
@@ -170,7 +170,7 @@ namespace MineWorld
         {
             bool goodspot = false;
 
-            if (x <= 0 || y <= 0 || z <= 0 || (int)x >= MAPSIZE - 1 || (int)y >= MAPSIZE - 1 || (int)z >= MAPSIZE - 1)
+            if (x <= 0 || y <= 0 || z <= 0 || (int)x >= Defines.MAPSIZE - 1 || (int)y >= Defines.MAPSIZE - 1 || (int)z >= Defines.MAPSIZE - 1)
             {
                 goodspot = false;
             }
@@ -186,7 +186,7 @@ namespace MineWorld
             ushort x = (ushort)point.X;
             ushort y = (ushort)point.Y;
             ushort z = (ushort)point.Z;
-            if (x <= 0 || y <= 0 || z <= 0 || (int)x >= MAPSIZE - 1 || (int)y >= MAPSIZE - 1 || (int)z >= MAPSIZE - 1)
+            if (x <= 0 || y <= 0 || z <= 0 || (int)x >= Defines.MAPSIZE - 1 || (int)y >= Defines.MAPSIZE - 1 || (int)z >= Defines.MAPSIZE - 1)
                 return BlockType.None;
             return blockList[x, y, z];
         }
@@ -507,7 +507,7 @@ namespace MineWorld
                         // Check if it's inside the sphere
                         if (Get3DDistance(dx + x, dy + y, dz + z, x, y, z) < 4)
                         {
-                            if (x + dx <= 0 || y + dy <= 0 || z + dz <= 0 || x + dx >= MAPSIZE - 1 || y + dy >= MAPSIZE - 1 || z + dz >= MAPSIZE - 1)
+                            if (x + dx <= 0 || y + dy <= 0 || z + dz <= 0 || x + dx >= Defines.MAPSIZE - 1 || y + dy >= Defines.MAPSIZE - 1 || z + dz >= Defines.MAPSIZE - 1)
                             {
                                 break;
                             }

@@ -57,16 +57,16 @@ namespace MineWorld
             // If some admin disabled fluids we can skip this
             if (Ssettings.StopFluids == false)
             {
-                bool[, ,] flowSleep = new bool[MAPSIZE, MAPSIZE, MAPSIZE]; //if true, do not calculate this turn
+                bool[, ,] flowSleep = new bool[Defines.MAPSIZE, Defines.MAPSIZE, Defines.MAPSIZE]; //if true, do not calculate this turn
 
-                for (ushort i = 0; i < MAPSIZE; i++)
-                    for (ushort j = 0; j < MAPSIZE; j++)
-                        for (ushort k = 0; k < MAPSIZE; k++)
+                for (ushort i = 0; i < Defines.MAPSIZE; i++)
+                    for (ushort j = 0; j < Defines.MAPSIZE; j++)
+                        for (ushort k = 0; k < Defines.MAPSIZE; k++)
                             flowSleep[i, j, k] = false;
 
-                for (ushort i = 0; i < MAPSIZE; i++)
-                    for (ushort j = 0; j < MAPSIZE; j++)
-                        for (ushort k = 0; k < MAPSIZE; k++)
+                for (ushort i = 0; i < Defines.MAPSIZE; i++)
+                    for (ushort j = 0; j < Defines.MAPSIZE; j++)
+                        for (ushort k = 0; k < Defines.MAPSIZE; k++)
                             if (blockList[i, j, k] == BlockType.Lava && !flowSleep[i, j, k])
                             {
                                 // RULES FOR LAVA EXPANSION:
@@ -74,9 +74,9 @@ namespace MineWorld
                                 // if the block below is empty space, move itself down and disalow horisontal lava movement
                                 // if the block below is something solid add lava to the sides
                                 BlockType typeBelow = (j == 0) ? BlockType.Lava : blockList[i, j - 1, k];
-                                BlockType typeIincr = (i == 63) ? BlockType.Lava : blockList[i + 1, j, k];
+                                BlockType typeIincr = ((int)i == Defines.MAPSIZE - 1) ? BlockType.Lava : blockList[i + 1, j, k];
                                 BlockType typeIdesc = (i == 0) ? BlockType.Lava : blockList[i - 1, j, k];
-                                BlockType typeKincr = (k == 63) ? BlockType.Lava : blockList[i, j, k + 1];
+                                BlockType typeKincr = ((int)k == Defines.MAPSIZE - 1) ? BlockType.Lava : blockList[i, j, k + 1];
                                 BlockType typeKdesc = (k == 0) ? BlockType.Lava : blockList[i, j, k - 1];
 
                                 bool doHorisontal = true;
@@ -107,7 +107,7 @@ namespace MineWorld
                                     }
                                     if (typeIincr == BlockType.None)
                                     {
-                                        if (i < MAPSIZE)
+                                        if (i < Defines.MAPSIZE)
                                         {
                                             SetBlock((ushort)(i + 1), j, k, BlockType.Lava, PlayerTeam.None);
                                             flowSleep[i + 1, j, k] = true;
@@ -123,7 +123,7 @@ namespace MineWorld
                                     }
                                     if (typeKincr == BlockType.None)
                                     {
-                                        if (k < MAPSIZE)
+                                        if (k < Defines.MAPSIZE)
                                         {
                                             SetBlock(i, j, (ushort)(k + 1), BlockType.Lava, PlayerTeam.None);
                                             flowSleep[i, j, k + 1] = true;
@@ -138,9 +138,9 @@ namespace MineWorld
         {
             //Todo: Rework this CalcGrass()
             // More horror code :S
-            for (ushort i = 0; i < MAPSIZE; i++)
-                for (ushort j = 0; j < MAPSIZE; j++)
-                    for (ushort k = 0; k < MAPSIZE; k++)
+            for (ushort i = 0; i < Defines.MAPSIZE; i++)
+                for (ushort j = 0; j < Defines.MAPSIZE; j++)
+                    for (ushort k = 0; k < Defines.MAPSIZE; k++)
                         if (blockList[i, j, k] == BlockType.Dirt)
                         {
                             if (InDirectSunLight(i, j, k))

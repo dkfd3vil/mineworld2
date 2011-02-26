@@ -223,9 +223,9 @@ namespace MineWorld
             sw.WriteLine(teamOreBlue+","+teamOreRed+","+teamCashBlue+","+teamCashRed);
 
             //Save block info
-            for (int x = 0; x < MAPSIZE; x++)
-                for (int y = 0; y < MAPSIZE; y++)
-                    for (int z = 0; z < MAPSIZE; z++)
+            for (int x = 0; x < Defines.MAPSIZE; x++)
+                for (int y = 0; y < Defines.MAPSIZE; y++)
+                    for (int z = 0; z < Defines.MAPSIZE; z++)
                         sw.WriteLine((byte)blockList[x, y, z] + "," + (byte)blockCreatorTeam[x, y, z]);
             sw.Close();
             fs.Close();
@@ -258,9 +258,9 @@ namespace MineWorld
                 teamCashRed = (uint)Int32.Parse(headerPart[3]);
 
                 //read block info
-                for (int x = 0; x < MAPSIZE; x++)
-                    for (int y = 0; y < MAPSIZE; y++)
-                        for (int z = 0; z < MAPSIZE; z++)
+                for (int x = 0; x < Defines.MAPSIZE; x++)
+                    for (int y = 0; y < Defines.MAPSIZE; y++)
+                        for (int z = 0; z < Defines.MAPSIZE; z++)
                         {
                             string line = sr.ReadLine();
                             string[] fileArgs = line.Split(",".ToCharArray());
