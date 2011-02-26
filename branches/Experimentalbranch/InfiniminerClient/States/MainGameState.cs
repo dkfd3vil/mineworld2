@@ -229,7 +229,7 @@ namespace MineWorld.States
             _P.playerPosition += _P.playerVelocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             // Death by falling off the map.
-            if (_P.playerPosition.Y < -30)
+            if (_P.playerPosition.Y < - Defines.MAPSIZE/2)
             {
                 _P.KillPlayer(Defines.deathByMiss);
                 return;
