@@ -50,8 +50,8 @@ namespace MineWorld.States
             // Update engines.
             _P.skyplaneEngine.Update(gameTime);
             _P.playerEngine.Update(gameTime);
-            _P.interfaceEngine.Update(gameTime);
             _P.particleEngine.Update(gameTime);
+            _P.interfaceEngine.Update(gameTime);
 
             // Count down the tool cooldown.
                 if (_P.playerToolCooldown > 0)

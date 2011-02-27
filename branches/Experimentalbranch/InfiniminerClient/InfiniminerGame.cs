@@ -316,7 +316,7 @@ namespace MineWorld
                                                 if (propertyBag.blockEngine.BlockAtPoint(new Vector3(x, y, z)) != BlockType.None)
                                                 {
                                                     propertyBag.blockEngine.RemoveBlock(x, y, z);
-                                                    propertyBag.particleEngine.CreateExplosionDebris(new Vector3(x, y, z));
+                                                    //propertyBag.particleEngine.CreateExplosionDebris(new Vector3(x, y, z));
                                                 }
                                             }
                                             else

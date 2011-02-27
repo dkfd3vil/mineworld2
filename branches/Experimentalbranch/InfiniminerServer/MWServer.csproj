@@ -73,6 +73,7 @@
     <Compile Include="GameWorld.cs" />
     <Compile Include="InfiniminerNetServer.cs" />
     <Compile Include="InfiniminerServer.cs" />
+    <Compile Include="LogSystem.cs" />
     <Compile Include="MapSender.cs" />
     <Compile Include="Physics.cs" />
     <Compile Include="Program.cs" />

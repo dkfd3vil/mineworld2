@@ -25,10 +25,12 @@ namespace MineWorld
             public string MOTD;
             public bool Includelava;
             public int Autosavetimer;
+            public bool Logs;
 
             //Not used by configs
             public bool StopFluids;
-            public string Directory;
+            public string SettingsDir;
+            public string LogsDir;
         }
         int lavaBlockCount = 0;
         uint oreFactor = 10;

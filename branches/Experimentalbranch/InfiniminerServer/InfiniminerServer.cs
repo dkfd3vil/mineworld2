@@ -218,14 +218,24 @@ namespace MineWorld
 
         public void LoadSettings()
         {
-            ConsoleWrite("LOADING SETTINGS");
             //TODO: Load settings from file
             //For now we hardcode them
             Ssettings.StopFluids = false;
-            Ssettings.Directory = "ServerConfigs";
+            Ssettings.SettingsDir = "ServerConfigs";
+            Ssettings.LogsDir = "Logs";
+
+            Datafile dataFile = new Datafile(Ssettings.SettingsDir + "/server.config.txt");
+
+            if (dataFile.Data.ContainsKey("logs"))
+                Ssettings.Logs = bool.Parse(dataFile.Data["logs"]);
+            else
+            {
+                Ssettings.Logs = false;
+                ConsoleWrite("Couldnt find logs settings so we use the default (false)");
+            }
+            ConsoleWrite("LOADING SETTINGS");
 
             // Read in from the config file.
-            Datafile dataFile = new Datafile(Ssettings.Directory + "/server.config.txt");
             if (dataFile.Data.ContainsKey("maxplayers"))
                 Ssettings.Maxplayers = int.Parse(dataFile.Data["maxplayers"]);
             else

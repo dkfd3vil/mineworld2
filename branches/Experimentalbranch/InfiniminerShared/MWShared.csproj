@@ -138,6 +138,9 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Logs\Readme.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="ServerConfigs\admins.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
@@ -150,7 +153,9 @@
     <Content Include="ClientConfigs\keymap.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="ServerConfigs\bannednames.txt" />
+    <Content Include="ServerConfigs\bannednames.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="ServerConfigs\server.config.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

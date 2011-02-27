@@ -27,3 +27,6 @@ includelava = true
 
 # Sets the number of minutes between autosaves (zero disables autosave)
 autosave = 5
+
+# Enables server logging
+logs = true

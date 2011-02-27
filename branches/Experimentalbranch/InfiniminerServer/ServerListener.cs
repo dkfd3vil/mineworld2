@@ -14,6 +14,7 @@ namespace MineWorld
         //private NetBuffer msgBuffer;
         private NetMessageType msgType;
         private NetConnection msgSender;
+        uint duplicateNameCount = 0;
         public ServerListener(MineWorldNetServer serv,MineWorldServer iserv)
         {
             netServer = serv;
@@ -70,18 +71,8 @@ namespace MineWorld
                                                         msgSender.Disapprove("bannedname");
                                                     }
                                                 }
-                                                //TODO: Make sure double names cant connect
-                                                /*
-                                                foreach ()
-                                                {
-                                                    if (dummy.Handle.ToLower() == temphandle.ToLower())
-                                                    {
-                                                        IServer.ConsoleWrite("CONNECTION REJECTED: " + temphandle + " NAME EXSISTS");
                                                     }
                                                 }
-                                                 */
-                                            }
-                                        }
                                         else
                                         {
                                             IServer.ConsoleWrite("CONNECTION REJECTED: NO NAME");
@@ -89,22 +80,19 @@ namespace MineWorld
                                         }
 
                                         IClient newPlayer = new IClient(msgSender, null);
-                                        newPlayer.Handle = temphandle;
 
-                                        //if (IServer.admins.Contains(newPlayer.IP))
-                                            //newPlayer.admin = IServer.admins[newPlayer.IP];
-                                        IServer.playerList[msgSender] = newPlayer;
-                                        //Check if we should compress the map for the client
-                                        //Removed for now
-                                        /*
-                                        try
+                                        foreach (Player oldPlayer in IServer.playerList.Values)
                                         {
-                                            bool compression = msgBuffer.ReadBoolean();
-                                            if (compression)
-                                                IServer.playerList[msgSender].compression = true;
+                                            if (newPlayer.Handle.ToLower() == oldPlayer.Handle.ToLower())
+                                            {
+                                                duplicateNameCount++;
+                                                newPlayer.Handle += "." + this.duplicateNameCount.ToString();
+                                                break;
+                                            }
                                         }
-                                        catch { }
-                                         */
+
+                                        newPlayer.Handle = temphandle;
+                                        IServer.playerList[msgSender] = newPlayer;
                                         System.Threading.Thread SenderThread = new System.Threading.Thread(new System.Threading.ThreadStart(newPlayer.start));
                                         SenderThread.Start();
                                         IServer.toGreet.Add(msgSender);

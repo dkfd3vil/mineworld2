@@ -22,6 +22,10 @@ namespace MineWorld
 
         public void ConsoleWrite(string text)
         {
+            if (Ssettings.Logs == true)
+            {
+                LogWrite(text);
+            }
             consoleText.Add(text);
             if (consoleText.Count > CONSOLE_SIZE)
                 consoleText.RemoveAt(0);
