@@ -61,11 +61,6 @@ namespace MineWorld
 
         public void SetBlock(ushort x, ushort y, ushort z, BlockType blockType, PlayerTeam team)
         {
-            //if (x <= 0 || y <= 0 || z <= 0 || (int)x >= MAPSIZE - 1 || (int)y >= MAPSIZE - 1 || (int)z >= MAPSIZE - 1)
-                //return;
-
-            //Debug.Assert(blockType != BlockType.None, "GODVERDOMME Setblock wordt gebruikt als delete functie");
-
             if(!SaneBlockPosition(x,y,z))
                 return;
 
@@ -186,7 +181,7 @@ namespace MineWorld
             ushort x = (ushort)point.X;
             ushort y = (ushort)point.Y;
             ushort z = (ushort)point.Z;
-            if (x <= 0 || y <= 0 || z <= 0 || (int)x >= Defines.MAPSIZE - 1 || (int)y >= Defines.MAPSIZE - 1 || (int)z >= Defines.MAPSIZE - 1)
+            if (!SaneBlockPosition(x,y,z))
                 return BlockType.None;
             return blockList[x, y, z];
         }
@@ -216,6 +211,7 @@ namespace MineWorld
             Vector3 buildPoint = Vector3.Zero;
             if (!RayCollision(playerPosition, playerHeading, 2, 10, ref hitPoint, ref buildPoint))
                 return;
+
             ushort x = (ushort)hitPoint.X;
             ushort y = (ushort)hitPoint.Y;
             ushort z = (ushort)hitPoint.Z;
@@ -313,15 +309,14 @@ namespace MineWorld
 
         public void UseConstructionGun(IClient player, Vector3 playerPosition, Vector3 playerHeading, BlockType blockType)
         {
-            bool actionFailed = false;
-
             // If there's no surface within range, bail.
             Vector3 hitPoint = Vector3.Zero;
             Vector3 buildPoint = Vector3.Zero;
             if (!RayCollision(playerPosition, playerHeading, 6, 25, ref hitPoint, ref buildPoint))
-                actionFailed = true;
+                return;
 
             // If there's someone there currently, bail.
+            bool actionFailed = false;
             ushort x = (ushort)buildPoint.X;
             ushort y = (ushort)buildPoint.Y;
             ushort z = (ushort)buildPoint.Z;
