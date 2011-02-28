@@ -170,10 +170,10 @@ namespace MineWorld
             return retList;
         }
 
-        public void KickPlayer(string ip)
-        {
-            KickPlayer(ip, false);
-        }
+        //public void KickPlayer(string ip)
+        //{
+            //KickPlayer(ip, false);
+        //}
 
         public void KickPlayer(string ip, bool name)
         {
@@ -190,12 +190,12 @@ namespace MineWorld
             }
         }
 
-        public void BanPlayer(string ip)
+        public void BanPlayer(string ip, bool name)
         {
             if (!banList.Contains(ip))
             {
                 banList.Add(ip);
-                KickPlayer(ip);
+                KickPlayer(ip,name);
                 SaveBanList();
             }
         }
@@ -235,7 +235,7 @@ namespace MineWorld
         }
         public void BackupLevel()
         {
-            SaveLevel("autoBK.lvl");
+            SaveLevel("autoBK " + (UInt64)DateTime.Now.ToBinary() + " .lvl");
         }
 
         public bool LoadLevel(string filename)

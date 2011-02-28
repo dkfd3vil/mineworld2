@@ -66,13 +66,13 @@ namespace MineWorld
                         ConsoleWrite("SERVER CONSOLE COMMANDS:");
                         ConsoleWrite(" announce");
                         ConsoleWrite(" admins");
-                        ConsoleWrite(" admin <name>");
+                        ConsoleWrite(" admin <ip>");
                         ConsoleWrite(" players");
                         ConsoleWrite(" kick <ip>");
                         ConsoleWrite(" kickn <name>");
                         ConsoleWrite(" ban <ip>");
                         ConsoleWrite(" bann <name>");
-                        ConsoleWrite(" say <message>");
+                        //ConsoleWrite(" say <message>");
                         ConsoleWrite(" save <mapfile>");
                         ConsoleWrite(" load <mapfile>");
                         ConsoleWrite(" status");
@@ -109,8 +109,10 @@ namespace MineWorld
                 case "admins":
                     {
                         ConsoleWrite("Admin list:");
-                        //foreach (string ip in admins.ToString())
+                        //foreach (string ip in admins)
+                        //{
                             //ConsoleWrite(ip);
+                        //}
                         break;
                     }
 
@@ -142,7 +144,7 @@ namespace MineWorld
                     {
                         if (args.Length == 2)
                         {
-                            KickPlayer(args[1]);
+                            KickPlayer(args[1],false);
                         }
                         break;
                     }
@@ -159,7 +161,7 @@ namespace MineWorld
                     {
                         if (args.Length == 2)
                         {
-                            BanPlayer(args[1]);
+                            BanPlayer(args[1],false);
                         }
                     }
                     break;
@@ -168,7 +170,7 @@ namespace MineWorld
                     {
                         if (args.Length == 2)
                         {
-                            BanPlayer(args[1]);
+                            BanPlayer(args[1],true);
                         }
                         break;
                     }

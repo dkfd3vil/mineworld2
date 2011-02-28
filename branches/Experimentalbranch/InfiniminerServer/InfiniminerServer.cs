@@ -151,7 +151,7 @@ namespace MineWorld
 
                 //Time to backup map?
                 // If Ssettings.autosavetimer is 0 then autosave is disabled
-                if (Ssettings.Autosavetimer == 0)
+                if (Ssettings.Autosavetimer != 0)
                 {
                     TimeSpan mapUpdateTimeSpan = DateTime.Now - lastMapBackup;
                     if (mapUpdateTimeSpan.TotalMinutes > Ssettings.Autosavetimer)
@@ -199,14 +199,13 @@ namespace MineWorld
                 // Restart the server?
                 if (restartTriggered && DateTime.Now > restartTime)
                 {
-                    SaveLevel("autosave_" + (UInt64)DateTime.Now.ToBinary() + ".lvl");
-                    //netServer.Shutdown("The server is restarting.");
+                    BackupLevel();
                     return true;
                 }
 
                 if (shutdownTriggerd && DateTime.Now > shutdownTime)
                 {
-                    SaveLevel("autosave_" + (UInt64)DateTime.Now.ToBinary() + ".lvl");
+                    BackupLevel();
                     return false;
                 }
 

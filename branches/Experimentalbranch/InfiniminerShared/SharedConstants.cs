@@ -9,7 +9,7 @@ namespace MineWorld
         public const double MINEWORLD_VER = 3.0;
 
         
-        public const int MAPSIZE = 192;
+        public const int MAPSIZE = 64;
         //Mapsize % Packetsize MUST EQUAL 0!!!
         public const int PACKETSIZE = 16;
 

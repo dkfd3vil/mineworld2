@@ -9,6 +9,7 @@ namespace MineWorld
         {
             DateTime dt = DateTime.Now;
             string minute;
+            string second;
 
             if (dt.Minute < 10)
             {
@@ -17,6 +18,15 @@ namespace MineWorld
             else
             {
                 minute = dt.Minute.ToString();
+            }
+
+            if (dt.Second < 10)
+            {
+                second = 0 + dt.Second.ToString();
+            }
+            else
+            {
+                second = dt.Second.ToString();
             }
 
             string text = "[" + dt.Hour + ":" + minute + ":" + dt.Second + "] ";
