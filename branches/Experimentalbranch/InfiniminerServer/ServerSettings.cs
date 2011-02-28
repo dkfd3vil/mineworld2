@@ -1,14 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Threading;
-using Lidgren.Network;
-using Lidgren.Network.Xna;
-using Microsoft.Xna.Framework;
-
-//Contains assorted server settings
-
+﻿//Contains assorted server settings
 namespace MineWorld
 {
     public partial class MineWorldServer
@@ -23,7 +13,6 @@ namespace MineWorld
             public bool Autoload;
             public bool AutoAnnouce;
             public string MOTD;
-            public bool Includelava;
             public int Autosavetimer;
             public bool Logs;
 

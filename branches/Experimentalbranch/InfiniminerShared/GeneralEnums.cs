@@ -135,6 +135,13 @@ namespace MineWorld
         SayBlueTeam,
     }
 
+    public enum Mapsize : byte
+    {
+        Small = 32,
+        Normal = 64,
+        Large = 128,
+    }
+
     public class ChatMessage
     {
         public string message;

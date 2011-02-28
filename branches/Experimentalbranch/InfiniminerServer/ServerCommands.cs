@@ -22,7 +22,6 @@ namespace MineWorld
         }
          */
 
-
         public List<string> LoadAdminList()
         {
             ConsoleWrite("LOADING ADMINLIST");
@@ -297,8 +296,13 @@ namespace MineWorld
         }
         public void status()
         {
-            ConsoleWrite(Ssettings.Servername);//serverName);
+            ConsoleWrite("ServerName: " + Ssettings.Servername);//serverName);
             ConsoleWrite(playerList.Count + " / " + Ssettings.Maxplayers + " players");
+            ConsoleWrite("Public: " + Ssettings.Public.ToString());
+            ConsoleWrite("Proxy: " + Ssettings.Proxy.ToString());
+            ConsoleWrite("Logging: " + Ssettings.Logs.ToString());
+            ConsoleWrite("MOTD: " + Ssettings.MOTD);
+            ConsoleWrite("Logging: " + Ssettings.Logs.ToString());
         }
     }
 }

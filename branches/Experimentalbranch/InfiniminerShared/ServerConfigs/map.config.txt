@@ -1,0 +1,8 @@
+﻿# If set, Lava will be placed randomly in the level otherwise there is no lava
+includelava = true
+
+# Mapsize
+# (1)Small = 32 * 32 * 32 Total of 32.768
+# (2)Normal = 64 * 64 * 64 Total of 262.144
+# (3)Large = 128 * 128 * 128 Total of 2.097.152
+mapsize = 2

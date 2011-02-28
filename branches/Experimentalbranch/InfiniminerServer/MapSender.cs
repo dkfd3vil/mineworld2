@@ -9,6 +9,7 @@ namespace MineWorld
     class MapSender
     {
         NetConnection client;
+        Mapsize mapsize;
         Thread conn;
         MineWorld.MineWorldServer infs;
         MineWorld.MineWorldNetServer infsN;
@@ -23,11 +24,12 @@ namespace MineWorld
             }
         }
 
-        public MapSender(NetConnection nClient, MineWorld.MineWorldServer nInfs, MineWorld.MineWorldNetServer nInfsN/*,int nMAPSIZE, bool compress*/)
+        public MapSender(NetConnection nClient, MineWorld.MineWorldServer nInfs, MineWorld.MineWorldNetServer nInfsN,Mapsize mpsize)
         {
             client = nClient;
             infs = nInfs;
             infsN = nInfsN;
+            mapsize = mpsize;
             //MAPSIZE = nMAPSIZE;
             //compression = compress;
             //finished = false;
@@ -50,6 +52,7 @@ namespace MineWorld
                 {
                     NetBuffer msgBuffer = infsN.CreateBuffer();
                     msgBuffer.Write((byte)MineWorld.MineWorldMessage.BlockBulkTransfer);
+                    msgBuffer.Write((byte)mapsize);
                     //if (!compression)
                     //{
                     msgBuffer.Write(x);

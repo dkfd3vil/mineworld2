@@ -15,13 +15,14 @@ namespace MineWorld
         private NetMessageType msgType;
         private NetConnection msgSender;
         uint duplicateNameCount = 0;
+
         public ServerListener(MineWorldNetServer serv,MineWorldServer iserv)
         {
             netServer = serv;
             IServer = iserv;
             // Initialize variables we'll use.
-            
         }
+
         public void start()
         {
             NetBuffer msgBuffer = netServer.CreateBuffer();
@@ -37,6 +38,7 @@ namespace MineWorld
                                 {
                                     string temphandle = Defines.Sanitize(msgBuffer.ReadString()).Trim();
                                     double authcode = msgBuffer.ReadDouble();
+
                                     if (authcode != Defines.MINEWORLD_VER)
                                     {
                                         IServer.ConsoleWrite("CONNECTION REJECTED: " + temphandle + " VERSION WRONG");
@@ -86,7 +88,7 @@ namespace MineWorld
                                             if (newPlayer.Handle.ToLower() == oldPlayer.Handle.ToLower())
                                             {
                                                 duplicateNameCount++;
-                                                newPlayer.Handle += "." + this.duplicateNameCount.ToString();
+                                                newPlayer.Handle += "." + duplicateNameCount.ToString();
                                                 break;
                                             }
                                         }

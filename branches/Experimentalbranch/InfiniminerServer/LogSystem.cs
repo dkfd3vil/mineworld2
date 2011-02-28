@@ -29,7 +29,7 @@ namespace MineWorld
                 second = dt.Second.ToString();
             }
 
-            string text = "[" + dt.Hour + ":" + minute + ":" + dt.Second + "] ";
+            string text = "[" + dt.Hour + ":" + minute + ":" + second + "] ";
 
             try
             {

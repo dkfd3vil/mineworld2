@@ -38,6 +38,7 @@ namespace MineWorld
         bool shutdownTriggerd = false;
 
         public ServerSettings Ssettings = new ServerSettings();
+        public MapSettings Msettings = new MapSettings();
 
         public MineWorldServer()
         {
@@ -76,6 +77,9 @@ namespace MineWorld
             // Load the general-settings.
             LoadSettings();
 
+            // Load the map-settings.
+            LoadMapSettings();
+
             // Load the ban-list.
             banList = LoadBanList();
 
@@ -97,7 +101,7 @@ namespace MineWorld
             //netServer.SimulatedDuplicates = 0.05f;
             netServer.Start();
 
-            // Store the last time that we did a flow calculation.
+            // Store the last time that we did a physics calculation.
             DateTime lastCalc = DateTime.Now;
 
             //Display external IP
@@ -117,10 +121,11 @@ namespace MineWorld
             }
             else
             {
+                ConsoleWrite("MAPSIZE = [" + Defines.MAPSIZE + "] [" + Defines.MAPSIZE + "] [" + Defines.MAPSIZE + "]");
+                ConsoleWrite("TOTAL BLOCKS = " + Defines.MAPSIZE * Defines.MAPSIZE * Defines.MAPSIZE);
                 // Calculate initial lava flows.
                 ConsoleWrite("CALCULATING INITIAL LAVA FLOWS");
                 ConsoleWrite("TOTAL LAVA BLOCKS = " + newMap());
-                ConsoleWrite("TOTAL BLOCKS = " + Defines.MAPSIZE * Defines.MAPSIZE * Defines.MAPSIZE);
             }
             lastMapBackup = DateTime.Now;
             ServerListener listener = new ServerListener(netServer,this);
@@ -217,8 +222,6 @@ namespace MineWorld
 
         public void LoadSettings()
         {
-            //TODO: Load settings from file
-            //For now we hardcode them
             Ssettings.StopFluids = false;
             Ssettings.SettingsDir = "ServerConfigs";
             Ssettings.LogsDir = "Logs";
@@ -290,14 +293,6 @@ namespace MineWorld
                 ConsoleWrite("Couldnt find autoannounce setting so we use the default (false)");
             }
 
-            if (dataFile.Data.ContainsKey("includelava"))
-                Ssettings.Includelava = bool.Parse(dataFile.Data["includelava"]);
-            else
-            {
-                Ssettings.Includelava = true;
-                ConsoleWrite("Couldnt find includelava setting so we use the default (true)");
-            }
-
             if (dataFile.Data.ContainsKey("autosave"))
                 Ssettings.Autosavetimer = int.Parse(dataFile.Data["autosave"]);
             else
@@ -306,7 +301,7 @@ namespace MineWorld
                 ConsoleWrite("Couldnt find autosave setting so we use the default (5)");
             }
 
-            if (!(Ssettings.Maxplayers > 1 && Ssettings.Maxplayers <= 16))
+            if (!(Ssettings.Maxplayers >= 1 && Ssettings.Maxplayers <= 16))
             {
                 Ssettings.Maxplayers = 16;
                 ConsoleWrite("The value of maxplayers must be between 1 and 16 for now");
@@ -320,6 +315,60 @@ namespace MineWorld
                 ConsoleWrite("Setting autosave to 5");
             }
             ConsoleWrite("SETTINGS LOADED");
+        }
+
+        public void LoadMapSettings()
+        {
+            ConsoleWrite("LOADING MAPSETTINGS");
+            Msettings.SettingsDir = "ServerConfigs";
+
+            Datafile dataFile = new Datafile(Msettings.SettingsDir + "/map.config.txt");
+
+            if (dataFile.Data.ContainsKey("includelava"))
+                Msettings.Includelava = bool.Parse(dataFile.Data["includelava"]);
+            else
+            {
+                Msettings.Includelava = true;
+                ConsoleWrite("Couldnt find includelava setting so we use the default (true)");
+            }
+
+            int temp;
+
+            if (dataFile.Data.ContainsKey("mapsize"))
+            {
+                temp = int.Parse(dataFile.Data["mapsize"]);
+                switch (temp)
+                {
+                    case 1:
+                        {
+                            Msettings.Mapsize = Mapsize.Small;
+                            break;
+                        }
+                    case 2:
+                        {
+                            Msettings.Mapsize = Mapsize.Normal;
+                            break;
+                        }
+                    case 3:
+                        {
+                            Msettings.Mapsize = Mapsize.Large;
+                            break;
+                        }
+                }
+            }
+            else
+            {
+                Msettings.Mapsize = Mapsize.Normal;
+                ConsoleWrite("Couldnt find mapsize settings so we use the default ((2)normal)");
+            }
+
+            if (!(Msettings.Mapsize == Mapsize.Small || Msettings.Mapsize == Mapsize.Normal || Msettings.Mapsize == Mapsize.Large))
+            {
+                Msettings.Mapsize = Mapsize.Normal;
+                ConsoleWrite("Invalid number in mapsize settings so we use the default ((2)normal)");
+            }
+
+            ConsoleWrite("MAPSETTINGS LOADED");
         }
 
         public void Shutdownserver()
@@ -407,7 +456,7 @@ namespace MineWorld
 
         public void SendCurrentMap(NetConnection client)
         {
-            MapSender ms = new MapSender(client, this, netServer/*,Defines.MAPSIZE/*,playerList[client].compression*/);
+            MapSender ms = new MapSender(client, this, netServer,Msettings.Mapsize);
             mapSendingProgress.Add(ms);
         }
 

@@ -101,7 +101,7 @@ namespace MineWorld
         public int newMap()
         {
             // Create our block world, translating the coordinates out of the cave generator (where Z points down)
-            BlockType[, ,] worldData = CaveGenerator.GenerateCaveSystem(Defines.MAPSIZE, Ssettings.Includelava, oreFactor);
+            BlockType[, ,] worldData = CaveGenerator.GenerateCaveSystem(Defines.MAPSIZE, Msettings.Includelava, oreFactor);
             blockList = new BlockType[Defines.MAPSIZE, Defines.MAPSIZE, Defines.MAPSIZE];
             blockCreatorTeam = new PlayerTeam[Defines.MAPSIZE, Defines.MAPSIZE, Defines.MAPSIZE];
             for (ushort i = 0; i < Defines.MAPSIZE; i++)
