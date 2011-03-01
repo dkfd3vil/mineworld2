@@ -99,7 +99,6 @@ namespace MineWorld
             //netServer.SimulatedLatencyVariance = 0.05f;
             //netServer.SimulatedLoss = 0.1f;
             //netServer.SimulatedDuplicates = 0.05f;
-            netServer.Start();
 
             // Store the last time that we did a physics calculation.
             DateTime lastCalc = DateTime.Now;
@@ -121,15 +120,22 @@ namespace MineWorld
             }
             else
             {
+                ConsoleWrite("GENERATING NEW MAP");
+                int lavablockscount = newMap();
+                ConsoleWrite("NEW MAP GENERATED");
                 ConsoleWrite("MAPSIZE = [" + Defines.MAPSIZE + "] [" + Defines.MAPSIZE + "] [" + Defines.MAPSIZE + "]");
-                ConsoleWrite("TOTAL BLOCKS = " + Defines.MAPSIZE * Defines.MAPSIZE * Defines.MAPSIZE);
-                // Calculate initial lava flows.
-                ConsoleWrite("CALCULATING INITIAL LAVA FLOWS");
-                ConsoleWrite("TOTAL LAVA BLOCKS = " + newMap());
+                int tempblocks = Defines.MAPSIZE * Defines.MAPSIZE * Defines.MAPSIZE;
+                ConsoleWrite("TOTAL BLOCKS = " + tempblocks.ToString("n0"));
+                ConsoleWrite("TOTAL LAVA BLOCKS = " + lavaBlockCount);
             }
             lastMapBackup = DateTime.Now;
             ServerListener listener = new ServerListener(netServer,this);
             System.Threading.Thread listenerthread = new System.Threading.Thread(new ThreadStart(listener.start));
+
+            //Start netserver
+            netServer.Start();
+
+            //Start listernerthread
             listenerthread.Start();
 
 
@@ -225,6 +231,7 @@ namespace MineWorld
             Ssettings.StopFluids = false;
             Ssettings.SettingsDir = "ServerConfigs";
             Ssettings.LogsDir = "Logs";
+            Ssettings.BackupDir = "Backups";
 
             Datafile dataFile = new Datafile(Ssettings.SettingsDir + "/server.config.txt");
 

@@ -52,7 +52,7 @@ namespace MineWorld
                 {
                     NetBuffer msgBuffer = infsN.CreateBuffer();
                     msgBuffer.Write((byte)MineWorld.MineWorldMessage.BlockBulkTransfer);
-                    msgBuffer.Write((byte)mapsize);
+                    //msgBuffer.Write((byte)mapsize);
                     //if (!compression)
                     //{
                     msgBuffer.Write(x);

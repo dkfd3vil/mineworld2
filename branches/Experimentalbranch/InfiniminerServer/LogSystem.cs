@@ -8,28 +8,8 @@ namespace MineWorld
         public void LogWrite(string consoletext)
         {
             DateTime dt = DateTime.Now;
-            string minute;
-            string second;
 
-            if (dt.Minute < 10)
-            {
-                minute = 0 + dt.Minute.ToString();
-            }
-            else
-            {
-                minute = dt.Minute.ToString();
-            }
-
-            if (dt.Second < 10)
-            {
-                second = 0 + dt.Second.ToString();
-            }
-            else
-            {
-                second = dt.Second.ToString();
-            }
-
-            string text = "[" + dt.Hour + ":" + minute + ":" + second + "] ";
+            string text = "[" + GetTime(true) + "] ";
 
             try
             {
@@ -48,6 +28,53 @@ namespace MineWorld
             {
 
             }
+        }
+
+        public string GetTime(bool usedots)
+        {
+            DateTime temp = DateTime.Now;
+            string time;
+            string minute;
+            string second;
+            string hour;
+
+            if (temp.Minute < 10)
+            {
+                minute = 0 + temp.Minute.ToString();
+            }
+            else
+            {
+                minute = temp.Minute.ToString();
+            }
+
+            if (temp.Second < 10)
+            {
+                second = 0 + temp.Second.ToString();
+            }
+            else
+            {
+                second = temp.Second.ToString();
+            }
+
+            if (temp.Hour < 10)
+            {
+                hour = 0 + temp.Hour.ToString();
+            }
+            else
+            {
+                hour = temp.Hour.ToString();
+            }
+
+            if (usedots == true)
+            {
+                time = hour + ":" + minute + ":" + second;
+            }
+            else
+            {
+                time = hour + "-" + minute + "-" + second;
+            }
+
+            return time;
         }
     }
 }

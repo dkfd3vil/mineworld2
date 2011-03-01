@@ -20,6 +20,7 @@ namespace MineWorld
             public bool StopFluids;
             public string SettingsDir;
             public string LogsDir;
+            public string BackupDir;
         }
         int lavaBlockCount = 0;
         uint oreFactor = 10;

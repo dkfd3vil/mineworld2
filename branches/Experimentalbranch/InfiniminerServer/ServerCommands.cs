@@ -234,7 +234,7 @@ namespace MineWorld
         }
         public void BackupLevel()
         {
-            SaveLevel("autoBK " + (UInt64)DateTime.Now.ToBinary() + " .lvl");
+            SaveLevel(Ssettings.BackupDir + "/backup" + GetTime(false) + ".lvl");
         }
 
         public bool LoadLevel(string filename)

@@ -30,9 +30,9 @@ namespace MineWorld
 
             // Generate a noise texture.
             randGen = new Random();
-            texNoise = new Texture2D(gameInstance.GraphicsDevice, 64, 64);
-            uint[] noiseData = new uint[64*64];
-            for (int i = 0; i < 64 * 64; i++)
+            texNoise = new Texture2D(gameInstance.GraphicsDevice, Defines.MAPSIZE, Defines.MAPSIZE);
+            uint[] noiseData = new uint[Defines.MAPSIZE*Defines.MAPSIZE];
+            for (int i = 0; i < Defines.MAPSIZE * Defines.MAPSIZE; i++)
                 if (randGen.Next(32) == 0)
                     noiseData[i] = Color.White.PackedValue;
                 else
@@ -45,12 +45,12 @@ namespace MineWorld
             // Create our vertices.
             vertexDeclaration = new VertexDeclaration(gameInstance.GraphicsDevice, VertexPositionTexture.VertexElements);
             vertices = new VertexPositionTexture[6];
-            vertices[0] = new VertexPositionTexture(new Vector3(-210, 100, -210), new Vector2(0, 0));
-            vertices[1] = new VertexPositionTexture(new Vector3(274, 100, -210), new Vector2(1, 0));
-            vertices[2] = new VertexPositionTexture(new Vector3(274, 100, 274), new Vector2(1, 1));
-            vertices[3] = new VertexPositionTexture(new Vector3(-210, 100, -210), new Vector2(0, 0));
-            vertices[4] = new VertexPositionTexture(new Vector3(274, 100, 274), new Vector2(1, 1));
-            vertices[5] = new VertexPositionTexture(new Vector3(-210, 100, 274), new Vector2(0, 1));
+            vertices[0] = new VertexPositionTexture(new Vector3(-Defines.MAPSIZE - 220, Defines.MAPSIZE + 40, -Defines.MAPSIZE - 220), new Vector2(0, 0));
+            vertices[1] = new VertexPositionTexture(new Vector3(Defines.MAPSIZE + 220, Defines.MAPSIZE + 40, -Defines.MAPSIZE - 220), new Vector2(1, 0));
+            vertices[2] = new VertexPositionTexture(new Vector3(Defines.MAPSIZE + 220, Defines.MAPSIZE + 40, Defines.MAPSIZE + 220), new Vector2(1, 1));
+            vertices[3] = new VertexPositionTexture(new Vector3(-Defines.MAPSIZE - 220, Defines.MAPSIZE + 40, -Defines.MAPSIZE - 220), new Vector2(0, 0));
+            vertices[4] = new VertexPositionTexture(new Vector3(Defines.MAPSIZE + 220, Defines.MAPSIZE + 40, Defines.MAPSIZE + 220), new Vector2(1, 1));
+            vertices[5] = new VertexPositionTexture(new Vector3(-Defines.MAPSIZE - 220, Defines.MAPSIZE + 40, Defines.MAPSIZE + 220), new Vector2(0, 1));
         }
 
         public void Update(GameTime gameTime)

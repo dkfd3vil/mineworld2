@@ -11,9 +11,9 @@ namespace MineWorld
         
         public const int MAPSIZE = 64;
         //Mapsize % Packetsize MUST EQUAL 0!!!
-        public const int PACKETSIZE = 16;
+        public const int PACKETSIZE = 32;
 
-        public const int GROUND_LEVEL = 8;
+        public const int GROUND_LEVEL = MAPSIZE / 8;
 
         public const string deathByLava = "WAS INCINERATED BY LAVA!";
         public const string deathByElec = "WAS ELECTROCUTED!";
