@@ -14,11 +14,11 @@ proxy = false
 # If true, the public server list will be notified immediately when your server goes up - otherwise it will take a couple mintes / you can use announce
 autoannounce = true
 
-# If set, a blank load command will load this level
-levelname = autoBK.lvl
-
-# If true, the above level will be loaded whenever the server is started
+# If true, the level below will be loaded whenever the server is started
 autoload = false
+
+# If set, a blank load command will load this level
+levelname =
 
 # If set, this message will be sent to newcomers - [name] will be replace with their name
 motd = Welcome [name] to my server!

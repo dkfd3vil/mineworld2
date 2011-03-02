@@ -1,5 +1,4 @@
-﻿//Todo
-//Implent this
+﻿//Todo Implent Server side handeling of client
 /*
 using System;
 using System.Collections.Generic;

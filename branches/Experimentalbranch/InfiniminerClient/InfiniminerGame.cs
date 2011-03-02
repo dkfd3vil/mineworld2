@@ -670,11 +670,11 @@ namespace MineWorld
             //Now to read the key bindings
             if (!File.Exists(Csettings.Directory + "/keymap.txt"))
             {
-                FileStream temp = File.Create("keymap.txt");
+                FileStream temp = File.Create(Csettings.Directory + "/keymap.txt");
                 temp.Close();
-                Console.WriteLine("Keymap file does not exist, creating.");
+                //Console.WriteLine("Keymap file does not exist, creating.");
             }
-            dataFile = new Datafile("keymap.txt");
+            dataFile = new Datafile(Csettings.Directory + "/keymap.txt");
             bool anyChanged = false;
             foreach (string key in dataFile.Data.Keys)
             {
@@ -699,8 +699,8 @@ namespace MineWorld
             if (!anyChanged)
             {
                 keyBinds.CreateDefaultSet();
-                keyBinds.SaveBinds(dataFile, "keymap.txt");
-                Console.WriteLine("Creating default keymap...");
+                keyBinds.SaveBinds(dataFile, Csettings.Directory + "/keymap.txt");
+                //Console.WriteLine("Creating default keymap...");
             }
             graphicsDeviceManager.IsFullScreen = Csettings.Fullscreen;
             graphicsDeviceManager.PreferredBackBufferHeight = Csettings.Height;

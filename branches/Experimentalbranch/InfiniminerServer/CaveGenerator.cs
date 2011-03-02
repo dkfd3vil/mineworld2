@@ -17,7 +17,7 @@ namespace MineWorld
 {
     public class CaveGenerator
     {
-        public string CaveInfo = "";
+        //public string CaveInfo = "";
         private static Random randGen = new Random();
         private int mapsize;
         private MineWorldServer.MapSettings Cgsettings;
@@ -146,7 +146,7 @@ namespace MineWorld
         public void AddRocks(ref BlockType[, ,] data, int size)
         {
             int numRocks = randGen.Next(size, 2*size);
-            CaveInfo += " numRocks=" + numRocks;
+            //CaveInfo += " numRocks=" + numRocks;
             for (int i = 0; i < numRocks; i++)
             {
                 int x = randGen.Next(0, size);
@@ -213,7 +213,7 @@ namespace MineWorld
 
         public void AddDiamond(ref BlockType[, ,] data, int size)
         {
-            CaveInfo += "diamond";
+            //CaveInfo += "diamond";
 
             int numDiamonds = 16;
             for (int i = 0; i < numDiamonds; i++)
@@ -234,7 +234,7 @@ namespace MineWorld
         }
         public void AddAdminblocks(ref BlockType[, ,] data, int size)
         {
-            CaveInfo += "Adminblocks";
+            //CaveInfo += "Adminblocks";
             int x = 0;
             int y = 0;
             int z = Defines.MAPSIZE - 2;
@@ -250,7 +250,7 @@ namespace MineWorld
         // Gold appears in fairly numerous streaks, located at medium depths.
         public void AddGold(ref BlockType[, ,] data, int size)
         {
-            CaveInfo += "gold";
+            //CaveInfo += "gold";
 
             int numVeins = 16;
             for (int i = 0; i < numVeins; i++)

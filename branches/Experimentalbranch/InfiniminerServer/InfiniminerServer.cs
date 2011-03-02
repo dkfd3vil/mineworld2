@@ -110,15 +110,24 @@ namespace MineWorld
                 serverIP = GetExternalIp();
                 ConsoleWrite("Your external IP Adress: " + serverIP);
             }
-
+            bool loaded = false;
             //Check if we should autoload a level
             if (Ssettings.Autoload)
             {
+                ConsoleWrite("AUTOLOAD MAP");
                 blockList = new BlockType[Defines.MAPSIZE, Defines.MAPSIZE, Defines.MAPSIZE];
                 blockCreatorTeam = new PlayerTeam[Defines.MAPSIZE, Defines.MAPSIZE, Defines.MAPSIZE];
-                LoadLevel(Ssettings.LevelName);
+                loaded = LoadLevel(Ssettings.LevelName);
+                if (loaded == false)
+                {
+                    ConsoleWrite("AUTOLOAD FAILED");
+                }
+                else
+                {
+                    ConsoleWrite("AUTLOAD SUCCESFULL");
+                }
             }
-            else
+            if(loaded == false)
             {
                 ConsoleWrite("GENERATING NEW MAP");
                 GenerateNewMap();
@@ -128,6 +137,7 @@ namespace MineWorld
                 ConsoleWrite("TOTAL BLOCKS = " + tempblocks.ToString("n0"));
                 ConsoleWrite("TOTAL LAVA BLOCKS = " + Msettings.Totallavablockcount);
             }
+
             lastMapBackup = DateTime.Now;
             ServerListener listener = new ServerListener(netServer,this);
             System.Threading.Thread listenerthread = new System.Threading.Thread(new ThreadStart(listener.start));
@@ -274,6 +284,14 @@ namespace MineWorld
             {
                 Ssettings.Servername = "Default";
                 ConsoleWrite("Couldnt find servername setting so we use the default (Default)");
+            }
+
+            if (dataFile.Data.ContainsKey("autoload"))
+                Ssettings.Autoload = bool.Parse(dataFile.Data["autoload"]);
+            else
+            {
+                Ssettings.Autoload = false;
+                ConsoleWrite("Couldnt find autoload setting so we use the default (false)");
             }
 
             if (dataFile.Data.ContainsKey("levelname"))
