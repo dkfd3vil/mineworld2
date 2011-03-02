@@ -22,8 +22,6 @@ namespace MineWorld
             public string LogsDir;
             public string BackupDir;
         }
-        int lavaBlockCount = 0;
-        uint oreFactor = 10;
 
         uint teamCashRed = 0;
         uint teamCashBlue = 0;

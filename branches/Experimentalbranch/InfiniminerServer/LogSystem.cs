@@ -35,17 +35,17 @@ namespace MineWorld
             String DateFormat = "";
             if (usedots)
             {
-                DateFormat = "{0:hh:mm:ss}";
+                DateFormat = "hh:mm:ss";
             }
             else
             {
-                DateFormat = "{0:hh-mm-ss}";
+                DateFormat = "hh-mm-ss";
             }
             return DateTime.Now.ToString(DateFormat);
         }
         public string GetDate()
         {
-            return DateTime.Now.ToString("{0:yyyy-MM-dd}");
+            return DateTime.Now.ToString("yyyy-MM-dd");
         }
     }
 }

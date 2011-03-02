@@ -94,29 +94,34 @@ namespace MineWorld
                 //if (netConn.Status == NetConnectionStatus.Connected)
                     player.AddQueMsg(msgBuffer, NetChannel.ReliableUnordered);
 
-            if (blockType == BlockType.Lava)
-                lavaBlockCount += 1;
+            //if (blockType == BlockType.Lava)
+                //lavaBlockCount += 1;
         }
 
-        public int newMap()
+        public void GenerateNewMap()
         {
             // Create our block world, translating the coordinates out of the cave generator (where Z points down)
-            BlockType[, ,] worldData = CaveGenerator.GenerateCaveSystem(Defines.MAPSIZE, Msettings.Includelava, oreFactor);
+            int templavablockcount = 0;
+            CaveGenerator Cg = new CaveGenerator(Defines.MAPSIZE,Msettings);
+            BlockType[, ,] worldData = Cg.GenerateCaveSystem();
             blockList = new BlockType[Defines.MAPSIZE, Defines.MAPSIZE, Defines.MAPSIZE];
             blockCreatorTeam = new PlayerTeam[Defines.MAPSIZE, Defines.MAPSIZE, Defines.MAPSIZE];
             for (ushort i = 0; i < Defines.MAPSIZE; i++)
+            {
                 for (ushort j = 0; j < Defines.MAPSIZE; j++)
+                {
                     for (ushort k = 0; k < Defines.MAPSIZE; k++)
                     {
-                        if (worldData[i, j, k] == BlockType.Lava)
-                        {
-                            lavaBlockCount++;
-                        }
                         blockList[i, (ushort)(Defines.MAPSIZE - 1 - k), j] = worldData[i, j, k];
                         blockCreatorTeam[i, j, k] = PlayerTeam.None;
+                        if (blockList[i, j, k] == BlockType.Lava)
+                        {
+                            templavablockcount++;
+                        }
                     }
-
-            return lavaBlockCount;
+                }
+            }
+            Msettings.Totallavablockcount = templavablockcount;
         }
 
         public double Get3DDistance(int x1, int y1, int z1, int x2, int y2, int z2)

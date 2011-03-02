@@ -17,38 +17,44 @@ namespace MineWorld
 {
     public class CaveGenerator
     {
-        public static string CaveInfo = "";
+        public string CaveInfo = "";
         private static Random randGen = new Random();
+        private int mapsize;
+        private MineWorldServer.MapSettings Cgsettings;
+
+        public CaveGenerator(int size, MineWorldServer.MapSettings Msettings)
+        {
+            mapsize = size;
+            Cgsettings = Msettings;
+        }
 
         // Create a cave system.
-        public static BlockType[, ,] GenerateCaveSystem(int size, bool includeLava, uint oreFactor)
+        public BlockType[, ,] GenerateCaveSystem()
         {
+            int size = mapsize;
             float gradientStrength = (float)randGen.NextDouble();
-            BlockType[, ,] caveData = CaveGenerator.GenerateConstant(size, BlockType.Dirt);
+            BlockType[, ,] caveData = GenerateConstant(size, BlockType.Dirt);
 
             // Add ore.
-            float[, ,] oreNoise = CaveGenerator.GeneratePerlinNoise(32);
-            oreNoise = InterpolateData(ref oreNoise, 32, size);
-            for (int i = 0; i < oreFactor; i++)
-                CaveGenerator.PaintWithRandomWalk(ref caveData, ref oreNoise, size, 1, BlockType.Ore, false);
+            AddOre(ref caveData, size);
 
             // Add minerals.
             AddGold(ref caveData, size);
             AddDiamond(ref caveData, size);
 
             // Level off everything above ground level, replacing it with mountains.
-            float[, ,] mountainNoise = CaveGenerator.GeneratePerlinNoise(32);
+            float[, ,] mountainNoise = GeneratePerlinNoise(32);
             mountainNoise = InterpolateData(ref mountainNoise, 32, size);
             for (int x = 0; x < size; x++)
                 for (int y = 0; y < size; y++)
                     for (int z = 0; z <= Defines.GROUND_LEVEL * 2; z++)
                         mountainNoise[x, y, z] = z < 3 ? 0 : Math.Min(1, z / (Defines.GROUND_LEVEL * 2));
-            float[, ,] gradient = CaveGenerator.GenerateGradient(size);
-            CaveGenerator.AddDataTo(ref mountainNoise, ref gradient, size, 0.1f, 0.9f);
-            BlockType[, ,] mountainData = CaveGenerator.GenerateConstant(size, BlockType.None);
+            float[, ,] gradient = GenerateGradient(size);
+            AddDataTo(ref mountainNoise, ref gradient, size, 0.1f, 0.9f);
+            BlockType[, ,] mountainData = GenerateConstant(size, BlockType.None);
             int numMountains = randGen.Next(size, size * 3);
             for (int i = 0; i < numMountains; i++)
-                CaveGenerator.PaintWithRandomWalk(ref mountainData, ref mountainNoise, size, randGen.Next(2, 3), BlockType.Dirt, false);
+                PaintWithRandomWalk(ref mountainData, ref mountainNoise, size, randGen.Next(2, 3), BlockType.Dirt, false);
             for (int x = 0; x < size; x++)
                 for (int y = 0; y < size; y++)
                     for (int z = 0; z <= Defines.GROUND_LEVEL; z++)
@@ -56,43 +62,68 @@ namespace MineWorld
                             caveData[x, y, z] = BlockType.None;
             
             // Carve some caves into the ground.
-            float[, ,] caveNoise = CaveGenerator.GeneratePerlinNoise(32);
+            float[, ,] caveNoise = GeneratePerlinNoise(32);
             caveNoise = InterpolateData(ref caveNoise, 32, size);
-            gradient = CaveGenerator.GenerateGradient(size);
-            CaveGenerator.AddDataTo(ref caveNoise, ref gradient, size, 1 - gradientStrength, gradientStrength);
+            gradient = GenerateGradient(size);
+            AddDataTo(ref caveNoise, ref gradient, size, 1 - gradientStrength, gradientStrength);
             int cavesToCarve = randGen.Next(size / 8, size / 2);
             for (int i = 0; i < cavesToCarve; i++)
-                CaveGenerator.PaintWithRandomWalk(ref caveData, ref caveNoise, size, randGen.Next(1, 2), BlockType.None, false);
+                PaintWithRandomWalk(ref caveData, ref caveNoise, size, randGen.Next(1, 2), BlockType.None, false);
 
             // Carve the map into a sphere.
-            float[, ,] sphereGradient = CaveGenerator.GenerateRadialGradient(size);
+            float[, ,] sphereGradient = GenerateRadialGradient(size);
             cavesToCarve = randGen.Next(size / 8, size / 2);
             for (int i = 0; i < cavesToCarve; i++)
-                CaveGenerator.PaintWithRandomWalk(ref caveData, ref sphereGradient, size, randGen.Next(1, 2), BlockType.None, true);
+                PaintWithRandomWalk(ref caveData, ref sphereGradient, size, randGen.Next(1, 2), BlockType.None, true);
 
             // Add rocks.
             AddRocks(ref caveData, size);
 
             // Add lava.
-            if (includeLava)
+            if(Cgsettings.Includelava)
+            {
                 AddLava(ref caveData, size);
+            }
 
             // Add Admin block to stop falling through the lvl
-            AddAdminblocks(ref caveData, size);
+            if (Cgsettings.IncludeAdminblocks)
+            {
+                AddAdminblocks(ref caveData, size);
+            }
 
             // Add starting positions.
             AddStartingPosition(ref caveData, size, size - 5, size - 5, Defines.GROUND_LEVEL, BlockType.HomeRed);
             AddStartingPosition(ref caveData, size, 5, 5, Defines.GROUND_LEVEL, BlockType.HomeBlue);
 
-            oreNoise = null;
-            caveNoise = null;
-            gradient = null;
+            // Its auto collected
+            //oreNoise = null;
+            //caveNoise = null;
+            //gradient = null;
             GC.Collect();
 
             return caveData;
         }
 
-        public static void AddStartingPosition(ref BlockType[, ,] data, int size, int x, int y, int z, BlockType blockType)
+        public void AddOre(ref BlockType[, ,] data, int size)
+        {
+            int orefactor;
+            float[, ,] oreNoise = GeneratePerlinNoise(32);
+            oreNoise = InterpolateData(ref oreNoise, 32, size);
+
+            if (Cgsettings.Orefactor == 0)
+            {
+                orefactor = randGen.Next(0, 15);
+            }
+            else
+            {
+                orefactor = Cgsettings.Orefactor;
+            }
+
+            for (int i = 0; i < orefactor; i++)
+                PaintWithRandomWalk(ref data, ref oreNoise, size, 1, BlockType.Ore, false);
+        }
+
+        public void AddStartingPosition(ref BlockType[, ,] data, int size, int x, int y, int z, BlockType blockType)
         {
             for (int i = 0; i < size; i++)
                 for (int j = 0; j < size; j++)
@@ -112,7 +143,7 @@ namespace MineWorld
             data[x, y, z] = blockType;
         }
 
-        public static void AddRocks(ref BlockType[, ,] data, int size)
+        public void AddRocks(ref BlockType[, ,] data, int size)
         {
             int numRocks = randGen.Next(size, 2*size);
             CaveInfo += " numRocks=" + numRocks;
@@ -135,9 +166,21 @@ namespace MineWorld
             }
         }
 
-        public static void AddLava(ref BlockType[, ,] data, int size)
+        public void AddLava(ref BlockType[, ,] data, int size)
         {
-            int numFlows = randGen.Next(size / 16, size / 2);
+            int numFlows;
+
+            if (Cgsettings.Lavaspawns == 0)
+            {
+                numFlows = randGen.Next(size / 16, size / 2);
+            }
+            else
+            {
+                numFlows = Cgsettings.Lavaspawns;
+            }
+
+            Cgsettings.Totallavablockcount = numFlows;
+
             while (numFlows > 0)
             {
                 int x = randGen.Next(0, size);
@@ -168,7 +211,7 @@ namespace MineWorld
             }
         }
 
-        public static void AddDiamond(ref BlockType[, ,] data, int size)
+        public void AddDiamond(ref BlockType[, ,] data, int size)
         {
             CaveInfo += "diamond";
 
@@ -189,7 +232,7 @@ namespace MineWorld
                 data[x, y, z] = BlockType.Diamond;
             }
         }
-        public static void AddAdminblocks(ref BlockType[, ,] data, int size)
+        public void AddAdminblocks(ref BlockType[, ,] data, int size)
         {
             CaveInfo += "Adminblocks";
             int x = 0;
@@ -205,7 +248,7 @@ namespace MineWorld
         }
 
         // Gold appears in fairly numerous streaks, located at medium depths.
-        public static void AddGold(ref BlockType[, ,] data, int size)
+        public void AddGold(ref BlockType[, ,] data, int size)
         {
             CaveInfo += "gold";
 
@@ -258,7 +301,7 @@ namespace MineWorld
 
         // Generates a cube of noise with sides of length size. Noise falls in a linear
         // distribution ranging from 0 to magnitude.
-        public static float[, ,] GenerateNoise(int size, float magnitude)
+        public float[, ,] GenerateNoise(int size, float magnitude)
         {
             float[,,] noiseArray = new float[size, size, size];
             for (int x = 0; x < size; x++)
@@ -269,7 +312,7 @@ namespace MineWorld
         }
 
         // Generates some perlin noise!
-        public static float[,,] GeneratePerlinNoise(int size)
+        public float[,,] GeneratePerlinNoise(int size)
         {
             float[,,] data = new float[size, size, size];
 
@@ -285,7 +328,7 @@ namespace MineWorld
         }
 
         // Does a random walk of noiseData, setting cells to 0 in caveData in the process.
-        public static void PaintWithRandomWalk(ref BlockType[, ,] caveData, ref float[, ,] noiseData, int size, int paintRadius, BlockType paintValue, bool dontStopAtEdge)
+        public void PaintWithRandomWalk(ref BlockType[, ,] caveData, ref float[, ,] noiseData, int size, int paintRadius, BlockType paintValue, bool dontStopAtEdge)
         {
             int x = randGen.Next(0, size);
             int y = randGen.Next(0, size);
@@ -360,7 +403,7 @@ namespace MineWorld
             }
         }
 
-        public static void PaintAtPoint(ref BlockType[, ,] caveData, int x, int y, int z, int size, int paintRadius, BlockType paintValue)
+        public void PaintAtPoint(ref BlockType[, ,] caveData, int x, int y, int z, int size, int paintRadius, BlockType paintValue)
         {
             for (int dx = -paintRadius; dx <= paintRadius; dx++)
                 for (int dy = -paintRadius; dy <= paintRadius; dy++)
@@ -371,7 +414,7 @@ namespace MineWorld
         }
 
         // Generates a set of constant values.
-        public static BlockType[, ,] GenerateConstant(int size, BlockType value)
+        public BlockType[, ,] GenerateConstant(int size, BlockType value)
         {
             BlockType[, ,] data = new BlockType[size, size, size];
             for (int x = 0; x < size; x++)
@@ -381,7 +424,7 @@ namespace MineWorld
             return data;
         }
 
-        public static float[, ,] GenerateGradient(int size)
+        public float[, ,] GenerateGradient(int size)
         {
             float[, ,] data = new float[size, size, size];
 
@@ -394,7 +437,7 @@ namespace MineWorld
         }
 
         // Radial gradient concentrated with high values at the outside.
-        public static float[, ,] GenerateRadialGradient(int size)
+        public float[, ,] GenerateRadialGradient(int size)
         {
             float[, ,] data = new float[size, size, size];
 
@@ -409,20 +452,20 @@ namespace MineWorld
         }
 
         // Adds the values in dataSrc to the values in dataDst, storing the result in dataDst.
-        public static void AddDataTo(ref float[, ,] dataDst, ref float[, ,] dataSrc, int size, float scalarDst, float scalarSrc)
+        public void AddDataTo(ref float[, ,] dataDst, ref float[, ,] dataSrc, int size, float scalarDst, float scalarSrc)
         {
             for (int x = 0; x < size; x++)
                 for (int y = 0; y < size; y++)
                     for (int z = 0; z < size; z++)
                         dataDst[x, y, z] = Math.Max(Math.Min(dataDst[x, y, z]*scalarDst + dataSrc[x, y, z]*scalarSrc, 1), 0);
         }
-        public static void AddDataTo(ref float[, ,] dataDst, ref float[, ,] dataSrc, int size)
+        public void AddDataTo(ref float[, ,] dataDst, ref float[, ,] dataSrc, int size)
         {
             AddDataTo(ref dataDst, ref dataSrc, size, 1, 1);
         }
 
         // Resizes dataIn, with size sizeIn, to be of size sizeOut.
-        public static float[, ,] InterpolateData(ref float[, ,] dataIn, int sizeIn, int sizeOut)
+        public float[, ,] InterpolateData(ref float[, ,] dataIn, int sizeIn, int sizeOut)
         {
             Debug.Assert(sizeOut > sizeIn, "sizeOut must be greater than sizeIn");
             Debug.Assert(sizeOut % sizeIn == 0, "sizeOut must be a multiple of sizeIn");
@@ -471,8 +514,8 @@ namespace MineWorld
         }
 
         // Renders a specific z-level of a 256x256x256 data array to a texture.
-        private static uint[] pixelData = new uint[256 * 256];
-        public static void RenderSlice(ref BlockType[, ,] data, int z, Texture2D renderTexture)
+        private uint[] pixelData = new uint[256 * 256];
+        public void RenderSlice(ref BlockType[, ,] data, int z, Texture2D renderTexture)
         {
             for (int x = 0; x < 256; x++)
                 for (int y = 0; y < 256; y++)

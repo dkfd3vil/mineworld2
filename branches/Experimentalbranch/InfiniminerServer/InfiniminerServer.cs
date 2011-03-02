@@ -121,12 +121,12 @@ namespace MineWorld
             else
             {
                 ConsoleWrite("GENERATING NEW MAP");
-                int lavablockscount = newMap();
+                GenerateNewMap();
                 ConsoleWrite("NEW MAP GENERATED");
                 ConsoleWrite("MAPSIZE = [" + Defines.MAPSIZE + "] [" + Defines.MAPSIZE + "] [" + Defines.MAPSIZE + "]");
                 int tempblocks = Defines.MAPSIZE * Defines.MAPSIZE * Defines.MAPSIZE;
                 ConsoleWrite("TOTAL BLOCKS = " + tempblocks.ToString("n0"));
-                ConsoleWrite("TOTAL LAVA BLOCKS = " + lavaBlockCount);
+                ConsoleWrite("TOTAL LAVA BLOCKS = " + Msettings.Totallavablockcount);
             }
             lastMapBackup = DateTime.Now;
             ServerListener listener = new ServerListener(netServer,this);
@@ -339,6 +339,39 @@ namespace MineWorld
                 ConsoleWrite("Couldnt find includelava setting so we use the default (true)");
             }
 
+            if (dataFile.Data.ContainsKey("includeadminblocks"))
+                Msettings.IncludeAdminblocks = bool.Parse(dataFile.Data["includeadminblocks"]);
+            else
+            {
+                Msettings.IncludeAdminblocks = true;
+                ConsoleWrite("Couldnt find includeadminblocks setting so we use the default (true)");
+            }
+
+            if (dataFile.Data.ContainsKey("lavaspawns"))
+                Msettings.Lavaspawns = int.Parse(dataFile.Data["lavaspawns"]);
+            else
+            {
+                Msettings.IncludeAdminblocks = true;
+                ConsoleWrite("Couldnt find lavaspawns setting so we use the default (0)");
+            }
+
+            if (dataFile.Data.ContainsKey("orefactor"))
+                Msettings.Orefactor = int.Parse(dataFile.Data["orefactor"]);
+            else
+            {
+                Msettings.IncludeAdminblocks = true;
+                ConsoleWrite("Couldnt find orefactor setting so we use the default (0)");
+            }
+
+            if(dataFile.Data.ContainsKey("winningcash"))
+                Msettings.Winningcashamount = int.Parse(dataFile.Data["winningcash"]);
+            else
+            {
+                Msettings.Winningcashamount = 10000;
+                ConsoleWrite("Couldnt find winningcash setting so we use the default (10000)");
+            }
+
+            /*
             int temp;
 
             if (dataFile.Data.ContainsKey("mapsize"))
@@ -373,7 +406,7 @@ namespace MineWorld
             {
                 Msettings.Mapsize = Mapsize.Normal;
                 ConsoleWrite("Invalid number in mapsize settings so we use the default ((2)normal)");
-            }
+            }*/
 
             ConsoleWrite("MAPSETTINGS LOADED");
         }

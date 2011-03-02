@@ -284,7 +284,7 @@ namespace MineWorld
         public void ResetLevel()
         {
             disconnectAll();
-            newMap();
+            GenerateNewMap();
         }
 
         public void disconnectAll()

@@ -41,17 +41,17 @@ namespace MineWorld
 
                                     if (authcode != Defines.MINEWORLD_VER)
                                     {
-                                        IServer.ConsoleWrite("CONNECTION REJECTED: " + temphandle + " VERSION WRONG");
+                                        IServer.ConsoleWrite("CONNECTION REJECTED: " + temphandle + " (VERSION WRONG)");
                                         msgSender.Disapprove("versionwrong");
                                     }
                                     else if (IServer.banList.Contains(msgSender.RemoteEndpoint.Address.ToString()))
                                     {
-                                        IServer.ConsoleWrite("CONNECTION REJECTED: " + temphandle + " IP BANNED");
+                                        IServer.ConsoleWrite("CONNECTION REJECTED: " + temphandle + " (IP BANNED)");
                                         msgSender.Disapprove("banned");
                                     }
                                     else if (IServer.playerList.Count == IServer.Ssettings.Maxplayers)
                                     {
-                                        IServer.ConsoleWrite("CONNECTION REJECTED: " + temphandle + " SERVER FULL");
+                                        IServer.ConsoleWrite("CONNECTION REJECTED: " + temphandle + " (SERVER FULL)");
                                         msgSender.Disapprove("serverfull");
                                     }
                                     else
@@ -60,7 +60,7 @@ namespace MineWorld
                                         {
                                             if (temphandle.ToLower() == "player")
                                             {
-                                                IServer.ConsoleWrite("CONNECTION REJECTED: " + temphandle + " CHANGE NAME");
+                                                IServer.ConsoleWrite("CONNECTION REJECTED: " + temphandle + " (CHANGE NAME)");
                                                 msgSender.Disapprove("changename");
                                             }
                                             else
@@ -69,7 +69,7 @@ namespace MineWorld
                                                 {
                                                     if (name.ToLower() == temphandle.ToLower())
                                                     {
-                                                        IServer.ConsoleWrite("CONNECTION REJECTED: " + temphandle + " BANNED NAME");
+                                                        IServer.ConsoleWrite("CONNECTION REJECTED: " + temphandle + " (BANNED NAME)");
                                                         msgSender.Disapprove("bannedname");
                                                     }
                                                 }
@@ -77,7 +77,7 @@ namespace MineWorld
                                                 }
                                         else
                                         {
-                                            IServer.ConsoleWrite("CONNECTION REJECTED: NO NAME");
+                                            IServer.ConsoleWrite("CONNECTION REJECTED: (NO NAME)");
                                             msgSender.Disapprove("noname");
                                         }
 
@@ -149,6 +149,13 @@ namespace MineWorld
                                     }
 
                                     IClient player = IServer.playerList[msgSender];
+
+                                    // If kicked we dont care anymore what he sends
+                                    if (player.Kicked == true)
+                                    {
+                                        break;
+                                    }
+
                                     MineWorldMessage dataType = (MineWorldMessage)msgBuffer.ReadByte();
                                     switch (dataType)
                                     {
