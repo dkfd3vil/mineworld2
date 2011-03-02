@@ -163,6 +163,10 @@ namespace MineWorld
             parameters["BloomSaturation"].SetValue(Settings.BloomSaturation);
             parameters["BaseSaturation"].SetValue(Settings.BaseSaturation);
 
+            //brightness and contrast addon
+            parameters["xBrightness"].SetValue(Settings.Brightness);
+            parameters["xContrast"].SetValue(Settings.Contrast);
+
             GraphicsDevice.Textures[1] = resolveTarget;
 
             Viewport viewport = GraphicsDevice.Viewport;

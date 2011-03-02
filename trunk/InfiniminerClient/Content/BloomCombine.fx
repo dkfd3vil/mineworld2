@@ -11,6 +11,9 @@ float BaseIntensity;
 float BloomSaturation;
 float BaseSaturation;
 
+float xBrightness;
+float xContrast;
+
 
 // Helper for modifying the saturation of a color.
 float4 AdjustSaturation(float4 color, float saturation)
@@ -38,7 +41,10 @@ float4 PixelShader(float2 texCoord : TEXCOORD0) : COLOR0
     base *= (1 - saturate(bloom));
     
     // Combine the two images.
-    return base + bloom;
+    float4 c=base+bloom;
+    c.rgb = ((c.rgb - 0.5f) * max(xContrast, 0)) + 0.5f;
+	c.rgb+=xBrightness;
+    return c;
 }
 
 

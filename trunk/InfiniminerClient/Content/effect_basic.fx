@@ -80,7 +80,7 @@ VertexToPixel LavaBlockVS( float4 inPos : POSITION, float2 inTexCoords: TEXCOORD
 	Output.TextureCoords.y -= xTime / 5;
 	Output.SpecialInfo.y = clamp(Output.Position.z,0,FADE_DISTANCE) / FADE_DISTANCE;
 	
-	return Output;    
+	return Output;
 }
 
 PixelToFrame LavaBlockPS(VertexToPixel PSIn) 

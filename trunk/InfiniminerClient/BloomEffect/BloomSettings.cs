@@ -37,6 +37,10 @@ namespace MineWorld
         public readonly float BloomIntensity;
         public readonly float BaseIntensity;
 
+        //Brightness and contrast
+        public readonly float Brightness;
+        public readonly float Contrast;
+
 
         // Independently control the color saturation of the bloom and
         // base images. Zero is totally desaturated, 1.0 leaves saturation
@@ -52,7 +56,7 @@ namespace MineWorld
         /// </summary>
         public BloomSettings(string name, float bloomThreshold, float blurAmount,
                              float bloomIntensity, float baseIntensity,
-                             float bloomSaturation, float baseSaturation)
+                             float bloomSaturation, float baseSaturation,float xBrightness,float xContrast)
         {
             Name = name;
             BloomThreshold = bloomThreshold;
@@ -61,6 +65,8 @@ namespace MineWorld
             BaseIntensity = baseIntensity;
             BloomSaturation = bloomSaturation;
             BaseSaturation = baseSaturation;
+            Brightness = xBrightness;
+            Contrast = xContrast;
         }
 
         /// <summary>
@@ -69,9 +75,9 @@ namespace MineWorld
         public static BloomSettings[] PresetSettings =
         {
             //                Name           Thresh  Blur Bloom  Base  BloomSat BaseSat
-            new BloomSettings("Default",       0.3f,  4,   1,     1,    1,       1),
-            new BloomSettings("SuperBloom",   0.25f,  4,   2,     1,    2,       1),
-            new BloomSettings("Disconnected",      0,      2,   2,     0.1f, 2,       1),
+            new BloomSettings("Default",       0.3f,  4,   1,     1,    1,       1,1,1.5f),
+            new BloomSettings("SuperBloom",   0.25f,  4,   2,     1,    2,       1,1,1),
+            new BloomSettings("Disconnected",      0,      2,   2,     0.1f, 2,       1,1,1),
         };
     }
 }

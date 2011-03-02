@@ -184,6 +184,10 @@ namespace MineWorld
             blockTextures[(byte)BlockTexture.BeaconBlue] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_beacon_top_blue"));
             blockTextures[(byte)BlockTexture.TransRed] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_trans_red"));
             blockTextures[(byte)BlockTexture.TransBlue] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_trans_blue"));
+            blockTextures[(byte)BlockTexture.Wood] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_tree_top"));
+            blockTextures[(byte)BlockTexture.WoodSide] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_tree_side"));
+            blockTextures[(byte)BlockTexture.Leafs] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_grass"));
+
 
             // Load our effects.
             basicEffect = gameInstance.Content.Load<Effect>("effect_basic");
@@ -348,6 +352,7 @@ namespace MineWorld
             // Apply posteffects.
             if (bloomPosteffect != null)
                 bloomPosteffect.Draw(graphicsDevice);
+
         }
 
         private void RenderVertexList(GraphicsDevice graphicsDevice, DynamicVertexBuffer vertexBuffer, Texture2D blockTexture, Color lodColor, bool renderTranslucent, bool renderLava, float elapsedTime)
@@ -385,7 +390,7 @@ namespace MineWorld
                 }
 
                 graphicsDevice.RenderState.CullMode = CullMode.CullCounterClockwiseFace;
-                graphicsDevice.SamplerStates[0].MagFilter = TextureFilter.Point;
+                graphicsDevice.SamplerStates[0].MagFilter = TextureFilter.Anisotropic;
                 graphicsDevice.VertexDeclaration = vertexDeclaration;
                 graphicsDevice.Vertices[0].SetSource(vertexBuffer, 0, VertexPositionTextureShade.SizeInBytes);
                 graphicsDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, vertexBuffer.SizeInBytes / VertexPositionTextureShade.SizeInBytes / 3);

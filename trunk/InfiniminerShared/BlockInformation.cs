@@ -33,6 +33,8 @@ namespace MineWorld
         TransBlue,
         Adminblock,
         Grass,
+        Wood,
+        Leafs,
         MAXIMUM
     }
 
@@ -79,6 +81,9 @@ namespace MineWorld
         Adminblock,
         Grass,
         GrassSide,
+        Wood,
+        WoodSide,
+        Leafs,
         TransRed,   // THESE MUST BE THE LAST TWO TEXTURES
         TransBlue,
         MAXIMUM
@@ -169,6 +174,18 @@ namespace MineWorld
                         case BlockFaceDirection.XIncreasing: return BlockTexture.GrassSide;
                         default: return BlockTexture.Dirt;
                     }
+                case BlockType.Wood:
+                    switch (faceDir)
+                    {
+                        case BlockFaceDirection.YIncreasing: return BlockTexture.Wood;
+                        case BlockFaceDirection.ZDecreasing: return BlockTexture.WoodSide;
+                        case BlockFaceDirection.ZIncreasing: return BlockTexture.WoodSide;
+                        case BlockFaceDirection.XDecreasing: return BlockTexture.WoodSide;
+                        case BlockFaceDirection.XIncreasing: return BlockTexture.WoodSide;
+                        default: return BlockTexture.Wood;
+                    }
+                case BlockType.Leafs:
+                    return BlockTexture.Leafs;
 
                 case BlockType.BankRed:
                     switch (faceDir)
