@@ -13,12 +13,12 @@ namespace MineWorld
 
             try
             {
-                if (!File.Exists(Ssettings.LogsDir + "/" + dt.Year + "-" + dt.Month + "-" + dt.Day + ".txt"))
+                if (!File.Exists(Ssettings.LogsDir + "/" + GetDate() + ".txt"))
                 {
-                    FileStream fs = File.Create(Ssettings.LogsDir + "/" + dt.Year + "-" + dt.Month + "-" + dt.Day + ".txt");
+                    FileStream fs = File.Create(Ssettings.LogsDir + "/" + GetDate() + ".txt");
                     fs.Close();
                 }
-                FileStream file = new FileStream(Ssettings.LogsDir + "/" + dt.Year + "-" + dt.Month + "-" + dt.Day + ".txt", FileMode.Append, FileAccess.Write);
+                FileStream file = new FileStream(Ssettings.LogsDir + "/" + GetDate() + ".txt", FileMode.Append, FileAccess.Write);
                 StreamWriter sw = new StreamWriter(file);
                 sw.WriteLine(text + consoletext);
                 sw.Close();
@@ -32,49 +32,20 @@ namespace MineWorld
 
         public string GetTime(bool usedots)
         {
-            DateTime temp = DateTime.Now;
-            string time;
-            string minute;
-            string second;
-            string hour;
-
-            if (temp.Minute < 10)
+            String DateFormat = "";
+            if (usedots)
             {
-                minute = 0 + temp.Minute.ToString();
+                DateFormat = "{0:hh:mm:ss}";
             }
             else
             {
-                minute = temp.Minute.ToString();
+                DateFormat = "{0:hh-mm-ss}";
             }
-
-            if (temp.Second < 10)
-            {
-                second = 0 + temp.Second.ToString();
-            }
-            else
-            {
-                second = temp.Second.ToString();
-            }
-
-            if (temp.Hour < 10)
-            {
-                hour = 0 + temp.Hour.ToString();
-            }
-            else
-            {
-                hour = temp.Hour.ToString();
-            }
-
-            if (usedots == true)
-            {
-                time = hour + ":" + minute + ":" + second;
-            }
-            else
-            {
-                time = hour + "-" + minute + "-" + second;
-            }
-
-            return time;
+            return DateTime.Now.ToString(DateFormat);
+        }
+        public string GetDate()
+        {
+            return DateTime.Now.ToString("{0:yyyy-MM-dd}");
         }
     }
 }
