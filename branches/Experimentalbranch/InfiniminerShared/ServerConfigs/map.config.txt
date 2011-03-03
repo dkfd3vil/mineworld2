@@ -1,8 +1,15 @@
 ﻿# If set, Adminblocks will be placed on the bottom covering the whole map so people cant fall through the map
 includeadminblocks = true
 
+# If set, Water will be placed randomly in the level otherwise there is no water
+includewater = true
+
 # If set, Lava will be placed randomly in the level otherwise there is no lava
 includelava = true
+
+# If includewater is set, How much water spawn shall we place ?
+# Set to zero for random
+waterspawns = 0
 
 # If includelava is set, How much lava spawn shall we place ?
 # Set to zero for random

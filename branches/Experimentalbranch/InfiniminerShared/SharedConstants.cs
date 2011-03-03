@@ -4,9 +4,9 @@ namespace MineWorld
 {
     public class Defines
     {
-        public const string MINEWORLDSERVER_VERSION = "Mine World Alpha 3.0";
-        public const string MINEWORLDCLIENT_VERSION = "Mine World Alpha 3.0";
-        public const double MINEWORLD_VER = 3.0;
+        public const string MINEWORLDSERVER_VERSION = "Mine World Alpha 3.5";
+        public const string MINEWORLDCLIENT_VERSION = "Mine World Alpha 3.5";
+        public const double MINEWORLD_VER = 3.5;
 
         
         public const int MAPSIZE = 64;
@@ -20,6 +20,8 @@ namespace MineWorld
         public const string deathByExpl = "WAS KILLED IN AN EXPLOSION!";
         public const string deathByFall = "WAS KILLED BY GRAVITY!";
         public const string deathByMiss = "WAS KILLED BY MISADVENTURE!";
+        public const string deathByCrush = "WAS CRUSHED!";
+        public const string deathByDrown = "WAS DROWNED!";
         public const string deathBySuic = "HAS COMMITED PIXELCIDE!";
 
         public static Color IM_BLUE = new Color(80, 150, 255);

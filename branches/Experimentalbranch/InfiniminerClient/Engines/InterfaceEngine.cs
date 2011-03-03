@@ -371,7 +371,8 @@ namespace MineWorld
             spriteBatch.Draw(texBlank, new Rectangle(0, 0, graphicsDevice.Viewport.Width, 20), Color.Black);
             spriteBatch.DrawString(uiFont, "ORE: " + _P.playerOre + "/" + _P.playerOreMax, new Vector2(textStart + 3, 2), Color.White);
             spriteBatch.DrawString(uiFont, "LOOT: $" + _P.playerCash, new Vector2(textStart + 170, 2), Color.White);
-            spriteBatch.DrawString(uiFont, "WEIGHT: " + _P.playerWeight + "/" + _P.playerWeightMax, new Vector2(textStart + 340, 2), Color.White);
+            RenderMessageCenter(spriteBatch, String.Format("Health: {0:000}", _P.playerHealth) + "/" + String.Format("{0:000}", _P.playerHealthMax), new Vector2(graphicsDevice.Viewport.Width - 300, graphicsDevice.Viewport.Height - 20), _P.playerHealth >= _P.playerHealthMax / 4 ? _P.playerHealth >= _P.playerHealthMax * 0.8f ? Color.Green : Color.Gray : Defines.IM_RED, Color.Black);
+            spriteBatch.DrawString(uiFont, "WEIGHT: " + _P.playerWeight + "/" + _P.playerWeightMax, new Vector2(textStart + 360, 2), Color.White);
             spriteBatch.DrawString(uiFont, "TEAM ORE: " + _P.teamOre, new Vector2(textStart + 515, 2), Color.White);
             spriteBatch.DrawString(uiFont, _P.redName + ": $" + _P.teamRedCash, new Vector2(textStart + 700, 2), _P.red);// Defines.IM_RED);
             spriteBatch.DrawString(uiFont, _P.blueName + ": $" + _P.teamBlueCash, new Vector2(textStart + 860, 2), _P.blue);// Defines.IM_BLUE);
@@ -479,6 +480,24 @@ namespace MineWorld
                 if (_P.screenEffectCounter > 2)
                     _P.screenEffect = ScreenEffect.None;
             }
+            if (_P.screenEffect == ScreenEffect.Water)
+            {
+                Color drawColor = new Color(0, 0, 1, 1 - (float)_P.screenEffectCounter);
+                spriteBatch.Draw(texBlank, new Rectangle(0, 0, graphicsDevice.Viewport.Width, graphicsDevice.Viewport.Height), drawColor);
+                if (_P.screenEffectCounter > 2)
+                    _P.screenEffect = ScreenEffect.None;
+            }
+            if (_P.screenEffect == ScreenEffect.Drown)
+            {
+                Color drawColor = new Color(0.5f, 0, 0.8f, 0.25f + (float)_P.screenEffectCounter * 0.2f);
+                spriteBatch.Draw(texBlank, new Rectangle(0, 0, graphicsDevice.Viewport.Width, graphicsDevice.Viewport.Height), drawColor);
+                if (_P.screenEffectCounter > 2)
+                {
+                    _P.screenEffect = ScreenEffect.Water;
+                    _P.screenEffectCounter = 1;
+                }
+            }
+
 
             // Draw the help screen.
             if (Keyboard.GetState().IsKeyDown(Keys.F1))

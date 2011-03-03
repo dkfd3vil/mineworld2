@@ -16,6 +16,8 @@ These are the commands that are currently implented in the client
 
 /tpt (name) Same as above except shorter
 
+/kill (name) Kills the specified player
+
 /restart Restarts the server from the client
 
 /announce A server announce for all players

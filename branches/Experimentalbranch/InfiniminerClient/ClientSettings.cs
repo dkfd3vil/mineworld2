@@ -18,6 +18,7 @@ namespace MineWorld
         public bool Fullscreen;
         public int Width;
         public int Height;
+        public bool Vsync;
         public string playerHandle;
         public float volumeLevel;
         public bool RenderPretty;

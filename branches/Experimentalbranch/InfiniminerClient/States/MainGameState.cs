@@ -127,11 +127,81 @@ namespace MineWorld.States
             // Double-speed move flag, set if we're on road.
             bool movingOnRoad = false;
             bool sprinting = false;
+            bool swimming = false;
+            bool crouching = false;
 
             // Apply "gravity".
-            _P.playerVelocity.Y += GRAVITY * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            //_P.playerVelocity.Y += GRAVITY * (float)gameTime.ElapsedGameTime.TotalSeconds;
             Vector3 footPosition = _P.playerPosition + new Vector3(0f, -1.5f, 0f);
             Vector3 headPosition = _P.playerPosition + new Vector3(0f, 0.1f, 0f);
+            Vector3 midPosition = _P.playerPosition + new Vector3(0f, -0.7f, 0f);
+
+            if (_P.blockEngine.BlockAtPoint(footPosition) == BlockType.Water || _P.blockEngine.BlockAtPoint(headPosition) == BlockType.Water || _P.blockEngine.BlockAtPoint(midPosition) == BlockType.Water)
+            {
+                swimming = true;
+
+                if (_P.blockEngine.BlockAtPoint(headPosition) == BlockType.Water)
+                {
+                    if (_P.playerHoldBreath == 20)
+                    {
+                        _P.playerVelocity.Y *= 0.2f;
+                    }
+                    if (_P.playerHoldBreath > 9)
+                    {
+                        _P.screenEffect = ScreenEffect.Water;
+                        _P.screenEffectCounter = 0.5;
+                    }
+
+                    _P.playerHoldBreath -= (float)gameTime.ElapsedGameTime.TotalSeconds;
+                }
+                else
+                {
+                    _P.playerHoldBreath = 20;
+                }
+            }
+            else
+            {
+                swimming = false;
+                _P.playerHoldBreath = 20;
+            }
+
+            if (swimming)
+            {
+                TimeSpan timeSpan = DateTime.Now - _P.lastBreath;
+                _P.playerVelocity.Y += (GRAVITY / 8) * (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+                if (timeSpan.TotalMilliseconds > 1000)
+                {
+                    if (_P.playerHoldBreath <= 10)
+                    {
+                        _P.screenEffect = ScreenEffect.Drown;
+                        _P.screenEffectCounter = 1.0;
+                        if (((int)_P.playerHealth - ((9 - _P.playerHoldBreath) * 10)) > 0)
+                        {
+                            _P.playerHealth -= (uint)(9 - _P.playerHoldBreath) * (_P.playerHealthMax / 10);
+                            _P.SendPlayerHurt();
+                            _P.lastBreath = DateTime.Now;
+                        }
+                        else
+                        {
+                            _P.playerHealth = 0;
+                        }
+                        _P.PlaySoundForEveryone(MineWorldSound.Death, _P.playerPosition);
+                    }
+                }
+
+                if (_P.playerHealth <= 0)
+                {
+                    _P.KillPlayer(Defines.deathByDrown);
+                }
+
+                _P.SendPlayerUpdate();
+            }
+            else
+            {
+                _P.playerVelocity.Y += GRAVITY * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            }
+
             if (_P.blockEngine.SolidAtPointForPlayer(footPosition) || _P.blockEngine.SolidAtPointForPlayer(headPosition))
             {
                 BlockType standingOnBlock = _P.blockEngine.BlockAtPoint(footPosition);
@@ -144,21 +214,28 @@ namespace MineWorld.States
                     if (standingOnBlock != BlockType.None && _P.playerVelocity.Y < 0)
                     {
                         float fallDamage = Math.Abs(_P.playerVelocity.Y) / DIEVELOCITY;
-                        if (fallDamage >= 1)
-                        {
-                            _P.PlaySoundForEveryone(MineWorldSound.GroundHit, _P.playerPosition);
-                            _P.KillPlayer(Defines.deathByFall);//"WAS KILLED BY GRAVITY!");
-                            return;
-                        }
-                        else if (fallDamage > 0.5)
+                        if (fallDamage >= 0.5)
                         {
                             // Fall damage of 0.5 maps to a screenEffectCounter value of 2, meaning that the effect doesn't appear.
                             // Fall damage of 1.0 maps to a screenEffectCounter value of 0, making the effect very strong.
                             if (standingOnBlock != BlockType.Jump)
                             {
                                 _P.screenEffect = ScreenEffect.Fall;
+                                if (((int)_P.playerHealth - (fallDamage * 100)) > 0)
+                                {
+                                    _P.playerHealth -= (uint)(fallDamage * 100);
+                                }
+                                else
+                                {
+                                    _P.playerHealth = 0;
+                                }
+                                if (_P.playerHealth <= 0)
+                                {
+                                    _P.KillPlayer(Defines.deathByFall);
+                                }
                                 _P.screenEffectCounter = 2 - (fallDamage - 0.5) * 4;
                                 _P.PlaySoundForEveryone(MineWorldSound.GroundHit, _P.playerPosition);
+                                _P.SendPlayerHurt();
                             }
                         }
                     }
@@ -166,6 +243,11 @@ namespace MineWorld.States
                 else
                 {
                     //_P.PlaySoundForEveryone(MineWorldSound.GroundHit, _P.playerPosition);
+                }
+
+                if (_P.blockEngine.SolidAtPointForPlayer(midPosition))
+                {
+                    _P.KillPlayer(Defines.deathByCrush);
                 }
 
                 // If the player has their head stuck in a block, push them down.
@@ -226,7 +308,10 @@ namespace MineWorld.States
                         break;
                 }
             }
-            _P.playerPosition += _P.playerVelocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            if (!_P.blockEngine.SolidAtPointForPlayer(midPosition + _P.playerVelocity * (float)gameTime.ElapsedGameTime.TotalSeconds))
+            {
+                _P.playerPosition += _P.playerVelocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            }
 
             // Death by falling off the map.
             if (_P.playerPosition.Y < - Defines.MAPSIZE/2)
@@ -251,6 +336,8 @@ namespace MineWorld.States
                 //Sprinting
                 if ((_SM as MineWorldGame).keyBinds.IsPressed(Buttons.Sprint))//keyState.IsKeyDown(Keys.LeftShift) || keyState.IsKeyDown(Keys.RightShift))
                     sprinting = true;
+                if ((_SM as MineWorldGame).keyBinds.IsPressed(Buttons.Crouch))
+                    crouching = true;
             }
 
             if (moveVector.X != 0 || moveVector.Z != 0)
@@ -264,11 +351,24 @@ namespace MineWorld.States
                 // Sprinting doubles speed, even if already on road
                 if (sprinting)
                     moveVector *= 1.5f;
+                if(swimming)
+                    moveVector *= 0.5f;
+                if(crouching)
+                    moveVector.Y = -1;
 
                 // Attempt to move, doing collision stuff.
-                if (TryToMoveTo(moveVector, gameTime)) { }
-                else if (!TryToMoveTo(new Vector3(0, 0, moveVector.Z), gameTime)) { }
-                else if (!TryToMoveTo(new Vector3(moveVector.X, 0, 0), gameTime)) { }
+                if (TryToMoveTo(moveVector, gameTime))
+                {
+                }
+                else
+                {
+                    if (!TryToMoveTo(new Vector3(0, 0, moveVector.Z), gameTime)) 
+                    {
+                    }
+                    if (!TryToMoveTo(new Vector3(moveVector.X, 0, 0), gameTime)) 
+                    { 
+                    }
+                }
             }
         }
 
@@ -278,7 +378,7 @@ namespace MineWorld.States
             float moveLength = moveVector.Length();
             Vector3 testVector = moveVector;
             testVector.Normalize();
-            testVector = testVector * (moveLength + 0.1f);
+            testVector = testVector * (moveLength);// + 0.1f);
 
             // Apply this test vector.
             Vector3 movePosition = _P.playerPosition + testVector;
@@ -287,8 +387,18 @@ namespace MineWorld.States
 
             if (!_P.blockEngine.SolidAtPointForPlayer(movePosition) && !_P.blockEngine.SolidAtPointForPlayer(lowerBodyPoint) && !_P.blockEngine.SolidAtPointForPlayer(midBodyPoint))
             {
-                _P.playerPosition = _P.playerPosition + moveVector;
-                return true;
+                testVector = moveVector;
+                testVector.Normalize();
+                testVector = testVector * (moveLength + 0.11f); // Makes sure the camera doesnt move too close to the block ;)
+                movePosition = _P.playerPosition + testVector;
+                midBodyPoint = movePosition + new Vector3(0, -0.7f, 0);
+                lowerBodyPoint = movePosition + new Vector3(0, -1.4f, 0);
+
+                if (!_P.blockEngine.SolidAtPointForPlayer(movePosition) && !_P.blockEngine.SolidAtPointForPlayer(lowerBodyPoint) && !_P.blockEngine.SolidAtPointForPlayer(midBodyPoint))
+                {
+                    _P.playerPosition = _P.playerPosition + moveVector;
+                    return true;
+                }
             }
 
             // It's solid there, so while we can't move we have officially collided with it.
@@ -390,11 +500,17 @@ namespace MineWorld.States
                 case Buttons.Jump:
                     {
                         Vector3 footPosition = _P.playerPosition + new Vector3(0f, -1.5f, 0f);
+                        Vector3 midPosition = _P.playerPosition + new Vector3(0f, -0.7f, 0f);
                         if (_P.blockEngine.SolidAtPointForPlayer(footPosition) && _P.playerVelocity.Y == 0)
                         {
                             _P.playerVelocity.Y = JUMPVELOCITY;
                             float amountBelowSurface = ((ushort)footPosition.Y) + 1 - footPosition.Y;
                             _P.playerPosition.Y += amountBelowSurface + 0.01f;
+                        }
+
+                        if (_P.blockEngine.BlockAtPoint(midPosition) == BlockType.Water)
+                        {
+                            _P.playerVelocity.Y = JUMPVELOCITY * 0.4f;
                         }
                     }
                     break;

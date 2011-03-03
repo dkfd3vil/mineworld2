@@ -17,6 +17,7 @@ namespace MineWorld
 {
     public enum PlayerClass
     {
+        None,
         Prospector,
         Miner,
         Engineer,
@@ -49,6 +50,8 @@ namespace MineWorld
         public Color blueTeam = new Color();
         //public bool compression = false;
         public string Handle = "";
+        public uint Health = 0;
+        public uint HealthMax = 0;
         public uint OreMax = 0;
         public uint WeightMax = 0;
         public uint Ore = 0;

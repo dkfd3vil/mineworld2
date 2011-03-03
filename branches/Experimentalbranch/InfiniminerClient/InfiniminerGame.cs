@@ -291,6 +291,7 @@ namespace MineWorld
                                     case MineWorldMessage.ResourceUpdate:
                                         {
                                             // ore, cash, weight, max ore, max weight, team ore, red cash, blue cash, all uint
+                                            // Health, Healthmax also uint
                                             propertyBag.playerOre = msgBuffer.ReadUInt32();
                                             propertyBag.playerCash = msgBuffer.ReadUInt32();
                                             propertyBag.playerWeight = msgBuffer.ReadUInt32();
@@ -299,8 +300,23 @@ namespace MineWorld
                                             propertyBag.teamOre = msgBuffer.ReadUInt32();
                                             propertyBag.teamRedCash = msgBuffer.ReadUInt32();
                                             propertyBag.teamBlueCash = msgBuffer.ReadUInt32();
+                                            propertyBag.playerHealth = msgBuffer.ReadUInt32();
+                                            propertyBag.playerHealthMax = msgBuffer.ReadUInt32();
                                         }
                                         break;
+
+                                    case MineWorldMessage.PlayerPosition:
+                                        {
+                                            propertyBag.playerPosition = msgBuffer.ReadVector3();
+                                            break;
+                                        }
+
+                                    case MineWorldMessage.PlayerRespawn:
+                                        {
+                                            propertyBag.playerPosition = msgBuffer.ReadVector3();
+                                            propertyBag.allowRespawn = true;
+                                            break;
+                                        }
 
                                     case MineWorldMessage.BlockSet:
                                         {
@@ -396,6 +412,13 @@ namespace MineWorld
                                         }
                                         break;
 
+                                    case MineWorldMessage.Killed:
+                                        {
+                                            //We received the death command :(
+                                            propertyBag.KillPlayer("");
+                                            break;
+                                        }
+
                                     case MineWorldMessage.PlayerDead:
                                         {
                                             uint playerId = msgBuffer.ReadUInt32();
@@ -432,6 +455,7 @@ namespace MineWorld
                                                 player.Tool = (PlayerTools)msgBuffer.ReadByte();
                                                 player.UsingTool = msgBuffer.ReadBoolean();
                                                 player.Score = (uint)(msgBuffer.ReadUInt16() * 100);
+                                                player.Health = (uint)(msgBuffer.ReadUInt16() * 100);
                                             }
                                         }
                                         break;
@@ -556,6 +580,11 @@ namespace MineWorld
                                                         }
                                                         break;
                                                     }
+                                                case PlayerCommands.Kill:
+                                                    {
+                                                        propertyBag.addChatMessage("TOUCH OF DEATH", ChatMessageType.SayAll, 10);
+                                                        break;
+                                                    }
                                                 case PlayerCommands.Noadmin:
                                                     {
                                                         propertyBag.addChatMessage("You arent a admin", ChatMessageType.SayAll, 10);
@@ -596,6 +625,7 @@ namespace MineWorld
             Csettings.Width = 1024;
             Csettings.Height = 768;
             Csettings.Fullscreen = false;
+            Csettings.Vsync = true;
 
             //Now moving to DatafileWriter only since it can read and write
             Datafile dataFile = new Datafile(Csettings.Directory + "/client.config.txt");
@@ -605,6 +635,8 @@ namespace MineWorld
                 Csettings.Height = int.Parse(dataFile.Data["height"], System.Globalization.CultureInfo.InvariantCulture);
             if (dataFile.Data.ContainsKey("fullscreen"))
                 Csettings.Fullscreen = bool.Parse(dataFile.Data["fullscreen"]);
+            if (dataFile.Data.ContainsKey("vsync"))
+                Csettings.Vsync = bool.Parse(dataFile.Data["vsync"]);
             if (dataFile.Data.ContainsKey("handle"))
                 Csettings.playerHandle = dataFile.Data["handle"];
             if (dataFile.Data.ContainsKey("showfps"))
@@ -702,10 +734,13 @@ namespace MineWorld
                 keyBinds.SaveBinds(dataFile, Csettings.Directory + "/keymap.txt");
                 //Console.WriteLine("Creating default keymap...");
             }
+
             graphicsDeviceManager.IsFullScreen = Csettings.Fullscreen;
             graphicsDeviceManager.PreferredBackBufferHeight = Csettings.Height;
             graphicsDeviceManager.PreferredBackBufferWidth = Csettings.Width;
+            graphicsDeviceManager.SynchronizeWithVerticalRetrace = Csettings.Vsync;
             graphicsDeviceManager.PreferredDepthStencilFormat = DepthFormat.Depth24Stencil8;
+            this.IsFixedTimeStep = false;
             graphicsDeviceManager.ApplyChanges();
             base.Initialize();
         }

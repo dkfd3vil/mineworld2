@@ -4,10 +4,12 @@
     {
         public struct MapSettings
         {
+            public bool Includewater;
             public bool Includelava;
             public bool IncludeAdminblocks;
             public Mapsize Mapsize;
             public int Lavaspawns;
+            public int Waterspawns;
             public int Orefactor; // 10
             public int Winningcashamount;
 
@@ -15,6 +17,7 @@
             public string SettingsDir;
 
             public int Totallavablockcount;
+            public int Totalwaterblockcount;
         }
     }
 }

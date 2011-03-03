@@ -76,6 +76,7 @@ namespace MineWorld
                         ConsoleWrite(" save <mapfile>");
                         ConsoleWrite(" load <mapfile>");
                         ConsoleWrite(" status");
+                        ConsoleWrite(" fps");
                         ConsoleWrite(" restart");
                         ConsoleWrite(" quit");
                         break;
@@ -202,6 +203,11 @@ namespace MineWorld
                         {
                             LoadLevel(Ssettings.LevelName);
                         }
+                        break;
+                    }
+                case "fps":
+                    {
+                        ConsoleWrite("Server FPS:" + frameCount);
                         break;
                     }
                 default:

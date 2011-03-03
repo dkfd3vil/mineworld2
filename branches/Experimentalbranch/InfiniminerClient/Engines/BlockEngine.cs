@@ -79,7 +79,7 @@ namespace MineWorld
         public BlockType[, ,] downloadList = null;
         Dictionary<uint,bool>[,] faceMap = null;
         BlockTexture[,] blockTextureMap = null;
-        IMTexture[] blockTextures = null;
+        public IMTexture[] blockTextures = null;
         Effect basicEffect;
         MineWorldGame gameInstance;
         DynamicVertexBuffer[,] vertexBuffers = null;
@@ -141,6 +141,8 @@ namespace MineWorld
             // Load the textures we'll use.
             blockTextures = new IMTexture[(byte)BlockTexture.MAXIMUM];
             blockTextures[(byte)BlockTexture.None] = new IMTexture(null);
+            blockTextures[(byte)BlockTexture.Water] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_trans_water"));
+            //blockTextures[(byte)BlockTexture.Spring] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_spring"));
             blockTextures[(byte)BlockTexture.GrassSide] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_grass_side"));
             blockTextures[(byte)BlockTexture.Grass] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_grass"));
             blockTextures[(byte)BlockTexture.Adminblock] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_adminblock"));
@@ -252,7 +254,8 @@ namespace MineWorld
             if (!TextureExists("blocks/tex_block_beacon_top_blue")) { return false; }
             if (!TextureExists("blocks/tex_block_trans_red")) { return false; }
             if (!TextureExists("blocks/tex_block_trans_blue")) { return false; }
-
+            if (!TextureExists("blocks/tex_block_trans_water")) { return false; }
+            //if (!TextureExists("blocks/tex_block_spring.png")) { return false; }
             return true;
         }
 
@@ -281,6 +284,8 @@ namespace MineWorld
                 return true;
             if (gameInstance.propertyBag.playerTeam == PlayerTeam.Blue && blockType == BlockType.TransBlue)
                 return true;
+            if(blockType == BlockType.Water)
+                return true;
             return false;
         }
 
@@ -302,7 +307,7 @@ namespace MineWorld
             {
                 testPos += rayDirection * distance / searchGranularity;
                 BlockType testBlock = BlockAtPoint(testPos);
-                if (testBlock != BlockType.None)
+                if (testBlock != BlockType.None && testBlock != BlockType.Water)
                 {
                     hitPoint = testPos;
                     buildPoint = buildPos;
@@ -322,7 +327,7 @@ namespace MineWorld
                 {
                     // Figure out if we should be rendering translucently.
                     bool renderTranslucent = false;
-                    if (blockTexture == BlockTexture.TransRed || blockTexture == BlockTexture.TransBlue)
+                    if (blockTexture == BlockTexture.TransRed || blockTexture == BlockTexture.TransBlue || blockTexture == BlockTexture.Water)
                         renderTranslucent = true;
 
                     // If this is empty, don't render it.
@@ -341,7 +346,7 @@ namespace MineWorld
                         continue;
 
                     // Actually render.
-                    RenderVertexList(graphicsDevice, regionBuffer, blockTextures[(byte)blockTexture].Texture, blockTextures[(byte)blockTexture].LODColor, renderTranslucent, blockTexture == BlockTexture.Lava, (float)gameTime.TotalRealTime.TotalSeconds);
+                    RenderVertexList(graphicsDevice, regionBuffer, blockTextures[(byte)blockTexture].Texture, blockTextures[(byte)blockTexture].LODColor, renderTranslucent, blockTexture, (float)gameTime.TotalRealTime.TotalSeconds);
                 }
 
             // Apply posteffects.
@@ -349,12 +354,12 @@ namespace MineWorld
                 bloomPosteffect.Draw(graphicsDevice);
         }
 
-        private void RenderVertexList(GraphicsDevice graphicsDevice, DynamicVertexBuffer vertexBuffer, Texture2D blockTexture, Color lodColor, bool renderTranslucent, bool renderLava, float elapsedTime)
+        private void RenderVertexList(GraphicsDevice graphicsDevice, DynamicVertexBuffer vertexBuffer, Texture2D blockTexture, Color lodColor, bool renderTranslucent, BlockTexture blocktex, float elapsedTime)
         {
             if (vertexBuffer == null)
                 return;
 
-            if (renderLava)
+            if (blocktex == BlockTexture.Lava)
             {
                 basicEffect.CurrentTechnique = basicEffect.Techniques["LavaBlock"];
                 basicEffect.Parameters["xTime"].SetValue(elapsedTime%5);
@@ -384,7 +389,7 @@ namespace MineWorld
                 }
 
                 graphicsDevice.RenderState.CullMode = CullMode.CullCounterClockwiseFace;
-                graphicsDevice.SamplerStates[0].MagFilter = TextureFilter.Point;
+                graphicsDevice.SamplerStates[0].MagFilter = TextureFilter.Linear;
                 graphicsDevice.VertexDeclaration = vertexDeclaration;
                 graphicsDevice.Vertices[0].SetSource(vertexBuffer, 0, VertexPositionTextureShade.SizeInBytes);
                 graphicsDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, vertexBuffer.SizeInBytes / VertexPositionTextureShade.SizeInBytes / 3);
@@ -538,7 +543,7 @@ namespace MineWorld
         private void _AddBlock(ushort x, ushort y, ushort z, BlockFaceDirection dir, BlockType type, int x2, int y2, int z2, BlockFaceDirection dir2)
         {
             BlockType type2 = blockList[x2, y2, z2];
-            if (type2 != BlockType.None && type != BlockType.TransRed && type != BlockType.TransBlue && type2 != BlockType.TransRed && type2 != BlockType.TransBlue)
+            if (type2 != BlockType.None && type != BlockType.TransRed && type != BlockType.TransBlue && type2 != BlockType.TransRed && type2 != BlockType.TransBlue && type != BlockType.Water && type2 != BlockType.Water)
                 HideQuad((ushort)x2, (ushort)y2, (ushort)z2, dir2, type2);
             else
                 ShowQuad(x, y, z, dir, type);
@@ -563,7 +568,7 @@ namespace MineWorld
         {
             BlockType type = blockList[x, y, z];
             BlockType type2 = blockList[x2, y2, z2];
-            if (type2 != BlockType.None && type != BlockType.TransRed && type != BlockType.TransBlue && type2 != BlockType.TransRed && type2 != BlockType.TransBlue)
+            if (type2 != BlockType.None && type != BlockType.TransRed && type != BlockType.TransBlue && type2 != BlockType.TransRed && type2 != BlockType.TransBlue && type != BlockType.Water && type2 != BlockType.Water)
                 ShowQuad((ushort)x2, (ushort)y2, (ushort)z2, dir2, type2);
             else
                 HideQuad(x, y, z, dir, type);

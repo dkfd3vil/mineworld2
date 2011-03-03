@@ -28,11 +28,13 @@ namespace MineWorld
         SolidBlue,
         Metal,
         DirtSign,
+        Adminblock,
+        Grass,
         Lava,
         TransRed,
         TransBlue,
-        Adminblock,
-        Grass,
+        Water,
+        //Spring,
         MAXIMUM
     }
 
@@ -79,6 +81,8 @@ namespace MineWorld
         Adminblock,
         Grass,
         GrassSide,
+        Water,
+        //Spring,
         TransRed,   // THESE MUST BE THE LAST TWO TEXTURES
         TransBlue,
         MAXIMUM
@@ -140,6 +144,10 @@ namespace MineWorld
         {
             switch (blockType)
             {
+                case BlockType.Water:
+                    return BlockTexture.Water;
+                //case BlockType.Spring:
+                    //return BlockTexture.Spring;
                 case BlockType.Metal:
                     return BlockTexture.Metal;
                 case BlockType.Lava:

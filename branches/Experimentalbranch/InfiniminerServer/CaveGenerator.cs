@@ -85,6 +85,11 @@ namespace MineWorld
                 AddLava(ref caveData, size);
             }
 
+            if (Cgsettings.Includewater)
+            {
+                AddWater(ref caveData, size);
+            }
+
             // Add Admin block to stop falling through the lvl
             if (Cgsettings.IncludeAdminblocks)
             {
@@ -179,8 +184,6 @@ namespace MineWorld
                 numFlows = Cgsettings.Lavaspawns;
             }
 
-            Cgsettings.Totallavablockcount = numFlows;
-
             while (numFlows > 0)
             {
                 int x = randGen.Next(0, size);
@@ -206,6 +209,53 @@ namespace MineWorld
                 {
                     data[x, y, z] = BlockType.Rock;
                     data[x, y, z+1] = BlockType.Lava;
+                    numFlows -= 1;
+                }
+            }
+        }
+
+        public void AddWater(ref BlockType[, ,] data, int size)
+        {
+            int numFlows;
+
+            if (Cgsettings.Waterspawns == 0)
+            {
+                numFlows = randGen.Next(size / 16, size / 2);
+            }
+            else
+            {
+                numFlows = Cgsettings.Waterspawns;
+            }
+
+            while (numFlows > 0)
+            {
+                int x = randGen.Next(0, size);
+                int y = randGen.Next(0, size);
+
+                //switch (randGen.Next(0, 4))
+                //{
+                //    case 0: x = 0; break;
+                //    case 1: x = size - 1; break;
+                //    case 2: y = 0; break;
+                //    case 3: y = size - 1; break;
+                //}
+
+                // generate a random z-value weighted toward a medium depth
+                float zf = 0;
+                for (int j = 0; j < 4; j++)
+                    zf += (float)randGen.NextDouble();
+                zf /= 2;
+                zf = 1 - Math.Abs(zf - 1);
+                int z = (int)(zf * size);
+
+                if (data[x, y, z] == BlockType.None && z + 1 < size - 1)
+                {
+                    //data[x, y, z] = BlockType.Spring;
+                    data[x, y, z + 1] = BlockType.Water;
+                    if (z + 2 < size - 2)
+                    {
+                        data[x, y, z + 2] = BlockType.Water;
+                    }
                     numFlows -= 1;
                 }
             }

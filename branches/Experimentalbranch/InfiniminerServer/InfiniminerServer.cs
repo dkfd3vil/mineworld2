@@ -26,6 +26,7 @@ namespace MineWorld
         public List<string> banList = null;
 
         public String serverIP;
+        int frameCount = 100;
 
         bool keepRunning = true;
 
@@ -133,14 +134,19 @@ namespace MineWorld
                 GenerateNewMap();
                 ConsoleWrite("NEW MAP GENERATED");
                 ConsoleWrite("MAPSIZE = [" + Defines.MAPSIZE + "] [" + Defines.MAPSIZE + "] [" + Defines.MAPSIZE + "]");
-                int tempblocks = Defines.MAPSIZE * Defines.MAPSIZE * Defines.MAPSIZE;
-                ConsoleWrite("TOTAL BLOCKS = " + tempblocks.ToString("n0"));
-                ConsoleWrite("TOTAL LAVA BLOCKS = " + Msettings.Totallavablockcount);
             }
+
+            int tempblocks = Defines.MAPSIZE * Defines.MAPSIZE * Defines.MAPSIZE;
+            ConsoleWrite("TOTAL BLOCKS = " + tempblocks.ToString("n0"));
+            ConsoleWrite("TOTAL LAVA BLOCKS = " + Msettings.Totallavablockcount);
+            ConsoleWrite("TOTAL WATER BLOCKS = " + Msettings.Totalwaterblockcount);
 
             lastMapBackup = DateTime.Now;
             ServerListener listener = new ServerListener(netServer,this);
             System.Threading.Thread listenerthread = new System.Threading.Thread(new ThreadStart(listener.start));
+
+            DateTime lastFPScheck = DateTime.Now;
+            double frameRate = 0;
 
             //Start netserver
             netServer.Start();
@@ -162,6 +168,19 @@ namespace MineWorld
 
             while (keepRunning)
             {
+                // Fps for the server
+                frameCount = frameCount + 1;
+                if (lastFPScheck <= DateTime.Now - TimeSpan.FromMilliseconds(1000))
+                {
+                    lastFPScheck = DateTime.Now;
+                    frameRate = frameCount;
+                    if (frameCount < 20)
+                    {
+                        ConsoleWrite("Heavy load: " + frameCount + " FPS");
+                    }
+                    frameCount = 0;
+                }
+
                 // Dont send hearthbeats too fast
                 TimeSpan updatehearthbeat = DateTime.Now - lasthearthbeatsend;
                 if (updatehearthbeat.TotalMilliseconds > 1000)
@@ -220,12 +239,16 @@ namespace MineWorld
                 // Restart the server?
                 if (restartTriggered && DateTime.Now > restartTime)
                 {
+                    disconnectAll();
+                    netServer.Shutdown("serverrestart");
                     BackupLevel();
                     return true;
                 }
 
                 if (shutdownTriggerd && DateTime.Now > shutdownTime)
                 {
+                    disconnectAll();
+                    netServer.Shutdown("servershutdown");
                     BackupLevel();
                     return false;
                 }
@@ -369,7 +392,7 @@ namespace MineWorld
                 Msettings.Lavaspawns = int.Parse(dataFile.Data["lavaspawns"]);
             else
             {
-                Msettings.IncludeAdminblocks = true;
+                Msettings.Lavaspawns = 0;
                 ConsoleWrite("Couldnt find lavaspawns setting so we use the default (0)");
             }
 
@@ -377,7 +400,7 @@ namespace MineWorld
                 Msettings.Orefactor = int.Parse(dataFile.Data["orefactor"]);
             else
             {
-                Msettings.IncludeAdminblocks = true;
+                Msettings.Orefactor = 0;
                 ConsoleWrite("Couldnt find orefactor setting so we use the default (0)");
             }
 
@@ -387,6 +410,22 @@ namespace MineWorld
             {
                 Msettings.Winningcashamount = 10000;
                 ConsoleWrite("Couldnt find winningcash setting so we use the default (10000)");
+            }
+
+            if (dataFile.Data.ContainsKey("includewater"))
+                Msettings.Includewater = bool.Parse(dataFile.Data["includewater"]);
+            else
+            {
+                Msettings.Includewater = true;
+                ConsoleWrite("Couldnt find includewater setting so we use the default (true)");
+            }
+
+            if (dataFile.Data.ContainsKey("waterspawns"))
+                Msettings.Winningcashamount = int.Parse(dataFile.Data["waterspawns"]);
+            else
+            {
+                Msettings.Waterspawns = 0;
+                ConsoleWrite("Couldnt find waterspawns setting so we use the default (0)");
             }
 
             /*
@@ -431,20 +470,18 @@ namespace MineWorld
 
         public void Shutdownserver()
         {
-            SendServerMessage("Server is shutting down");
-            disconnectAll();
+            ConsoleWrite("Server is shutting down in 5 seconds.");
+            SendServerMessage("Server is shutting down in 5 seconds.");
             shutdownTriggerd = true;
-            shutdownTime = DateTime.Now;
-            netServer.Shutdown("servershutdown");
+            shutdownTime = DateTime.Now + TimeSpan.FromSeconds(5);
         }
 
         public void Restartserver()
         {
-            SendServerMessage("Server is restarting");
-            disconnectAll();
+            ConsoleWrite("Server restarting in 5 seconds.");
+            SendServerMessage("Server restarting in 5 seconds.");
             restartTriggered = true;
-            restartTime = DateTime.Now;
-            netServer.Shutdown("serverrestart");
+            restartTime = DateTime.Now + TimeSpan.FromSeconds(5);
         }
 
         public void SendServerMessageToPlayer(string message, NetConnection conn)
@@ -490,6 +527,8 @@ namespace MineWorld
             msgBuffer.Write((uint)(player.Team == PlayerTeam.Red ? teamOreRed : teamOreBlue));
             msgBuffer.Write((uint)teamCashRed);
             msgBuffer.Write((uint)teamCashBlue);
+            msgBuffer.Write((uint)player.Health);
+            msgBuffer.Write((uint)player.HealthMax);
             player.AddQueMsg(msgBuffer, NetChannel.ReliableInOrder1);
         }
 
@@ -551,6 +590,31 @@ namespace MineWorld
                 player.AddQueMsg(msgBuffer, NetChannel.ReliableUnordered);
         }
 
+        public void KillPlayerSpecific(Player player)
+        {
+            NetBuffer msgBufferb = netServer.CreateBuffer();
+            msgBufferb.Write((byte)MineWorldMessage.Killed);
+            netServer.SendMessage(msgBufferb, player.NetConn, NetChannel.ReliableUnordered);
+
+            NetBuffer msgBuffer = netServer.CreateBuffer();
+            msgBuffer.Write((byte)MineWorldMessage.PlayerDead);
+            msgBuffer.Write((uint)player.ID);
+            foreach (IClient iplayer in playerList.Values)
+                //if (netConn.Status == NetConnectionStatus.Connected)
+                iplayer.AddQueMsg(msgBuffer, NetChannel.ReliableInOrder2);
+        }
+
+        public void SendPlayerPosition(Player player)
+        {
+            if (player.NetConn.Status != NetConnectionStatus.Connected)
+                return;
+
+            NetBuffer msgBuffer = netServer.CreateBuffer();
+            msgBuffer.Write((byte)MineWorldMessage.PlayerPosition);
+            msgBuffer.Write(player.Position);
+            netServer.SendMessage(msgBuffer, player.NetConn, NetChannel.ReliableUnordered);
+        }
+
         public void SendPlayerUpdate(IClient player)
         {
             NetBuffer msgBuffer = netServer.CreateBuffer();
@@ -569,6 +633,7 @@ namespace MineWorld
                 msgBuffer.Write(player.UsingTool);
 
             msgBuffer.Write((ushort)player.Score / 100);
+            msgBuffer.Write((ushort)player.Health / 100);
 
             foreach (IClient iplayer in playerList.Values)
                 //if (netConn.Status == NetConnectionStatus.Connected)
@@ -637,6 +702,7 @@ namespace MineWorld
                 //if (netConn.Status == NetConnectionStatus.Connected)
                 iplayer.AddQueMsg(msgBuffer, NetChannel.ReliableInOrder2);
 
+            SendPlayerRespawn(player);
             // Send this out just incase someone is joining at the last minute.
             if (winningTeam != PlayerTeam.None)
                 BroadcastGameOver();
@@ -709,6 +775,55 @@ namespace MineWorld
             foreach (IClient iplayer in playerList.Values)
                 //if (netConn.Status == NetConnectionStatus.Connected)
                 iplayer.AddQueMsg(msgBuffer, NetChannel.ReliableInOrder2);
+        }
+
+        public void SendPlayerRespawn(Player player)
+        {
+            if (!player.Alive)
+            {
+                //create respawn script
+                // Respawn a few blocks above a safe position above altitude 0.
+                bool positionFound = false;
+
+                // Try 20 times; use a potentially invalid position if we fail.
+                for (int i = 0; i < 20; i++)
+                {
+                    // Pick a random starting point.
+                    Vector3 startPos = new Vector3(randGen.Next(2, 62), 63, randGen.Next(2, 62));
+
+                    // See if this is a safe place to drop.
+                    for (startPos.Y = 63; startPos.Y >= 54; startPos.Y--)
+                    {
+                        BlockType blockType = BlockAtPoint(startPos);
+                        if (blockType == BlockType.Lava)
+                            break;
+                        else if (blockType != BlockType.None)
+                        {
+                            // We have found a valid place to spawn, so spawn a few above it.
+                            player.Position = startPos + Vector3.UnitY * 5;
+                            positionFound = true;
+                            break;
+                        }
+                    }
+
+                    // If we found a position, no need to try anymore!
+                    if (positionFound)
+                        break;
+                }
+
+                // If we failed to find a spawn point, drop randomly.
+                if (!positionFound)
+                    player.Position = new Vector3(randGen.Next(2, 62), 66, randGen.Next(2, 62));
+
+                // Drop the player on the middle of the block, not at the corner.
+                player.Position += new Vector3(0.5f, 0, 0.5f);
+                //
+
+                NetBuffer msgBuffer = netServer.CreateBuffer();
+                msgBuffer.Write((byte)MineWorldMessage.PlayerRespawn);
+                msgBuffer.Write(player.Position);
+                netServer.SendMessage(msgBuffer, player.NetConn, NetChannel.ReliableInOrder3);
+            }
         }
 
         public void PlaySound(MineWorldSound sound, Vector3 position)

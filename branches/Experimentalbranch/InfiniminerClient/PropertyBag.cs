@@ -41,18 +41,25 @@ namespace MineWorld
         public Camera playerCamera = null;
         public Vector3 playerPosition = Vector3.Zero;
         public Vector3 playerVelocity = Vector3.Zero;
-        public PlayerClass playerClass;
+        public Vector3 lastPosition = Vector3.Zero;
+        public Vector3 lastHeading = Vector3.Zero;
+        public PlayerClass playerClass = PlayerClass.None;
         public PlayerTools[] playerTools = new PlayerTools[1] { PlayerTools.Pickaxe };
         public int playerToolSelected = 0;
         public BlockType[] playerBlocks = new BlockType[1] { BlockType.None };
         public int playerBlockSelected = 0;
-        public PlayerTeam playerTeam = PlayerTeam.Red;
+        public PlayerTeam playerTeam = PlayerTeam.None;
         public bool playerDead = true;
+        public bool allowRespawn = false;
+        public uint playerHealth = 0;
+        public uint playerHealthMax = 0;
         public uint playerOre = 0;
         public uint playerCash = 0;
         public uint playerWeight = 0;
         public uint playerOreMax = 0;
         public uint playerWeightMax = 0;
+        public float playerHoldBreath = 20;
+        public DateTime lastBreath = DateTime.Now;
         public bool playerRadarMute = false;
         public float playerToolCooldown = 0;
         public string playerHandle = "Player";
@@ -182,9 +189,10 @@ namespace MineWorld
                 return;
 
             PlaySound(MineWorldSound.Death);
-            playerPosition = new Vector3(randGen.Next(2, 62), 66, randGen.Next(2, 62));
+            //playerPosition = new Vector3(randGen.Next(2, 62), 66, randGen.Next(2, 62));
             playerVelocity = Vector3.Zero;
             playerDead = true;
+            allowRespawn = false;
             screenEffect = ScreenEffect.Death;
             screenEffectCounter = 0;
 
@@ -199,43 +207,15 @@ namespace MineWorld
             if (netClient.Status != NetConnectionStatus.Connected)
                 return;
 
-            playerDead = false;
-
-            // Respawn a few blocks above a safe position above altitude 0.
-            bool positionFound = false;
-
-            // Try 100 times; use a potentially invalid position if we fail.
-            for (int i = 0; i < 100; i++)
+            if(allowRespawn == false)
             {
-                // Pick a random starting point.
-                Vector3 startPos = new Vector3(randGen.Next(2, Defines.MAPSIZE-2), Defines.MAPSIZE-1, randGen.Next(2, Defines.MAPSIZE-2));
-
-                // See if this is a safe place to drop.
-                for (startPos.Y = Defines.MAPSIZE-1; startPos.Y >= Defines.MAPSIZE-8; startPos.Y--)
-                {
-                    BlockType blockType = blockEngine.BlockAtPoint(startPos);
-                    if (blockType == BlockType.Lava)
-                        break;
-                    else if (blockType != BlockType.None)
-                    {
-                        // We have found a valid place to spawn, so spawn a few above it.
-                        playerPosition = startPos + Vector3.UnitY * 5;
-                        positionFound = true;
-                        break;
-                    }
-                }
-
-                // If we found a position, no need to try anymore!
-                if (positionFound)
-                    break;
+                NetBuffer msgBuffer = netClient.CreateBuffer();
+                msgBuffer.Write((byte)MineWorldMessage.PlayerRespawn);
+                netClient.SendMessage(msgBuffer, NetChannel.ReliableUnordered);
+                return;
             }
 
-            // If we failed to find a spawn point, drop randomly.
-            if (!positionFound)
-                playerPosition = new Vector3(randGen.Next(2, 62), 66, randGen.Next(2, 62));
-
-            // Drop the player on the middle of the block, not at the corner.
-            playerPosition += new Vector3(0.5f, 0, 0.5f);
+            playerDead = false;
 
             // Zero out velocity and reset camera and screen effects.
             playerVelocity = Vector3.Zero;
@@ -244,9 +224,9 @@ namespace MineWorld
             UpdateCamera();
 
             // Tell the server we have respawned.
-            NetBuffer msgBuffer = netClient.CreateBuffer();
-            msgBuffer.Write((byte)MineWorldMessage.PlayerAlive);
-            netClient.SendMessage(msgBuffer, NetChannel.ReliableUnordered);
+            NetBuffer msgBufferb = netClient.CreateBuffer();
+            msgBufferb.Write((byte)MineWorldMessage.PlayerAlive);
+            netClient.SendMessage(msgBufferb, NetChannel.ReliableUnordered);
         }
 
         public void PlaySound(MineWorldSound sound)
@@ -265,6 +245,20 @@ namespace MineWorld
             float distance = (position - playerPosition).Length();
             float volume = Math.Max(0, 10 - distance) / 10.0f * volumeLevel;
             volume = volume > 1.0f ? 1.0f : volume < 0.0f ? 0.0f : volume;
+            soundList[sound].Play(volume);
+        }
+
+
+        public void PlaySound(MineWorldSound sound, Vector3 position, int magnification)
+        {
+            if (soundList.Count == 0)
+                return;
+            float distance = (position - playerPosition).Length() - magnification;
+
+            float volume = Math.Max(0, 64 - distance) / 10.0f * volumeLevel;
+
+            volume = volume > 1.0f ? 1.0f : volume < 0.0f ? 0.0f : volume;
+
             soundList[sound].Play(volume);
         }
 
@@ -356,7 +350,7 @@ namespace MineWorld
                     // For 0 to 2, shake the camera.
                     if (screenEffectCounter < 2)
                     {
-                        Vector3 newPosition = playerCamera.Position;
+                        Vector3 newPosition = playerPosition;
                         newPosition.X += (float)(2 - screenEffectCounter) * (float)(randGen.NextDouble() - 0.5) * 0.5f;
                         newPosition.Y += (float)(2 - screenEffectCounter) * (float)(randGen.NextDouble() - 0.5) * 0.5f;
                         newPosition.Z += (float)(2 - screenEffectCounter) * (float)(randGen.NextDouble() - 0.5) * 0.5f;
@@ -424,12 +418,24 @@ namespace MineWorld
             if (netClient.Status != NetConnectionStatus.Connected)
                 return;
 
-            this.playerTeam = playerTeam;
+            if (this.playerTeam != playerTeam)
+            {
+                this.playerTeam = playerTeam;
 
-            NetBuffer msgBuffer = netClient.CreateBuffer();
-            msgBuffer.Write((byte)MineWorldMessage.PlayerSetTeam);
-            msgBuffer.Write((byte)playerTeam);
-            netClient.SendMessage(msgBuffer, NetChannel.ReliableUnordered);
+                NetBuffer msgBuffer = netClient.CreateBuffer();
+                msgBuffer.Write((byte)MineWorldMessage.PlayerSetTeam);
+                msgBuffer.Write((byte)playerTeam);
+                netClient.SendMessage(msgBuffer, NetChannel.ReliableUnordered);
+
+                if (playerTeam == PlayerTeam.Red)
+                {
+                    this.KillPlayer("HAS JOINED THE RED TEAM");
+                }
+                else
+                {
+                    this.KillPlayer("HAS JOINED THE BLUE TEAM");
+                }
+            }
         }
 
         public bool allWeps = false; //Needs to be true on sandbox servers, though that requires a server mod
@@ -517,6 +523,11 @@ namespace MineWorld
                 if (netClient.Status != NetConnectionStatus.Connected)
                     return;
 
+                if (this.playerClass != PlayerClass.None)
+                {
+                    this.KillPlayer("");
+                }
+
                 this.playerClass = playerClass;
 
                 NetBuffer msgBuffer = netClient.CreateBuffer();
@@ -528,9 +539,12 @@ namespace MineWorld
                 playerBlockSelected = 0;
 
                 equipWeps();
+                this.RespawnPlayer();
             }
-            this.KillPlayer("");
-            this.RespawnPlayer();
+            else
+            {
+                equipWeps();
+            }
         }
 
         public void FireRadar()
@@ -731,13 +745,47 @@ namespace MineWorld
             if (netClient.Status != NetConnectionStatus.Connected)
                 return;
 
+            if (lastPosition != playerPosition)//do full network update
+            {
+                lastPosition = playerPosition;
+
+                NetBuffer msgBuffer = netClient.CreateBuffer();
+                msgBuffer.Write((byte)MineWorldMessage.PlayerUpdate);//full
+                msgBuffer.Write(playerPosition);
+                msgBuffer.Write(playerCamera.GetLookVector());
+                msgBuffer.Write((byte)playerTools[playerToolSelected]);
+                msgBuffer.Write(playerToolCooldown > 0.001f);
+                netClient.SendMessage(msgBuffer, NetChannel.UnreliableInOrder1);
+            }
+            else if (lastHeading != playerCamera.GetLookVector())
+            {
+                lastHeading = playerCamera.GetLookVector();
+                NetBuffer msgBuffer = netClient.CreateBuffer();
+                msgBuffer.Write((byte)MineWorldMessage.PlayerUpdate1);//just heading
+                msgBuffer.Write(lastHeading);
+                msgBuffer.Write((byte)playerTools[playerToolSelected]);
+                msgBuffer.Write(playerToolCooldown > 0.001f);
+                netClient.SendMessage(msgBuffer, NetChannel.UnreliableInOrder1);
+            }
+            else
+            {
+                NetBuffer msgBuffer = netClient.CreateBuffer();
+                msgBuffer.Write((byte)MineWorldMessage.PlayerUpdate2);//just tools
+                msgBuffer.Write((byte)playerTools[playerToolSelected]);
+                msgBuffer.Write(playerToolCooldown > 0.001f);
+                netClient.SendMessage(msgBuffer, NetChannel.UnreliableInOrder1);
+            }
+        }
+
+        public void SendPlayerHurt()
+        {
+            if (netClient.Status != NetConnectionStatus.Connected)
+                return;
+
             NetBuffer msgBuffer = netClient.CreateBuffer();
-            msgBuffer.Write((byte)MineWorldMessage.PlayerUpdate);
-            msgBuffer.Write(playerPosition);
-            msgBuffer.Write(playerCamera.GetLookVector());
-            msgBuffer.Write((byte)playerTools[playerToolSelected]);
-            msgBuffer.Write(playerToolCooldown > 0.001f);
-            netClient.SendMessage(msgBuffer, NetChannel.UnreliableInOrder1);
+            msgBuffer.Write((byte)MineWorldMessage.PlayerHurt);
+            msgBuffer.Write(playerHealth);
+            netClient.SendMessage(msgBuffer, NetChannel.ReliableInOrder1);
         }
     }
 }

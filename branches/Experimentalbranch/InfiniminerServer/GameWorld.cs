@@ -102,6 +102,7 @@ namespace MineWorld
         {
             // Create our block world, translating the coordinates out of the cave generator (where Z points down)
             int templavablockcount = 0;
+            int tempwaterblockcount = 0;
             CaveGenerator Cg = new CaveGenerator(Defines.MAPSIZE,Msettings);
             BlockType[, ,] worldData = Cg.GenerateCaveSystem();
             blockList = new BlockType[Defines.MAPSIZE, Defines.MAPSIZE, Defines.MAPSIZE];
@@ -118,10 +119,15 @@ namespace MineWorld
                         {
                             templavablockcount++;
                         }
+                        else if (blockList[i, j, k] == BlockType.Water)
+                        {
+                            tempwaterblockcount++;
+                        }
                     }
                 }
             }
             Msettings.Totallavablockcount = templavablockcount;
+            Msettings.Totalwaterblockcount = tempwaterblockcount;
         }
 
         public double Get3DDistance(int x1, int y1, int z1, int x2, int y2, int z2)
@@ -131,6 +137,17 @@ namespace MineWorld
             int dz = z2 - z1;
             double distance = Math.Sqrt(dx * dx + dy * dy + dz * dz);
             return distance;
+        }
+
+
+        public double Distf(Vector3 x, Vector3 y)
+        {
+            float dx = y.X - x.X;
+            float dy = y.Y - x.Y;
+            float dz = y.Z - x.Z;
+            float dist = (float)(Math.Sqrt(dx * dx + dy * dy + dz * dz));
+
+            return dist;
         }
 
         public void DepositForPlayers()
@@ -164,6 +181,63 @@ namespace MineWorld
                 }
             }
             return true;
+        }
+
+        public Vector3 Auth_Position(Vector3 pos, Player pl)//check boundaries and legality of action
+        {
+            BlockType testpoint = BlockAtPoint(pos);
+
+            if (testpoint == BlockType.None 
+                //|| testpoint == BlockType.Fire 
+                //|| testpoint == BlockType.Vacuum 
+                || testpoint == BlockType.Water 
+                || testpoint == BlockType.Lava 
+                //|| testpoint == BlockType.StealthBlockB && pl.Team == PlayerTeam.Blue 
+                || testpoint == BlockType.TransBlue && pl.Team == PlayerTeam.Blue 
+                //|| testpoint == BlockType.TrapR && pl.Team == PlayerTeam.Blue 
+                //|| testpoint == BlockType.TrapB && pl.Team == PlayerTeam.Red 
+                //|| testpoint == BlockType.StealthBlockR && pl.Team == PlayerTeam.Red 
+                || testpoint == BlockType.TransRed && pl.Team == PlayerTeam.Red)
+            {//check if player is not in wall
+                //falldamage
+                /*
+                if (testpoint == BlockType.Fire)
+                {
+                    //burn
+                    if (pl.Health > 1)
+                    {
+                        pl.Health = pl.Health - 10;
+                        if (pl.Health == 0)
+                        {
+                            pl.Weight = 0;
+                            pl.Alive = false;
+
+                            SendResourceUpdate(pl);
+                            SendPlayerDead(pl);
+                            ConsoleWrite(pl.Handle + " died in the fire.");
+                        }
+                    }
+                }
+                 */
+            }
+            else
+            {
+                if (pl.Alive)
+                {
+                    ConsoleWrite("refused" + pl.Handle + " " + pos.X + "/" + pos.Y + "/" + pos.Z);
+                    return pl.Position;
+                }
+                else//player is dead, return position silent
+                {
+                    return pl.Position;
+                }
+            }
+            return pos;
+        }
+
+        public Vector3 Auth_Heading(Vector3 head)//check boundaries and legality of action
+        {
+            return head;
         }
 
         public bool SaneBlockPosition(ushort x, ushort y, ushort z)
@@ -210,11 +284,51 @@ namespace MineWorld
             return false;
         }
 
+        public bool RayCollision(Vector3 startPosition, Vector3 rayDirection, float distance, int searchGranularity, ref Vector3 hitPoint, ref Vector3 buildPoint, BlockType ignore)
+        {
+            Vector3 testPos = startPosition;
+            Vector3 buildPos = startPosition;
+            for (int i = 0; i < searchGranularity; i++)
+            {
+                testPos += rayDirection * distance / searchGranularity;
+                BlockType testBlock = BlockAtPoint(testPos);
+                if (testBlock != BlockType.None && testBlock != ignore)
+                {
+                    hitPoint = testPos;
+                    buildPoint = buildPos;
+                    return true;
+                }
+                buildPos = testPos;
+            }
+            return false;
+        }
+
+        public Vector3 RayCollisionExact(Vector3 startPosition, Vector3 rayDirection, float distance, int searchGranularity, ref Vector3 hitPoint, ref Vector3 buildPoint)
+        {
+            Vector3 testPos = startPosition;
+            Vector3 buildPos = startPosition;
+
+            for (int i = 0; i < searchGranularity; i++)
+            {
+                testPos += rayDirection * distance / searchGranularity;
+                BlockType testBlock = BlockAtPoint(testPos);
+                if (testBlock != BlockType.None)
+                {
+                    hitPoint = testPos;
+                    buildPoint = buildPos;
+                    return hitPoint;
+                }
+                buildPos = testPos;
+            }
+
+            return startPosition;
+        }
+
         public void UsePickaxe(IClient player, Vector3 playerPosition, Vector3 playerHeading)
         {
             Vector3 hitPoint = Vector3.Zero;
             Vector3 buildPoint = Vector3.Zero;
-            if (!RayCollision(playerPosition, playerHeading, 2, 10, ref hitPoint, ref buildPoint))
+            if (!RayCollision(playerPosition, playerHeading, 2, 10, ref hitPoint, ref buildPoint, BlockType.Water))
                 return;
 
             ushort x = (ushort)hitPoint.X;
@@ -317,7 +431,7 @@ namespace MineWorld
             // If there's no surface within range, bail.
             Vector3 hitPoint = Vector3.Zero;
             Vector3 buildPoint = Vector3.Zero;
-            if (!RayCollision(playerPosition, playerHeading, 6, 25, ref hitPoint, ref buildPoint))
+            if (!RayCollision(playerPosition, playerHeading, 6, 25, ref hitPoint, ref buildPoint, BlockType.Water))
                 return;
 
             // If there's someone there currently, bail.
@@ -384,6 +498,7 @@ namespace MineWorld
                     }
             }
         }
+
         public Vector3 intifyVector(Vector3 vector){
             Vector3 cleanvector=new Vector3();
             cleanvector.X = (int)vector.X;
@@ -391,6 +506,7 @@ namespace MineWorld
             cleanvector.Z = (int)vector.Z;
             return cleanvector;
         }
+
         public void UseDeconstructionGun(IClient player, Vector3 playerPosition, Vector3 playerHeading)
         {
             bool actionFailed = false;
@@ -398,7 +514,7 @@ namespace MineWorld
             // If there's no surface within range, bail.
             Vector3 hitPoint = Vector3.Zero;
             Vector3 buildPoint = Vector3.Zero;
-            if (!RayCollision(playerPosition, playerHeading, 6, 25, ref hitPoint, ref buildPoint))
+            if (!RayCollision(playerPosition, playerHeading, 6, 25, ref hitPoint, ref buildPoint, BlockType.Water))
                 actionFailed = true;
             ushort x = (ushort)hitPoint.X;
             ushort y = (ushort)hitPoint.Y;
@@ -416,6 +532,7 @@ namespace MineWorld
                 blockType == BlockType.Jump ||
                 blockType == BlockType.Ladder ||
                 blockType == BlockType.Road ||
+                blockType == BlockType.Water ||
                 blockType == BlockType.Shock ||
                 blockType == BlockType.BeaconRed ||
                 blockType == BlockType.BeaconBlue ||

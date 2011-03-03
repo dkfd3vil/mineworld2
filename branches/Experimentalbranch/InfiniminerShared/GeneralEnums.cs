@@ -57,6 +57,8 @@ namespace MineWorld
         Teleport,
         Fall,
         Explosion,
+        Drown,
+        Water,
     }
 
     public enum MineWorldSound
@@ -108,6 +110,12 @@ namespace MineWorld
         Hearthbeat,
         PlayerCommand,         // uint id, string command  This is sent by client
         PlayerCommandEnable,   // byte Playercommands this is sent by the server
+        PlayerUpdate1,         // minus position
+        PlayerUpdate2,         // minus heading
+        PlayerHurt,             // allows client to tell server of damage
+        PlayerPosition,         // server sends client new position
+        PlayerRespawn,          // allows the player to respawn
+        Killed,
         //KillPlayer,            // Send by the server to notify that the player has died
         //RespawnPlayer,         // vector 3 position, Send by the server to notify that the player has respawned
     }
@@ -122,6 +130,7 @@ namespace MineWorld
         Noadmin,
         Nocost,
         Teleportto,
+        Kill,
 
         Announce,
         Restart,

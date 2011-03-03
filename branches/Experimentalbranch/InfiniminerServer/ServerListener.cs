@@ -85,10 +85,10 @@ namespace MineWorld
 
                                         foreach (Player oldPlayer in IServer.playerList.Values)
                                         {
-                                            if (newPlayer.Handle.ToLower() == oldPlayer.Handle.ToLower())
+                                            if (temphandle.ToLower() == oldPlayer.Handle.ToLower())
                                             {
                                                 duplicateNameCount++;
-                                                newPlayer.Handle += "." + duplicateNameCount.ToString();
+                                                temphandle += "." + duplicateNameCount.ToString();
                                                 break;
                                             }
                                         }
@@ -222,6 +222,31 @@ namespace MineWorld
                                                                 }
                                                                 break;
                                                             }
+                                                        case "/kill":
+                                                            {
+                                                                if (splitted.Length > 1)
+                                                                {
+                                                                    command = PlayerCommands.Kill;
+
+                                                                    foreach (IClient dummy in IServer.playerList.Values)
+                                                                    {
+                                                                        if (dummy.Handle.ToLower() == splitted[1])
+                                                                        {
+                                                                            //Todo Create a death function for the player
+                                                                            dummy.Ore = 0;
+                                                                            dummy.Cash = 0;
+                                                                            dummy.Weight = 0;
+                                                                            dummy.Health = 0;
+                                                                            dummy.Alive = false;
+
+                                                                            IServer.SendResourceUpdate(dummy);
+                                                                            IServer.KillPlayerSpecific(dummy);
+                                                                            break;
+                                                                        }
+                                                                    }
+                                                                }
+                                                                break;
+                                                            }
                                                         case "/announce":
                                                             {
                                                                 command = PlayerCommands.Announce;
@@ -315,6 +340,7 @@ namespace MineWorld
                                         case MineWorldMessage.SelectClass:
                                             {
                                                 PlayerClass playerClass = (PlayerClass)msgBuffer.ReadByte();
+                                                player.Alive = false;
                                                 IServer.ConsoleWrite("SELECT_CLASS: " + player.Handle + ", " + playerClass.ToString());
                                                 switch (playerClass)
                                                 {
@@ -335,6 +361,8 @@ namespace MineWorld
                                                         player.WeightMax = 4;
                                                         break;
                                                 }
+                                                player.HealthMax = 400;
+                                                player.Health = player.HealthMax;
                                                 IServer.SendResourceUpdate(player);
                                             }
                                             break;
@@ -344,6 +372,9 @@ namespace MineWorld
                                                 PlayerTeam playerTeam = (PlayerTeam)msgBuffer.ReadByte();
                                                 IServer.ConsoleWrite("SELECT_TEAM: " + player.Handle + ", " + playerTeam.ToString());
                                                 player.Team = playerTeam;
+                                                player.Health = 0;
+                                                player.Alive = false;
+                                                player.Health = 0;
                                                 IServer.SendResourceUpdate(player);
                                                 IServer.SendPlayerSetTeam(player);
                                             }
@@ -356,10 +387,11 @@ namespace MineWorld
                                                 player.Cash = 0;
                                                 player.Weight = 0;
                                                 player.Alive = false;
+                                                string deathMessage = msgBuffer.ReadString();
+
                                                 IServer.SendResourceUpdate(player);
                                                 IServer.SendPlayerDead(player);
 
-                                                string deathMessage = msgBuffer.ReadString();
                                                 if (deathMessage != "")
                                                 {
                                                     msgBuffer = netServer.CreateBuffer();
@@ -370,6 +402,7 @@ namespace MineWorld
                                                         //if (netConn.Status == NetConnectionStatus.Connected)
                                                         iplayer.AddQueMsg(msgBuffer, NetChannel.ReliableInOrder3);
                                                 }
+                                                IServer.SendPlayerRespawn(player);//allow this player to instantly respawn
                                             }
                                             break;
 
@@ -394,22 +427,71 @@ namespace MineWorld
                                                 player.Ore = 0;
                                                 player.Cash = 0;
                                                 player.Weight = 0;
+                                                player.Health = player.HealthMax;
                                                 player.Alive = true;
                                                 IServer.SendResourceUpdate(player);
                                                 IServer.SendPlayerAlive(player);
                                             }
                                             break;
 
+                                        case MineWorldMessage.PlayerRespawn:
+                                            {
+                                                IServer.SendPlayerRespawn(player);//new respawn
+                                                break;
+                                            }
+
                                         case MineWorldMessage.PlayerUpdate:
                                             {
-                                                player.Position = msgBuffer.ReadVector3();
-                                                player.Heading = msgBuffer.ReadVector3();
+                                                player.Position = IServer.Auth_Position(msgBuffer.ReadVector3(), player);
+                                                player.Heading = IServer.Auth_Heading(msgBuffer.ReadVector3());
                                                 player.Tool = (PlayerTools)msgBuffer.ReadByte();
                                                 player.UsingTool = msgBuffer.ReadBoolean();
                                                 IServer.SendPlayerUpdate(player);
                                             }
                                             break;
 
+                                        case MineWorldMessage.PlayerUpdate1://minus position
+                                            {
+                                                player.Heading = IServer.Auth_Heading(msgBuffer.ReadVector3());
+                                                player.Tool = (PlayerTools)msgBuffer.ReadByte();
+                                                player.UsingTool = msgBuffer.ReadBoolean();
+                                                IServer.SendPlayerUpdate(player);
+                                                break;
+                                            }
+
+                                        case MineWorldMessage.PlayerUpdate2://minus position and heading
+                                            {
+                                                player.Tool = (PlayerTools)msgBuffer.ReadByte();
+                                                player.UsingTool = msgBuffer.ReadBoolean();
+                                                IServer.SendPlayerUpdate(player);
+                                                break;
+                                            }
+
+                                        case MineWorldMessage.PlayerHurt://client speaks of fall damage
+                                            {
+                                                uint newhp = msgBuffer.ReadUInt32();
+                                                if (newhp < player.Health)
+                                                {
+                                                    player.Health = newhp;
+                                                    if (player.Health < 1)
+                                                    {
+                                                        //Todo Create a death function for the player
+                                                        player.Ore = 0;
+                                                        player.Cash = 0;
+                                                        player.Weight = 0;
+                                                        player.Health = 0;
+                                                        player.Alive = false;
+
+                                                        IServer.SendResourceUpdate(player);
+                                                        IServer.KillPlayerSpecific(player);
+                                                    }
+                                                }
+                                                break;
+                                            }
+                                        case MineWorldMessage.PlayerPosition://server not interested in clients complaints about position
+                                            {
+                                                break;
+                                            }
                                         case MineWorldMessage.DepositOre:
                                             {
                                                 IServer.DepositOre(player);
