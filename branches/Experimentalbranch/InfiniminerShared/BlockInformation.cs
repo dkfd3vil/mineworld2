@@ -85,9 +85,9 @@ namespace MineWorld
         GrassSide,
         Water,
         //Spring,
-        Leafs,
         WoodSide,
         Wood,
+        Leafs,
         TransRed,   // THESE MUST BE THE LAST TWO TEXTURES
         TransBlue,
         MAXIMUM
@@ -184,7 +184,7 @@ namespace MineWorld
                     }
 
                 case BlockType.Leaves:
-                    return BlockTexture.Grass; //TODO REPLACE THIS LEAVES PLACEHOLDER
+                    return BlockTexture.Leafs;
 
                 case BlockType.Wood:
                     switch (faceDir)

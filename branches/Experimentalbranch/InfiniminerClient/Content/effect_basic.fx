@@ -54,7 +54,7 @@ PixelToFrame BlockPS(VertexToPixel PSIn)
 	
 	float4 texColor = tex2D(TextureSampler, PSIn.TextureCoords);
 	Output.Color.rgb = lerp(texColor.rgb, xLODColor, PSIn.SpecialInfo.y);
-	Output.Color.rgb *= PSIn.SpecialInfo.x;
+	Output.Color.rgb *= clamp(PSIn.SpecialInfo.x,0,1);
 	Output.Color.a = texColor.a;
 	
 	return Output;

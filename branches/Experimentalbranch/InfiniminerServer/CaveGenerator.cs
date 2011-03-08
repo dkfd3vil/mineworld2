@@ -310,7 +310,10 @@ namespace MineWorld
 
                 if(EnoughSpaceForTree(ref data, x,y,z))
                 {
-                    BuildTree(ref data, x, y, z);
+                    if (data[x, y, z+1] != BlockType.None)
+                    {
+                        BuildTree(ref data, x, y, z);
+                    }
                     treecount--;
                 }
             }
@@ -343,20 +346,41 @@ namespace MineWorld
 
         private void BuildTree(ref BlockType[, ,] data,int x,int y,int z)
         {
-            data[x, y, z] = BlockType.Wood;
-            data[x, y, z - 1] = BlockType.Wood;
-            data[x, y, z - 2] = BlockType.Wood;
-            data[x, y, z - 3] = BlockType.Wood;
+            //create trunk
+            int trunklength = randGen.Next(4,7);
+            for (int i = 0; i < trunklength; i++)
+            {
+                data[x, y, z-i] = BlockType.Wood;
+            }
 
-            data[x + 1, y + 1, z - 3] = BlockType.Leaves;
-            data[x + 1, y, z - 3] = BlockType.Leaves;
-            data[x - 1, y - 1, z - 3] = BlockType.Leaves;
-            data[x + 1, y - 1, z - 3] = BlockType.Leaves;
-            data[x - 1, y, z - 3] = BlockType.Leaves;
-            data[x - 1, y + 1, z - 3] = BlockType.Leaves;
-            data[x, y - 1, z - 3] = BlockType.Leaves;
-            data[x, y + 1, z - 3] = BlockType.Leaves;
-            data[x, y, z - 4] = BlockType.Leaves;
+            //basic leaves
+            data[x, y, z - (trunklength+1)] = BlockType.Leaves;
+            data[x, y + 1, z - trunklength] = BlockType.Leaves;
+            data[x, y - 1, z - trunklength] = BlockType.Leaves;
+            data[x + 1, y, z - trunklength] = BlockType.Leaves;
+            data[x - 1, y, z - trunklength] = BlockType.Leaves;
+
+            if (trunklength > 3)
+            {
+                data[x, y + 1, z - (trunklength - 1)] = BlockType.Leaves;
+                data[x, y - 1, z - (trunklength - 1)] = BlockType.Leaves;
+                data[x + 1, y, z - (trunklength - 1)] = BlockType.Leaves;
+                data[x - 1, y, z - (trunklength - 1)] = BlockType.Leaves;
+            }
+
+            //random leaves
+            data[x, y + 2, z - (trunklength - randGen.Next(1,3))] = BlockType.Leaves;
+            data[x, y - 2, z - (trunklength - randGen.Next(1, 3))] = BlockType.Leaves;
+            data[x - 2, y, z - (trunklength - randGen.Next(1, 3))] = BlockType.Leaves;
+
+            data[x, y + 1, z - (trunklength - randGen.Next(1, 3))] = BlockType.Leaves;
+            data[x, y - 1, z - (trunklength - randGen.Next(1, 3))] = BlockType.Leaves;
+            data[x + 1, y, z - (trunklength - randGen.Next(1, 3))] = BlockType.Leaves;
+            data[x - 1, y, z - (trunklength - randGen.Next(1, 3))] = BlockType.Leaves;
+            data[x, y + 1, z - (trunklength - randGen.Next(1, 3))] = BlockType.Leaves;
+            data[x - 1, y, z - (trunklength - randGen.Next(1, 3))] = BlockType.Leaves;
+
+
         }
 
         private void AddAdminblocks(ref BlockType[, ,] data, int size)

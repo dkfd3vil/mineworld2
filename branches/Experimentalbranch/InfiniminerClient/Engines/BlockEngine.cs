@@ -200,6 +200,7 @@ namespace MineWorld
             blockTextures[(byte)BlockTexture.TransBlue] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_trans_blue"));
             blockTextures[(byte)BlockTexture.Wood] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_tree_top"));
             blockTextures[(byte)BlockTexture.WoodSide] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_tree_side"));
+            blockTextures[(byte)BlockTexture.Leafs] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_tree_leaves"));
 
             // Load our effects.
             basicEffect = gameInstance.Content.Load<Effect>("effect_basic");
@@ -496,68 +497,68 @@ namespace MineWorld
             {
                 case BlockFaceDirection.XIncreasing:
                     {
-                        vertexList[vertexPointer + 0] = new VertexPositionTextureShade(new Vector3(x + 1, y + 1, z + 1), new Vector2(0, 0), lightingEngine.GetLight(x + 1, y, z) + Defines.SIDESHADOWS);
-                        vertexList[vertexPointer + 1] = new VertexPositionTextureShade(new Vector3(x + 1, y + 1, z), new Vector2(1, 0), lightingEngine.GetLight(x + 1, y, z) + Defines.SIDESHADOWS);
-                        vertexList[vertexPointer + 2] = new VertexPositionTextureShade(new Vector3(x + 1, y, z + 1), new Vector2(0, 1), lightingEngine.GetLight(x + 1, y, z) + Defines.SIDESHADOWS);
-                        vertexList[vertexPointer + 3] = new VertexPositionTextureShade(new Vector3(x + 1, y, z + 1), new Vector2(0, 1), lightingEngine.GetLight(x + 1, y, z) + Defines.SIDESHADOWS);
-                        vertexList[vertexPointer + 4] = new VertexPositionTextureShade(new Vector3(x + 1, y + 1, z), new Vector2(1, 0), lightingEngine.GetLight(x + 1, y, z) + Defines.SIDESHADOWS);
-                        vertexList[vertexPointer + 5] = new VertexPositionTextureShade(new Vector3(x + 1, y, z), new Vector2(1, 1), lightingEngine.GetLight(x + 1, y, z) + Defines.SIDESHADOWS);
+                        vertexList[vertexPointer + 0] = new VertexPositionTextureShade(new Vector3(x + 1, y + 1, z + 1), new Vector2(0, 0), Math.Min(lightingEngine.GetLight(x + 1, y, z),0.6));
+                        vertexList[vertexPointer + 1] = new VertexPositionTextureShade(new Vector3(x + 1, y + 1, z), new Vector2(1, 0), Math.Min(lightingEngine.GetLight(x + 1, y, z), 0.6));
+                        vertexList[vertexPointer + 2] = new VertexPositionTextureShade(new Vector3(x + 1, y, z + 1), new Vector2(0, 1), Math.Min(lightingEngine.GetLight(x + 1, y, z), 0.6));
+                        vertexList[vertexPointer + 3] = new VertexPositionTextureShade(new Vector3(x + 1, y, z + 1), new Vector2(0, 1), Math.Min(lightingEngine.GetLight(x + 1, y, z), 0.6));
+                        vertexList[vertexPointer + 4] = new VertexPositionTextureShade(new Vector3(x + 1, y + 1, z), new Vector2(1, 0), Math.Min(lightingEngine.GetLight(x + 1, y, z), 0.6));
+                        vertexList[vertexPointer + 5] = new VertexPositionTextureShade(new Vector3(x + 1, y, z), new Vector2(1, 1), Math.Min(lightingEngine.GetLight(x + 1, y, z), 0.6));
                     }
                     break;
 
 
                 case BlockFaceDirection.XDecreasing:
                     {
-                        vertexList[vertexPointer + 0] = new VertexPositionTextureShade(new Vector3(x, y + 1, z), new Vector2(0, 0), lightingEngine.GetLight(x - 1, y, z) + Defines.SIDESHADOWS);
-                        vertexList[vertexPointer + 1] = new VertexPositionTextureShade(new Vector3(x, y + 1, z + 1), new Vector2(1, 0), lightingEngine.GetLight(x - 1, y, z) + Defines.SIDESHADOWS);
-                        vertexList[vertexPointer + 2] = new VertexPositionTextureShade(new Vector3(x, y, z + 1), new Vector2(1, 1), lightingEngine.GetLight(x - 1, y, z) + Defines.SIDESHADOWS);
-                        vertexList[vertexPointer + 3] = new VertexPositionTextureShade(new Vector3(x, y + 1, z), new Vector2(0, 0), lightingEngine.GetLight(x - 1, y, z) + Defines.SIDESHADOWS);
-                        vertexList[vertexPointer + 4] = new VertexPositionTextureShade(new Vector3(x, y, z + 1), new Vector2(1, 1), lightingEngine.GetLight(x - 1, y, z) + Defines.SIDESHADOWS);
-                        vertexList[vertexPointer + 5] = new VertexPositionTextureShade(new Vector3(x, y, z), new Vector2(0, 1), lightingEngine.GetLight(x - 1, y, z) + Defines.SIDESHADOWS);
+                        vertexList[vertexPointer + 0] = new VertexPositionTextureShade(new Vector3(x, y + 1, z), new Vector2(0, 0), Math.Min(lightingEngine.GetLight(x - 1, y, z),0.6));
+                        vertexList[vertexPointer + 1] = new VertexPositionTextureShade(new Vector3(x, y + 1, z + 1), new Vector2(1, 0), Math.Min(lightingEngine.GetLight(x - 1, y, z), 0.6));
+                        vertexList[vertexPointer + 2] = new VertexPositionTextureShade(new Vector3(x, y, z + 1), new Vector2(1, 1), Math.Min(lightingEngine.GetLight(x - 1, y, z), 0.6));
+                        vertexList[vertexPointer + 3] = new VertexPositionTextureShade(new Vector3(x, y + 1, z), new Vector2(0, 0), Math.Min(lightingEngine.GetLight(x - 1, y, z), 0.6));
+                        vertexList[vertexPointer + 4] = new VertexPositionTextureShade(new Vector3(x, y, z + 1), new Vector2(1, 1), Math.Min(lightingEngine.GetLight(x - 1, y, z), 0.6));
+                        vertexList[vertexPointer + 5] = new VertexPositionTextureShade(new Vector3(x, y, z), new Vector2(0, 1), Math.Min(lightingEngine.GetLight(x - 1, y, z), 0.6));
                     }
                     break;
 
                 case BlockFaceDirection.YIncreasing:
                     {
-                        vertexList[vertexPointer + 0] = new VertexPositionTextureShade(new Vector3(x, y + 1, z), new Vector2(0, 1), lightingEngine.GetLight(x, y + 1, z));
-                        vertexList[vertexPointer + 1] = new VertexPositionTextureShade(new Vector3(x + 1, y + 1, z), new Vector2(0, 0), lightingEngine.GetLight(x, y + 1, z));
-                        vertexList[vertexPointer + 2] = new VertexPositionTextureShade(new Vector3(x + 1, y + 1, z + 1), new Vector2(1, 0), lightingEngine.GetLight(x, y + 1, z));
-                        vertexList[vertexPointer + 3] = new VertexPositionTextureShade(new Vector3(x, y + 1, z), new Vector2(0, 1), lightingEngine.GetLight(x, y + 1, z));
-                        vertexList[vertexPointer + 4] = new VertexPositionTextureShade(new Vector3(x + 1, y + 1, z + 1), new Vector2(1, 0), lightingEngine.GetLight(x, y + 1, z));
-                        vertexList[vertexPointer + 5] = new VertexPositionTextureShade(new Vector3(x, y + 1, z + 1), new Vector2(1, 1), lightingEngine.GetLight(x, y + 1, z));
+                        vertexList[vertexPointer + 0] = new VertexPositionTextureShade(new Vector3(x, y + 1, z), new Vector2(0, 1), Math.Min(lightingEngine.GetLight(x, y + 1, z),0.8));
+                        vertexList[vertexPointer + 1] = new VertexPositionTextureShade(new Vector3(x + 1, y + 1, z), new Vector2(0, 0), Math.Min(lightingEngine.GetLight(x, y + 1, z), 0.8));
+                        vertexList[vertexPointer + 2] = new VertexPositionTextureShade(new Vector3(x + 1, y + 1, z + 1), new Vector2(1, 0), Math.Min(lightingEngine.GetLight(x, y + 1, z), 0.8));
+                        vertexList[vertexPointer + 3] = new VertexPositionTextureShade(new Vector3(x, y + 1, z), new Vector2(0, 1), Math.Min(lightingEngine.GetLight(x, y + 1, z), 0.8));
+                        vertexList[vertexPointer + 4] = new VertexPositionTextureShade(new Vector3(x + 1, y + 1, z + 1), new Vector2(1, 0), Math.Min(lightingEngine.GetLight(x, y + 1, z), 0.8));
+                        vertexList[vertexPointer + 5] = new VertexPositionTextureShade(new Vector3(x, y + 1, z + 1), new Vector2(1, 1), Math.Min(lightingEngine.GetLight(x, y + 1, z), 0.8));
                     }
                     break;
 
                 case BlockFaceDirection.YDecreasing:
                     {
-                        vertexList[vertexPointer + 0] = new VertexPositionTextureShade(new Vector3(x + 1, y, z + 1), new Vector2(0, 0), lightingEngine.GetLight(x, y - 1, z) + Defines.SIDESHADOWS);
-                        vertexList[vertexPointer + 1] = new VertexPositionTextureShade(new Vector3(x + 1, y, z), new Vector2(1, 0), lightingEngine.GetLight(x, y - 1, z) + Defines.SIDESHADOWS);
-                        vertexList[vertexPointer + 2] = new VertexPositionTextureShade(new Vector3(x, y, z + 1), new Vector2(0, 1), lightingEngine.GetLight(x, y - 1, z) + Defines.SIDESHADOWS);
-                        vertexList[vertexPointer + 3] = new VertexPositionTextureShade(new Vector3(x, y, z + 1), new Vector2(0, 1), lightingEngine.GetLight(x, y - 1, z) + Defines.SIDESHADOWS);
-                        vertexList[vertexPointer + 4] = new VertexPositionTextureShade(new Vector3(x + 1, y, z), new Vector2(1, 0), lightingEngine.GetLight(x, y - 1, z) + Defines.SIDESHADOWS);
-                        vertexList[vertexPointer + 5] = new VertexPositionTextureShade(new Vector3(x, y, z), new Vector2(1, 1), lightingEngine.GetLight(x, y - 1, z) + Defines.SIDESHADOWS);
+                        vertexList[vertexPointer + 0] = new VertexPositionTextureShade(new Vector3(x + 1, y, z + 1), new Vector2(0, 0), Math.Min(lightingEngine.GetLight(x, y - 1, z),0.2));
+                        vertexList[vertexPointer + 1] = new VertexPositionTextureShade(new Vector3(x + 1, y, z), new Vector2(1, 0), Math.Min(lightingEngine.GetLight(x, y - 1, z), 0.2));
+                        vertexList[vertexPointer + 2] = new VertexPositionTextureShade(new Vector3(x, y, z + 1), new Vector2(0, 1), Math.Min(lightingEngine.GetLight(x, y - 1, z), 0.2));
+                        vertexList[vertexPointer + 3] = new VertexPositionTextureShade(new Vector3(x, y, z + 1), new Vector2(0, 1), Math.Min(lightingEngine.GetLight(x, y - 1, z), 0.2));
+                        vertexList[vertexPointer + 4] = new VertexPositionTextureShade(new Vector3(x + 1, y, z), new Vector2(1, 0), Math.Min(lightingEngine.GetLight(x, y - 1, z), 0.2));
+                        vertexList[vertexPointer + 5] = new VertexPositionTextureShade(new Vector3(x, y, z), new Vector2(1, 1), Math.Min(lightingEngine.GetLight(x, y - 1, z), 0.2));
                     }
                     break;
 
                 case BlockFaceDirection.ZIncreasing:
                     {
-                        vertexList[vertexPointer + 0] = new VertexPositionTextureShade(new Vector3(x, y + 1, z + 1), new Vector2(0, 0), lightingEngine.GetLight(x, y, z + 1));
-                        vertexList[vertexPointer + 1] = new VertexPositionTextureShade(new Vector3(x + 1, y + 1, z + 1), new Vector2(1, 0), lightingEngine.GetLight(x, y, z + 1));
-                        vertexList[vertexPointer + 2] = new VertexPositionTextureShade(new Vector3(x + 1, y, z + 1), new Vector2(1, 1), lightingEngine.GetLight(x, y, z + 1));
-                        vertexList[vertexPointer + 3] = new VertexPositionTextureShade(new Vector3(x, y + 1, z + 1), new Vector2(0, 0), lightingEngine.GetLight(x, y, z + 1));
-                        vertexList[vertexPointer + 4] = new VertexPositionTextureShade(new Vector3(x + 1, y, z + 1), new Vector2(1, 1), lightingEngine.GetLight(x, y, z + 1));
-                        vertexList[vertexPointer + 5] = new VertexPositionTextureShade(new Vector3(x, y, z + 1), new Vector2(0, 1), lightingEngine.GetLight(x, y, z + 1));
+                        vertexList[vertexPointer + 0] = new VertexPositionTextureShade(new Vector3(x, y + 1, z + 1), new Vector2(0, 0), Math.Min(lightingEngine.GetLight(x, y, z + 1),0.4));
+                        vertexList[vertexPointer + 1] = new VertexPositionTextureShade(new Vector3(x + 1, y + 1, z + 1), new Vector2(1, 0), Math.Min(lightingEngine.GetLight(x, y, z + 1), 0.4));
+                        vertexList[vertexPointer + 2] = new VertexPositionTextureShade(new Vector3(x + 1, y, z + 1), new Vector2(1, 1), Math.Min(lightingEngine.GetLight(x, y, z + 1), 0.4));
+                        vertexList[vertexPointer + 3] = new VertexPositionTextureShade(new Vector3(x, y + 1, z + 1), new Vector2(0, 0), Math.Min(lightingEngine.GetLight(x, y, z + 1), 0.4));
+                        vertexList[vertexPointer + 4] = new VertexPositionTextureShade(new Vector3(x + 1, y, z + 1), new Vector2(1, 1), Math.Min(lightingEngine.GetLight(x, y, z + 1), 0.4));
+                        vertexList[vertexPointer + 5] = new VertexPositionTextureShade(new Vector3(x, y, z + 1), new Vector2(0, 1), Math.Min(lightingEngine.GetLight(x, y, z + 1), 0.4));
                     }
                     break;
 
                 case BlockFaceDirection.ZDecreasing:
                     {
-                        vertexList[vertexPointer + 0] = new VertexPositionTextureShade(new Vector3(x + 1, y + 1, z), new Vector2(0, 0), lightingEngine.GetLight(x, y, z - 1));
-                        vertexList[vertexPointer + 1] = new VertexPositionTextureShade(new Vector3(x, y + 1, z), new Vector2(1, 0), lightingEngine.GetLight(x, y, z - 1));
-                        vertexList[vertexPointer + 2] = new VertexPositionTextureShade(new Vector3(x + 1, y, z), new Vector2(0, 1), lightingEngine.GetLight(x, y, z - 1));
-                        vertexList[vertexPointer + 3] = new VertexPositionTextureShade(new Vector3(x + 1, y, z), new Vector2(0, 1), lightingEngine.GetLight(x, y, z - 1));
-                        vertexList[vertexPointer + 4] = new VertexPositionTextureShade(new Vector3(x, y + 1, z), new Vector2(1, 0), lightingEngine.GetLight(x, y, z - 1));
-                        vertexList[vertexPointer + 5] = new VertexPositionTextureShade(new Vector3(x, y, z), new Vector2(1, 1), lightingEngine.GetLight(x, y, z - 1));
+                        vertexList[vertexPointer + 0] = new VertexPositionTextureShade(new Vector3(x + 1, y + 1, z), new Vector2(0, 0), Math.Min(lightingEngine.GetLight(x, y, z - 1), 0.4));
+                        vertexList[vertexPointer + 1] = new VertexPositionTextureShade(new Vector3(x, y + 1, z), new Vector2(1, 0), Math.Min(lightingEngine.GetLight(x, y, z - 1), 0.4));
+                        vertexList[vertexPointer + 2] = new VertexPositionTextureShade(new Vector3(x + 1, y, z), new Vector2(0, 1), Math.Min(lightingEngine.GetLight(x, y, z - 1), 0.4));
+                        vertexList[vertexPointer + 3] = new VertexPositionTextureShade(new Vector3(x + 1, y, z), new Vector2(0, 1), Math.Min(lightingEngine.GetLight(x, y, z - 1), 0.4));
+                        vertexList[vertexPointer + 4] = new VertexPositionTextureShade(new Vector3(x, y + 1, z), new Vector2(1, 0), Math.Min(lightingEngine.GetLight(x, y, z - 1), 0.4));
+                        vertexList[vertexPointer + 5] = new VertexPositionTextureShade(new Vector3(x, y, z), new Vector2(1, 1), Math.Min(lightingEngine.GetLight(x, y, z - 1), 0.4));
                     }
                     break;
             }
