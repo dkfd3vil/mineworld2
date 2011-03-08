@@ -488,9 +488,9 @@ namespace MineWorld
                     case PlayerClass.Miner:
                         playerTools = new PlayerTools[2] {  PlayerTools.Pickaxe,
                                                         PlayerTools.ConstructionGun     };
-                        playerBlocks = new BlockType[4] {   playerTeam == PlayerTeam.Red ? BlockType.SolidRed : BlockType.SolidBlue,
+                        playerBlocks = new BlockType[5] {   playerTeam == PlayerTeam.Red ? BlockType.SolidRed : BlockType.SolidBlue,
                                                         playerTeam == PlayerTeam.Red ? BlockType.TransRed : BlockType.TransBlue,
-                                                        BlockType.Ladder,BlockType.Lava    };
+                                                        BlockType.Ladder,BlockType.Lava,BlockType.Lamp    };
                         break;
 
                     case PlayerClass.Engineer:

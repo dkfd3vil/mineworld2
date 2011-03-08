@@ -31,6 +31,7 @@ namespace MineWorld
         Adminblock,
         Grass,
         Lava,
+        Lamp,
         TransRed,
         TransBlue,
         Water,
@@ -81,6 +82,7 @@ namespace MineWorld
         BeaconRed,
         BeaconBlue,
         Adminblock,
+        Lamp,
         Grass,
         GrassSide,
         Water,
@@ -135,6 +137,8 @@ namespace MineWorld
                 case BlockType.Explosive:
                 case BlockType.Lava:
                     return 100;
+                case BlockType.Lamp:
+                    return 5;
             }
 
             return 1000;
@@ -308,6 +312,8 @@ namespace MineWorld
 
                 case BlockType.Explosive:
                     return BlockTexture.Explosive;
+                case BlockType.Lamp:
+                    return BlockTexture.Lamp;
             }
 
             return BlockTexture.None;
@@ -315,7 +321,7 @@ namespace MineWorld
 
         public static bool IsLightEmittingBlock(BlockType type)
         {
-            if (type == BlockType.Lava || type == BlockType.Shock) return true;
+            if (type == BlockType.Lava || type == BlockType.Shock || type==BlockType.Road || type==BlockType.Lamp) return true;
             return false;
         }
 

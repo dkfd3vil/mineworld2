@@ -201,6 +201,7 @@ namespace MineWorld
             blockTextures[(byte)BlockTexture.Wood] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_tree_top"));
             blockTextures[(byte)BlockTexture.WoodSide] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_tree_side"));
             blockTextures[(byte)BlockTexture.Leafs] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_tree_leaves"));
+            blockTextures[(byte)BlockTexture.Lamp] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_lamp"));
 
             // Load our effects.
             basicEffect = gameInstance.Content.Load<Effect>("effect_basic");
