@@ -27,6 +27,14 @@ namespace MineWorld
         public static Color IM_BLUE = new Color(80, 150, 255);
         public static Color IM_RED = new Color(222, 24, 24);
 
+
+        public const byte MAXLIGHT = 10;
+        public const byte MINLIGHT = 1;
+        public const float SIDESHADOWS = 0.0f; //0.2f
+
+        public const float NEARPLANE = 0.01f;
+        public const float FARPLANE = 140;
+
         public static Color[] BLUE_SHADES = { //Darkest to lightest
                                                 new Color(0,28,57),
                                                 new Color(0,58,117),
@@ -34,6 +42,7 @@ namespace MineWorld
                                                 new Color(0,107,215),
                                                 new Color(0,127,255)
                                             };
+
         public static Color[] generateShades(Color col)
         {
             Color temp = col;//new Color(80, 150, 255);

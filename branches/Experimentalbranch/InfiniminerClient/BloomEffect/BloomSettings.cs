@@ -71,7 +71,7 @@ namespace MineWorld
             //                Name           Thresh  Blur Bloom  Base  BloomSat BaseSat
             new BloomSettings("Default",       0.3f,  4,   1,     1,    1,       1),
             new BloomSettings("SuperBloom",   0.25f,  4,   2,     1,    2,       1),
-            new BloomSettings("Disconnected",      0,      2,   2,     0.1f, 2,       1),
+            new BloomSettings("Disconnected",     0,  2,   2,  0.1f,    2,       1),
         };
     }
 }

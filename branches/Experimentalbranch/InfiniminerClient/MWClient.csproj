@@ -97,6 +97,7 @@
     <Compile Include="Engines\BlockEngine.cs" />
     <Compile Include="Camera.cs" />
     <Compile Include="ClickRegion.cs" />
+    <Compile Include="Engines\LightingEngine.cs" />
     <Compile Include="Engines\ParticleEngine.cs" />
     <Compile Include="EventInput.cs" />
     <Compile Include="FPSCounter.cs" />

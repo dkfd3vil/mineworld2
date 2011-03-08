@@ -115,7 +115,7 @@ namespace MineWorld
         PlayerHurt,             // allows client to tell server of damage
         PlayerPosition,         // server sends client new position
         PlayerRespawn,          // allows the player to respawn
-        Killed,
+        Killed,                 // Send by the server to notify the player has been killed
         //KillPlayer,            // Send by the server to notify that the player has died
         //RespawnPlayer,         // vector 3 position, Send by the server to notify that the player has respawned
     }
@@ -149,6 +149,7 @@ namespace MineWorld
         Small = 32,
         Normal = 64,
         Large = 128,
+        Huge = 192,
     }
 
     public class ChatMessage

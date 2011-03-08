@@ -32,6 +32,15 @@ namespace MineWorld
             ConsoleRedraw();
         }
 
+        public void ConsoleClearScreen()
+        {
+            while (consoleText.Count > 0)
+            {
+                consoleText.RemoveAt(0);
+            }
+            ConsoleRedraw();
+        }
+
         public void ConsoleProcessInput()
         {
             ConsoleWrite("> " + consoleInput);
@@ -72,11 +81,11 @@ namespace MineWorld
                         ConsoleWrite(" kickn <name>");
                         ConsoleWrite(" ban <ip>");
                         ConsoleWrite(" bann <name>");
-                        //ConsoleWrite(" say <message>");
                         ConsoleWrite(" save <mapfile>");
                         ConsoleWrite(" load <mapfile>");
                         ConsoleWrite(" status");
                         ConsoleWrite(" fps");
+                        ConsoleWrite(" cls");
                         ConsoleWrite(" restart");
                         ConsoleWrite(" quit");
                         break;
@@ -103,20 +112,22 @@ namespace MineWorld
                             if (GetAdmin(p.IP))
                                 teamIdent += " (Admin)";
                             ConsoleWrite(p.Handle + teamIdent);
-                            ConsoleWrite("  - " + p.IP);
+                            ConsoleWrite(" - " + p.IP);
                         }
                         break;
                     }
                 case "admins":
                     {
                         ConsoleWrite("Admin list:");
-                        //foreach (string ip in admins)
-                        //{
-                            //ConsoleWrite(ip);
-                        //}
+                        foreach (IClient p in playerList.Values)
+                        {
+                            if(GetAdmin(p.IP))
+                            {
+                                ConsoleWrite(p.Handle + " - " + p.IP);
+                            }
+                        }
                         break;
                     }
-
                 case "admin":
                     {
                         if (args.Length == 2)
@@ -125,17 +136,6 @@ namespace MineWorld
                         }
                         break;
                     }
-                    /*
-                case "adminn":
-                    {
-                        if (args.Length == 2)
-                        {
-                            AddAdmin(args[1]);
-                        }
-                    }
-                    break;
-                     */
-
                 case "status":
                     {
                         status();
@@ -155,18 +155,16 @@ namespace MineWorld
                         {
                             KickPlayer(args[1], true);
                         }
+                        break;
                     }
-                    break;
-
                 case "ban":
                     {
                         if (args.Length == 2)
                         {
                             BanPlayer(args[1],false);
                         }
+                        break;
                     }
-                    break;
-
                 case "bann":
                     {
                         if (args.Length == 2)
@@ -208,6 +206,12 @@ namespace MineWorld
                 case "fps":
                     {
                         ConsoleWrite("Server FPS:" + frameCount);
+                        break;
+                    }
+                case "cls":
+                    {
+                        ConsoleClearScreen();
+                        ConsoleWrite("Your screen has been cleared by the roundhouse kick of chuck norris");
                         break;
                     }
                 default:

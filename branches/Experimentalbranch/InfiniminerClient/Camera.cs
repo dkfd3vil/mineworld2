@@ -12,6 +12,9 @@ namespace MineWorld
         public Matrix ViewMatrix = Matrix.Identity;
         public Matrix ProjectionMatrix = Matrix.Identity;
 
+        private float _nearPlane = Defines.NEARPLANE;
+        private float _farPlane = Defines.FARPLANE;
+
         public Camera(GraphicsDevice device)
         {
             Pitch = 0;
@@ -19,7 +22,7 @@ namespace MineWorld
             Position = Vector3.Zero;
 
             float aspectRatio = device.Viewport.AspectRatio;
-            this.ProjectionMatrix = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(70), aspectRatio, 0.01f, 200.0f);
+            this.ProjectionMatrix = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(70), aspectRatio, _nearPlane, _farPlane);
         }
 
         // Returns a unit vector pointing in the direction that we're looking.

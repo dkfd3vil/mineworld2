@@ -36,14 +36,9 @@ namespace MineWorld
             if (args.Length > 0)
             {
                 IPAddress.TryParse(args[0], out IPargument);
+            }
         }
-        }
-        /*
-        public void setServername(string newName)
-        {
-            propertyBag.serverName = newName;
-        }
-        */
+
         public void JoinGame(IPEndPoint serverEndPoint)
         {
             anyPacketsReceived = false;
@@ -332,13 +327,14 @@ namespace MineWorld
                                                 if (propertyBag.blockEngine.BlockAtPoint(new Vector3(x, y, z)) != BlockType.None)
                                                 {
                                                     propertyBag.blockEngine.RemoveBlock(x, y, z);
-                                                    //propertyBag.particleEngine.CreateExplosionDebris(new Vector3(x, y, z));
                                                 }
                                             }
                                             else
                                             {
                                                 if (propertyBag.blockEngine.BlockAtPoint(new Vector3(x, y, z)) != BlockType.None)
+                                                {
                                                     propertyBag.blockEngine.RemoveBlock(x, y, z);
+                                                }
                                                 propertyBag.blockEngine.AddBlock(x, y, z, blockType);
                                             }
                                         }
@@ -426,7 +422,7 @@ namespace MineWorld
                                             {
                                                 Player player = propertyBag.playerList[playerId];
                                                 player.Alive = false;
-                                                //propertyBag.particleEngine.CreateBloodSplatter(player.Position, player.Team == PlayerTeam.Red ? Color.Red : Color.Blue);
+                                                propertyBag.particleEngine.CreateBloodSplatter(player.Position, player.Team == PlayerTeam.Red ? Color.Red : Color.Blue);
                                                 if (playerId != propertyBag.playerMyId)
                                                     propertyBag.PlaySound(MineWorldSound.Death, player.Position);
                                             }

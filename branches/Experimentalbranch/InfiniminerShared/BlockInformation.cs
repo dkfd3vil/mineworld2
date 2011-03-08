@@ -34,6 +34,8 @@ namespace MineWorld
         TransRed,
         TransBlue,
         Water,
+        Leaves,
+        Wood,
         //Spring,
         MAXIMUM
     }
@@ -83,6 +85,9 @@ namespace MineWorld
         GrassSide,
         Water,
         //Spring,
+        Leafs,
+        WoodSide,
+        Wood,
         TransRed,   // THESE MUST BE THE LAST TWO TEXTURES
         TransBlue,
         MAXIMUM
@@ -176,6 +181,20 @@ namespace MineWorld
                         case BlockFaceDirection.XDecreasing: return BlockTexture.GrassSide;
                         case BlockFaceDirection.XIncreasing: return BlockTexture.GrassSide;
                         default: return BlockTexture.Dirt;
+                    }
+
+                case BlockType.Leaves:
+                    return BlockTexture.Grass; //TODO REPLACE THIS LEAVES PLACEHOLDER
+
+                case BlockType.Wood:
+                    switch (faceDir)
+                    {
+                        case BlockFaceDirection.YIncreasing: return BlockTexture.Wood;
+                        case BlockFaceDirection.ZDecreasing: return BlockTexture.WoodSide;
+                        case BlockFaceDirection.ZIncreasing: return BlockTexture.WoodSide;
+                        case BlockFaceDirection.XDecreasing: return BlockTexture.WoodSide;
+                        case BlockFaceDirection.XIncreasing: return BlockTexture.WoodSide;
+                        default: return BlockTexture.Wood;
                     }
 
                 case BlockType.BankRed:
@@ -292,6 +311,18 @@ namespace MineWorld
             }
 
             return BlockTexture.None;
+        }
+
+        public static bool IsLightEmittingBlock(BlockType type)
+        {
+            if (type == BlockType.Lava || type == BlockType.Shock) return true;
+            return false;
+        }
+
+        public static bool IsLightTransparentBlock(BlockType type)
+        {
+            if (type == BlockType.None || type == BlockType.Water) return true;
+            return false;
         }
     }
 }

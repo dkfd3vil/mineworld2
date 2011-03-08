@@ -27,6 +27,7 @@ namespace MineWorld
         public PlayerEngine playerEngine = null;
         public SkyplaneEngine skyplaneEngine = null;
         public ParticleEngine particleEngine = null;
+        //public Lighting lightingEngine = null;
 
         // Network stuff.
         public NetClient netClient = null;
@@ -122,10 +123,14 @@ namespace MineWorld
             playerEngine = new PlayerEngine(gameInstance);
             skyplaneEngine = new SkyplaneEngine(gameInstance);
             particleEngine = new ParticleEngine(gameInstance);
+            //lightingEngine = new Lighting(gameInstance);
 
             // Create a camera.
             playerCamera = new Camera(gameInstance.GraphicsDevice);
             UpdateCamera();
+
+            //
+            //lightingEngine.Initialize();
 
             // Load sounds.
             if (!gameInstance.Csettings.NoSound)

@@ -438,6 +438,7 @@ namespace MineWorld.States
         {
             _P.skyplaneEngine.Render(graphicsDevice);
             _P.playerEngine.Render(graphicsDevice);
+            //_P.lightingEngine.Update(gameTime);
             _P.blockEngine.Render(graphicsDevice, gameTime);
             _P.playerEngine.RenderPlayerNames(graphicsDevice);
             _P.particleEngine.Render(graphicsDevice);

@@ -7,6 +7,9 @@ includewater = true
 # If set, Lava will be placed randomly in the level otherwise there is no lava
 includelava = true
 
+# If set, Trees will be placed randomly in the level otherwise there is no trees
+includetrees = true
+
 # If includewater is set, How much water spawn shall we place ?
 # Set to zero for random
 waterspawns = 0
@@ -14,6 +17,10 @@ waterspawns = 0
 # If includelava is set, How much lava spawn shall we place ?
 # Set to zero for random
 lavaspawns = 0
+
+# If includetrees is set, How much trees shall we place ?
+# Set to zero for random
+treecount = 0
 
 # Set the orefactor number
 # Set to zero for random

@@ -78,6 +78,7 @@ VertexToPixel LavaBlockVS( float4 inPos : POSITION, float2 inTexCoords: TEXCOORD
 	Output.Position = mul(inPos, preWorldViewProjection);	
 	Output.TextureCoords = inTexCoords;
 	Output.TextureCoords.y -= xTime / 5;
+	Output.SpecialInfo.x = inShade;
 	Output.SpecialInfo.y = clamp(Output.Position.z,0,FADE_DISTANCE) / FADE_DISTANCE;
 	
 	return Output;    

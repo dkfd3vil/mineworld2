@@ -126,6 +126,10 @@ namespace MineWorld
                                     doHorisontal = false;
                                 }
                             }
+                            if (typeBelow != BlockType.None)
+                            {
+                                doHorisontal = true;
+                            }
                             if (typeBelow == BlockType.Lava)
                             {
                                 doHorisontal = false;
@@ -170,8 +174,6 @@ namespace MineWorld
 
         public void CalcGrass()
         {
-            //Todo: Rework this CalcGrass()
-            // More horror code :S
             for (ushort i = 0; i < Defines.MAPSIZE; i++)
                 for (ushort j = 0; j < Defines.MAPSIZE; j++)
                     for (ushort k = 0; k < Defines.MAPSIZE; k++)
@@ -280,9 +282,9 @@ namespace MineWorld
                         if (blockList[i, j, k] == BlockType.Water && !flowSleep[i, j, k])
                         {
                             // RULES FOR WATER EXPANSION:
-                            // if the block below is lava, do nothing (not even horisontal)
+                            // if the block below is water, do nothing (not even horisontal)
                             // if the block below is empty space, move itself down and disalow horisontal lava movement
-                            // if the block below is something solid add lava to the sides
+                            // if the block below is something solid add water to the sides
                             BlockType typeBelow = (j == 0) ? BlockType.Water : blockList[i, j - 1, k];
                             BlockType typeIincr = ((int)i == Defines.MAPSIZE - 1) ? BlockType.Water : blockList[i + 1, j, k];
                             BlockType typeIdesc = (i == 0) ? BlockType.Water : blockList[i - 1, j, k];
@@ -300,6 +302,10 @@ namespace MineWorld
                                     //flowSleep[i, j, k] = true;
                                     doHorisontal = false;
                                 }
+                            }
+                            if (typeBelow != BlockType.None)
+                            {
+                                doHorisontal = true;
                             }
                             if (typeBelow == BlockType.Water)
                             {

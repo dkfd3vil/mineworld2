@@ -58,6 +58,7 @@ namespace MineWorld
         public uint Weight = 0;
         public uint Cash = 0;
         public bool Alive = false;
+        //TODO change this vector3 to a vector3i
         public List<Vector3> ExplosiveList = new List<Vector3>();
         public uint ID;
         public Vector3 Heading = Vector3.Zero;

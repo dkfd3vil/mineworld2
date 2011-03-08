@@ -90,6 +90,11 @@ namespace MineWorld
                 AddWater(ref caveData, size);
             }
 
+            if (Cgsettings.Includetrees)
+            {
+                AddTrees(ref caveData, size);
+            }
+
             // Add Admin block to stop falling through the lvl
             if (Cgsettings.IncludeAdminblocks)
             {
@@ -109,7 +114,7 @@ namespace MineWorld
             return caveData;
         }
 
-        public void AddOre(ref BlockType[, ,] data, int size)
+        private void AddOre(ref BlockType[, ,] data, int size)
         {
             int orefactor;
             float[, ,] oreNoise = GeneratePerlinNoise(32);
@@ -128,7 +133,7 @@ namespace MineWorld
                 PaintWithRandomWalk(ref data, ref oreNoise, size, 1, BlockType.Ore, false);
         }
 
-        public void AddStartingPosition(ref BlockType[, ,] data, int size, int x, int y, int z, BlockType blockType)
+        private void AddStartingPosition(ref BlockType[, ,] data, int size, int x, int y, int z, BlockType blockType)
         {
             for (int i = 0; i < size; i++)
                 for (int j = 0; j < size; j++)
@@ -148,7 +153,7 @@ namespace MineWorld
             data[x, y, z] = blockType;
         }
 
-        public void AddRocks(ref BlockType[, ,] data, int size)
+        private void AddRocks(ref BlockType[, ,] data, int size)
         {
             int numRocks = randGen.Next(size, 2*size);
             //CaveInfo += " numRocks=" + numRocks;
@@ -171,7 +176,7 @@ namespace MineWorld
             }
         }
 
-        public void AddLava(ref BlockType[, ,] data, int size)
+        private void AddLava(ref BlockType[, ,] data, int size)
         {
             int numFlows;
 
@@ -214,7 +219,7 @@ namespace MineWorld
             }
         }
 
-        public void AddWater(ref BlockType[, ,] data, int size)
+        private void AddWater(ref BlockType[, ,] data, int size)
         {
             int numFlows;
 
@@ -241,12 +246,13 @@ namespace MineWorld
                 //}
 
                 // generate a random z-value weighted toward a medium depth
-                float zf = 0;
-                for (int j = 0; j < 4; j++)
-                    zf += (float)randGen.NextDouble();
-                zf /= 2;
-                zf = 1 - Math.Abs(zf - 1);
-                int z = (int)(zf * size);
+                //float zf = 0;
+                //for (int j = 0; j < 4; j++)
+                    //zf += (float)randGen.NextDouble();
+                //zf /= 2;
+                //zf = 1 - Math.Abs(zf - 1);
+                //int z = (int)(zf * size);
+                int z = Defines.GROUND_LEVEL;
 
                 if (data[x, y, z] == BlockType.None && z + 1 < size - 1)
                 {
@@ -261,7 +267,7 @@ namespace MineWorld
             }
         }
 
-        public void AddDiamond(ref BlockType[, ,] data, int size)
+        private void AddDiamond(ref BlockType[, ,] data, int size)
         {
             //CaveInfo += "diamond";
 
@@ -282,7 +288,78 @@ namespace MineWorld
                 data[x, y, z] = BlockType.Diamond;
             }
         }
-        public void AddAdminblocks(ref BlockType[, ,] data, int size)
+
+        private void AddTrees(ref BlockType[, ,] data, int size)
+        {
+            int treecount = 0;
+
+            if (Cgsettings.Treecount == 0)
+            {
+                treecount = randGen.Next(size / 16, size / 2);
+            }
+            else
+            {
+                treecount = Cgsettings.Treecount;
+            }
+
+            while (treecount > 0)
+            {
+                int x = randGen.Next(2, Defines.MAPSIZE - 2);
+                int y = randGen.Next(2, Defines.MAPSIZE - 2);
+                int z = Defines.GROUND_LEVEL;
+
+                if(EnoughSpaceForTree(ref data, x,y,z))
+                {
+                    BuildTree(ref data, x, y, z);
+                    treecount--;
+                }
+            }
+
+        }
+
+        private bool EnoughSpaceForTree(ref BlockType[, ,] data, int x, int y, int z)
+        {
+            if (data[x, y, z] == BlockType.None &&
+                data[x, y, z - 1] == BlockType.None &&
+                data[x, y, z - 2] == BlockType.None &&
+                data[x, y, z - 3] == BlockType.None &&
+                data[x + 1, y + 1, z - 3] == BlockType.None &&
+                data[x + 1, y, z - 3] == BlockType.None &&
+                data[x - 1, y - 1, z - 3] == BlockType.None &&
+                data[x + 1, y - 1, z - 3] == BlockType.None &&
+                data[x - 1, y, z - 3] == BlockType.None &&
+                data[x - 1, y + 1, z - 3] == BlockType.None &&
+                data[x, y - 1, z - 3] == BlockType.None &&
+                data[x, y + 1, z - 3] == BlockType.None &&
+                data[x, y, z - 4] == BlockType.None)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
+        private void BuildTree(ref BlockType[, ,] data,int x,int y,int z)
+        {
+            data[x, y, z] = BlockType.Wood;
+            data[x, y, z - 1] = BlockType.Wood;
+            data[x, y, z - 2] = BlockType.Wood;
+            data[x, y, z - 3] = BlockType.Wood;
+
+            data[x + 1, y + 1, z - 3] = BlockType.Leaves;
+            data[x + 1, y, z - 3] = BlockType.Leaves;
+            data[x - 1, y - 1, z - 3] = BlockType.Leaves;
+            data[x + 1, y - 1, z - 3] = BlockType.Leaves;
+            data[x - 1, y, z - 3] = BlockType.Leaves;
+            data[x - 1, y + 1, z - 3] = BlockType.Leaves;
+            data[x, y - 1, z - 3] = BlockType.Leaves;
+            data[x, y + 1, z - 3] = BlockType.Leaves;
+            data[x, y, z - 4] = BlockType.Leaves;
+        }
+
+        private void AddAdminblocks(ref BlockType[, ,] data, int size)
         {
             //CaveInfo += "Adminblocks";
             int x = 0;
@@ -298,7 +375,7 @@ namespace MineWorld
         }
 
         // Gold appears in fairly numerous streaks, located at medium depths.
-        public void AddGold(ref BlockType[, ,] data, int size)
+        private void AddGold(ref BlockType[, ,] data, int size)
         {
             //CaveInfo += "gold";
 
@@ -351,7 +428,7 @@ namespace MineWorld
 
         // Generates a cube of noise with sides of length size. Noise falls in a linear
         // distribution ranging from 0 to magnitude.
-        public float[, ,] GenerateNoise(int size, float magnitude)
+        private float[, ,] GenerateNoise(int size, float magnitude)
         {
             float[,,] noiseArray = new float[size, size, size];
             for (int x = 0; x < size; x++)
@@ -362,7 +439,7 @@ namespace MineWorld
         }
 
         // Generates some perlin noise!
-        public float[,,] GeneratePerlinNoise(int size)
+        private float[, ,] GeneratePerlinNoise(int size)
         {
             float[,,] data = new float[size, size, size];
 
@@ -378,7 +455,7 @@ namespace MineWorld
         }
 
         // Does a random walk of noiseData, setting cells to 0 in caveData in the process.
-        public void PaintWithRandomWalk(ref BlockType[, ,] caveData, ref float[, ,] noiseData, int size, int paintRadius, BlockType paintValue, bool dontStopAtEdge)
+        private void PaintWithRandomWalk(ref BlockType[, ,] caveData, ref float[, ,] noiseData, int size, int paintRadius, BlockType paintValue, bool dontStopAtEdge)
         {
             int x = randGen.Next(0, size);
             int y = randGen.Next(0, size);
@@ -453,7 +530,7 @@ namespace MineWorld
             }
         }
 
-        public void PaintAtPoint(ref BlockType[, ,] caveData, int x, int y, int z, int size, int paintRadius, BlockType paintValue)
+        private void PaintAtPoint(ref BlockType[, ,] caveData, int x, int y, int z, int size, int paintRadius, BlockType paintValue)
         {
             for (int dx = -paintRadius; dx <= paintRadius; dx++)
                 for (int dy = -paintRadius; dy <= paintRadius; dy++)
@@ -464,7 +541,7 @@ namespace MineWorld
         }
 
         // Generates a set of constant values.
-        public BlockType[, ,] GenerateConstant(int size, BlockType value)
+        private BlockType[, ,] GenerateConstant(int size, BlockType value)
         {
             BlockType[, ,] data = new BlockType[size, size, size];
             for (int x = 0; x < size; x++)
@@ -474,7 +551,7 @@ namespace MineWorld
             return data;
         }
 
-        public float[, ,] GenerateGradient(int size)
+        private float[, ,] GenerateGradient(int size)
         {
             float[, ,] data = new float[size, size, size];
 
@@ -487,7 +564,7 @@ namespace MineWorld
         }
 
         // Radial gradient concentrated with high values at the outside.
-        public float[, ,] GenerateRadialGradient(int size)
+        private float[, ,] GenerateRadialGradient(int size)
         {
             float[, ,] data = new float[size, size, size];
 
@@ -502,20 +579,20 @@ namespace MineWorld
         }
 
         // Adds the values in dataSrc to the values in dataDst, storing the result in dataDst.
-        public void AddDataTo(ref float[, ,] dataDst, ref float[, ,] dataSrc, int size, float scalarDst, float scalarSrc)
+        private void AddDataTo(ref float[, ,] dataDst, ref float[, ,] dataSrc, int size, float scalarDst, float scalarSrc)
         {
             for (int x = 0; x < size; x++)
                 for (int y = 0; y < size; y++)
                     for (int z = 0; z < size; z++)
                         dataDst[x, y, z] = Math.Max(Math.Min(dataDst[x, y, z]*scalarDst + dataSrc[x, y, z]*scalarSrc, 1), 0);
         }
-        public void AddDataTo(ref float[, ,] dataDst, ref float[, ,] dataSrc, int size)
+        private void AddDataTo(ref float[, ,] dataDst, ref float[, ,] dataSrc, int size)
         {
             AddDataTo(ref dataDst, ref dataSrc, size, 1, 1);
         }
 
         // Resizes dataIn, with size sizeIn, to be of size sizeOut.
-        public float[, ,] InterpolateData(ref float[, ,] dataIn, int sizeIn, int sizeOut)
+        private float[, ,] InterpolateData(ref float[, ,] dataIn, int sizeIn, int sizeOut)
         {
             Debug.Assert(sizeOut > sizeIn, "sizeOut must be greater than sizeIn");
             Debug.Assert(sizeOut % sizeIn == 0, "sizeOut must be a multiple of sizeIn");
@@ -565,7 +642,7 @@ namespace MineWorld
 
         // Renders a specific z-level of a 256x256x256 data array to a texture.
         private uint[] pixelData = new uint[256 * 256];
-        public void RenderSlice(ref BlockType[, ,] data, int z, Texture2D renderTexture)
+        private void RenderSlice(ref BlockType[, ,] data, int z, Texture2D renderTexture)
         {
             for (int x = 0; x < 256; x++)
                 for (int y = 0; y < 256; y++)

@@ -165,7 +165,6 @@ namespace MineWorld
                 updateMasterServer();
             }
 
-
             while (keepRunning)
             {
                 // Fps for the server
@@ -174,7 +173,7 @@ namespace MineWorld
                 {
                     lastFPScheck = DateTime.Now;
                     frameRate = frameCount;
-                    if (frameCount < 20)
+                    if (frameCount <= 20)
                     {
                         ConsoleWrite("Heavy load: " + frameCount + " FPS");
                     }
@@ -188,6 +187,7 @@ namespace MineWorld
                     Sendhearthbeat();
                     lasthearthbeatsend = DateTime.Now;
                 }
+
 
                 //Time to backup map?
                 // If Ssettings.autosavetimer is 0 then autosave is disabled
@@ -369,8 +369,17 @@ namespace MineWorld
         {
             ConsoleWrite("LOADING MAPSETTINGS");
             Msettings.SettingsDir = "ServerConfigs";
+            Msettings.Includetrees = true;
 
             Datafile dataFile = new Datafile(Msettings.SettingsDir + "/map.config.txt");
+
+            if (dataFile.Data.ContainsKey("includetrees"))
+                Msettings.Includetrees = bool.Parse(dataFile.Data["includetrees"]);
+            else
+            {
+                Msettings.Includetrees = true;
+                ConsoleWrite("Couldnt find includetrees setting so we use the default (true)");
+            }
 
             if (dataFile.Data.ContainsKey("includelava"))
                 Msettings.Includelava = bool.Parse(dataFile.Data["includelava"]);
@@ -394,6 +403,14 @@ namespace MineWorld
             {
                 Msettings.Lavaspawns = 0;
                 ConsoleWrite("Couldnt find lavaspawns setting so we use the default (0)");
+            }
+
+            if (dataFile.Data.ContainsKey("treecount"))
+                Msettings.Treecount = int.Parse(dataFile.Data["treecount"]);
+            else
+            {
+                Msettings.Treecount = 0;
+                ConsoleWrite("Couldnt find treecount setting so we use the default (0)");
             }
 
             if (dataFile.Data.ContainsKey("orefactor"))
@@ -534,7 +551,7 @@ namespace MineWorld
 
         List<MapSender> mapSendingProgress = new List<MapSender>();
 
-        public void TerminateFinishedThreads()
+        public void  TerminateFinishedThreads()
         {
             List<MapSender> mapSendersToRemove = new List<MapSender>();
             foreach (MapSender ms in mapSendingProgress)
@@ -592,10 +609,12 @@ namespace MineWorld
 
         public void KillPlayerSpecific(Player player)
         {
+            // Kill the player specific
             NetBuffer msgBufferb = netServer.CreateBuffer();
             msgBufferb.Write((byte)MineWorldMessage.Killed);
             netServer.SendMessage(msgBufferb, player.NetConn, NetChannel.ReliableUnordered);
 
+            // Let all the other players know
             NetBuffer msgBuffer = netServer.CreateBuffer();
             msgBuffer.Write((byte)MineWorldMessage.PlayerDead);
             msgBuffer.Write((uint)player.ID);

@@ -174,6 +174,7 @@ namespace MineWorld
                                                     {
                                                         case "/godmode":
                                                             {
+                                                                //TODO Implent serverside of godmode
                                                                 //Redo this :S
                                                                 command = PlayerCommands.Godmode;
                                                                 break;
@@ -216,6 +217,9 @@ namespace MineWorld
                                                                         {
                                                                             //We found the player woot
                                                                             argplayer = dummy.ID;
+                                                                            //TODO Implent serverside of teleport
+                                                                            //player.Position = dummy.Position;
+                                                                            //IServer.SendPlayerPosition(player);
                                                                             break;
                                                                         }
                                                                     }
@@ -490,6 +494,7 @@ namespace MineWorld
                                             }
                                         case MineWorldMessage.PlayerPosition://server not interested in clients complaints about position
                                             {
+                                                IServer.ConsoleWrite("MESSAGE RECEIVED PLAYER POSITION FROM " + player.Handle);
                                                 break;
                                             }
                                         case MineWorldMessage.DepositOre:

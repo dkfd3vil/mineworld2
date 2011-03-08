@@ -16,13 +16,11 @@ namespace MineWorld
     public class Particle
     {
         public Vector3 Position;
+        public Vector3 Velocity;
         public float Size;
         public Color Color;
-        public int StepsToLife=180;
-        public int StepsToLifeStatic = 180;
+        public int stepstolive = 60;
         public bool FlaggedForDeletion = false;
-        public float speed = 1;
-        public bool fadeOut=true;
     }
 
     public class ParticleEngine
@@ -50,7 +48,7 @@ namespace MineWorld
 
         private VertexPositionTextureShade[] GenerateVertices()
         {
-            VertexPositionTextureShade[] cubeVerts = new VertexPositionTextureShade[6];
+            VertexPositionTextureShade[] cubeVerts = new VertexPositionTextureShade[36];
 
             // BOTTOM
             cubeVerts[0] = new VertexPositionTextureShade(new Vector3(-1, -1, -1), new Vector2(0, 0), 0.3);
@@ -59,6 +57,47 @@ namespace MineWorld
             cubeVerts[3] = new VertexPositionTextureShade(new Vector3(1, -1, -1), new Vector2(0, 0), 0.3);
             cubeVerts[4] = new VertexPositionTextureShade(new Vector3(1, 1, -1), new Vector2(0, 0), 0.3);
             cubeVerts[5] = new VertexPositionTextureShade(new Vector3(-1, 1, -1), new Vector2(0, 0), 0.3);
+
+            // TOP
+            cubeVerts[30] = new VertexPositionTextureShade(new Vector3(-1, -1, 1), new Vector2(0, 0), 1.0);
+            cubeVerts[31] = new VertexPositionTextureShade(new Vector3(1, -1, 1), new Vector2(0, 0), 1.0);
+            cubeVerts[32] = new VertexPositionTextureShade(new Vector3(-1, 1, 1), new Vector2(0, 0), 1.0);
+            cubeVerts[33] = new VertexPositionTextureShade(new Vector3(1, -1, 1), new Vector2(0, 0), 1.0);
+            cubeVerts[34] = new VertexPositionTextureShade(new Vector3(1, 1, 1), new Vector2(0, 0), 1.0);
+            cubeVerts[35] = new VertexPositionTextureShade(new Vector3(-1, 1, 1), new Vector2(0, 0), 1.0);
+
+            // LEFT
+            cubeVerts[6] = new VertexPositionTextureShade(new Vector3(-1, -1, -1), new Vector2(0, 0), 0.7);
+            cubeVerts[7] = new VertexPositionTextureShade(new Vector3(-1, -1, 1), new Vector2(0, 0), 0.7);
+            cubeVerts[8] = new VertexPositionTextureShade(new Vector3(-1, 1, 1), new Vector2(0, 0), 0.7);
+            cubeVerts[9] = new VertexPositionTextureShade(new Vector3(-1, -1, -1), new Vector2(0, 0), 0.7);
+            cubeVerts[10] = new VertexPositionTextureShade(new Vector3(-1, 1, 1), new Vector2(0, 0), 0.7);
+            cubeVerts[11] = new VertexPositionTextureShade(new Vector3(-1, 1, -1), new Vector2(0, 0), 0.7);
+
+            // RIGHT
+            cubeVerts[12] = new VertexPositionTextureShade(new Vector3(1, -1, -1), new Vector2(0, 0), 0.7);
+            cubeVerts[13] = new VertexPositionTextureShade(new Vector3(1, -1, 1), new Vector2(0, 0), 0.7);
+            cubeVerts[14] = new VertexPositionTextureShade(new Vector3(1, 1, 1), new Vector2(0, 0), 0.7);
+            cubeVerts[15] = new VertexPositionTextureShade(new Vector3(1, -1, -1), new Vector2(0, 0), 0.7);
+            cubeVerts[16] = new VertexPositionTextureShade(new Vector3(1, 1, 1), new Vector2(0, 0), 0.7);
+            cubeVerts[17] = new VertexPositionTextureShade(new Vector3(1, 1, -1), new Vector2(0, 0), 0.7);
+
+            // FRONT
+            cubeVerts[18] = new VertexPositionTextureShade(new Vector3(-1, 1, -1), new Vector2(0, 0), 0.5);
+            cubeVerts[19] = new VertexPositionTextureShade(new Vector3(-1, 1, 1), new Vector2(0, 0), 0.5);
+            cubeVerts[20] = new VertexPositionTextureShade(new Vector3(1, 1, 1), new Vector2(0, 0), 0.5);
+            cubeVerts[21] = new VertexPositionTextureShade(new Vector3(-1, 1, -1), new Vector2(0, 0), 0.5);
+            cubeVerts[22] = new VertexPositionTextureShade(new Vector3(1, 1, 1), new Vector2(0, 0), 0.5);
+            cubeVerts[23] = new VertexPositionTextureShade(new Vector3(1, 1, -1), new Vector2(0, 0), 0.5);
+
+            // BACK
+            cubeVerts[24] = new VertexPositionTextureShade(new Vector3(-1, -1, -1), new Vector2(0, 0), 0.5);
+            cubeVerts[25] = new VertexPositionTextureShade(new Vector3(-1, -1, 1), new Vector2(0, 0), 0.5);
+            cubeVerts[26] = new VertexPositionTextureShade(new Vector3(1, -1, 1), new Vector2(0, 0), 0.5);
+            cubeVerts[27] = new VertexPositionTextureShade(new Vector3(-1, -1, -1), new Vector2(0, 0), 0.5);
+            cubeVerts[28] = new VertexPositionTextureShade(new Vector3(1, -1, 1), new Vector2(0, 0), 0.5);
+            cubeVerts[29] = new VertexPositionTextureShade(new Vector3(1, -1, -1), new Vector2(0, 0), 0.5);
+
             return cubeVerts;
         }
 
@@ -74,75 +113,48 @@ namespace MineWorld
 
             foreach (Particle p in particleList)
             {
-                p.Position.Y += (float)gameTime.ElapsedGameTime.TotalSeconds*p.speed;
-                if (p.fadeOut)
-                {
-                    
-                    p.Color.A = (byte)((p.StepsToLife / (p.StepsToLifeStatic + 0.001f))*255);
-                }
+                p.Position += (float)gameTime.ElapsedGameTime.TotalSeconds * p.Velocity;
+                p.Velocity.Y -= 8 * (float)gameTime.ElapsedGameTime.TotalSeconds;
                 if (_P.blockEngine.SolidAtPoint(p.Position))
                     p.FlaggedForDeletion = true;
-                if (p.StepsToLife < 1)
+                if (p.stepstolive < 1)
                 {
                     p.FlaggedForDeletion = true;
                 }
             }
             for (int i = 0; i < particleList.Count; i++)
             {
-                particleList[i].StepsToLife--;
+                particleList[i].stepstolive--;
             }
             particleList.RemoveAll(ParticleExpired);
         }
 
         public void CreateExplosionDebris(Vector3 explosionPosition)
         {
-            Particle p = new Particle();
-            p.Color = new Color(255, 255, 255 - randGen.Next(0, 55));
-            p.Size = 0.4f + (float)((float)randGen.Next(0, 100)/(float)200);
-            p.speed = 4.0f+((float)randGen.Next(0, 100) / 200.0f);
-            p.StepsToLife = 80;
-            p.StepsToLifeStatic = 80;
-            p.Position = explosionPosition;
-            particleList.Add(p);
+            for (int i = 0; i < 50; i++)
+            {
+                Particle p = new Particle();
+                p.Color = new Color(90, 60, 40);
+                p.Size = (float)(randGen.NextDouble() * 0.4 + 0.05);
+                p.Position = explosionPosition;
+                p.Position.Y += (float)randGen.NextDouble() - 0.5f;
+                p.Velocity = new Vector3((float)randGen.NextDouble() * 8 - 4, (float)randGen.NextDouble() * 8, (float)randGen.NextDouble() * 8 - 4);
+                particleList.Add(p);
+            }
         }
 
-        /*public void CreateBloodSplatter(Vector3 playerPosition, Color color)
+        public void CreateBloodSplatter(Vector3 playerPosition, Color color)
         {
             for (int i = 0; i < 30; i++)
             {
                 Particle p = new Particle();
                 p.Color = color;
-                p.Size = (float)(randGen.NextDouble()*0.2 + 0.05);
+                p.Size = (float)(randGen.NextDouble() * 0.2 + 0.05);
                 p.Position = playerPosition;
                 p.Position.Y -= (float)randGen.NextDouble();
                 p.Velocity = new Vector3((float)randGen.NextDouble() * 5 - 2.5f, (float)randGen.NextDouble() * 4f, (float)randGen.NextDouble() * 5 - 2.5f);
                 particleList.Add(p);
             }
-        }*/
-
-        public VertexPositionColor[] GenerateVertices(Vector3 cameraPosition, Vector3 drawPosition, Vector3 drawHeading, float drawScale,Color particleColor)
-        {
-            VertexPositionColor[] vertices = new VertexPositionColor[6];
-
-            Vector2 vTexStart = new Vector2(0, 0);
-
-            Vector3 vToPlayer = cameraPosition - drawPosition;
-
-            float dotProduct = Vector3.Dot(vToPlayer, drawHeading);
-            Vector3 crossProduct = Vector3.Cross(vToPlayer, drawHeading);
-            
-            VertexPositionColor v1 = new VertexPositionColor(new Vector3(-0.375f * drawScale, 1 * drawScale, 0), particleColor);
-            VertexPositionColor v2 = new VertexPositionColor(new Vector3(0.375f * drawScale, 1 * drawScale, 0), particleColor);
-            VertexPositionColor v3 = new VertexPositionColor(new Vector3(-0.375f * drawScale, 0, 0), particleColor);
-            VertexPositionColor v4 = new VertexPositionColor(new Vector3(0.375f * drawScale, 0, 0), particleColor);
-
-            vertices[0] = v3;
-            vertices[1] = v2;
-            vertices[2] = v4;
-            vertices[3] = v3;
-            vertices[4] = v1;
-            vertices[5] = v2;
-            return vertices;
         }
 
         public void Render(GraphicsDevice graphicsDevice)
@@ -154,12 +166,8 @@ namespace MineWorld
 
             foreach (Particle p in particleList)
             {
-                VertexPositionColor[] vertices = GenerateVertices(_P.playerCamera.Position, p.Position, Vector3.One, p.Size,p.Color);
                 Matrix worldMatrix = Matrix.CreateScale(p.Size / 2) * Matrix.CreateTranslation(p.Position);
-
-
-                Matrix world = Matrix.CreateBillboard(p.Position, _P.playerCamera.Position, Vector3.UnitY,null);
-                particleEffect.Parameters["xWorld"].SetValue(world);
+                particleEffect.Parameters["xWorld"].SetValue(worldMatrix);
                 particleEffect.Parameters["xView"].SetValue(_P.playerCamera.ViewMatrix);
                 particleEffect.Parameters["xProjection"].SetValue(_P.playerCamera.ProjectionMatrix);
                 particleEffect.Parameters["xColor"].SetValue(p.Color.ToVector4());
@@ -167,13 +175,12 @@ namespace MineWorld
                 particleEffect.Techniques[0].Passes[0].Begin();
 
                 graphicsDevice.RenderState.CullMode = CullMode.None;
-                graphicsDevice.RenderState.AlphaBlendEnable = true;
                 graphicsDevice.VertexDeclaration = vertexDeclaration;
                 graphicsDevice.Vertices[0].SetSource(vertexBuffer, 0, VertexPositionTextureShade.SizeInBytes);
-                graphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleList, vertices, 0, vertices.Length / 3);
-                graphicsDevice.RenderState.AlphaBlendEnable = false;
+                graphicsDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, vertexBuffer.SizeInBytes / VertexPositionTextureShade.SizeInBytes / 3);
+
                 particleEffect.Techniques[0].Passes[0].End();
-                particleEffect.End();  
+                particleEffect.End();
             }
         }
     }

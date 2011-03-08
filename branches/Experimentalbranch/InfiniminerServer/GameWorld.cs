@@ -224,7 +224,7 @@ namespace MineWorld
             {
                 if (pl.Alive)
                 {
-                    ConsoleWrite("refused" + pl.Handle + " " + pos.X + "/" + pos.Y + "/" + pos.Z);
+                    ConsoleWrite("refused " + pl.Handle + " " + pos.X + "/" + pos.Y + "/" + pos.Z);
                     return pl.Position;
                 }
                 else//player is dead, return position silent
@@ -349,6 +349,10 @@ namespace MineWorld
                 case BlockType.Lava:
                     removeBlock = false;
                     break;
+
+                case BlockType.Wood:
+                case BlockType.Leaves:
+                case BlockType.Rock:
                 case BlockType.Dirt:
                 case BlockType.DirtSign:
                     removeBlock = true;
