@@ -1,0 +1,27 @@
+# This value specifies your name - please change it to something unique!
+handle = Player
+
+# These values specifies your resolution
+width = 1024
+height = 780
+fullscreen = false
+
+# If this flag is set to true, pretty mode will be enabled, which turns on bloom lighting!
+# If your performance is bad, try turning this off.
+pretty = true
+
+# If this flag is set to true, We use vsync, wich stops screen tearing!
+# If your performance is bad, try turning this off.
+vsync = true
+
+showfps = true
+yinvert = false
+
+# This value specifies the override volume multiplier, for people who find the sounds too loud.
+volume = 1
+
+# This value specifies the mouse sensitivity, from 1-50 default 5
+sensitivity = 5
+
+# If this flag is true, all sound for the game will be disabled. This should fix all AllocateFormatAndData crashes.
+nosound = false
