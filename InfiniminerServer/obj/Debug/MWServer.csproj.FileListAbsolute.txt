@@ -12,3 +12,17 @@ C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Expe
 C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\InfiniminerServer\obj\Debug\MWServer.pdb
 C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\ServerConfigs\map.config.txt
 C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Backups\Readme.txt
+F:\mw2\trunk\Output\debug\Backups\Readme.txt
+F:\mw2\trunk\Output\debug\Logs\Readme.txt
+F:\mw2\trunk\Output\debug\ServerConfigs\admins.txt
+F:\mw2\trunk\Output\debug\ServerConfigs\banlist.txt
+F:\mw2\trunk\Output\debug\ClientConfigs\client.config.txt
+F:\mw2\trunk\Output\debug\ClientConfigs\keymap.txt
+F:\mw2\trunk\Output\debug\ServerConfigs\bannednames.txt
+F:\mw2\trunk\Output\debug\ServerConfigs\map.config.txt
+F:\mw2\trunk\Output\debug\ServerConfigs\server.config.txt
+F:\mw2\trunk\Output\debug\MWServer.exe
+F:\mw2\trunk\Output\debug\MWServer.pdb
+F:\mw2\trunk\InfiniminerServer\obj\Debug\ResolveAssemblyReference.cache
+F:\mw2\trunk\InfiniminerServer\obj\Debug\MWServer.exe
+F:\mw2\trunk\InfiniminerServer\obj\Debug\MWServer.pdb

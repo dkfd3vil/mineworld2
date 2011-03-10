@@ -13,3 +13,18 @@ C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Expe
 C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\InfiniminerShared\obj\x86\Debug\MWShared.pdb
 C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\ServerConfigs\map.config.txt
 C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Backups\Readme.txt
+F:\mw2\trunk\Output\debug\Backups\Readme.txt
+F:\mw2\trunk\Output\debug\Logs\Readme.txt
+F:\mw2\trunk\Output\debug\ServerConfigs\admins.txt
+F:\mw2\trunk\Output\debug\ServerConfigs\banlist.txt
+F:\mw2\trunk\Output\debug\ClientConfigs\client.config.txt
+F:\mw2\trunk\Output\debug\ClientConfigs\keymap.txt
+F:\mw2\trunk\Output\debug\ServerConfigs\bannednames.txt
+F:\mw2\trunk\Output\debug\ServerConfigs\map.config.txt
+F:\mw2\trunk\Output\debug\ServerConfigs\server.config.txt
+F:\mw2\trunk\Output\debug\MWShared.dll
+F:\mw2\trunk\Output\debug\MWShared.pdb
+F:\mw2\trunk\InfiniminerShared\obj\x86\Debug\ResolveAssemblyReference.cache
+F:\mw2\trunk\InfiniminerShared\obj\x86\Debug\Microsoft.Xna.Framework.RuntimeProfile.txt
+F:\mw2\trunk\InfiniminerShared\obj\x86\Debug\MWShared.dll
+F:\mw2\trunk\InfiniminerShared\obj\x86\Debug\MWShared.pdb

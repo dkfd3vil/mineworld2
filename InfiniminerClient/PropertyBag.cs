@@ -25,7 +25,6 @@ namespace MineWorld
         public BlockEngine blockEngine = null;
         public InterfaceEngine interfaceEngine = null;
         public PlayerEngine playerEngine = null;
-        public SkyplaneEngine skyplaneEngine = null;
         public ParticleEngine particleEngine = null;
 
         // Network stuff.
@@ -126,7 +125,6 @@ namespace MineWorld
             blockEngine = new BlockEngine(gameInstance);
             interfaceEngine = new InterfaceEngine(gameInstance);
             playerEngine = new PlayerEngine(gameInstance);
-            skyplaneEngine = new SkyplaneEngine(gameInstance);
             particleEngine = new ParticleEngine(gameInstance);
 
             // Create a camera.

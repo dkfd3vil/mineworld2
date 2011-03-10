@@ -108,6 +108,11 @@ Content\menus\tex_menu_help_blue.xnb
 Content\menus\tex_menu_help_red.xnb
 Content\blocks\tex_block_spring.xnb
 Content\blocks\tex_block_trans_water.xnb
+Content\blocks\tex_block_tree_side.xnb
+Content\blocks\tex_block_tree_top.xnb
+Content\blocks\tex_block_tree_leaves.xnb
+Content\blocks\tex_block_lamp.xnb
+Content\menus\tex_menu_error.xnb
 Content\font_04b08.xnb
 Content\font_04b03b.xnb
 Content\sounds\build.xnb
@@ -126,11 +131,6 @@ Content\sounds\teleport.xnb
 Content\sounds\radar-high.xnb
 Content\sounds\radar-low.xnb
 Content\song_title.xnb
-Content\blocks\tex_block_tree_side.xnb
-Content\blocks\tex_block_tree_top.xnb
-Content\blocks\tex_block_tree_leaves.xnb
-Content\blocks\tex_block_lamp.xnb
-Content\menus\tex_menu_error.xnb
 Content\song_title.wma
 Content\BloomCombine.fx
 Content\BloomExtract.fx
