@@ -7,8 +7,8 @@
       <Importer>EffectImporter</Importer>
       <Processor>EffectProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\effect_basic.xnb</Output>
-      <Time>2011-03-09T09:08:54.8058+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\effect_basic.xnb</Output>
+      <Time>2011-03-10T21:36:04.0231695+01:00</Time>
     </Item>
     <Item>
       <Source>effect_skyplane.fx</Source>
@@ -16,8 +16,8 @@
       <Importer>EffectImporter</Importer>
       <Processor>EffectProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\effect_skyplane.xnb</Output>
-      <Time>2011-03-01T12:17:55.37425+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\effect_skyplane.xnb</Output>
+      <Time>2011-03-10T21:36:04.0261697+01:00</Time>
     </Item>
     <Item>
       <Source>effect_spritemodel.fx</Source>
@@ -25,8 +25,8 @@
       <Importer>EffectImporter</Importer>
       <Processor>EffectProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\effect_spritemodel.xnb</Output>
-      <Time>2011-02-26T17:09:39.5336+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\effect_spritemodel.xnb</Output>
+      <Time>2011-03-10T21:36:04.0111688+01:00</Time>
     </Item>
     <Item>
       <Source>effect_particle.fx</Source>
@@ -34,8 +34,8 @@
       <Importer>EffectImporter</Importer>
       <Processor>EffectProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\effect_particle.xnb</Output>
-      <Time>2011-03-07T11:42:38.66595+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\effect_particle.xnb</Output>
+      <Time>2011-03-10T21:36:04.0171691+01:00</Time>
     </Item>
     <Item>
       <Source>BloomCombine.fx</Source>
@@ -43,8 +43,8 @@
       <Importer>EffectImporter</Importer>
       <Processor>EffectProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\BloomCombine.xnb</Output>
-      <Time>2011-02-26T17:09:39.5492+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\BloomCombine.xnb</Output>
+      <Time>2011-03-10T21:36:04.0131689+01:00</Time>
     </Item>
     <Item>
       <Source>BloomExtract.fx</Source>
@@ -52,8 +52,8 @@
       <Importer>EffectImporter</Importer>
       <Processor>EffectProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\BloomExtract.xnb</Output>
-      <Time>2011-02-26T17:09:39.5336+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\BloomExtract.xnb</Output>
+      <Time>2011-03-10T21:36:04.0121689+01:00</Time>
     </Item>
     <Item>
       <Source>GaussianBlur.fx</Source>
@@ -61,8 +61,8 @@
       <Importer>EffectImporter</Importer>
       <Processor>EffectProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\GaussianBlur.xnb</Output>
-      <Time>2011-02-26T17:09:39.674+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\GaussianBlur.xnb</Output>
+      <Time>2011-03-10T21:36:04.0241695+01:00</Time>
     </Item>
     <Item>
       <Source>blocks\tex_block_ore.png</Source>
@@ -70,8 +70,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\blocks\tex_block_ore.xnb</Output>
-      <Time>2011-02-26T17:09:37.8644+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\blocks\tex_block_ore.xnb</Output>
+      <Time>2011-03-10T21:36:03.8201579+01:00</Time>
     </Item>
     <Item>
       <Source>blocks\tex_block_rock.png</Source>
@@ -79,8 +79,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\blocks\tex_block_rock.xnb</Output>
-      <Time>2011-02-26T17:09:37.9424+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\blocks\tex_block_rock.xnb</Output>
+      <Time>2011-03-10T21:36:03.8381589+01:00</Time>
     </Item>
     <Item>
       <Source>blocks\tex_block_silver.png</Source>
@@ -88,8 +88,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\blocks\tex_block_silver.xnb</Output>
-      <Time>2011-02-26T17:09:37.9892+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\blocks\tex_block_silver.xnb</Output>
+      <Time>2011-03-10T21:36:03.8521597+01:00</Time>
     </Item>
     <Item>
       <Source>blocks\tex_block_dirt.png</Source>
@@ -97,8 +97,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\blocks\tex_block_dirt.xnb</Output>
-      <Time>2011-02-26T17:09:37.5524+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\blocks\tex_block_dirt.xnb</Output>
+      <Time>2011-03-10T21:36:03.7541541+01:00</Time>
     </Item>
     <Item>
       <Source>blocks\tex_block_home_red.png</Source>
@@ -106,8 +106,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\blocks\tex_block_home_red.xnb</Output>
-      <Time>2011-02-26T17:09:38.1296+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\blocks\tex_block_home_red.xnb</Output>
+      <Time>2011-03-10T21:36:03.9131632+01:00</Time>
     </Item>
     <Item>
       <Source>blocks\tex_block_diamond.png</Source>
@@ -115,8 +115,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\blocks\tex_block_diamond.xnb</Output>
-      <Time>2011-02-26T17:09:38.0672+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\blocks\tex_block_diamond.xnb</Output>
+      <Time>2011-03-10T21:36:03.8951622+01:00</Time>
     </Item>
     <Item>
       <Source>blocks\tex_block_blue.png</Source>
@@ -124,8 +124,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\blocks\tex_block_blue.xnb</Output>
-      <Time>2011-02-26T17:09:37.88+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\blocks\tex_block_blue.xnb</Output>
+      <Time>2011-03-10T21:36:03.8241581+01:00</Time>
     </Item>
     <Item>
       <Source>blocks\tex_block_red.png</Source>
@@ -133,8 +133,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\blocks\tex_block_red.xnb</Output>
-      <Time>2011-02-26T17:09:38.036+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\blocks\tex_block_red.xnb</Output>
+      <Time>2011-03-10T21:36:03.8621603+01:00</Time>
     </Item>
     <Item>
       <Source>blocks\tex_block_trans_blue.png</Source>
@@ -142,8 +142,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\blocks\tex_block_trans_blue.xnb</Output>
-      <Time>2011-02-26T17:09:37.9268+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\blocks\tex_block_trans_blue.xnb</Output>
+      <Time>2011-03-10T21:36:03.8411591+01:00</Time>
     </Item>
     <Item>
       <Source>blocks\tex_block_trans_red.png</Source>
@@ -151,8 +151,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\blocks\tex_block_trans_red.xnb</Output>
-      <Time>2011-02-26T17:09:37.802+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\blocks\tex_block_trans_red.xnb</Output>
+      <Time>2011-03-10T21:36:03.7921563+01:00</Time>
     </Item>
     <Item>
       <Source>blocks\tex_block_ladder.png</Source>
@@ -160,8 +160,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\blocks\tex_block_ladder.xnb</Output>
-      <Time>2011-02-26T17:09:37.8956+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\blocks\tex_block_ladder.xnb</Output>
+      <Time>2011-03-10T21:36:03.8311585+01:00</Time>
     </Item>
     <Item>
       <Source>blocks\tex_block_spikes.png</Source>
@@ -169,8 +169,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\blocks\tex_block_spikes.xnb</Output>
-      <Time>2011-02-26T17:09:38.2388+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\blocks\tex_block_spikes.xnb</Output>
+      <Time>2011-03-10T21:36:03.9301642+01:00</Time>
     </Item>
     <Item>
       <Source>blocks\tex_block_ladder_top.png</Source>
@@ -178,8 +178,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\blocks\tex_block_ladder_top.xnb</Output>
-      <Time>2011-02-26T17:09:37.6928+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\blocks\tex_block_ladder_top.xnb</Output>
+      <Time>2011-03-10T21:36:03.7781555+01:00</Time>
     </Item>
     <Item>
       <Source>blocks\tex_block_home_blue.png</Source>
@@ -187,8 +187,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\blocks\tex_block_home_blue.xnb</Output>
-      <Time>2011-02-26T17:09:37.958+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\blocks\tex_block_home_blue.xnb</Output>
+      <Time>2011-03-10T21:36:03.8431592+01:00</Time>
     </Item>
     <Item>
       <Source>ui\tex_ui_crosshair.png</Source>
@@ -196,8 +196,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\ui\tex_ui_crosshair.xnb</Output>
-      <Time>2011-02-26T17:09:39.4712+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\ui\tex_ui_crosshair.xnb</Output>
+      <Time>2011-03-10T21:36:03.9991681+01:00</Time>
     </Item>
     <Item>
       <Source>blocks\tex_block_explosive.png</Source>
@@ -205,8 +205,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\blocks\tex_block_explosive.xnb</Output>
-      <Time>2011-02-26T17:09:37.724+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\blocks\tex_block_explosive.xnb</Output>
+      <Time>2011-03-10T21:36:03.7801556+01:00</Time>
     </Item>
     <Item>
       <Source>menus\tex_menu_class_blue.png</Source>
@@ -214,8 +214,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\menus\tex_menu_class_blue.xnb</Output>
-      <Time>2011-02-26T17:09:29.3624+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\menus\tex_menu_class_blue.xnb</Output>
+      <Time>2011-03-10T21:35:57.4827954+01:00</Time>
     </Item>
     <Item>
       <Source>menus\tex_menu_class_red.png</Source>
@@ -223,8 +223,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\menus\tex_menu_class_red.xnb</Output>
-      <Time>2011-02-26T17:09:29.5028+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\menus\tex_menu_class_red.xnb</Output>
+      <Time>2011-03-10T21:35:57.5017965+01:00</Time>
     </Item>
     <Item>
       <Source>menus\tex_menu_team.png</Source>
@@ -232,8 +232,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\menus\tex_menu_team.xnb</Output>
-      <Time>2011-02-26T17:09:29.5964+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\menus\tex_menu_team.xnb</Output>
+      <Time>2011-03-10T21:35:57.5177974+01:00</Time>
     </Item>
     <Item>
       <Source>menus\tex_menu_server.png</Source>
@@ -241,8 +241,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\menus\tex_menu_server.xnb</Output>
-      <Time>2011-02-26T17:09:29.612+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\menus\tex_menu_server.xnb</Output>
+      <Time>2011-03-10T21:35:57.5217976+01:00</Time>
     </Item>
     <Item>
       <Source>sprites\tex_sprite_blue_construction.png</Source>
@@ -250,8 +250,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\sprites\tex_sprite_blue_construction.xnb</Output>
-      <Time>2011-02-26T17:09:30.3608+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\sprites\tex_sprite_blue_construction.xnb</Output>
+      <Time>2011-03-10T21:35:57.598802+01:00</Time>
     </Item>
     <Item>
       <Source>sprites\tex_sprite_blue_detonator.png</Source>
@@ -259,8 +259,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\sprites\tex_sprite_blue_detonator.xnb</Output>
-      <Time>2011-02-26T17:09:30.1112+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\sprites\tex_sprite_blue_detonator.xnb</Output>
+      <Time>2011-03-10T21:35:57.5838012+01:00</Time>
     </Item>
     <Item>
       <Source>sprites\tex_sprite_blue_pickaxe.png</Source>
@@ -268,8 +268,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\sprites\tex_sprite_blue_pickaxe.xnb</Output>
-      <Time>2011-02-26T17:09:30.1892+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\sprites\tex_sprite_blue_pickaxe.xnb</Output>
+      <Time>2011-03-10T21:35:57.5878014+01:00</Time>
     </Item>
     <Item>
       <Source>sprites\tex_sprite_blue_radar.png</Source>
@@ -277,8 +277,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\sprites\tex_sprite_blue_radar.xnb</Output>
-      <Time>2011-02-26T17:09:30.3296+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\sprites\tex_sprite_blue_radar.xnb</Output>
+      <Time>2011-03-10T21:35:57.5948018+01:00</Time>
     </Item>
     <Item>
       <Source>sprites\tex_sprite_red_construction.png</Source>
@@ -286,8 +286,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\sprites\tex_sprite_red_construction.xnb</Output>
-      <Time>2011-02-26T17:09:30.392+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\sprites\tex_sprite_red_construction.xnb</Output>
+      <Time>2011-03-10T21:35:57.6038023+01:00</Time>
     </Item>
     <Item>
       <Source>sprites\tex_sprite_red_detonator.png</Source>
@@ -295,8 +295,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\sprites\tex_sprite_red_detonator.xnb</Output>
-      <Time>2011-02-26T17:09:30.1424+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\sprites\tex_sprite_red_detonator.xnb</Output>
+      <Time>2011-03-10T21:35:57.5858013+01:00</Time>
     </Item>
     <Item>
       <Source>sprites\tex_sprite_red_pickaxe.png</Source>
@@ -304,8 +304,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\sprites\tex_sprite_red_pickaxe.xnb</Output>
-      <Time>2011-02-26T17:09:30.314+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\sprites\tex_sprite_red_pickaxe.xnb</Output>
+      <Time>2011-03-10T21:35:57.5928017+01:00</Time>
     </Item>
     <Item>
       <Source>sprites\tex_sprite_red_radar.png</Source>
@@ -313,8 +313,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\sprites\tex_sprite_red_radar.xnb</Output>
-      <Time>2011-02-26T17:09:30.3764+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\sprites\tex_sprite_red_radar.xnb</Output>
+      <Time>2011-03-10T21:35:57.6008022+01:00</Time>
     </Item>
     <Item>
       <Source>menus\tex_menu_title.png</Source>
@@ -322,8 +322,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\menus\tex_menu_title.xnb</Output>
-      <Time>2011-02-26T17:09:29.5496+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\menus\tex_menu_title.xnb</Output>
+      <Time>2011-03-10T21:35:57.510797+01:00</Time>
     </Item>
     <Item>
       <Source>ui\tex_radar_background.png</Source>
@@ -331,8 +331,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\ui\tex_radar_background.xnb</Output>
-      <Time>2011-02-26T17:09:39.4244+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\ui\tex_radar_background.xnb</Output>
+      <Time>2011-03-10T21:36:03.9941678+01:00</Time>
     </Item>
     <Item>
       <Source>ui\tex_radar_foreground.png</Source>
@@ -340,8 +340,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\ui\tex_radar_foreground.xnb</Output>
-      <Time>2011-02-26T17:09:39.4088+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\ui\tex_radar_foreground.xnb</Output>
+      <Time>2011-03-10T21:36:03.9901676+01:00</Time>
     </Item>
     <Item>
       <Source>menus\tex_menu_loading.png</Source>
@@ -349,8 +349,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\menus\tex_menu_loading.xnb</Output>
-      <Time>2011-02-26T17:09:29.4248+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\menus\tex_menu_loading.xnb</Output>
+      <Time>2011-03-10T21:35:57.4887957+01:00</Time>
     </Item>
     <Item>
       <Source>blocks\tex_block_metal.png</Source>
@@ -358,8 +358,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\blocks\tex_block_metal.xnb</Output>
-      <Time>2011-02-26T17:09:37.9736+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\blocks\tex_block_metal.xnb</Output>
+      <Time>2011-03-10T21:36:03.8481595+01:00</Time>
     </Item>
     <Item>
       <Source>sprites\tex_sprite_blue_drill.png</Source>
@@ -367,8 +367,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\sprites\tex_sprite_blue_drill.xnb</Output>
-      <Time>2011-02-26T17:09:30.2984+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\sprites\tex_sprite_blue_drill.xnb</Output>
+      <Time>2011-03-10T21:35:57.5908016+01:00</Time>
     </Item>
     <Item>
       <Source>sprites\tex_sprite_red_drill.png</Source>
@@ -376,8 +376,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\sprites\tex_sprite_red_drill.xnb</Output>
-      <Time>2011-02-26T17:09:30.3452+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\sprites\tex_sprite_red_drill.xnb</Output>
+      <Time>2011-03-10T21:35:57.5968019+01:00</Time>
     </Item>
     <Item>
       <Source>blocks\tex_block_dirt_sign.png</Source>
@@ -385,8 +385,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\blocks\tex_block_dirt_sign.xnb</Output>
-      <Time>2011-02-26T17:09:38.114+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\blocks\tex_block_dirt_sign.xnb</Output>
+      <Time>2011-03-10T21:36:03.9081629+01:00</Time>
     </Item>
     <Item>
       <Source>tools\tex_tool_detonator_down_blue.png</Source>
@@ -394,8 +394,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\tools\tex_tool_detonator_down_blue.xnb</Output>
-      <Time>2011-02-26T17:09:31.8272+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\tools\tex_tool_detonator_down_blue.xnb</Output>
+      <Time>2011-03-10T21:35:57.7268094+01:00</Time>
     </Item>
     <Item>
       <Source>tools\tex_tool_detonator_down_red.png</Source>
@@ -403,8 +403,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\tools\tex_tool_detonator_down_red.xnb</Output>
-      <Time>2011-02-26T17:09:31.6556+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\tools\tex_tool_detonator_down_red.xnb</Output>
+      <Time>2011-03-10T21:35:57.7128086+01:00</Time>
     </Item>
     <Item>
       <Source>tools\tex_tool_detonator_up_blue.png</Source>
@@ -412,8 +412,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\tools\tex_tool_detonator_up_blue.xnb</Output>
-      <Time>2011-02-26T17:09:31.9988+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\tools\tex_tool_detonator_up_blue.xnb</Output>
+      <Time>2011-03-10T21:35:57.7438103+01:00</Time>
     </Item>
     <Item>
       <Source>tools\tex_tool_detonator_up_red.png</Source>
@@ -421,8 +421,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\tools\tex_tool_detonator_up_red.xnb</Output>
-      <Time>2011-02-26T17:09:31.7804+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\tools\tex_tool_detonator_up_red.xnb</Output>
+      <Time>2011-03-10T21:35:57.7248092+01:00</Time>
     </Item>
     <Item>
       <Source>tools\tex_tool_radar_blue.png</Source>
@@ -430,8 +430,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\tools\tex_tool_radar_blue.xnb</Output>
-      <Time>2011-02-26T17:09:31.9208+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\tools\tex_tool_radar_blue.xnb</Output>
+      <Time>2011-03-10T21:35:57.7358099+01:00</Time>
     </Item>
     <Item>
       <Source>tools\tex_tool_radar_led.png</Source>
@@ -439,8 +439,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\tools\tex_tool_radar_led.xnb</Output>
-      <Time>2011-02-26T17:09:32.0456+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\tools\tex_tool_radar_led.xnb</Output>
+      <Time>2011-03-10T21:35:57.7498107+01:00</Time>
     </Item>
     <Item>
       <Source>tools\tex_tool_radar_pointer.png</Source>
@@ -448,8 +448,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\tools\tex_tool_radar_pointer.xnb</Output>
-      <Time>2011-02-26T17:09:31.7648+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\tools\tex_tool_radar_pointer.xnb</Output>
+      <Time>2011-03-10T21:35:57.7228091+01:00</Time>
     </Item>
     <Item>
       <Source>tools\tex_tool_radar_red.png</Source>
@@ -457,8 +457,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\tools\tex_tool_radar_red.xnb</Output>
-      <Time>2011-02-26T17:09:31.718+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\tools\tex_tool_radar_red.xnb</Output>
+      <Time>2011-03-10T21:35:57.7178088+01:00</Time>
     </Item>
     <Item>
       <Source>tools\tex_tool_radar_screen_diamond.png</Source>
@@ -466,8 +466,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\tools\tex_tool_radar_screen_diamond.xnb</Output>
-      <Time>2011-02-26T17:09:31.6868+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\tools\tex_tool_radar_screen_diamond.xnb</Output>
+      <Time>2011-03-10T21:35:57.7158087+01:00</Time>
     </Item>
     <Item>
       <Source>tools\tex_tool_radar_screen_gold.png</Source>
@@ -475,8 +475,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\tools\tex_tool_radar_screen_gold.xnb</Output>
-      <Time>2011-02-26T17:09:31.8584+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\tools\tex_tool_radar_screen_gold.xnb</Output>
+      <Time>2011-03-10T21:35:57.7288095+01:00</Time>
     </Item>
     <Item>
       <Source>tools\tex_tool_radar_flash.png</Source>
@@ -484,8 +484,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\tools\tex_tool_radar_flash.xnb</Output>
-      <Time>2011-02-26T17:09:31.9676+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\tools\tex_tool_radar_flash.xnb</Output>
+      <Time>2011-03-10T21:35:57.7398101+01:00</Time>
     </Item>
     <Item>
       <Source>blocks\tex_block_bank_back_blue.png</Source>
@@ -493,8 +493,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\blocks\tex_block_bank_back_blue.xnb</Output>
-      <Time>2011-02-26T17:09:37.958+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\blocks\tex_block_bank_back_blue.xnb</Output>
+      <Time>2011-03-10T21:36:03.8461594+01:00</Time>
     </Item>
     <Item>
       <Source>blocks\tex_block_bank_back_red.png</Source>
@@ -502,8 +502,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\blocks\tex_block_bank_back_red.xnb</Output>
-      <Time>2011-02-26T17:09:37.8488+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\blocks\tex_block_bank_back_red.xnb</Output>
+      <Time>2011-03-10T21:36:03.8181578+01:00</Time>
     </Item>
     <Item>
       <Source>blocks\tex_block_bank_front_blue.png</Source>
@@ -511,8 +511,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\blocks\tex_block_bank_front_blue.xnb</Output>
-      <Time>2011-02-26T17:09:38.2232+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\blocks\tex_block_bank_front_blue.xnb</Output>
+      <Time>2011-03-10T21:36:03.9281641+01:00</Time>
     </Item>
     <Item>
       <Source>blocks\tex_block_bank_front_red.png</Source>
@@ -520,8 +520,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\blocks\tex_block_bank_front_red.xnb</Output>
-      <Time>2011-02-26T17:09:38.0828+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\blocks\tex_block_bank_front_red.xnb</Output>
+      <Time>2011-03-10T21:36:03.8991624+01:00</Time>
     </Item>
     <Item>
       <Source>blocks\tex_block_bank_left_blue.png</Source>
@@ -529,8 +529,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\blocks\tex_block_bank_left_blue.xnb</Output>
-      <Time>2011-02-26T17:09:37.9112+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\blocks\tex_block_bank_left_blue.xnb</Output>
+      <Time>2011-03-10T21:36:03.8331586+01:00</Time>
     </Item>
     <Item>
       <Source>blocks\tex_block_bank_left_red.png</Source>
@@ -538,8 +538,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\blocks\tex_block_bank_left_red.xnb</Output>
-      <Time>2011-02-26T17:09:37.7552+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\blocks\tex_block_bank_left_red.xnb</Output>
+      <Time>2011-03-10T21:36:03.7821557+01:00</Time>
     </Item>
     <Item>
       <Source>blocks\tex_block_bank_right_blue.png</Source>
@@ -547,8 +547,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\blocks\tex_block_bank_right_blue.xnb</Output>
-      <Time>2011-02-26T17:09:38.0984+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\blocks\tex_block_bank_right_blue.xnb</Output>
+      <Time>2011-03-10T21:36:03.9041627+01:00</Time>
     </Item>
     <Item>
       <Source>blocks\tex_block_bank_right_red.png</Source>
@@ -556,8 +556,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\blocks\tex_block_bank_right_red.xnb</Output>
-      <Time>2011-02-26T17:09:37.5524+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\blocks\tex_block_bank_right_red.xnb</Output>
+      <Time>2011-03-10T21:36:03.7481538+01:00</Time>
     </Item>
     <Item>
       <Source>blocks\tex_block_bank_top_blue.png</Source>
@@ -565,8 +565,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\blocks\tex_block_bank_top_blue.xnb</Output>
-      <Time>2011-02-26T17:09:37.5992+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\blocks\tex_block_bank_top_blue.xnb</Output>
+      <Time>2011-03-10T21:36:03.7631546+01:00</Time>
     </Item>
     <Item>
       <Source>blocks\tex_block_bank_top_red.png</Source>
@@ -574,8 +574,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\blocks\tex_block_bank_top_red.xnb</Output>
-      <Time>2011-02-26T17:09:38.192+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\blocks\tex_block_bank_top_red.xnb</Output>
+      <Time>2011-03-10T21:36:03.9231638+01:00</Time>
     </Item>
     <Item>
       <Source>icons\tex_icon_bank_blue.png</Source>
@@ -583,8 +583,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\icons\tex_icon_bank_blue.xnb</Output>
-      <Time>2011-02-26T17:09:34.1984+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\icons\tex_icon_bank_blue.xnb</Output>
+      <Time>2011-03-10T21:36:00.9999966+01:00</Time>
     </Item>
     <Item>
       <Source>icons\tex_icon_bank_red.png</Source>
@@ -592,8 +592,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\icons\tex_icon_bank_red.xnb</Output>
-      <Time>2011-02-26T17:09:33.9644+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\icons\tex_icon_bank_red.xnb</Output>
+      <Time>2011-03-10T21:36:00.9779953+01:00</Time>
     </Item>
     <Item>
       <Source>icons\tex_icon_explosive.png</Source>
@@ -601,8 +601,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\icons\tex_icon_explosive.xnb</Output>
-      <Time>2011-02-26T17:09:34.0892+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\icons\tex_icon_explosive.xnb</Output>
+      <Time>2011-03-10T21:36:00.9929962+01:00</Time>
     </Item>
     <Item>
       <Source>icons\tex_icon_jump.png</Source>
@@ -610,8 +610,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\icons\tex_icon_jump.xnb</Output>
-      <Time>2011-02-26T17:09:34.058+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\icons\tex_icon_jump.xnb</Output>
+      <Time>2011-03-10T21:36:00.9889959+01:00</Time>
     </Item>
     <Item>
       <Source>icons\tex_icon_ladder.png</Source>
@@ -619,8 +619,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\icons\tex_icon_ladder.xnb</Output>
-      <Time>2011-02-26T17:09:34.0424+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\icons\tex_icon_ladder.xnb</Output>
+      <Time>2011-03-10T21:36:00.9869958+01:00</Time>
     </Item>
     <Item>
       <Source>icons\tex_icon_solid_blue.png</Source>
@@ -628,8 +628,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\icons\tex_icon_solid_blue.xnb</Output>
-      <Time>2011-02-26T17:09:34.1204+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\icons\tex_icon_solid_blue.xnb</Output>
+      <Time>2011-03-10T21:36:00.9969964+01:00</Time>
     </Item>
     <Item>
       <Source>icons\tex_icon_solid_red.png</Source>
@@ -637,8 +637,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\icons\tex_icon_solid_red.xnb</Output>
-      <Time>2011-02-26T17:09:33.9176+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\icons\tex_icon_solid_red.xnb</Output>
+      <Time>2011-03-10T21:36:00.972995+01:00</Time>
     </Item>
     <Item>
       <Source>icons\tex_icon_spikes.png</Source>
@@ -646,8 +646,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\icons\tex_icon_spikes.xnb</Output>
-      <Time>2011-02-26T17:09:34.1204+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\icons\tex_icon_spikes.xnb</Output>
+      <Time>2011-03-10T21:36:00.9949963+01:00</Time>
     </Item>
     <Item>
       <Source>icons\tex_icon_teleporter.png</Source>
@@ -655,8 +655,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\icons\tex_icon_teleporter.xnb</Output>
-      <Time>2011-02-26T17:09:33.98+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\icons\tex_icon_teleporter.xnb</Output>
+      <Time>2011-03-10T21:36:00.9799954+01:00</Time>
     </Item>
     <Item>
       <Source>icons\tex_icon_translucent_blue.png</Source>
@@ -664,8 +664,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\icons\tex_icon_translucent_blue.xnb</Output>
-      <Time>2011-02-26T17:09:34.0268+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\icons\tex_icon_translucent_blue.xnb</Output>
+      <Time>2011-03-10T21:36:00.9839957+01:00</Time>
     </Item>
     <Item>
       <Source>icons\tex_icon_translucent_red.png</Source>
@@ -673,8 +673,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\icons\tex_icon_translucent_red.xnb</Output>
-      <Time>2011-02-26T17:09:34.0736+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\icons\tex_icon_translucent_red.xnb</Output>
+      <Time>2011-03-10T21:36:00.9909961+01:00</Time>
     </Item>
     <Item>
       <Source>tools\tex_tool_build.png</Source>
@@ -682,8 +682,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\tools\tex_tool_build.xnb</Output>
-      <Time>2011-02-26T17:09:31.9208+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\tools\tex_tool_build.xnb</Output>
+      <Time>2011-03-10T21:35:57.7338098+01:00</Time>
     </Item>
     <Item>
       <Source>tools\tex_tool_build_blast.png</Source>
@@ -691,8 +691,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\tools\tex_tool_build_blast.xnb</Output>
-      <Time>2011-02-26T17:09:31.7492+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\tools\tex_tool_build_blast.xnb</Output>
+      <Time>2011-03-10T21:35:57.719809+01:00</Time>
     </Item>
     <Item>
       <Source>tools\tex_tool_build_charge.png</Source>
@@ -700,8 +700,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\tools\tex_tool_build_charge.xnb</Output>
-      <Time>2011-02-26T17:09:31.9832+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\tools\tex_tool_build_charge.xnb</Output>
+      <Time>2011-03-10T21:35:57.7418102+01:00</Time>
     </Item>
     <Item>
       <Source>tools\tex_tool_build_smoke.png</Source>
@@ -709,8 +709,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\tools\tex_tool_build_smoke.xnb</Output>
-      <Time>2011-02-26T17:09:31.9052+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\tools\tex_tool_build_smoke.xnb</Output>
+      <Time>2011-03-10T21:35:57.7308096+01:00</Time>
     </Item>
     <Item>
       <Source>icons\tex_icon_deconstruction.png</Source>
@@ -718,8 +718,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\icons\tex_icon_deconstruction.xnb</Output>
-      <Time>2011-02-26T17:09:34.2296+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\icons\tex_icon_deconstruction.xnb</Output>
+      <Time>2011-03-10T21:36:01.0039968+01:00</Time>
     </Item>
     <Item>
       <Source>blocks\tex_block_teleporter_a.png</Source>
@@ -727,8 +727,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\blocks\tex_block_teleporter_a.xnb</Output>
-      <Time>2011-02-26T17:09:37.8488+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\blocks\tex_block_teleporter_a.xnb</Output>
+      <Time>2011-03-10T21:36:03.7981566+01:00</Time>
     </Item>
     <Item>
       <Source>blocks\tex_block_teleporter_b.png</Source>
@@ -736,8 +736,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\blocks\tex_block_teleporter_b.xnb</Output>
-      <Time>2011-02-26T17:09:37.88+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\blocks\tex_block_teleporter_b.xnb</Output>
+      <Time>2011-03-10T21:36:03.822158+01:00</Time>
     </Item>
     <Item>
       <Source>blocks\tex_block_teleporter_bottom.png</Source>
@@ -745,8 +745,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\blocks\tex_block_teleporter_bottom.xnb</Output>
-      <Time>2011-02-26T17:09:37.646+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\blocks\tex_block_teleporter_bottom.xnb</Output>
+      <Time>2011-03-10T21:36:03.7741552+01:00</Time>
     </Item>
     <Item>
       <Source>blocks\tex_block_teleporter_top.png</Source>
@@ -754,8 +754,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\blocks\tex_block_teleporter_top.xnb</Output>
-      <Time>2011-02-26T17:09:38.0048+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\blocks\tex_block_teleporter_top.xnb</Output>
+      <Time>2011-03-10T21:36:03.85716+01:00</Time>
     </Item>
     <Item>
       <Source>blocks\tex_block_lava.png</Source>
@@ -763,8 +763,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\blocks\tex_block_lava.xnb</Output>
-      <Time>2011-02-26T17:09:38.1764+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\blocks\tex_block_lava.xnb</Output>
+      <Time>2011-03-10T21:36:03.9171634+01:00</Time>
     </Item>
     <Item>
       <Source>blocks\tex_block_jump.png</Source>
@@ -772,8 +772,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\blocks\tex_block_jump.xnb</Output>
-      <Time>2011-02-26T17:09:38.0516+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\blocks\tex_block_jump.xnb</Output>
+      <Time>2011-03-10T21:36:03.8661605+01:00</Time>
     </Item>
     <Item>
       <Source>blocks\tex_block_jump_top.png</Source>
@@ -781,8 +781,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\blocks\tex_block_jump_top.xnb</Output>
-      <Time>2011-02-26T17:09:37.9268+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\blocks\tex_block_jump_top.xnb</Output>
+      <Time>2011-03-10T21:36:03.8361588+01:00</Time>
     </Item>
     <Item>
       <Source>blocks\tex_block_road.png</Source>
@@ -790,8 +790,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\blocks\tex_block_road.xnb</Output>
-      <Time>2011-02-26T17:09:37.8332+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\blocks\tex_block_road.xnb</Output>
+      <Time>2011-03-10T21:36:03.7961565+01:00</Time>
     </Item>
     <Item>
       <Source>ui\tex_radar_player_above.png</Source>
@@ -799,8 +799,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\ui\tex_radar_player_above.xnb</Output>
-      <Time>2011-02-26T17:09:39.2216+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\ui\tex_radar_player_above.xnb</Output>
+      <Time>2011-03-10T21:36:03.9851673+01:00</Time>
     </Item>
     <Item>
       <Source>ui\tex_radar_player_below.png</Source>
@@ -808,8 +808,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\ui\tex_radar_player_below.xnb</Output>
-      <Time>2011-02-26T17:09:39.206+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\ui\tex_radar_player_below.xnb</Output>
+      <Time>2011-03-10T21:36:03.9831672+01:00</Time>
     </Item>
     <Item>
       <Source>ui\tex_radar_player_ping.png</Source>
@@ -817,8 +817,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\ui\tex_radar_player_ping.xnb</Output>
-      <Time>2011-02-26T17:09:39.362+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\ui\tex_radar_player_ping.xnb</Output>
+      <Time>2011-03-10T21:36:03.9871674+01:00</Time>
     </Item>
     <Item>
       <Source>ui\tex_radar_player_same.png</Source>
@@ -826,8 +826,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\ui\tex_radar_player_same.xnb</Output>
-      <Time>2011-02-26T17:09:39.4556+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\ui\tex_radar_player_same.xnb</Output>
+      <Time>2011-03-10T21:36:03.9961679+01:00</Time>
     </Item>
     <Item>
       <Source>blocks\tex_block_beacon_top_blue.png</Source>
@@ -835,8 +835,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\blocks\tex_block_beacon_top_blue.xnb</Output>
-      <Time>2011-02-26T17:09:37.7864+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\blocks\tex_block_beacon_top_blue.xnb</Output>
+      <Time>2011-03-10T21:36:03.787156+01:00</Time>
     </Item>
     <Item>
       <Source>blocks\tex_block_beacon_top_red.png</Source>
@@ -844,8 +844,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\blocks\tex_block_beacon_top_red.xnb</Output>
-      <Time>2011-02-26T17:09:37.5836+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\blocks\tex_block_beacon_top_red.xnb</Output>
+      <Time>2011-03-10T21:36:03.7601544+01:00</Time>
     </Item>
     <Item>
       <Source>icons\tex_icon_beacon.png</Source>
@@ -853,8 +853,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\icons\tex_icon_beacon.xnb</Output>
-      <Time>2011-02-26T17:09:34.0112+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\icons\tex_icon_beacon.xnb</Output>
+      <Time>2011-03-10T21:36:00.9819955+01:00</Time>
     </Item>
     <Item>
       <Source>icons\tex_icon_road.png</Source>
@@ -862,8 +862,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\icons\tex_icon_road.xnb</Output>
-      <Time>2011-02-26T17:09:33.9332+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\icons\tex_icon_road.xnb</Output>
+      <Time>2011-03-10T21:36:00.9759952+01:00</Time>
     </Item>
     <Item>
       <Source>ui\tex_radar_north.png</Source>
@@ -871,8 +871,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\ui\tex_radar_north.xnb</Output>
-      <Time>2011-02-26T17:09:39.4088+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\ui\tex_radar_north.xnb</Output>
+      <Time>2011-03-10T21:36:03.9921677+01:00</Time>
     </Item>
     <Item>
       <Source>menus\tex_menu_settings.png</Source>
@@ -880,8 +880,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\menus\tex_menu_settings.xnb</Output>
-      <Time>2011-02-26T17:09:29.534+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\menus\tex_menu_settings.xnb</Output>
+      <Time>2011-03-10T21:35:57.5077968+01:00</Time>
     </Item>
     <Item>
       <Source>blocks\tex_block_road_top.png</Source>
@@ -889,8 +889,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\blocks\tex_block_road_top.xnb</Output>
-      <Time>2011-02-26T17:09:37.6304+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\blocks\tex_block_road_top.xnb</Output>
+      <Time>2011-03-10T21:36:03.7721551+01:00</Time>
     </Item>
     <Item>
       <Source>blocks\tex_block_road_bottom.png</Source>
@@ -898,8 +898,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\blocks\tex_block_road_bottom.xnb</Output>
-      <Time>2011-02-26T17:09:38.0204+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\blocks\tex_block_road_bottom.xnb</Output>
+      <Time>2011-03-10T21:36:03.8591601+01:00</Time>
     </Item>
     <Item>
       <Source>blocks\tex_block_adminblock.png</Source>
@@ -907,8 +907,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\blocks\tex_block_adminblock.xnb</Output>
-      <Time>2011-02-26T17:09:37.568+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\blocks\tex_block_adminblock.xnb</Output>
+      <Time>2011-03-10T21:36:03.7571543+01:00</Time>
     </Item>
     <Item>
       <Source>blocks\tex_block_grass.png</Source>
@@ -916,8 +916,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\blocks\tex_block_grass.xnb</Output>
-      <Time>2011-02-26T17:09:37.7708+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\blocks\tex_block_grass.xnb</Output>
+      <Time>2011-03-10T21:36:03.7851559+01:00</Time>
     </Item>
     <Item>
       <Source>blocks\tex_block_grass_side.png</Source>
@@ -925,8 +925,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\blocks\tex_block_grass_side.xnb</Output>
-      <Time>2011-02-26T17:09:38.1608+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\blocks\tex_block_grass_side.xnb</Output>
+      <Time>2011-03-10T21:36:03.9211637+01:00</Time>
     </Item>
     <Item>
       <Source>icons\tex_icon_lava.png</Source>
@@ -934,8 +934,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\icons\tex_icon_lava.xnb</Output>
-      <Time>2011-02-26T17:09:34.214+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\icons\tex_icon_lava.xnb</Output>
+      <Time>2011-03-10T21:36:01.0019967+01:00</Time>
     </Item>
     <Item>
       <Source>tools\tex_tool_drill_blue.png</Source>
@@ -943,8 +943,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\tools\tex_tool_drill_blue.xnb</Output>
-      <Time>2011-02-26T17:09:32.03+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\tools\tex_tool_drill_blue.xnb</Output>
+      <Time>2011-03-10T21:35:57.7468105+01:00</Time>
     </Item>
     <Item>
       <Source>tools\tex_tool_drill_red.png</Source>
@@ -952,8 +952,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\tools\tex_tool_drill_red.xnb</Output>
-      <Time>2011-02-26T17:09:31.952+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\tools\tex_tool_drill_red.xnb</Output>
+      <Time>2011-03-10T21:35:57.73781+01:00</Time>
     </Item>
     <Item>
       <Source>menus\tex_menu_help_blue.png</Source>
@@ -961,8 +961,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\menus\tex_menu_help_blue.xnb</Output>
-      <Time>2011-02-26T17:09:29.456+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\menus\tex_menu_help_blue.xnb</Output>
+      <Time>2011-03-10T21:35:57.4957961+01:00</Time>
     </Item>
     <Item>
       <Source>menus\tex_menu_help_red.png</Source>
@@ -970,8 +970,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\menus\tex_menu_help_red.xnb</Output>
-      <Time>2011-02-26T17:09:29.5652+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\menus\tex_menu_help_red.xnb</Output>
+      <Time>2011-03-10T21:35:57.5147972+01:00</Time>
     </Item>
     <Item>
       <Source>blocks\tex_block_spring.png</Source>
@@ -979,8 +979,8 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\blocks\tex_block_spring.xnb</Output>
-      <Time>2011-03-03T11:20:10.3107+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\blocks\tex_block_spring.xnb</Output>
+      <Time>2011-03-10T21:36:03.7511539+01:00</Time>
     </Item>
     <Item>
       <Source>blocks\tex_block_trans_water.png</Source>
@@ -988,8 +988,53 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\blocks\tex_block_trans_water.xnb</Output>
-      <Time>2011-03-03T11:20:49.9657+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\blocks\tex_block_trans_water.xnb</Output>
+      <Time>2011-03-10T21:36:03.8271583+01:00</Time>
+    </Item>
+    <Item>
+      <Source>blocks\tex_block_tree_side.PNG</Source>
+      <Name>blocks\tex_block_tree_side</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>F:\mw2\trunk\Output\debug\Content\blocks\tex_block_tree_side.xnb</Output>
+      <Time>2011-03-10T21:36:03.8501596+01:00</Time>
+    </Item>
+    <Item>
+      <Source>blocks\tex_block_tree_top.png</Source>
+      <Name>blocks\tex_block_tree_top</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>F:\mw2\trunk\Output\debug\Content\blocks\tex_block_tree_top.xnb</Output>
+      <Time>2011-03-10T21:36:03.7891561+01:00</Time>
+    </Item>
+    <Item>
+      <Source>blocks\tex_block_tree_leaves.png</Source>
+      <Name>blocks\tex_block_tree_leaves</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>F:\mw2\trunk\Output\debug\Content\blocks\tex_block_tree_leaves.xnb</Output>
+      <Time>2011-03-10T21:36:03.9321643+01:00</Time>
+    </Item>
+    <Item>
+      <Source>blocks\tex_block_lamp.png</Source>
+      <Name>blocks\tex_block_lamp</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>F:\mw2\trunk\Output\debug\Content\blocks\tex_block_lamp.xnb</Output>
+      <Time>2011-03-10T21:36:03.8291584+01:00</Time>
+    </Item>
+    <Item>
+      <Source>menus\tex_menu_error.png</Source>
+      <Name>menus\tex_menu_error</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+      <Options>None</Options>
+      <Output>F:\mw2\trunk\Output\debug\Content\menus\tex_menu_error.xnb</Output>
+      <Time>2011-03-10T21:35:57.475795+01:00</Time>
     </Item>
     <Item>
       <Source>04b08.spritefont</Source>
@@ -997,8 +1042,8 @@
       <Importer>FontDescriptionImporter</Importer>
       <Processor>FontDescriptionProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\font_04b08.xnb</Output>
-      <Time>2011-02-26T17:09:39.5804+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\font_04b08.xnb</Output>
+      <Time>2011-03-10T21:36:04.0161691+01:00</Time>
     </Item>
     <Item>
       <Source>04b03b.spritefont</Source>
@@ -1006,8 +1051,8 @@
       <Importer>FontDescriptionImporter</Importer>
       <Processor>FontDescriptionProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\font_04b03b.xnb</Output>
-      <Time>2011-02-26T17:09:39.5804+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\font_04b03b.xnb</Output>
+      <Time>2011-03-10T21:36:04.014169+01:00</Time>
     </Item>
     <Item>
       <Source>sounds\build.wav</Source>
@@ -1018,8 +1063,8 @@
         <Data Key="Quality">Low</Data>
       </Parameters>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\sounds\build.xnb</Output>
-      <Time>2011-02-26T17:09:35.4776+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\sounds\build.xnb</Output>
+      <Time>2011-03-10T21:36:02.5940878+01:00</Time>
     </Item>
     <Item>
       <Source>sounds\cash.wav</Source>
@@ -1030,8 +1075,8 @@
         <Data Key="Quality">Low</Data>
       </Parameters>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\sounds\cash.xnb</Output>
-      <Time>2011-02-26T17:09:35.6336+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\sounds\cash.xnb</Output>
+      <Time>2011-03-10T21:36:02.615089+01:00</Time>
     </Item>
     <Item>
       <Source>sounds\click-loud.wav</Source>
@@ -1042,8 +1087,8 @@
         <Data Key="Quality">Low</Data>
       </Parameters>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\sounds\click-loud.xnb</Output>
-      <Time>2011-02-26T17:09:35.3528+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\sounds\click-loud.xnb</Output>
+      <Time>2011-03-10T21:36:02.5740866+01:00</Time>
     </Item>
     <Item>
       <Source>sounds\click-quiet.wav</Source>
@@ -1054,8 +1099,8 @@
         <Data Key="Quality">Low</Data>
       </Parameters>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\sounds\click-quiet.xnb</Output>
-      <Time>2011-02-26T17:09:35.618+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\sounds\click-quiet.xnb</Output>
+      <Time>2011-03-10T21:36:02.6130888+01:00</Time>
     </Item>
     <Item>
       <Source>sounds\death.wav</Source>
@@ -1066,8 +1111,8 @@
         <Data Key="Quality">Low</Data>
       </Parameters>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\sounds\death.xnb</Output>
-      <Time>2011-02-26T17:09:35.3216+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\sounds\death.xnb</Output>
+      <Time>2011-03-10T21:36:02.5650861+01:00</Time>
     </Item>
     <Item>
       <Source>sounds\dig-dirt.wav</Source>
@@ -1078,8 +1123,8 @@
         <Data Key="Quality">Low</Data>
       </Parameters>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\sounds\dig-dirt.xnb</Output>
-      <Time>2011-02-26T17:09:35.5244+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\sounds\dig-dirt.xnb</Output>
+      <Time>2011-03-10T21:36:02.6040883+01:00</Time>
     </Item>
     <Item>
       <Source>sounds\dig-metal.wav</Source>
@@ -1090,8 +1135,8 @@
         <Data Key="Quality">Low</Data>
       </Parameters>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\sounds\dig-metal.xnb</Output>
-      <Time>2011-02-26T17:09:35.54+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\sounds\dig-metal.xnb</Output>
+      <Time>2011-03-10T21:36:02.6060884+01:00</Time>
     </Item>
     <Item>
       <Source>sounds\explosion.wav</Source>
@@ -1102,8 +1147,8 @@
         <Data Key="Quality">Low</Data>
       </Parameters>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\sounds\explosion.xnb</Output>
-      <Time>2011-02-26T17:09:35.6492+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\sounds\explosion.xnb</Output>
+      <Time>2011-03-10T21:36:02.6170891+01:00</Time>
     </Item>
     <Item>
       <Source>sounds\hitground.wav</Source>
@@ -1114,8 +1159,8 @@
         <Data Key="Quality">Low</Data>
       </Parameters>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\sounds\hitground.xnb</Output>
-      <Time>2011-02-26T17:09:35.5088+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\sounds\hitground.xnb</Output>
+      <Time>2011-03-10T21:36:02.6020882+01:00</Time>
     </Item>
     <Item>
       <Source>sounds\jumpblock.wav</Source>
@@ -1126,8 +1171,8 @@
         <Data Key="Quality">Low</Data>
       </Parameters>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\sounds\jumpblock.xnb</Output>
-      <Time>2011-02-26T17:09:35.3372+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\sounds\jumpblock.xnb</Output>
+      <Time>2011-03-10T21:36:02.5690863+01:00</Time>
     </Item>
     <Item>
       <Source>sounds\ping.wav</Source>
@@ -1138,8 +1183,8 @@
         <Data Key="Quality">Low</Data>
       </Parameters>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\sounds\ping.xnb</Output>
-      <Time>2011-02-26T17:09:35.4464+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\sounds\ping.xnb</Output>
+      <Time>2011-03-10T21:36:02.5840872+01:00</Time>
     </Item>
     <Item>
       <Source>sounds\switch.wav</Source>
@@ -1150,8 +1195,8 @@
         <Data Key="Quality">Low</Data>
       </Parameters>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\sounds\switch.xnb</Output>
-      <Time>2011-02-26T17:09:35.4932+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\sounds\switch.xnb</Output>
+      <Time>2011-03-10T21:36:02.598088+01:00</Time>
     </Item>
     <Item>
       <Source>sounds\teleport.wav</Source>
@@ -1162,8 +1207,8 @@
         <Data Key="Quality">Low</Data>
       </Parameters>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\sounds\teleport.xnb</Output>
-      <Time>2011-02-26T17:09:35.462+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\sounds\teleport.xnb</Output>
+      <Time>2011-03-10T21:36:02.5890875+01:00</Time>
     </Item>
     <Item>
       <Source>sounds\radar-high.wav</Source>
@@ -1174,8 +1219,8 @@
         <Data Key="Quality">Low</Data>
       </Parameters>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\sounds\radar-high.xnb</Output>
-      <Time>2011-02-26T17:09:35.6024+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\sounds\radar-high.xnb</Output>
+      <Time>2011-03-10T21:36:02.6100887+01:00</Time>
     </Item>
     <Item>
       <Source>sounds\radar-low.wav</Source>
@@ -1186,8 +1231,8 @@
         <Data Key="Quality">Low</Data>
       </Parameters>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\sounds\radar-low.xnb</Output>
-      <Time>2011-02-26T17:09:35.4308+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\sounds\radar-low.xnb</Output>
+      <Time>2011-03-10T21:36:02.5790869+01:00</Time>
     </Item>
     <Item>
       <Source>song_title.mp3</Source>
@@ -1195,89 +1240,44 @@
       <Importer>Mp3Importer</Importer>
       <Processor>SongProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\song_title.xnb</Output>
-      <Extra>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\song_title.wma</Extra>
-      <Time>2011-02-26T17:09:39.6428+01:00</Time>
-    </Item>
-    <Item>
-      <Source>blocks\tex_block_tree_side.PNG</Source>
-      <Name>blocks\tex_block_tree_side</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-      <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\blocks\tex_block_tree_side.xnb</Output>
-      <Time>2011-03-02T14:29:26.28845+01:00</Time>
-    </Item>
-    <Item>
-      <Source>blocks\tex_block_tree_top.png</Source>
-      <Name>blocks\tex_block_tree_top</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-      <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\blocks\tex_block_tree_top.xnb</Output>
-      <Time>2011-03-02T14:29:38.89045+01:00</Time>
-    </Item>
-    <Item>
-      <Source>blocks\tex_block_tree_leaves.png</Source>
-      <Name>blocks\tex_block_tree_leaves</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-      <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\blocks\tex_block_tree_leaves.xnb</Output>
-      <Time>2011-03-09T09:08:54.681+01:00</Time>
-    </Item>
-    <Item>
-      <Source>blocks\tex_block_lamp.png</Source>
-      <Name>blocks\tex_block_lamp</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-      <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\blocks\tex_block_lamp.xnb</Output>
-      <Time>2011-03-09T09:08:54.6654+01:00</Time>
-    </Item>
-    <Item>
-      <Source>menus\tex_menu_error.png</Source>
-      <Name>menus\tex_menu_error</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-      <Options>None</Options>
-      <Output>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\menus\tex_menu_error.xnb</Output>
-      <Time>2011-03-09T10:05:31.77855+01:00</Time>
+      <Output>F:\mw2\trunk\Output\debug\Content\song_title.xnb</Output>
+      <Extra>F:\mw2\trunk\Output\debug\Content\song_title.wma</Extra>
+      <Time>2011-03-10T21:36:04.0211694+01:00</Time>
     </Item>
     <BuildSuccessful>true</BuildSuccessful>
     <Settings>
       <TargetPlatform>Windows</TargetPlatform>
       <BuildConfiguration>Debug</BuildConfiguration>
       <CompressContent>false</CompressContent>
-      <RootDirectory>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\InfiniminerClient\Content\</RootDirectory>
-      <LoggerRootDirectory>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\InfiniminerClient\</LoggerRootDirectory>
-      <IntermediateDirectory>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\InfiniminerClient\Content\obj\x86\Debug\</IntermediateDirectory>
-      <OutputDirectory>C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\Output\debug\Content\</OutputDirectory>
+      <RootDirectory>F:\mw2\trunk\InfiniminerClient\Content\</RootDirectory>
+      <LoggerRootDirectory>F:\mw2\trunk\InfiniminerClient\</LoggerRootDirectory>
+      <IntermediateDirectory>F:\mw2\trunk\InfiniminerClient\Content\obj\x86\Debug\</IntermediateDirectory>
+      <OutputDirectory>F:\mw2\trunk\Output\debug\Content\</OutputDirectory>
     </Settings>
     <Assemblies>
       <Assembly>
         <Key>C:\Program Files (x86)\Microsoft XNA\XNA Game Studio\v3.0\References\Windows\x86\Microsoft.Xna.Framework.Content.Pipeline.XImporter.dll</Key>
-        <Value>2009-05-14T12:13:52+02:00</Value>
+        <Value>2009-05-14T11:13:52+02:00</Value>
       </Assembly>
       <Assembly>
         <Key>C:\Program Files (x86)\Microsoft XNA\XNA Game Studio\v3.0\References\Windows\x86\Microsoft.Xna.Framework.Content.Pipeline.TextureImporter.dll</Key>
-        <Value>2009-05-14T12:13:52+02:00</Value>
+        <Value>2009-05-14T11:13:52+02:00</Value>
       </Assembly>
       <Assembly>
         <Key>C:\Program Files (x86)\Microsoft XNA\XNA Game Studio\v3.0\References\Windows\x86\Microsoft.Xna.Framework.Content.Pipeline.FBXImporter.dll</Key>
-        <Value>2009-05-14T12:13:52+02:00</Value>
+        <Value>2009-05-14T11:13:52+02:00</Value>
       </Assembly>
       <Assembly>
         <Key>C:\Program Files (x86)\Microsoft XNA\XNA Game Studio\v3.0\References\Windows\x86\Microsoft.Xna.Framework.Content.Pipeline.EffectImporter.dll</Key>
-        <Value>2009-05-14T12:13:52+02:00</Value>
+        <Value>2009-05-14T11:13:52+02:00</Value>
       </Assembly>
       <Assembly>
         <Key>C:\Program Files (x86)\Microsoft XNA\XNA Game Studio\v3.0\References\Windows\x86\Microsoft.Xna.Framework.Content.Pipeline.AudioImporters.dll</Key>
-        <Value>2009-05-14T12:13:52+02:00</Value>
+        <Value>2009-05-14T11:13:52+02:00</Value>
       </Assembly>
       <Assembly>
         <Key>C:\Windows\assembly\GAC_32\Microsoft.Xna.Framework.Content.Pipeline\3.0.0.0__6d5c3888ef60e27d\Microsoft.Xna.Framework.Content.Pipeline.dll</Key>
-        <Value>2010-11-08T21:22:45.32905+01:00</Value>
+        <Value>2010-09-09T01:02:39.8398613+02:00</Value>
       </Assembly>
     </Assemblies>
   </Asset>

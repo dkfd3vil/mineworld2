@@ -1,1 +1,2 @@
 C:\Users\Oeds\Desktop\Unsorted Stuff\Project Infiniminer\Public MW\branches\Experimentalbranch\InfiniminerClient\Content\obj\x86\Debug\ResolveAssemblyReference.cache
+F:\mw2\trunk\InfiniminerClient\Content\obj\x86\Debug\ResolveAssemblyReference.cache

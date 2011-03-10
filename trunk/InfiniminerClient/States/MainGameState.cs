@@ -48,7 +48,6 @@ namespace MineWorld.States
             _P.screenEffectCounter += gameTime.ElapsedGameTime.TotalSeconds;
 
             // Update engines.
-            _P.skyplaneEngine.Update(gameTime);
             _P.playerEngine.Update(gameTime);
             _P.particleEngine.Update(gameTime);
             _P.interfaceEngine.Update(gameTime);
@@ -436,7 +435,6 @@ namespace MineWorld.States
 
         public override void OnRenderAtUpdate(GraphicsDevice graphicsDevice, GameTime gameTime)
         {
-            _P.skyplaneEngine.Render(graphicsDevice);
             _P.playerEngine.Render(graphicsDevice);
             //_P.lightingEngine.Update(gameTime);
             _P.blockEngine.Render(graphicsDevice, gameTime);
