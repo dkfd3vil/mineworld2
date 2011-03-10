@@ -175,7 +175,7 @@ namespace MineWorld
             for (s = j; s < Defines.MAPSIZE; s++)
             {
                 BlockType blockatloc = blockList[i,s,k];
-                if (blockatloc != BlockType.None)
+                if (blockatloc != BlockType.None && blockatloc != BlockType.Leaves)
                 {
                     return false;
                 }

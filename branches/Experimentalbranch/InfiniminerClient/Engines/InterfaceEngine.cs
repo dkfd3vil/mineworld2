@@ -92,7 +92,7 @@ namespace MineWorld
             blockIcons[BlockType.Lava] = gameInstance.Content.Load<Texture2D>("icons/tex_icon_lava");
             blockIcons[BlockType.Road] = gameInstance.Content.Load<Texture2D>("icons/tex_icon_road");
             blockIcons[BlockType.None] = gameInstance.Content.Load<Texture2D>("icons/tex_icon_deconstruction");
-            blockIcons[BlockType.Lamp] = gameInstance.Content.Load<Texture2D>("icons/tex_icon_deconstruction");
+            blockIcons[BlockType.Lamp] = gameInstance.Content.Load<Texture2D>("icons/tex_icon_deconstruction"); // TODO Replace this placeholder
 
             // Load fonts.
             uiFont = gameInstance.Content.Load<SpriteFont>("font_04b08");

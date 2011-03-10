@@ -70,6 +70,7 @@
     <Compile Include="CaveGenerator.cs" />
     <Compile Include="ClientControl.cs" />
     <Compile Include="ClientSender.cs" />
+    <Compile Include="DayManager.cs" />
     <Compile Include="GameWorld.cs" />
     <Compile Include="InfiniminerNetServer.cs" />
     <Compile Include="InfiniminerServer.cs" />

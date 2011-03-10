@@ -118,6 +118,7 @@ namespace MineWorld
         Killed,                 // Send by the server to notify the player has been killed
         //KillPlayer,            // Send by the server to notify that the player has died
         //RespawnPlayer,         // vector 3 position, Send by the server to notify that the player has respawned
+        DayUpdate,              // float , Send by the server to notify the player how dark or light the game is
     }
 
     public enum PlayerCommands : byte

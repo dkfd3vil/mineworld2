@@ -143,7 +143,6 @@ namespace MineWorld
                     case NetMessageType.ConnectionRejected:
                         {
                             anyPacketsReceived = false;
-                            string message = "";
                             try
                             {
                                 string reason = msgBuffer.ReadString();
@@ -153,37 +152,44 @@ namespace MineWorld
                                     {
                                         case "bannedname":
                                             {
-                                                message = "Error: The name you choosed is banned from the server";
+                                                propertyBag.connectionerror = "Error: The name you choosed is banned from the server";
+                                                propertyBag.connectionerrornewstate = "MineWorld.States.SettingsState";
                                                 break;
                                             }
                                         case "noname":
                                             {
-                                                message = "Error: You didnt choose a name";
+                                                propertyBag.connectionerror = "Error: You didnt choose a name";
+                                                propertyBag.connectionerrornewstate = "MineWorld.States.SettingsState";
                                                 break;
                                             }
                                         case "changename":
                                             {
-                                                message = "Error: You need to change your name you cannot choose name (player)";
+                                                propertyBag.connectionerror = "Error: You need to change your name you cannot choose name (player)";
+                                                propertyBag.connectionerrornewstate = "MineWorld.States.SettingsState";
                                                 break;
                                             }
                                         case "versionwrong":
                                             {
-                                                message = "Error: Your client is out of date consider updating";
+                                                propertyBag.connectionerror = "Error: Your client is out of date consider updating";
+                                                propertyBag.connectionerrornewstate = "MineWorld.States.ServerBrowserState";
                                                 break;
                                             }
                                         case "banned":
                                             {
-                                                message = "Error: You are banned from this server";
+                                                propertyBag.connectionerror = "Error: You are banned from this server";
+                                                propertyBag.connectionerrornewstate = "MineWorld.States.ServerBrowserState";
                                                 break;
                                             }
                                         case "serverisfull":
                                             {
-                                                message = "Error: The server is full";
+                                                propertyBag.connectionerror = "Error: The server is full";
+                                                propertyBag.connectionerrornewstate = "MineWorld.States.ServerBrowserState";
                                                 break;
                                             }
                                         default:
                                             {
-                                                message = "Error: Unknow error";
+                                                propertyBag.connectionerror = "Error: Unknow error";
+                                                propertyBag.connectionerrornewstate = "MineWorld.States.ServerBrowserState";
                                                 break;
                                             }
                                     }
@@ -191,10 +197,10 @@ namespace MineWorld
                             }
                             catch 
                             {
-                                message = "Error: Unknow error";
+                                propertyBag.connectionerror = "Error: Unknow error";
+                                propertyBag.connectionerrornewstate = "MineWorld.States.SettingsState";
                             }
-                            MessageBox.Show(message);
-                            ChangeState("MineWorld.States.ServerBrowserState");
+                            ChangeState("MineWorld.States.ErrorState");
                         }
                         break;
 
@@ -253,6 +259,13 @@ namespace MineWorld
                                             }
                                         }
                                         break;
+
+                                    case MineWorldMessage.DayUpdate:
+                                        {
+                                            float light = msgBuffer.ReadFloat();
+                                            propertyBag.time = light;
+                                            break;
+                                        }
 
                                     case MineWorldMessage.SetBeacon:
                                         {

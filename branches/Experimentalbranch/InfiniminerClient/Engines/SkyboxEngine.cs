@@ -60,11 +60,19 @@ namespace MineWorld
 
         public void Render(GraphicsDevice graphicsDevice)
         {
-            graphicsDevice.Clear(Color.LightBlue);
             // If we don't have _P, grab it from the current gameInstance.
             // We can't do this in the constructor because we are created in the property bag's constructor!
             if (_P == null)
                 _P = gameInstance.propertyBag;
+
+            if (_P.time <= 1.0f && _P.time >= 0.5f)
+            {
+                graphicsDevice.Clear(Color.LightBlue);
+            }
+            else
+            {
+                graphicsDevice.Clear(Color.Black);
+            }
 
             // Draw the skybox.
             Matrix viewMatrix = _P.playerCamera.ViewMatrix;

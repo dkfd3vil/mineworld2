@@ -15,6 +15,7 @@ namespace MineWorld
     public partial class MineWorldServer
     {
         MineWorldNetServer netServer = null;
+        //DayManager dayManager = null;
         public Dictionary<NetConnection, IClient> playerList = new Dictionary<NetConnection, IClient>();
         public List<NetConnection> toGreet = new List<NetConnection>();
         public List<string> admins = new List<string>(); //List of strings with all the admins
@@ -100,6 +101,9 @@ namespace MineWorld
             //netServer.SimulatedLatencyVariance = 0.05f;
             //netServer.SimulatedLoss = 0.1f;
             //netServer.SimulatedDuplicates = 0.05f;
+
+            // Initialize the daymanager.
+            //dayManager = new DayManager();
 
             // Store the last time that we did a physics calculation.
             DateTime lastCalc = DateTime.Now;
@@ -187,6 +191,15 @@ namespace MineWorld
                     Sendhearthbeat();
                     lasthearthbeatsend = DateTime.Now;
                 }
+
+                //Check the time
+                //dayManager.Update();
+
+                // Look if the time is changed so that wel tell the clients
+                //if (dayManager.Timechanged())
+                //{
+                    //Senddaytimeupdate(dayManager.light);
+                //}
 
 
                 //Time to backup map?
@@ -609,18 +622,22 @@ namespace MineWorld
 
         public void KillPlayerSpecific(Player player)
         {
-            // Kill the player specific
-            NetBuffer msgBufferb = netServer.CreateBuffer();
-            msgBufferb.Write((byte)MineWorldMessage.Killed);
-            netServer.SendMessage(msgBufferb, player.NetConn, NetChannel.ReliableUnordered);
+            // Dont kill the player if he has godmode
+            if (player.godmode != true)
+            {
+                // Kill the player specific
+                NetBuffer msgBufferb = netServer.CreateBuffer();
+                msgBufferb.Write((byte)MineWorldMessage.Killed);
+                netServer.SendMessage(msgBufferb, player.NetConn, NetChannel.ReliableUnordered);
 
-            // Let all the other players know
-            NetBuffer msgBuffer = netServer.CreateBuffer();
-            msgBuffer.Write((byte)MineWorldMessage.PlayerDead);
-            msgBuffer.Write((uint)player.ID);
-            foreach (IClient iplayer in playerList.Values)
-                //if (netConn.Status == NetConnectionStatus.Connected)
-                iplayer.AddQueMsg(msgBuffer, NetChannel.ReliableInOrder2);
+                // Let all the other players know
+                NetBuffer msgBuffer = netServer.CreateBuffer();
+                msgBuffer.Write((byte)MineWorldMessage.PlayerDead);
+                msgBuffer.Write((uint)player.ID);
+                foreach (IClient iplayer in playerList.Values)
+                    //if (netConn.Status == NetConnectionStatus.Connected)
+                    iplayer.AddQueMsg(msgBuffer, NetChannel.ReliableInOrder2);
+            }
         }
 
         public void SendPlayerPosition(Player player)
@@ -885,6 +902,14 @@ namespace MineWorld
             foreach (IClient iplayer in playerList.Values)
                 //if (netConn.Status == NetConnectionStatus.Connected)
                 iplayer.AddQueMsg(msgBuffer, NetChannel.UnreliableInOrder15);
+        }
+
+        public void Senddaytimeupdate(float time)
+        {
+            NetBuffer msgBuffer = netServer.CreateBuffer();
+            msgBuffer.Write((byte)MineWorldMessage.DayUpdate);
+            foreach (IClient iplayer in playerList.Values)
+                iplayer.AddQueMsg(msgBuffer, NetChannel.ReliableInOrder14);
         }
     }
 }
