@@ -403,7 +403,7 @@ namespace MineWorld
             foreach (EffectPass pass in basicEffect.CurrentTechnique.Passes)
             {
                 pass.Begin();
-
+                graphicsDevice.RenderState.DepthBufferEnable = true;
                 if (renderTranslucent)
                 {
                     // TODO: Make translucent blocks look like we actually want them to look!
