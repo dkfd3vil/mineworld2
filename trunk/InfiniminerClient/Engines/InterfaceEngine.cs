@@ -483,7 +483,7 @@ namespace MineWorld
             }
             if (_P.screenEffect == ScreenEffect.Water)
             {
-                Color drawColor = new Color(0, 0, 1, 1 - (float)_P.screenEffectCounter);
+                Color drawColor = new Color(0.0f, 0.5f, 1.0f, 1.0f - (float)_P.screenEffectCounter);
                 spriteBatch.Draw(texBlank, new Rectangle(0, 0, graphicsDevice.Viewport.Width, graphicsDevice.Viewport.Height), drawColor);
                 if (_P.screenEffectCounter > 2)
                     _P.screenEffect = ScreenEffect.None;
