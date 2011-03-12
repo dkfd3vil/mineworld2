@@ -572,7 +572,15 @@ namespace MineWorld
             if (type2 != BlockType.None && type != BlockType.TransRed && type != BlockType.TransBlue && type2 != BlockType.TransRed && type2 != BlockType.TransBlue && type != BlockType.Water && type2 != BlockType.Water && type != BlockType.Leaves && type2 != BlockType.Leaves)
                 HideQuad((ushort)x2, (ushort)y2, (ushort)z2, dir2, type2);
             else
-                ShowQuad(x, y, z, dir, type);
+                if ((type2 == BlockType.Water || type2==BlockType.TransBlue || type2==BlockType.TransRed) && type2 == type)
+                {
+                    HideQuad(x, y, z, dir, type);
+                    HideQuad((ushort)x2, (ushort)y2, (ushort)z2, dir2, type);
+                }
+                else
+                {
+                    ShowQuad(x, y, z, dir, type);
+                }
         }
 
         public void AddBlock(ushort x, ushort y, ushort z, BlockType blockType)
