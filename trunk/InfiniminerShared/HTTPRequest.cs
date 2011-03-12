@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.IO;
 using System.Net;
+using Microsoft.Win32;
 
 namespace MineWorld
 {
@@ -11,7 +12,11 @@ namespace MineWorld
         public static string Post(string url, Dictionary<string, string> parameters)
         {
             WebRequest request = WebRequest.Create(url);
-            
+            RegistryKey IEsettings = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Internet Settings");
+            if ((int)IEsettings.GetValue("ProxyEnable") == 0)
+            {
+                request.Proxy = null;
+            }
             request.ContentType = "application/x-www-form-urlencoded";
             request.Method = "POST";
 
@@ -44,7 +49,11 @@ namespace MineWorld
             string paramString = EncodeParameters(parameters);
             if (paramString != "") url = url + "?" + paramString;
             WebRequest request = WebRequest.Create(url);
-            request.Proxy = null;
+            RegistryKey IEsettings = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Internet Settings");
+            if ((int)IEsettings.GetValue("ProxyEnable") == 0)
+            {
+                request.Proxy = null;
+            }
             return ReadResponse(request);
         }
 
