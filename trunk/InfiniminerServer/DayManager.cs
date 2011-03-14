@@ -13,8 +13,8 @@ namespace MineWorld
     public class DayManager
     {
         bool goingup = false;
-        public float light = 1;
-        float prevlight = 1;
+        public float light = 1f;
+        float prevlight = 1f;
         DateTime lastcalclight = DateTime.Now;
         public void Update()
         {

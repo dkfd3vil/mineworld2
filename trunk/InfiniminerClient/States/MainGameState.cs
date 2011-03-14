@@ -741,7 +741,7 @@ namespace MineWorld.States
             {
                 if (scrollDelta >= 120)
                 {
-                    Console.WriteLine("Handling input for scroll up...");
+                    //Console.WriteLine("Handling input for scroll up...");
                     HandleInput((_SM as MineWorldGame).keyBinds.GetBound(MouseButton.WheelUp));//.keyBinds.GetBound(button));
                 }
                 else if (scrollDelta <= -120)

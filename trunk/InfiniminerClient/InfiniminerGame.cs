@@ -252,10 +252,10 @@ namespace MineWorld
                                             }
                                             catch (Exception e)
                                             {
-                                                Console.OpenStandardError();
-                                                Console.Error.WriteLine(e.Message);
-                                                Console.Error.WriteLine(e.StackTrace);
-                                                Console.Error.Close();
+                                                //Console.OpenStandardError();
+                                                //Console.Error.WriteLine(e.Message);
+                                                //Console.Error.WriteLine(e.StackTrace);
+                                                //Console.Error.Close();
                                             }
                                         }
                                         break;
@@ -677,8 +677,9 @@ namespace MineWorld
                     temp.B = byte.Parse(data[2].Trim());
                     temp.A = (byte)255;
                 }
-                catch {
-                    Console.WriteLine("Invalid colour values for red");
+                catch 
+                {
+                    //Console.WriteLine("Invalid colour values for red");
                 }
                 if (temp.A != 0)
                 {
@@ -698,8 +699,9 @@ namespace MineWorld
                     temp.B = byte.Parse(data[2].Trim());
                     temp.A = (byte)255;
                 }
-                catch {
-                    Console.WriteLine("Invalid colour values for blue");
+                catch 
+                {
+                    //Console.WriteLine("Invalid colour values for blue");
                 }
                 if (temp.A != 0)
                 {
@@ -731,7 +733,7 @@ namespace MineWorld
                     }
                     else
                     {
-                        Console.WriteLine("Enum not defined for " + dataFile.Data[key] + ".");
+                        //Console.WriteLine("Enum not defined for " + dataFile.Data[key] + ".");
                     }
                 } catch { }
             }

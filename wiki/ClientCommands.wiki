@@ -21,3 +21,7 @@ These are the commands that are currently implented in the client
 /restart Restarts the server from the client
 
 /announce A server announce for all players
+
+/setday Speaks for itself
+
+/setnight Speak for itself

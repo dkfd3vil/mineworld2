@@ -15,7 +15,7 @@ namespace MineWorld
     public partial class MineWorldServer
     {
         MineWorldNetServer netServer = null;
-        DayManager dayManager = null;
+        public DayManager dayManager = null;
         public Dictionary<NetConnection, IClient> playerList = new Dictionary<NetConnection, IClient>();
         public List<NetConnection> toGreet = new List<NetConnection>();
         public List<string> admins = new List<string>(); //List of strings with all the admins
