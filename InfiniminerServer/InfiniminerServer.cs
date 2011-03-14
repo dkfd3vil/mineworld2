@@ -15,7 +15,7 @@ namespace MineWorld
     public partial class MineWorldServer
     {
         MineWorldNetServer netServer = null;
-        //DayManager dayManager = null;
+        DayManager dayManager = null;
         public Dictionary<NetConnection, IClient> playerList = new Dictionary<NetConnection, IClient>();
         public List<NetConnection> toGreet = new List<NetConnection>();
         public List<string> admins = new List<string>(); //List of strings with all the admins
@@ -29,6 +29,8 @@ namespace MineWorld
         public String serverIP;
         int frameCount = 100;
 
+        public bool StopFluids;
+
         bool keepRunning = true;
 
         // Server restarting variables.
@@ -41,6 +43,19 @@ namespace MineWorld
 
         public ServerSettings Ssettings = new ServerSettings();
         public MapSettings Msettings = new MapSettings();
+
+        //TODO Find a proper place
+        // Team variables
+        uint teamCashRed;
+        uint teamCashBlue;
+        uint teamOreRed;
+        uint teamOreBlue;
+        PlayerTeam winningTeam;
+
+        //TODO Find a proper place
+        // Fluids count
+        int Totallavablockcount;
+        int Totalwaterblockcount;
 
         public MineWorldServer()
         {
@@ -74,8 +89,12 @@ namespace MineWorld
             }
             return externalIp;
         }
+
         public bool Start()
         {
+            // Load the directory's.
+            LoadDirectorys();
+
             // Load the general-settings.
             LoadSettings();
 
@@ -91,6 +110,9 @@ namespace MineWorld
             // Load the bannednames-list.
             bannednames = LoadBannedNames();
 
+            // Load the team variables.
+            LoadTeamVariables();
+
             // Initialize the server.
             NetConfiguration netConfig = new NetConfiguration("MineWorldPlus");
             netConfig.MaxConnections = Ssettings.Maxplayers;
@@ -103,7 +125,7 @@ namespace MineWorld
             //netServer.SimulatedDuplicates = 0.05f;
 
             // Initialize the daymanager.
-            //dayManager = new DayManager();
+            dayManager = new DayManager();
 
             // Store the last time that we did a physics calculation.
             DateTime lastCalc = DateTime.Now;
@@ -117,7 +139,7 @@ namespace MineWorld
             }
             bool loaded = false;
             //Check if we should autoload a level
-            if (Ssettings.Autoload)
+            if (Ssettings.LevelName != "")
             {
                 ConsoleWrite("AUTOLOAD MAP");
                 blockList = new BlockType[Defines.MAPSIZE, Defines.MAPSIZE, Defines.MAPSIZE];
@@ -142,8 +164,8 @@ namespace MineWorld
 
             int tempblocks = Defines.MAPSIZE * Defines.MAPSIZE * Defines.MAPSIZE;
             ConsoleWrite("TOTAL BLOCKS = " + tempblocks.ToString("n0"));
-            ConsoleWrite("TOTAL LAVA BLOCKS = " + Msettings.Totallavablockcount);
-            ConsoleWrite("TOTAL WATER BLOCKS = " + Msettings.Totalwaterblockcount);
+            ConsoleWrite("TOTAL LAVA BLOCKS = " + Totallavablockcount);
+            ConsoleWrite("TOTAL WATER BLOCKS = " + Totalwaterblockcount);
 
             lastMapBackup = DateTime.Now;
             ServerListener listener = new ServerListener(netServer,this);
@@ -193,13 +215,13 @@ namespace MineWorld
                 }
 
                 //Check the time
-                //dayManager.Update();
+                dayManager.Update();
 
                 // Look if the time is changed so that wel tell the clients
-                //if (dayManager.Timechanged())
-                //{
-                    //Senddaytimeupdate(dayManager.light);
-                //}
+                if (dayManager.Timechanged())
+                {
+                    Senddaytimeupdate(dayManager.light);
+                }
 
 
                 //Time to backup map?
@@ -274,11 +296,6 @@ namespace MineWorld
 
         public void LoadSettings()
         {
-            Ssettings.StopFluids = false;
-            Ssettings.SettingsDir = "ServerConfigs";
-            Ssettings.LogsDir = "Logs";
-            Ssettings.BackupDir = "Backups";
-
             Datafile dataFile = new Datafile(Ssettings.SettingsDir + "/server.config.txt");
 
             if (dataFile.Data.ContainsKey("logs"))
@@ -320,14 +337,6 @@ namespace MineWorld
             {
                 Ssettings.Servername = "Default";
                 ConsoleWrite("Couldnt find servername setting so we use the default (Default)");
-            }
-
-            if (dataFile.Data.ContainsKey("autoload"))
-                Ssettings.Autoload = bool.Parse(dataFile.Data["autoload"]);
-            else
-            {
-                Ssettings.Autoload = false;
-                ConsoleWrite("Couldnt find autoload setting so we use the default (false)");
             }
 
             if (dataFile.Data.ContainsKey("levelname"))
@@ -381,8 +390,6 @@ namespace MineWorld
         public void LoadMapSettings()
         {
             ConsoleWrite("LOADING MAPSETTINGS");
-            Msettings.SettingsDir = "ServerConfigs";
-            Msettings.Includetrees = true;
 
             Datafile dataFile = new Datafile(Msettings.SettingsDir + "/map.config.txt");
 
@@ -451,7 +458,7 @@ namespace MineWorld
             }
 
             if (dataFile.Data.ContainsKey("waterspawns"))
-                Msettings.Winningcashamount = int.Parse(dataFile.Data["waterspawns"]);
+                Msettings.Waterspawns = int.Parse(dataFile.Data["waterspawns"]);
             else
             {
                 Msettings.Waterspawns = 0;
@@ -496,6 +503,23 @@ namespace MineWorld
             }*/
 
             ConsoleWrite("MAPSETTINGS LOADED");
+        }
+
+        public void LoadDirectorys()
+        {
+            Ssettings.SettingsDir = "ServerConfigs";
+            Ssettings.LogsDir = "Logs";
+            Ssettings.BackupDir = "Backups";
+            Msettings.SettingsDir = "ServerConfigs";
+        }
+
+        public void LoadTeamVariables()
+        {
+            teamCashRed = 0;
+            teamCashBlue = 0;
+            teamOreRed = 0;
+            teamOreBlue = 0;
+            winningTeam = PlayerTeam.None;
         }
 
         public void Shutdownserver()
@@ -908,6 +932,7 @@ namespace MineWorld
         {
             NetBuffer msgBuffer = netServer.CreateBuffer();
             msgBuffer.Write((byte)MineWorldMessage.DayUpdate);
+            msgBuffer.Write(time);
             foreach (IClient iplayer in playerList.Values)
                 iplayer.AddQueMsg(msgBuffer, NetChannel.ReliableInOrder14);
         }

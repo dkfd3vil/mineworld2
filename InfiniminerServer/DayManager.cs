@@ -12,19 +12,34 @@ namespace MineWorld
 {
     public class DayManager
     {
-        public float light = 1.0f;
-        float prevlight = 1.0f;
+        bool goingup = false;
+        public float light = 1;
+        float prevlight = 1;
         DateTime lastcalclight = DateTime.Now;
         public void Update()
         {
             TimeSpan timespanlastcalclight = DateTime.Now - lastcalclight;
             // Update time every minute
-            if (timespanlastcalclight.Seconds > 15)
+            if (timespanlastcalclight.Seconds > 60)
             {
-                light = light - 0.1f;
-                if (light < 0.0f)
+                if (goingup)
+                {
+                    light = light + 0.1f;
+                }
+                else
+                {
+                    light = light - 0.1f;
+                }
+
+                if (light <= 0.0f)
+                {
+                    light = 0.0f;
+                    goingup = true;
+                }
+                if (light >= 1.0f)
                 {
                     light = 1.0f;
+                    goingup = false;
                 }
                 lastcalclight = DateTime.Now;
             }

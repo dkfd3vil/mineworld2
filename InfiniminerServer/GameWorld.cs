@@ -126,8 +126,8 @@ namespace MineWorld
                     }
                 }
             }
-            Msettings.Totallavablockcount = templavablockcount;
-            Msettings.Totalwaterblockcount = tempwaterblockcount;
+            Totallavablockcount = templavablockcount;
+            Totalwaterblockcount = tempwaterblockcount;
         }
 
         public double Get3DDistance(int x1, int y1, int z1, int x2, int y2, int z2)
@@ -158,9 +158,9 @@ namespace MineWorld
                     DepositCash(p);
             }
 
-            if (teamCashBlue >= winningCashAmount && winningTeam == PlayerTeam.None)
+            if (teamCashBlue >= Msettings.Winningcashamount && winningTeam == PlayerTeam.None)
                 winningTeam = PlayerTeam.Blue;
-            if (teamCashRed >= winningCashAmount && winningTeam == PlayerTeam.None)
+            if (teamCashRed >= Msettings.Winningcashamount && winningTeam == PlayerTeam.None)
                 winningTeam = PlayerTeam.Red;
         }
 

@@ -44,7 +44,7 @@ namespace MineWorld
             }
 
             // Dont need to calc if its disabled
-            if (Ssettings.StopFluids == false)
+            if (StopFluids == false)
             {
                 // We calculate lava every 1000 milliseconds
                 if (timeSpanCalcLava.TotalMilliseconds > 1000)

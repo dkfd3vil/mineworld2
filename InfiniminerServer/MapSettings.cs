@@ -17,9 +17,6 @@
 
             //Not used by configs
             public string SettingsDir;
-
-            public int Totallavablockcount;
-            public int Totalwaterblockcount;
         }
     }
 }

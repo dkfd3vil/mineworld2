@@ -143,7 +143,7 @@ namespace MineWorld
             toDark.Enqueue(new Light(x, y, z, Defines.MAXLIGHT * 2));
         }
 
-        public void Update(GameTime gameTime)
+        public void Update()
         {
             DeFillLighting();
             FillLighting();
@@ -237,7 +237,7 @@ namespace MineWorld
         {
             if (y == Defines.MAPSIZE - 1)
             {
-                // HACK We set this value manual put it needs to be fixed
+                //HACK We set this value manual put it needs to be fixed
                 return 7.5f;
             }
             if (SaneBlockPosition(x, y, z))
