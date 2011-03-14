@@ -49,6 +49,7 @@ namespace MineWorld.States
 
             // Update engines.
             _P.playerEngine.Update(gameTime);
+            _P.blockEngine.Update(gameTime);
             _P.particleEngine.Update(gameTime);
             _P.interfaceEngine.Update(gameTime);
 
@@ -436,9 +437,8 @@ namespace MineWorld.States
         public override void OnRenderAtUpdate(GraphicsDevice graphicsDevice, GameTime gameTime)
         {
             _P.playerEngine.Render(graphicsDevice);
-            //_P.lightingEngine.Update(gameTime);
-            _P.blockEngine.Render(graphicsDevice, gameTime);
             _P.playerEngine.RenderPlayerNames(graphicsDevice);
+            _P.blockEngine.Render(graphicsDevice, gameTime);
             _P.particleEngine.Render(graphicsDevice);
             _P.interfaceEngine.Render(graphicsDevice);
 

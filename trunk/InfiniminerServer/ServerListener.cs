@@ -182,13 +182,13 @@ namespace MineWorld
                                                         case "/stopfluids":
                                                             {
                                                                 command = PlayerCommands.Stopfluids;
-                                                                IServer.Ssettings.StopFluids = true;
+                                                                IServer.StopFluids = true;
                                                                 break;
                                                             }
                                                         case "/startfluids":
                                                             {
                                                                 command = PlayerCommands.Startfluids;
-                                                                IServer.Ssettings.StopFluids = false;
+                                                                IServer.StopFluids = false;
                                                                 break;
                                                             }
                                                         case "/nocost":

@@ -338,9 +338,13 @@ namespace MineWorld
             return false;
         }
 
+        public void Update(GameTime gameTime)
+        {
+            lightingEngine.Update();
+        }
+
         public void Render(GraphicsDevice graphicsDevice, GameTime gameTime)
         {
-            lightingEngine.Update(gameTime);
             RegenerateDirtyVertexLists();
 
             for (BlockTexture blockTexture = BlockTexture.None+1; blockTexture < BlockTexture.MAXIMUM; blockTexture++)
@@ -348,8 +352,21 @@ namespace MineWorld
                 {
                     // Figure out if we should be rendering translucently.
                     bool renderTranslucent = false;
-                    if (blockTexture == BlockTexture.TransRed || blockTexture == BlockTexture.TransBlue || blockTexture == BlockTexture.Water)
-                        renderTranslucent = true;
+                    switch (blockTexture)
+                    {
+                        case BlockTexture.TransBlue:
+                        case BlockTexture.TransRed:
+                        case BlockTexture.Water:
+                            {
+                                renderTranslucent = true;
+                                break;
+                            }
+                        default:
+                            {
+                                renderTranslucent = false;
+                                break;
+                            }
+                    }
 
                     // If this is empty, don't render it.
                     DynamicVertexBuffer regionBuffer = vertexBuffers[(byte)blockTexture, r];
@@ -380,19 +397,28 @@ namespace MineWorld
             if (vertexBuffer == null)
                 return;
 
-            if (blocktex == BlockTexture.Lava)
+            switch (blocktex)
             {
-                basicEffect.CurrentTechnique = basicEffect.Techniques["LavaBlock"];
-                basicEffect.Parameters["xTime"].SetValue(elapsedTime%5);
+                case BlockTexture.Lava:
+                    {
+                        basicEffect.CurrentTechnique = basicEffect.Techniques["LavaBlock"];
+                        basicEffect.Parameters["xTime"].SetValue(elapsedTime % 5);
+                        break;
+                    }
+                case BlockTexture.Water:
+                    {
+                        //TODO Make own effect for water textures
+                        basicEffect.CurrentTechnique = basicEffect.Techniques["Block"];
+                        break;
+                    }
+                default:
+                    {
+                        basicEffect.CurrentTechnique = basicEffect.Techniques["Block"];
+                        break;
+                    }
             }
-            else if (blocktex == BlockTexture.Water)
-            {
-                //TODO Make own effect for water textures
-                basicEffect.CurrentTechnique = basicEffect.Techniques["Block"];
-            }
-            else
-                basicEffect.CurrentTechnique = basicEffect.Techniques["Block"];
-            
+ 
+
             basicEffect.Parameters["xWorld"].SetValue(Matrix.Identity);
             basicEffect.Parameters["xView"].SetValue(gameInstance.propertyBag.playerCamera.ViewMatrix);
             basicEffect.Parameters["xProjection"].SetValue(gameInstance.propertyBag.playerCamera.ProjectionMatrix);
