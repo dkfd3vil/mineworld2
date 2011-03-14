@@ -132,6 +132,8 @@ namespace MineWorld
         Nocost,
         Teleportto,
         Kill,
+        Setday,
+        Setnight,
 
         Announce,
         Restart,

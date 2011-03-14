@@ -251,6 +251,18 @@ namespace MineWorld
                                                                 }
                                                                 break;
                                                             }
+                                                        case "/setday":
+                                                            {
+                                                                command = PlayerCommands.Setday;
+                                                                IServer.dayManager.light = 1.0f;
+                                                                break;
+                                                            }
+                                                        case "/setnight":
+                                                            {
+                                                                command = PlayerCommands.Setnight;
+                                                                IServer.dayManager.light = 0.0f;
+                                                                break;
+                                                            }
                                                         case "/announce":
                                                             {
                                                                 command = PlayerCommands.Announce;
