@@ -14,6 +14,8 @@ namespace MineWorld
 {
     public partial class MineWorldServer
     {
+        Random randomizer = new Random();
+
         MineWorldNetServer netServer = null;
         public DayManager dayManager = null;
         public Dictionary<NetConnection, IClient> playerList = new Dictionary<NetConnection, IClient>();
@@ -169,7 +171,8 @@ namespace MineWorld
 
             lastMapBackup = DateTime.Now;
             ServerListener listener = new ServerListener(netServer,this);
-            System.Threading.Thread listenerthread = new System.Threading.Thread(new ThreadStart(listener.start));
+            Thread listenerthread = new Thread(new ThreadStart(listener.start));
+            Thread physicsthread = new Thread(new ThreadStart(DoPhysics));
 
             DateTime lastFPScheck = DateTime.Now;
             double frameRate = 0;
@@ -180,10 +183,8 @@ namespace MineWorld
             //Start listernerthread
             listenerthread.Start();
 
-
-            // Main server loop!
-            ConsoleWrite("SERVER READY");
-            Random randomizer = new Random(56235676);
+            //Start physicsthread
+            physicsthread.Start();
 
             //If public, announce server to public tracker
             if (Ssettings.Public)
@@ -191,8 +192,25 @@ namespace MineWorld
                 updateMasterServer();
             }
 
+            // Main server loop!
+            ConsoleWrite("SERVER READY");
+
             while (keepRunning)
             {
+                // Check the state of our core threads
+                if (!listenerthread.IsAlive)
+                {
+                    ConsoleWrite("Listenerthread died");
+                    ConsoleWrite("Server is shutting down");
+                    return false;
+                }
+                if (!physicsthread.IsAlive)
+                {
+                    ConsoleWrite("Physicsthread died");
+                    ConsoleWrite("Server is shutting down");
+                    return false;
+                }
+
                 // Fps for the server
                 frameCount = frameCount + 1;
                 if (lastFPScheck <= DateTime.Now - TimeSpan.FromMilliseconds(1000))
@@ -215,12 +233,12 @@ namespace MineWorld
                 }
 
                 //Check the time
-                dayManager.Update();
+                dayManager.Update(Ssettings.Lightsteps);
 
                 // Look if the time is changed so that wel tell the clients
                 if (dayManager.Timechanged())
                 {
-                    Senddaytimeupdate(dayManager.light);
+                    Senddaytimeupdate(dayManager.Light);
                 }
 
 
@@ -240,9 +258,6 @@ namespace MineWorld
                 }
                 //Time to terminate finished map sending threads?
                 TerminateFinishedThreads();
-
-                //Do some world calculation
-                DoPhysics();
 
                 // Handle console keypresses.
                 while (Console.KeyAvailable)
@@ -369,6 +384,14 @@ namespace MineWorld
             {
                 Ssettings.Autosavetimer = 5;
                 ConsoleWrite("Couldnt find autosave setting so we use the default (5)");
+            }
+
+            if (dataFile.Data.ContainsKey("lightsteps"))
+                Ssettings.Lightsteps = int.Parse(dataFile.Data["lightsteps"]);
+            else
+            {
+                Ssettings.Lightsteps = 60;
+                ConsoleWrite("Couldnt find lightsteps setting so we use the default (60)");
             }
 
             if (!(Ssettings.Maxplayers >= 1 && Ssettings.Maxplayers <= 16))
@@ -652,6 +675,8 @@ namespace MineWorld
                 // Kill the player specific
                 NetBuffer msgBufferb = netServer.CreateBuffer();
                 msgBufferb.Write((byte)MineWorldMessage.Killed);
+                //TODO IMPLENT DEATH MESSAGES
+                msgBufferb.Write("");
                 netServer.SendMessage(msgBufferb, player.NetConn, NetChannel.ReliableUnordered);
 
                 // Let all the other players know

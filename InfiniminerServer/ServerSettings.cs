@@ -3,6 +3,7 @@ namespace MineWorld
 {
     public partial class MineWorldServer
     {
+        //TODO Convert from struct to class
         public struct ServerSettings
         {
             public string Servername;
@@ -14,6 +15,7 @@ namespace MineWorld
             public string MOTD;
             public int Autosavetimer;
             public bool Logs;
+            public int Lightsteps;
 
             //Not used by configs
             public string SettingsDir;

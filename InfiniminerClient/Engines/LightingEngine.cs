@@ -27,7 +27,7 @@ namespace MineWorld
             }
         }
 
-        public BlockType[, ,] blockList = null;
+        private BlockType[, ,] blockList = null;
         private byte[, ,] _lighting;
         private int[,] _lightHeight;
 
@@ -41,7 +41,7 @@ namespace MineWorld
             _lighting = new byte[Defines.MAPSIZE, Defines.MAPSIZE, Defines.MAPSIZE];
         }
 
-        public void Initialize(BlockType[,,] temp)
+        public void Initialize(BlockType[, ,] temp)
         {
             blockList = temp;
             InitLighting();
@@ -106,21 +106,20 @@ namespace MineWorld
 
         public void BlockAdded(BlockType blockType, int x, int y, int z)
         {
-            if (_lighting != null)
+            blockList[x, y, z] = blockType;
+            if (BlockInformation.IsLightEmittingBlock(blockType))
             {
-                if (BlockInformation.IsLightEmittingBlock(blockType))
-                {
-                    toLight.Enqueue(new Light(x, y, z, Defines.MAXLIGHT));
-                }
-                if (!BlockInformation.IsLightTransparentBlock(blockType))
-                {
-                    toDark.Enqueue(new Light(x, y, z, Defines.MAXLIGHT * 2));
-                }
+                toLight.Enqueue(new Light(x, y, z, Defines.MAXLIGHT));
+            }
+            if (!BlockInformation.IsLightTransparentBlock(blockType))
+            {
+                toDark.Enqueue(new Light(x, y, z, Defines.MAXLIGHT * 2));
             }
         }
 
         public void BlockRemoved(BlockType blockType, int x, int y, int z)
         {
+            blockList[x, y, z] = blockType;
             if (!BlockInformation.IsLightTransparentBlock(blockType) && !BlockInformation.IsLightEmittingBlock(blockType))
             {
                 toLight.Enqueue(new Light(x, y, z, _lighting[x, y, z]));
@@ -222,7 +221,7 @@ namespace MineWorld
         {
             bool goodspot = false;
 
-            if (x <= 0 || y <= 0 || z <= 0 || (int)x >= Defines.MAPSIZE - 1 || (int)y >= Defines.MAPSIZE - 1 || (int)z >= Defines.MAPSIZE - 1)
+            if (x <= 0 || y <= 0 || z <= 0 || x >= Defines.MAPSIZE - 1 || y >= Defines.MAPSIZE - 1 || z >= Defines.MAPSIZE - 1)
             {
                 goodspot = false;
             }

@@ -254,13 +254,13 @@ namespace MineWorld
                                                         case "/setday":
                                                             {
                                                                 command = PlayerCommands.Setday;
-                                                                IServer.dayManager.light = 1.0f;
+                                                                IServer.dayManager.Light = 1.0f;
                                                                 break;
                                                             }
                                                         case "/setnight":
                                                             {
                                                                 command = PlayerCommands.Setnight;
-                                                                IServer.dayManager.light = 0.0f;
+                                                                IServer.dayManager.Light = 0.0f;
                                                                 break;
                                                             }
                                                         case "/announce":

@@ -22,49 +22,54 @@ namespace MineWorld
 
         public void DoPhysics()
         {
-            TimeSpan timeSpanCalcRegen = DateTime.Now - lastCalcRegen;
-
-            TimeSpan timeSpanCalcBlocks = DateTime.Now - lastCalcBlocks;
-            TimeSpan timeSpanCalcLava = DateTime.Now - lastCalcLava;
-            TimeSpan timeSpanCalcGrass = DateTime.Now - lastCalcGrass;
-            TimeSpan timeSpanCalcWater = DateTime.Now - lastCalcWater;
-
-            // We calculate health regeneration every 250 milleseconds
-            if (timeSpanCalcRegen.TotalMilliseconds > 250)
+            while (true)
             {
-                CalcRegen();
-                lastCalcRegen = DateTime.Now;
-            }
+                TimeSpan timeSpanCalcRegen = DateTime.Now - lastCalcRegen;
 
-            // We calculate blocks that need action every 250 milleseconds
-            if (timeSpanCalcBlocks.TotalMilliseconds > 250)
-            {
-                CalcBlocks();
-                lastCalcBlocks = DateTime.Now;
-            }
+                TimeSpan timeSpanCalcBlocks = DateTime.Now - lastCalcBlocks;
+                TimeSpan timeSpanCalcLava = DateTime.Now - lastCalcLava;
+                TimeSpan timeSpanCalcGrass = DateTime.Now - lastCalcGrass;
+                TimeSpan timeSpanCalcWater = DateTime.Now - lastCalcWater;
 
-            // Dont need to calc if its disabled
-            if (StopFluids == false)
-            {
-                // We calculate lava every 1000 milliseconds
-                if (timeSpanCalcLava.TotalMilliseconds > 1000)
+                // We calculate health regeneration every 250 milleseconds
+                if (timeSpanCalcRegen.TotalMilliseconds > 250)
                 {
-                    CalcLava();
-                    lastCalcLava = DateTime.Now;
+                    CalcRegen();
+                    lastCalcRegen = DateTime.Now;
                 }
-                //We calculate water every 1000 milliseconds
-                if (timeSpanCalcWater.TotalMilliseconds > 1000)
+
+                // We calculate blocks that need action every 250 milleseconds
+                if (timeSpanCalcBlocks.TotalMilliseconds > 250)
                 {
-                    CalcWater();
-                    lastCalcWater = DateTime.Now;
+                    CalcBlocks();
+                    lastCalcBlocks = DateTime.Now;
                 }
-            }
-            // We calculate grass every 2500 milliseconds
-            // so it doesnt grow to fast
-            if (timeSpanCalcGrass.TotalMilliseconds > 2500)
-            {
-                CalcGrass();
-                lastCalcGrass = DateTime.Now;
+
+                // Dont need to calc if its disabled
+                if (StopFluids == false)
+                {
+                    // We calculate lava every 1000 milliseconds
+                    if (timeSpanCalcLava.TotalMilliseconds > 1000)
+                    {
+                        CalcLava();
+                        lastCalcLava = DateTime.Now;
+                    }
+                    //We calculate water every 1000 milliseconds
+                    if (timeSpanCalcWater.TotalMilliseconds > 1000)
+                    {
+                        CalcWater();
+                        lastCalcWater = DateTime.Now;
+                    }
+                }
+                // We calculate grass every 2500 milliseconds
+                // so it doesnt grow to fast
+                if (timeSpanCalcGrass.TotalMilliseconds > 2500)
+                {
+                    CalcGrass();
+                    lastCalcGrass = DateTime.Now;
+                }
+
+                System.Threading.Thread.Sleep(25);
             }
         }
 
