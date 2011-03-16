@@ -75,7 +75,7 @@ namespace MineWorld
 
     public class BlockEngine
     {
-        public BlockType[,,] blockList = null;
+        public BlockType[, ,] blockList = null;
         public BlockType[, ,] downloadList = null;
         Dictionary<uint,bool>[,] faceMap = null;
         BlockTexture[,] blockTextureMap = null;
@@ -106,13 +106,13 @@ namespace MineWorld
 
         public void DownloadComplete()
         {
+            lightingEngine.Initialize(downloadList);
+
             for (ushort i = 0; i < Defines.MAPSIZE; i++)
                 for (ushort j = 0; j < Defines.MAPSIZE; j++)
                     for (ushort k = 0; k < Defines.MAPSIZE; k++)
                         if (downloadList[i, j, k] != BlockType.None)
                             AddBlock(i, j, k, downloadList[i, j, k]);
-
-            lightingEngine.Initialize(blockList);
         }
 
         public BlockEngine(MineWorldGame gameInstance)

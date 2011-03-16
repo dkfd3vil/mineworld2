@@ -13,14 +13,28 @@ namespace MineWorld
     public class DayManager
     {
         bool goingup = false;
-        public float light = 1f;
+        float light = 1f;
         float prevlight = 1f;
         DateTime lastcalclight = DateTime.Now;
-        public void Update()
+
+        public float Light
+        {
+            get
+            {
+                return light;
+            }
+            set
+            {
+                light = value;
+            }
+        }
+
+        //TODO Load struct Serversettings for this
+        public void Update(int dirty)
         {
             TimeSpan timespanlastcalclight = DateTime.Now - lastcalclight;
-            // Update time every minute
-            if (timespanlastcalclight.Seconds > 60)
+
+            if (timespanlastcalclight.Seconds > dirty)
             {
                 if (goingup)
                 {

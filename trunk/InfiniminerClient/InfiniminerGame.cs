@@ -424,7 +424,8 @@ namespace MineWorld
                                     case MineWorldMessage.Killed:
                                         {
                                             //We received the death command :(
-                                            propertyBag.KillPlayer("");
+                                            string reason = msgBuffer.ReadString();
+                                            propertyBag.KillPlayer(reason);
                                             break;
                                         }
 

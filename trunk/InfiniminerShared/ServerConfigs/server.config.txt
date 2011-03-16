@@ -26,3 +26,8 @@ autosave = 5
 
 # Enables server logging
 logs = true
+
+# This sets the amount of steps times 10 to go from day to night
+# Example 60 * 10 = 600 secs to go from day to night
+# Another example 5 * 10 = 50 secs to go from day to night
+lightsteps = 60
