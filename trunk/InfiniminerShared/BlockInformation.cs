@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 
 using System.Text;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace MineWorld
 {
@@ -148,6 +149,74 @@ namespace MineWorld
         {
             return GetTexture(blockType, faceDir, BlockType.None);
         }
+
+        public static String GetTopTextureFile(BlockType blockType)
+        {
+            switch (blockType)
+            {
+                case BlockType.Water:
+                    return "tex_block_trans_water";
+                case BlockType.Metal:
+                    return "tex_block_metal";
+                case BlockType.Lava:
+                    return "tex_block_lava";
+                case BlockType.Rock:
+                    return "tex_block_rock";
+                case BlockType.Ore:
+                    return "tex_block_ore";
+                case BlockType.Gold:
+                    return "tex_block_silver";
+                case BlockType.Diamond:
+                    return "tex_block_diamond";
+                case BlockType.DirtSign:
+                    return "tex_block_dirt";
+                case BlockType.Adminblock:
+                    return "tex_block_adminblock";
+                case BlockType.Dirt:
+                    return "tex_block_dirt";
+                case BlockType.Grass:
+                    return "tex_block_dirt";
+                case BlockType.Leaves:
+                    return "tex_block_leaves";
+                case BlockType.Wood:
+                    return "tex_block_tree_top";
+                case BlockType.BankRed:
+                    return "tex_block_bank_front_red";
+                case BlockType.BankBlue:
+                    return "tex_block_bank_front_blue";
+                case BlockType.HomeBlue:
+                    return "tex_block_home_blue";
+                case BlockType.HomeRed:
+                    return "tex_block_home_red";
+                case BlockType.BeaconRed:
+                    return "tex_block_beacon_top_red";
+                case BlockType.BeaconBlue:
+                    return "tex_block_beacon_top_blue";
+                case BlockType.Road:
+                    return "tex_block_road_top";
+                case BlockType.Shock:
+                    return "tex_block_teleporter_bottom";
+                case BlockType.Jump:
+                    return "tex_block_jump_top";
+                case BlockType.SolidRed:
+                    return "tex_block_red";
+                case BlockType.SolidBlue:
+                    return "tex_block_blue";
+                case BlockType.TransRed:
+                    return "tex_block_trans_red";
+                case BlockType.TransBlue:
+                    return "tex_block_trans_blue";
+                case BlockType.Ladder:
+                    return "tex_block_ladder";
+                case BlockType.Explosive:
+                    return "tex_block_explosive";
+                case BlockType.Lamp:
+                    return "tex_block_lamp";
+            }
+
+            return "";
+        }
+        
 
         public static BlockTexture GetTexture(BlockType blockType, BlockFaceDirection faceDir, BlockType blockAbove)
         {
