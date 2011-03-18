@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual C# Express 2008
+# Visual Studio 2008
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MWClient", "InfiniminerClient\MWClient.csproj", "{F5524591-8592-43F7-B4A8-E6FCC52F2A7B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MWServer", "InfiniminerServer\MWServer.csproj", "{265DD692-3652-4905-BC3E-22AB10783A3D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MWShared", "InfiniminerShared\MWShared.csproj", "{CC122120-E018-43DA-B92D-EC368AA0CFF5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MWedit", "MWedit\MWedit.csproj", "{44CC6C89-FB4E-4F11-BF58-0BBBA0D9D177}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -60,6 +62,16 @@ Global
 		{FF957C83-3097-421B-B2CA-422112D59E21}.Release|Any CPU.ActiveCfg = Release|x86
 		{FF957C83-3097-421B-B2CA-422112D59E21}.Release|Mixed Platforms.ActiveCfg = Release|x86
 		{FF957C83-3097-421B-B2CA-422112D59E21}.Release|x86.ActiveCfg = Release|x86
+		{44CC6C89-FB4E-4F11-BF58-0BBBA0D9D177}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{44CC6C89-FB4E-4F11-BF58-0BBBA0D9D177}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{44CC6C89-FB4E-4F11-BF58-0BBBA0D9D177}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{44CC6C89-FB4E-4F11-BF58-0BBBA0D9D177}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{44CC6C89-FB4E-4F11-BF58-0BBBA0D9D177}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{44CC6C89-FB4E-4F11-BF58-0BBBA0D9D177}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{44CC6C89-FB4E-4F11-BF58-0BBBA0D9D177}.Release|Any CPU.Build.0 = Release|Any CPU
+		{44CC6C89-FB4E-4F11-BF58-0BBBA0D9D177}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{44CC6C89-FB4E-4F11-BF58-0BBBA0D9D177}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{44CC6C89-FB4E-4F11-BF58-0BBBA0D9D177}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
