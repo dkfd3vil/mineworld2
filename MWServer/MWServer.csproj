@@ -74,8 +74,8 @@
     <Compile Include="ClientSender.cs" />
     <Compile Include="DayManager.cs" />
     <Compile Include="GameWorld.cs" />
-    <Compile Include="InfiniminerNetServer.cs" />
-    <Compile Include="InfiniminerServer.cs" />
+    <Compile Include="MineWorldNetServer.cs" />
+    <Compile Include="MineWorldServer.cs" />
     <Compile Include="LogSystem.cs" />
     <Compile Include="MapSender.cs" />
     <Compile Include="MapSettings.cs" />
@@ -88,7 +88,7 @@
     <Compile Include="ServerSettings.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\InfiniminerShared\MWShared.csproj">
+    <ProjectReference Include="..\MWShared\MWShared.csproj">
       <Project>{CC122120-E018-43DA-B92D-EC368AA0CFF5}</Project>
       <Name>MWShared</Name>
     </ProjectReference>
