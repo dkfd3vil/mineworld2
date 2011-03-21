@@ -54,6 +54,8 @@ namespace MineWorld.States
             // Do network stuff.
             (_SM as MineWorldGame).UpdateNetwork(gameTime);
 
+            _P.skyEngine.Update(gameTime);
+            _P.blockEngine.Update(gameTime);
             _P.playerEngine.Update(gameTime);
             _P.interfaceEngine.Update(gameTime);
             _P.particleEngine.Update(gameTime);

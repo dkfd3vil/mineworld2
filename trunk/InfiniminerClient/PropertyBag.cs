@@ -22,6 +22,7 @@ namespace MineWorld
         public DateTime lasthearthbeatreceived = DateTime.Now;
 
         // Game engines.
+        public SkyEngine skyEngine = null;
         public BlockEngine blockEngine = null;
         public InterfaceEngine interfaceEngine = null;
         public PlayerEngine playerEngine = null;
@@ -122,6 +123,7 @@ namespace MineWorld
             netClient.Start();
 
             // Initialize engines.
+            skyEngine = new SkyEngine(gameInstance);
             blockEngine = new BlockEngine(gameInstance);
             interfaceEngine = new InterfaceEngine(gameInstance);
             playerEngine = new PlayerEngine(gameInstance);
