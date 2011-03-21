@@ -44,6 +44,13 @@ namespace MineWorld
             if (!SaneBlockPosition(x, y, z))
                 return;
 
+            if (blockList[x, y, z] == BlockType.BeaconRed || blockList[x, y, z] == BlockType.BeaconBlue)
+            {
+                if (beaconList.ContainsKey(new Vector3(x, y, z)))
+                    beaconList.Remove(new Vector3(x, y, z));
+                SendSetBeacon(new Vector3(x, y + 1, z), "", PlayerTeam.None);
+            }
+
             blockList[x, y, z] = BlockType.None;
             blockCreatorTeam[x, y, z] = PlayerTeam.None;
 
@@ -61,6 +68,8 @@ namespace MineWorld
 
         public void SetBlock(ushort x, ushort y, ushort z, BlockType blockType, PlayerTeam team)
         {
+            Debug.Assert(blockType != BlockType.None, "Setblock used for removal", "Block was sent " + blockType.ToString());
+
             if(!SaneBlockPosition(x,y,z))
                 return;
 
@@ -71,13 +80,6 @@ namespace MineWorld
                 newBeacon.Team = blockType == BlockType.BeaconRed ? PlayerTeam.Red : PlayerTeam.Blue;
                 beaconList[new Vector3(x, y, z)] = newBeacon;
                 SendSetBeacon(new Vector3(x, y + 1, z), newBeacon.ID, newBeacon.Team);
-            }
-
-            if (blockType == BlockType.None && (blockList[x, y, z] == BlockType.BeaconRed || blockList[x, y, z] == BlockType.BeaconBlue))
-            {
-                if (beaconList.ContainsKey(new Vector3(x, y, z)))
-                    beaconList.Remove(new Vector3(x, y, z));
-                SendSetBeacon(new Vector3(x, y + 1, z), "", PlayerTeam.None);
             }
 
             blockList[x, y, z] = blockType;
@@ -188,37 +190,12 @@ namespace MineWorld
             BlockType testpoint = BlockAtPoint(pos);
 
             if (testpoint == BlockType.None 
-                //|| testpoint == BlockType.Fire 
-                //|| testpoint == BlockType.Vacuum 
                 || testpoint == BlockType.Water 
                 || testpoint == BlockType.Lava 
-                //|| testpoint == BlockType.StealthBlockB && pl.Team == PlayerTeam.Blue 
                 || testpoint == BlockType.TransBlue && pl.Team == PlayerTeam.Blue 
-                //|| testpoint == BlockType.TrapR && pl.Team == PlayerTeam.Blue 
-                //|| testpoint == BlockType.TrapB && pl.Team == PlayerTeam.Red 
-                //|| testpoint == BlockType.StealthBlockR && pl.Team == PlayerTeam.Red 
                 || testpoint == BlockType.TransRed && pl.Team == PlayerTeam.Red)
-            {//check if player is not in wall
-                //falldamage
-                /*
-                if (testpoint == BlockType.Fire)
-                {
-                    //burn
-                    if (pl.Health > 1)
-                    {
-                        pl.Health = pl.Health - 10;
-                        if (pl.Health == 0)
-                        {
-                            pl.Weight = 0;
-                            pl.Alive = false;
-
-                            SendResourceUpdate(pl);
-                            SendPlayerDead(pl);
-                            ConsoleWrite(pl.Handle + " died in the fire.");
-                        }
-                    }
-                }
-                 */
+            {
+                //Everthing is fine then
             }
             else
             {

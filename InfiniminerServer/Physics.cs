@@ -184,11 +184,14 @@ namespace MineWorld
                     for (ushort k = 0; k < Defines.MAPSIZE; k++)
                         if (blockList[i, j, k] == BlockType.Dirt)
                         {
-                            if (InDirectSunLight(i, j, k))
+                            if (j >= Defines.GROUND_LEVEL)
                             {
-                                if (randGen.Next(0, 6) == 3)
+                                if (InDirectSunLight(i, j, k))
                                 {
-                                    SetBlock(i, j, k, BlockType.Grass, PlayerTeam.None);
+                                    if (randGen.Next(0, 6) == 3)
+                                    {
+                                        SetBlock(i, j, k, BlockType.Grass, PlayerTeam.None);
+                                    }
                                 }
                             }
                         }
