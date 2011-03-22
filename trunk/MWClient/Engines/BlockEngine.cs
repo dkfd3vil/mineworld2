@@ -350,24 +350,6 @@ namespace MineWorld
             for (BlockTexture blockTexture = BlockTexture.None+1; blockTexture < BlockTexture.MAXIMUM; blockTexture++)
                 for (uint r = 0; r < NUMREGIONS; r++)
                 {
-                    // Figure out if we should be rendering translucently.
-                    bool renderTranslucent = false;
-                    switch (blockTexture)
-                    {
-                        case BlockTexture.TransBlue:
-                        case BlockTexture.TransRed:
-                        case BlockTexture.Water:
-                            {
-                                renderTranslucent = true;
-                                break;
-                            }
-                        default:
-                            {
-                                renderTranslucent = false;
-                                break;
-                            }
-                    }
-
                     // If this is empty, don't render it.
                     DynamicVertexBuffer regionBuffer = vertexBuffers[(byte)blockTexture, r];
                     if (regionBuffer == null)
@@ -384,7 +366,7 @@ namespace MineWorld
                         continue;
 
                     // Actually render.
-                    RenderVertexList(graphicsDevice, regionBuffer, blockTextures[(byte)blockTexture].Texture, blockTextures[(byte)blockTexture].LODColor, renderTranslucent, blockTexture, (float)gameTime.TotalRealTime.TotalSeconds);
+                    RenderVertexList(graphicsDevice, regionBuffer, blockTextures[(byte)blockTexture].Texture, blockTextures[(byte)blockTexture].LODColor, blockTexture, (float)gameTime.TotalRealTime.TotalSeconds);
                 }
 
             // Apply posteffects.
@@ -392,8 +374,10 @@ namespace MineWorld
                 bloomPosteffect.Draw(graphicsDevice);
         }
 
-        private void RenderVertexList(GraphicsDevice graphicsDevice, DynamicVertexBuffer vertexBuffer, Texture2D blockTexture, Color lodColor, bool renderTranslucent, BlockTexture blocktex, float elapsedTime)
+        private void RenderVertexList(GraphicsDevice graphicsDevice, DynamicVertexBuffer vertexBuffer, Texture2D blockTexture, Color lodColor, BlockTexture blocktex, float elapsedTime)
         {
+            bool renderTranslucent = false;
+
             if (vertexBuffer == null)
                 return;
 
@@ -408,6 +392,7 @@ namespace MineWorld
                 case BlockTexture.Water:
                     {
                         //TODO Make own effect for water textures
+                        renderTranslucent = true;
                         basicEffect.CurrentTechnique = basicEffect.Techniques["Block"];
                         break;
                     }

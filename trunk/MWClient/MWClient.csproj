@@ -110,7 +110,6 @@
     <Compile Include="InterfaceItems\InterfaceSlider.cs" />
     <Compile Include="InterfaceItems\InterfaceTextInput.cs" />
     <Compile Include="KeyBindHandler.cs" />
-    <Compile Include="KeyMap.cs" />
     <Compile Include="Engines\PlayerEngine.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
