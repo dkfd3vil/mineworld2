@@ -366,11 +366,11 @@ namespace MineWorld
                                             // Figure out what the effect is.
                                             float distFromExplosive = (blockPos + 0.5f * Vector3.One - propertyBag.playerPosition).Length();
                                             if (distFromExplosive < 3)
-                                                if (propertyBag.godmode == false)
-                                                {
-                                                    propertyBag.KillPlayer(Defines.deathByExpl);//"WAS KILLED IN AN EXPLOSION!");
-                                                }
-                                                else if (distFromExplosive < 8)
+                                                //if (propertyBag.godmode == false)
+                                                //{
+                                                    //propertyBag.KillPlayer(Defines.deathByExpl);//"WAS KILLED IN AN EXPLOSION!");
+                                                //}
+                                                /*else*/ if (distFromExplosive < 8)
                                                 {
                                                     // If we're not in explosion mode, turn it on with the minimum ammount of shakiness.
                                                     if (propertyBag.screenEffect != ScreenEffect.Explosion)
@@ -529,16 +529,16 @@ namespace MineWorld
                                                     }
                                                 case PlayerCommands.Godmode:
                                                     {
-                                                        if (propertyBag.godmode == true)
-                                                        {
-                                                            propertyBag.godmode = false;
-                                                            propertyBag.addChatMessage("Godmode disabled", ChatMessageType.SayAll, 10);
-                                                        }
-                                                        else
-                                                        {
-                                                            propertyBag.godmode = true;
-                                                            propertyBag.addChatMessage("Godmode enabled", ChatMessageType.SayAll, 10);
-                                                        }
+                                                        //if (propertyBag.godmode == true)
+                                                        //{
+                                                            //propertyBag.godmode = false;
+                                                            //propertyBag.addChatMessage("Godmode disabled", ChatMessageType.SayAll, 10);
+                                                        //}
+                                                        //else
+                                                        //{
+                                                            //propertyBag.godmode = true;
+                                                            //propertyBag.addChatMessage("Godmode enabled", ChatMessageType.SayAll, 10);
+                                                        //}
                                                         break;
                                                     }
                                                 case PlayerCommands.Stopfluids:

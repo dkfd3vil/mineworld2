@@ -483,30 +483,32 @@ namespace MineWorld
                                                 break;
                                             }
 
-                                        case MineWorldMessage.PlayerHurt://client speaks of fall damage
+                                        case MineWorldMessage.PlayerHurt:
                                             {
-                                                uint newhp = msgBuffer.ReadUInt32();
-                                                if (newhp < player.Health)
-                                                {
-                                                    player.Health = newhp;
-                                                    if (player.Health < 1)
-                                                    {
-                                                        //Todo Create a death function for the player
-                                                        player.Ore = 0;
-                                                        player.Cash = 0;
-                                                        player.Weight = 0;
-                                                        player.Health = 0;
-                                                        player.Alive = false;
+                                                uint damage = msgBuffer.ReadUInt32();
 
-                                                        IServer.SendResourceUpdate(player);
-                                                        IServer.KillPlayerSpecific(player);
-                                                    }
+                                                //If the player has godmode then ignore
+                                                if (player.godmode)
+                                                {
+                                                    break;
                                                 }
-                                                break;
-                                            }
-                                        case MineWorldMessage.PlayerPosition://server not interested in clients complaints about position
-                                            {
-                                                IServer.ConsoleWrite("MESSAGE RECEIVED PLAYER POSITION FROM " + player.Handle);
+                                                if (damage >= player.Health)
+                                                {
+                                                    //Todo Create a death function for the player
+                                                    player.Ore = 0;
+                                                    player.Cash = 0;
+                                                    player.Weight = 0;
+                                                    player.Health = 0;
+                                                    player.Alive = false;
+
+                                                    IServer.SendResourceUpdate(player);
+                                                    IServer.KillPlayerSpecific(player);
+                                                }
+                                                else
+                                                {
+                                                    player.Health = player.Health - damage;
+                                                    IServer.SendResourceUpdate(player);
+                                                }
                                                 break;
                                             }
                                         case MineWorldMessage.DepositOre:

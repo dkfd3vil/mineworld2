@@ -69,7 +69,7 @@ namespace MineWorld
         public float radarDistance = 0;
         public float radarValue = 0;
         public float constructionGunAnimation = 0;
-        public bool godmode = false;
+        //public bool godmode = false;
         public bool nocost = false;
 
         public float time = 1.0f;
@@ -435,11 +435,11 @@ namespace MineWorld
 
                 if (playerTeam == PlayerTeam.Red)
                 {
-                    this.KillPlayer("HAS JOINED THE RED TEAM");
+                    //this.KillPlayer("HAS JOINED THE RED TEAM");
                 }
                 else
                 {
-                    this.KillPlayer("HAS JOINED THE BLUE TEAM");
+                    //this.KillPlayer("HAS JOINED THE BLUE TEAM");
                 }
             }
         }
@@ -531,7 +531,7 @@ namespace MineWorld
 
                 if (this.playerClass != PlayerClass.None)
                 {
-                    this.KillPlayer("");
+                    //this.KillPlayer("");
                 }
 
                 this.playerClass = playerClass;
@@ -783,14 +783,14 @@ namespace MineWorld
             }
         }
 
-        public void SendPlayerHurt()
+        public void SendPlayerHurt(uint damage)
         {
             if (netClient.Status != NetConnectionStatus.Connected)
                 return;
 
             NetBuffer msgBuffer = netClient.CreateBuffer();
             msgBuffer.Write((byte)MineWorldMessage.PlayerHurt);
-            msgBuffer.Write(playerHealth);
+            msgBuffer.Write(damage);
             netClient.SendMessage(msgBuffer, NetChannel.ReliableInOrder1);
         }
     }
