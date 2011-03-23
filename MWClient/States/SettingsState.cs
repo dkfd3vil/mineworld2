@@ -176,9 +176,6 @@ namespace MineWorld.States
                 addButtonAutomatic("Bloom", "Pretty", "Boring", dw.Data.ContainsKey("pretty") ? bool.Parse(dw.Data["pretty"]) : true);
                 addButtonAutomatic("Show FPS", "Yes", "No", dw.Data.ContainsKey("showfps") ? bool.Parse(dw.Data["showfps"]) : true);
             addSpace(16);
-
-            
-            //_P.KillPlayer("");
         }
 
         public override void OnLeave(string newState)
@@ -199,13 +196,15 @@ namespace MineWorld.States
                     nextState = "MineWorld.States.ServerBrowserState";
                     break;
                 case "accept":
-                    if (saveData() >= 1)
+                    if (saveSettings() == true)
                         nextState = "MineWorld.States.ServerBrowserState";
+                    else
+                    {
+                        _P.connectionerror = "Error: Problem while saving";
+                        _P.connectionerrornewstate = "MineWorld.States.ServerBrowserState";
+                        nextState = "MineWorld.States.ErrorState";
+                    }
                     break;
-                /*case "keylayout":
-                    saveData();
-                    nextState = "MineWorld.States.KeySettingsState";
-                    break;*/
             }
         }
 
@@ -218,7 +217,7 @@ namespace MineWorld.States
             }
         }
 
-        public int saveData()
+        public bool saveSettings()
         {
             Datafile dw = new Datafile((_SM as MineWorldGame).Csettings.Directory + "/client.config.txt");
             foreach (InterfaceElement element in elements)
@@ -266,7 +265,11 @@ namespace MineWorld.States
             (_SM as MineWorldGame).graphicsDeviceManager.PreferredBackBufferWidth = (_SM as MineWorldGame).Csettings.Width;
             (_SM as MineWorldGame).graphicsDeviceManager.PreferredBackBufferHeight = (_SM as MineWorldGame).Csettings.Height;
             (_SM as MineWorldGame).graphicsDeviceManager.ApplyChanges();
-            return dw.WriteChanges((_SM as MineWorldGame).Csettings.Directory + "/client.config.txt");
+            if (dw.WriteChanges((_SM as MineWorldGame).Csettings.Directory + "/client.config.txt") >= 1)
+            {
+                return true;
+            }
+            return false;
         }
 
         public override void OnCharEntered(EventInput.CharacterEventArgs e)

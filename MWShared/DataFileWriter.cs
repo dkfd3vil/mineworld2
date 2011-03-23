@@ -76,17 +76,17 @@ namespace MineWorld
                         seen[args[0].Trim()] = true;
                         if (Data.ContainsKey(args[0].Trim()) && Data[args[0].Trim()] != args[1]) //Maybe we need to replace?
                         {
-                            contentToWrite += args[0].Trim() + " = " + Data[args[0].Trim()] + "\n";
+                            contentToWrite += args[0].Trim() + " = " + Data[args[0].Trim()] + "\r\n";
                             changes = true;
                         }
                         else
                         {
                             Data[args[0].Trim()] = args[1].Trim();
-                            contentToWrite += line + "\n";
+                            contentToWrite += line + "\r\n";
                         }
                     }
                     else
-                        contentToWrite += line + "\n";
+                        contentToWrite += line + "\r\n";
                     line = sr.ReadLine();
                 }
 
@@ -98,7 +98,7 @@ namespace MineWorld
                 {
                     if (!seen.ContainsKey(dataI.Key))
                     {
-                        contentToWrite += dataI.Key + " = " + dataI.Value + "\n";
+                        contentToWrite += dataI.Key + " = " + dataI.Value + "\r\n";
                         changes = true;
                     }
                 }
