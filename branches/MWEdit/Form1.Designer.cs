@@ -35,6 +35,8 @@
             this.DLGopenMap = new System.Windows.Forms.OpenFileDialog();
             this.TXTgoto = new System.Windows.Forms.TextBox();
             this.BTNgoto = new System.Windows.Forms.Button();
+            this.LayerNext = new System.Windows.Forms.Button();
+            this.PrevLayer = new System.Windows.Forms.Button();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -61,13 +63,13 @@
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.openToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(35, 20);
             this.fileToolStripMenuItem.Text = "File";
             // 
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(111, 22);
             this.openToolStripMenuItem.Text = "Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
@@ -78,14 +80,15 @@
             // 
             // TXTgoto
             // 
-            this.TXTgoto.Location = new System.Drawing.Point(643, 27);
+            this.TXTgoto.Location = new System.Drawing.Point(643, 29);
             this.TXTgoto.Name = "TXTgoto";
             this.TXTgoto.Size = new System.Drawing.Size(100, 20);
             this.TXTgoto.TabIndex = 3;
+            this.TXTgoto.Text = "0";
             // 
             // BTNgoto
             // 
-            this.BTNgoto.Location = new System.Drawing.Point(748, 25);
+            this.BTNgoto.Location = new System.Drawing.Point(748, 27);
             this.BTNgoto.Name = "BTNgoto";
             this.BTNgoto.Size = new System.Drawing.Size(75, 23);
             this.BTNgoto.TabIndex = 4;
@@ -93,11 +96,33 @@
             this.BTNgoto.UseVisualStyleBackColor = true;
             this.BTNgoto.Click += new System.EventHandler(this.BTNgoto_Click);
             // 
+            // LayerNext
+            // 
+            this.LayerNext.Location = new System.Drawing.Point(829, 27);
+            this.LayerNext.Name = "LayerNext";
+            this.LayerNext.Size = new System.Drawing.Size(75, 23);
+            this.LayerNext.TabIndex = 5;
+            this.LayerNext.Text = "Next";
+            this.LayerNext.UseVisualStyleBackColor = true;
+            this.LayerNext.Click += new System.EventHandler(this.LayerNext_Click);
+            // 
+            // PrevLayer
+            // 
+            this.PrevLayer.Location = new System.Drawing.Point(910, 27);
+            this.PrevLayer.Name = "PrevLayer";
+            this.PrevLayer.Size = new System.Drawing.Size(75, 23);
+            this.PrevLayer.TabIndex = 6;
+            this.PrevLayer.Text = "Prev.";
+            this.PrevLayer.UseVisualStyleBackColor = true;
+            this.PrevLayer.Click += new System.EventHandler(this.PrevLayer_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1025, 664);
+            this.Controls.Add(this.PrevLayer);
+            this.Controls.Add(this.LayerNext);
             this.Controls.Add(this.BTNgoto);
             this.Controls.Add(this.TXTgoto);
             this.Controls.Add(this.grid);
@@ -122,6 +147,8 @@
         private System.Windows.Forms.OpenFileDialog DLGopenMap;
         private System.Windows.Forms.TextBox TXTgoto;
         private System.Windows.Forms.Button BTNgoto;
+        private System.Windows.Forms.Button LayerNext;
+        private System.Windows.Forms.Button PrevLayer;
     }
 }
 
