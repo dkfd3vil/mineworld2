@@ -669,24 +669,20 @@ namespace MineWorld
 
         public void KillPlayerSpecific(Player player)
         {
-            // Dont kill the player if he has godmode
-            if (player.godmode != true)
-            {
-                // Kill the player specific
-                NetBuffer msgBufferb = netServer.CreateBuffer();
-                msgBufferb.Write((byte)MineWorldMessage.Killed);
-                //TODO IMPLENT DEATH MESSAGES
-                msgBufferb.Write("");
-                netServer.SendMessage(msgBufferb, player.NetConn, NetChannel.ReliableUnordered);
+            // Kill the player specific
+            NetBuffer msgBufferb = netServer.CreateBuffer();
+            msgBufferb.Write((byte)MineWorldMessage.Killed);
+            //TODO IMPLENT DEATH MESSAGES
+            msgBufferb.Write("");
+            netServer.SendMessage(msgBufferb, player.NetConn, NetChannel.ReliableUnordered);
 
-                // Let all the other players know
-                NetBuffer msgBuffer = netServer.CreateBuffer();
-                msgBuffer.Write((byte)MineWorldMessage.PlayerDead);
-                msgBuffer.Write((uint)player.ID);
-                foreach (IClient iplayer in playerList.Values)
-                    //if (netConn.Status == NetConnectionStatus.Connected)
-                    iplayer.AddQueMsg(msgBuffer, NetChannel.ReliableInOrder2);
-            }
+            // Let all the other players know
+            NetBuffer msgBuffer = netServer.CreateBuffer();
+            msgBuffer.Write((byte)MineWorldMessage.PlayerDead);
+            msgBuffer.Write((uint)player.ID);
+            foreach (IClient iplayer in playerList.Values)
+                //if (netConn.Status == NetConnectionStatus.Connected)
+                iplayer.AddQueMsg(msgBuffer, NetChannel.ReliableInOrder2);
         }
 
         public void SendPlayerPosition(Player player)

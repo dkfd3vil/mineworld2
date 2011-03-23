@@ -170,7 +170,7 @@ namespace MineWorld.States
             {
                 TimeSpan timeSpan = DateTime.Now - _P.lastBreath;
                 _P.playerVelocity.Y += (GRAVITY / 8) * (float)gameTime.ElapsedGameTime.TotalSeconds;
-
+                /*
                 if (timeSpan.TotalMilliseconds > 1000)
                 {
                     if (_P.playerHoldBreath <= 10)
@@ -190,11 +190,11 @@ namespace MineWorld.States
                         _P.PlaySoundForEveryone(MineWorldSound.Death, _P.playerPosition);
                     }
                 }
-
-                if (_P.playerHealth <= 0)
-                {
-                    _P.KillPlayer(Defines.deathByDrown);
-                }
+                */
+                //if (_P.playerHealth <= 0)
+                //{
+                    //_P.KillPlayer(Defines.deathByDrown);
+                //}
 
                 _P.SendPlayerUpdate();
             }
@@ -210,7 +210,7 @@ namespace MineWorld.States
 
                 // If we"re hitting the ground with a high velocity, die!
                 // Except if we have godmode ;)
-                if (!_P.godmode)
+                if (false)//!_P.godmode)
                 {
                     if (standingOnBlock != BlockType.None && _P.playerVelocity.Y < 0)
                     {
@@ -222,21 +222,21 @@ namespace MineWorld.States
                             if (standingOnBlock != BlockType.Jump)
                             {
                                 _P.screenEffect = ScreenEffect.Fall;
-                                if (((int)_P.playerHealth - (fallDamage * 100)) > 0)
-                                {
-                                    _P.playerHealth -= (uint)(fallDamage * 100);
-                                }
-                                else
-                                {
-                                    _P.playerHealth = 0;
-                                }
-                                if (_P.playerHealth <= 0)
-                                {
-                                    _P.KillPlayer(Defines.deathByFall);
-                                }
+                                //if (((int)_P.playerHealth - (fallDamage * 100)) > 0)
+                                //{
+                                    //_P.playerHealth -= (uint)(fallDamage * 100);
+                                //}
+                                //else
+                                //{
+                                    //_P.playerHealth = 0;
+                                //}
+                                //if (_P.playerHealth <= 0)
+                                //{
+                                    //_P.KillPlayer(Defines.deathByFall);
+                                //}
                                 _P.screenEffectCounter = 2 - (fallDamage - 0.5) * 4;
                                 _P.PlaySoundForEveryone(MineWorldSound.GroundHit, _P.playerPosition);
-                                _P.SendPlayerHurt();
+                                //_P.SendPlayerHurt();
                             }
                         }
                     }
@@ -248,7 +248,7 @@ namespace MineWorld.States
 
                 if (_P.blockEngine.SolidAtPointForPlayer(midPosition))
                 {
-                    _P.KillPlayer(Defines.deathByCrush);
+                    //_P.KillPlayer(Defines.deathByCrush);
                 }
 
                 // If the player has their head stuck in a block, push them down.
@@ -281,33 +281,33 @@ namespace MineWorld.States
                         break;
 
                     case BlockType.Lava:
-                        if (_P.godmode == false)
-                        {
-                            _P.KillPlayer(Defines.deathByLava);
-                            return;
-                        }
+                        //if (_P.godmode == false)
+                        //{
+                            //_P.KillPlayer(Defines.deathByLava);
+                            //return;
+                        //}
                         break;
                 }
 
                 // Logic for bumping your head on a block.
-                switch (hittingHeadOnBlock)
-                {
-                    case BlockType.Shock:
-                        if (_P.godmode == false)
-                        {
-                            _P.KillPlayer(Defines.deathByElec);
-                            return;
-                        }
-                        break;
+                //switch (hittingHeadOnBlock)
+                //{
+                    //case BlockType.Shock:
+                        //if (_P.godmode == false)
+                        //{
+                            //_P.KillPlayer(Defines.deathByElec);
+                            //return;
+                        //}
+                        //break;
 
-                    case BlockType.Lava:
-                        if (_P.godmode == false)
-                        {
-                            _P.KillPlayer(Defines.deathByLava);
-                            return;
-                        }
-                        break;
-                }
+                    //case BlockType.Lava:
+                        //if (_P.godmode == false)
+                        //{
+                            //_P.KillPlayer(Defines.deathByLava);
+                            //return;
+                        //}
+                        //break;
+                //}
             }
             if (!_P.blockEngine.SolidAtPointForPlayer(midPosition + _P.playerVelocity * (float)gameTime.ElapsedGameTime.TotalSeconds))
             {
@@ -317,7 +317,7 @@ namespace MineWorld.States
             // Death by falling off the map.
             if (_P.playerPosition.Y < - Defines.MAPSIZE/2)
             {
-                _P.KillPlayer(Defines.deathByMiss);
+                //_P.KillPlayer(Defines.deathByMiss);
                 return;
             }
 
@@ -410,10 +410,10 @@ namespace MineWorld.States
             // It's solid there, so see if it's a lava block. If so, touching it will kill us!
             if (upperBlock == BlockType.Lava || lowerBlock == BlockType.Lava || midBlock == BlockType.Lava)
             {
-                if (_P.godmode == false)
-                {
-                    _P.KillPlayer(Defines.deathByLava);
-                }
+                //if (_P.godmode == false)
+                //{
+                    //_P.KillPlayer(Defines.deathByLava);
+                //}
                 return true;
             }
 
@@ -631,16 +631,9 @@ namespace MineWorld.States
             // Pixelcide!
             if (key == Keys.K && Keyboard.GetState().IsKeyDown(Keys.Escape) && !_P.playerDead)
             {
-                _P.KillPlayer(Defines.deathBySuic);//"HAS COMMMITTED PIXELCIDE!");
+                //_P.KillPlayer(Defines.deathBySuic);//"HAS COMMMITTED PIXELCIDE!");
                 return;
             }
-
-            //Map saving!
-            //if ((Keyboard.GetState().IsKeyDown(Keys.LeftControl) || Keyboard.GetState().IsKeyDown(Keys.RightControl)) && key == Keys.S)
-            //{
-                //_P.SaveMap();
-                //return;
-            //}
 
             if (_P.chatMode != ChatMessageType.None)
             {
