@@ -89,5 +89,21 @@ namespace MineWorld
             int offset = layerID * 4096;
             setGridData(offset);
         }
+
+        private void LayerNext_Click(object sender, EventArgs e)
+        {
+            int layerID = Int32.Parse(TXTgoto.Text);
+            TXTgoto.Text = (layerID + 1).ToString();
+            int offset = (layerID + 1) * 4096;
+            setGridData(offset);
+        }
+
+        private void PrevLayer_Click(object sender, EventArgs e)
+        {
+            int layerID = Int32.Parse(TXTgoto.Text);
+            TXTgoto.Text = (layerID - 1).ToString();
+            int offset = (layerID - 1) * 4096;
+            setGridData(offset);
+        }
     }
 }
