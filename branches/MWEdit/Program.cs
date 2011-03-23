@@ -4,7 +4,7 @@ using System.Linq;
 using System.Windows.Forms;
 using MineWorld;
 
-namespace MWedit
+namespace MineWorld
 {
     static class Program
     {

@@ -1,4 +1,4 @@
-﻿namespace MWedit
+﻿namespace MineWorld
 {
     partial class Form1
     {

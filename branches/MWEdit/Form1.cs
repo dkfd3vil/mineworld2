@@ -9,7 +9,7 @@ using System.Windows.Forms;
 using MineWorld;
 using System.IO;
 
-namespace MWedit
+namespace MineWorld
 {
     public partial class Form1 : Form
     {
