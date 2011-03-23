@@ -25,12 +25,12 @@ namespace MineWorld.States
         
         static string[] HINTS = new string[19]
         {
-            "Engineers can build bank blocks near ore veins for\nMiners to quickly fill the team's supplies.",
-            "Sappers can use TNT to excavate around gold and\ndiamonds, as it does not destroy them.",
-            "Gold occurs in veins that can run dozens of blocks\nin length; follow the veins!",
-            "You can paste a server name or IP into the direct\nconnect field by using Ctrl-V.",
-            "The Engineer's jump blocks cost as much as a ladder\nblock but are far more efficient for going up.",
-            "Beacon blocks are shown on your teammates' radar.\nUse them to mark important locations.",
+            "Chuck Norris doesn't like beta",
+            "Explosives are irritating, so use em on the enemy",
+            "[Insert some loading message here] LOL :)",
+            "With extra bytes",
+            "NOW! 15 terrapixel",
+            "Bacon blocks are shown on your teammates' radar.\nUse them to mark important locations.",
             "Build force fields to keep the enemy out of your tunnels.",
             "Shock blocks will kill anyone who touches their underside.",
             "Combine jump blocks and shock blocks to make deadly traps!",

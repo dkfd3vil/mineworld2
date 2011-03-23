@@ -40,6 +40,19 @@ namespace MineWorld
             }
         }
         public BlockType[] world=new BlockType[262144];
+        public Dictionary<String, Image> smalltexture = new Dictionary<string, Image>();
+
+        public Image loadTexture(String texture)
+        {
+            if (!smalltexture.ContainsKey(texture))
+            {
+                Image temp = Image.FromFile("textures/" + texture + ".png");
+
+                smalltexture[texture] = temp.GetThumbnailImage(10,10,null,IntPtr.Zero);
+            }
+            return smalltexture[texture];
+        }
+
         public void setGridData(int offset)
         {
             for (int p = 0; p < 4096; p++)
@@ -47,11 +60,11 @@ namespace MineWorld
                 String fileName=BlockInformation.GetTopTextureFile(world[p+offset]);
                 if (fileName != "")
                 {
-                    grid.Controls[p].BackgroundImage = Image.FromFile("textures/" + fileName + ".png");
+                    grid.Controls[4095 - p].BackgroundImage = loadTexture(fileName);
                 }
                 else
                 {
-                    grid.Controls[p].BackgroundImage = null;
+                    grid.Controls[4095 - p].BackgroundImage = null;
                 }
             }
         }
@@ -73,7 +86,7 @@ namespace MineWorld
         private void BTNgoto_Click(object sender, EventArgs e)
         {
             int layerID = Int32.Parse(TXTgoto.Text);
-            int offset = layerID * 4069;
+            int offset = layerID * 4096;
             setGridData(offset);
         }
     }
