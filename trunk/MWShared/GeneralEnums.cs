@@ -82,6 +82,7 @@ namespace MineWorld
 
     public enum MineWorldMessage : byte
     {
+        None,
         BlockBulkTransfer,      // x-value, y-value, followed by 64 bytes of blocktype ; 
         BlockSet,               // x, y, z, type
         UseTool,                // position, heading, tool, blocktype 
@@ -109,7 +110,9 @@ namespace MineWorld
         //Update by Oeds
         Hearthbeat,
         PlayerCommand,         // uint id, string command  This is sent by client
-        PlayerCommandEnable,   // byte Playercommands this is sent by the server
+        PlayerCommands,        // byte Playercommands this is sent by the server
+        PlayerCommandenable,   // byte send by the server to let the client know its enabled
+        PlayerCommanddisabled, // byte send by the server to let the client know its disabled
         PlayerUpdate1,         // minus position
         PlayerUpdate2,         // minus heading
         PlayerHurt,             // allows client to tell server of damage

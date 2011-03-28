@@ -347,12 +347,8 @@ namespace MineWorld
                 RenderMessageCenter(spriteBatch, String.Format("FPS: {0:000}", gameInstance.FrameRate), new Vector2(60, graphicsDevice.Viewport.Height - 20), Color.Gray, Color.Black);
 
             // Show the altimeter.
-            //int altitude = (int)(_P.playerPosition.Y - 64 + Defines.GROUND_LEVEL);
-            int px = (int)_P.playerPosition.Y;
-            int py = (int)_P.playerPosition.X;
-            int pz = (int)_P.playerPosition.Z;
-            //RenderMessageCenter(spriteBatch, String.Format("COORD: {0:00}", altitude), new Vector2(graphicsDevice.Viewport.Width - 90, graphicsDevice.Viewport.Height - 20), altitude >= 0 ? Color.Gray : Defines.IM_RED, Color.Black); 
-            RenderMessageCenter(spriteBatch, String.Format("X:"+ px + "Y:" + py + "Z:" + pz), new Vector2(graphicsDevice.Viewport.Width - 90, graphicsDevice.Viewport.Height - 20),Color.Yellow,Color.Black);//, altitude >= 0 ? Color.Gray : Defines.IM_RED, Color.Black);
+            int altitude = (int)(_P.playerPosition.Y - Defines.MAPSIZE + Defines.GROUND_LEVEL);
+            RenderMessageCenter(spriteBatch, String.Format("ALTITUDE: {0:00}", altitude), new Vector2(graphicsDevice.Viewport.Width - 90, graphicsDevice.Viewport.Height - 20), altitude >= 0 ? Color.Gray : Defines.IM_RED, Color.Black);
             
             // Draw bank instructions.
             if (_P.AtBankTerminal())
@@ -361,11 +357,6 @@ namespace MineWorld
             // Draw homebase instructions.
             if (_P.AtHomeBase())
                 RenderMessageCenter(spriteBatch, "8: DEPOSIT LOOT", new Vector2(graphicsDevice.Viewport.Width / 2, graphicsDevice.Viewport.Height / 2 + 60), Color.White, Color.Black);
-
-
-            // Are they trying to change class when they cannot?
-            //if (Keyboard.GetState().IsKeyDown(Keys.M) && _P.playerPosition.Y <= 64 - Defines.GROUND_LEVEL && _P.chatMode == ChatMessageType.None)
-            //    RenderMessageCenter(spriteBatch, "YOU CANNOT CHANGE YOUR CLASS BELOW THE SURFACE", new Vector2(graphicsDevice.Viewport.Width / 2, graphicsDevice.Viewport.Height / 2 + 90), Color.White, Color.Black);
 
             // Draw the text-based information panel.
             int textStart = (graphicsDevice.Viewport.Width - 1024) / 2;

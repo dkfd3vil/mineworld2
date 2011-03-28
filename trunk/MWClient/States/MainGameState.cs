@@ -85,13 +85,6 @@ namespace MineWorld.States
             else
                 mouseInitialized = false;
 
-            // Digging like a freaking terrier! Now for everyone!
-            if (mouseInitialized && mouseState.LeftButton == ButtonState.Pressed && !_P.playerDead && _P.playerToolCooldown == 0 && _P.playerTools[_P.playerToolSelected] == PlayerTools.Pickaxe)
-            {
-                _P.FirePickaxe();
-                _P.playerToolCooldown = _P.GetToolCooldown(PlayerTools.Pickaxe) * (_P.playerClass == PlayerClass.Miner ? 0.4f : 1.0f);
-            }
-
             // Prospector radar stuff.
             if (!_P.playerDead && _P.playerToolCooldown == 0 && _P.playerTools[_P.playerToolSelected] == PlayerTools.ProspectingRadar)
             {
@@ -125,21 +118,14 @@ namespace MineWorld.States
 
         private void UpdatePlayerPosition(GameTime gameTime, KeyboardState keyState)
         {
-            // Double-speed move flag, set if we're on road.
-            bool movingOnRoad = false;
-            bool sprinting = false;
-            bool swimming = false;
-            bool crouching = false;
-
             // Apply "gravity".
-            //_P.playerVelocity.Y += GRAVITY * (float)gameTime.ElapsedGameTime.TotalSeconds;
             Vector3 footPosition = _P.playerPosition + new Vector3(0f, -1.5f, 0f);
             Vector3 headPosition = _P.playerPosition + new Vector3(0f, 0.1f, 0f);
             Vector3 midPosition = _P.playerPosition + new Vector3(0f, -0.7f, 0f);
 
             if (_P.blockEngine.BlockAtPoint(footPosition) == BlockType.Water || _P.blockEngine.BlockAtPoint(headPosition) == BlockType.Water || _P.blockEngine.BlockAtPoint(midPosition) == BlockType.Water)
             {
-                swimming = true;
+                _P.swimming = true;
 
                 if (_P.blockEngine.BlockAtPoint(headPosition) == BlockType.Water)
                 {
@@ -152,8 +138,11 @@ namespace MineWorld.States
                         _P.screenEffect = ScreenEffect.Water;
                         _P.screenEffectCounter = 0.5;
                     }
-
-                    _P.playerHoldBreath -= (float)gameTime.ElapsedGameTime.TotalSeconds;
+                    else
+                    {
+                        _P.screenEffect = ScreenEffect.Drown;
+                        _P.screenEffectCounter = 0.5;
+                    }
                 }
                 else
                 {
@@ -162,46 +151,32 @@ namespace MineWorld.States
             }
             else
             {
-                swimming = false;
+                _P.swimming = false;
                 _P.playerHoldBreath = 20;
             }
 
-            if (swimming)
+            if (_P.swimming)
             {
                 TimeSpan timeSpan = DateTime.Now - _P.lastBreath;
                 _P.playerVelocity.Y += (GRAVITY / 8) * (float)gameTime.ElapsedGameTime.TotalSeconds;
-                /*
+
                 if (timeSpan.TotalMilliseconds > 1000)
                 {
-                    if (_P.playerHoldBreath <= 10)
+                    _P.playerHoldBreath -= 1;
+                    if (_P.playerHoldBreath <= 0)
                     {
-                        _P.screenEffect = ScreenEffect.Drown;
-                        _P.screenEffectCounter = 1.0;
-                        if (((int)_P.playerHealth - ((9 - _P.playerHoldBreath) * 10)) > 0)
-                        {
-                            _P.playerHealth -= (uint)(9 - _P.playerHoldBreath) * (_P.playerHealthMax / 10);
-                            _P.SendPlayerHurt();
-                            _P.lastBreath = DateTime.Now;
-                        }
-                        else
-                        {
-                            _P.playerHealth = 0;
-                        }
-                        _P.PlaySoundForEveryone(MineWorldSound.Death, _P.playerPosition);
+                        _P.SendPlayerHurt(20, false);
                     }
+                    //_P.PlaySoundForEveryone(MineWorldSound.Death, _P.playerPosition);
                 }
-                */
-                //if (_P.playerHealth <= 0)
-                //{
-                    //_P.KillPlayer(Defines.deathByDrown);
-                //}
-
-                _P.SendPlayerUpdate();
             }
             else
             {
                 _P.playerVelocity.Y += GRAVITY * (float)gameTime.ElapsedGameTime.TotalSeconds;
             }
+
+            // Let the server know and then move on
+            _P.SendPlayerUpdate();
 
             if (_P.blockEngine.SolidAtPointForPlayer(footPosition) || _P.blockEngine.SolidAtPointForPlayer(headPosition))
             {
@@ -249,6 +224,7 @@ namespace MineWorld.States
                 if (_P.blockEngine.SolidAtPointForPlayer(midPosition))
                 {
                     //_P.KillPlayer(Defines.deathByCrush);
+                    _P.SendPlayerHurt(100, false);
                 }
 
                 // If the player has their head stuck in a block, push them down.
@@ -277,7 +253,7 @@ namespace MineWorld.States
                         break;
 
                     case BlockType.Road:
-                        movingOnRoad = true;
+                        _P.movingOnRoad = true;
                         break;
 
                     case BlockType.Lava:
@@ -286,28 +262,18 @@ namespace MineWorld.States
                             //_P.KillPlayer(Defines.deathByLava);
                             //return;
                         //}
+                        _P.SendPlayerHurt(100, false);
                         break;
                 }
 
                 // Logic for bumping your head on a block.
-                //switch (hittingHeadOnBlock)
-                //{
-                    //case BlockType.Shock:
-                        //if (_P.godmode == false)
-                        //{
-                            //_P.KillPlayer(Defines.deathByElec);
-                            //return;
-                        //}
-                        //break;
-
-                    //case BlockType.Lava:
-                        //if (_P.godmode == false)
-                        //{
-                            //_P.KillPlayer(Defines.deathByLava);
-                            //return;
-                        //}
-                        //break;
-                //}
+                switch (hittingHeadOnBlock)
+                {
+                    case BlockType.Shock:
+                    case BlockType.Lava:
+                        _P.SendPlayerHurt(100, false);
+                        break;
+                }
             }
             if (!_P.blockEngine.SolidAtPointForPlayer(midPosition + _P.playerVelocity * (float)gameTime.ElapsedGameTime.TotalSeconds))
             {
@@ -317,6 +283,7 @@ namespace MineWorld.States
             // Death by falling off the map.
             if (_P.playerPosition.Y < - Defines.MAPSIZE/2)
             {
+                _P.SendPlayerHurt(100,false);
                 //_P.KillPlayer(Defines.deathByMiss);
                 return;
             }
@@ -336,9 +303,9 @@ namespace MineWorld.States
                     moveVector -= _P.playerCamera.GetRightVector();
                 //Sprinting
                 if ((_SM as MineWorldGame).keyBinds.IsPressed(Buttons.Sprint))//keyState.IsKeyDown(Keys.LeftShift) || keyState.IsKeyDown(Keys.RightShift))
-                    sprinting = true;
+                    _P.sprinting = true;
                 if ((_SM as MineWorldGame).keyBinds.IsPressed(Buttons.Crouch))
-                    crouching = true;
+                    _P.crouching = false;
             }
 
             if (moveVector.X != 0 || moveVector.Z != 0)
@@ -347,14 +314,14 @@ namespace MineWorld.States
                 moveVector.Y = 0;
                 moveVector.Normalize();
                 moveVector *= MOVESPEED * (float)gameTime.ElapsedGameTime.TotalSeconds;
-                if (movingOnRoad)
+                if (_P.movingOnRoad)
                     moveVector *= 2;
                 // Sprinting doubles speed, even if already on road
-                if (sprinting)
+                if (_P.sprinting)
                     moveVector *= 1.5f;
-                if(swimming)
+                if (_P.swimming)
                     moveVector *= 0.5f;
-                if(crouching)
+                if (_P.crouching)
                     moveVector.Y = -1;
 
                 // Attempt to move, doing collision stuff.
@@ -371,6 +338,11 @@ namespace MineWorld.States
                     }
                 }
             }
+            //Reset movement flags
+            _P.movingOnRoad = false;
+            _P.sprinting = false;
+            _P.swimming = false;
+            _P.crouching = false;
         }
 
         private bool TryToMoveTo(Vector3 moveVector, GameTime gameTime)
@@ -410,10 +382,7 @@ namespace MineWorld.States
             // It's solid there, so see if it's a lava block. If so, touching it will kill us!
             if (upperBlock == BlockType.Lava || lowerBlock == BlockType.Lava || midBlock == BlockType.Lava)
             {
-                //if (_P.godmode == false)
-                //{
-                    //_P.KillPlayer(Defines.deathByLava);
-                //}
+                _P.SendPlayerHurt(100, false);
                 return true;
             }
 
@@ -474,13 +443,12 @@ namespace MineWorld.States
                         switch (_P.playerTools[_P.playerToolSelected])
                         {
                             // Disabled as everyone speed-mines now.
-                            //case PlayerTools.Pickaxe:
-                            //    if (_P.playerClass != PlayerClass.Miner)
-                            //        _P.FirePickaxe();
-                            //    break;
+                            case PlayerTools.Pickaxe:
+                                _P.FirePickaxe();
+                                break;
 
                             case PlayerTools.ConstructionGun:
-                                _P.FireConstructionGun(_P.playerBlocks[_P.playerBlockSelected]);//, !(button == MouseButton.LeftButton));//_P.FireConstructionGun(_P.playerBlocks[_P.playerBlockSelected]);
+                                _P.FireConstructionGun(_P.playerBlocks[_P.playerBlockSelected]);
                                 break;
 
                             case PlayerTools.DeconstructionGun:

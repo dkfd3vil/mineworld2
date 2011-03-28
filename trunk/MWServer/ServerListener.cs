@@ -162,6 +162,7 @@ namespace MineWorld
                                         case MineWorldMessage.PlayerCommand:
                                             {
                                                 PlayerCommands command = PlayerCommands.None;
+                                                MineWorldMessage state = MineWorldMessage.None;
                                                 UInt32 argplayer = 0;
 
                                                 if(IServer.GetAdmin(player.IP))
@@ -174,20 +175,33 @@ namespace MineWorld
                                                     {
                                                         case "/godmode":
                                                             {
-                                                                //TODO Implent serverside of godmode
-                                                                //Redo this :S
-                                                                command = PlayerCommands.Godmode;
+                                                                if (player.godmode == false)
+                                                                {
+                                                                    player.godmode = true;
+                                                                    command = PlayerCommands.Godmode;
+                                                                    state = MineWorldMessage.PlayerCommandenable;
+                                                                }
+                                                                else
+                                                                {
+                                                                    player.godmode = false;
+                                                                    command = PlayerCommands.Godmode;
+                                                                    state = MineWorldMessage.PlayerCommanddisabled;
+                                                                }
                                                                 break;
                                                             }
                                                         case "/stopfluids":
                                                             {
                                                                 command = PlayerCommands.Stopfluids;
+                                                                //HACK This needs refactoring
+                                                                state = MineWorldMessage.PlayerCommandenable;
                                                                 IServer.StopFluids = true;
                                                                 break;
                                                             }
                                                         case "/startfluids":
                                                             {
                                                                 command = PlayerCommands.Startfluids;
+                                                                //HACK This needs refactoring
+                                                                state = MineWorldMessage.PlayerCommandenable;
                                                                 IServer.StopFluids = false;
                                                                 break;
                                                             }
@@ -197,10 +211,12 @@ namespace MineWorld
                                                                 if (player.nocost == false)
                                                                 {
                                                                     player.nocost = true;
+                                                                    state = MineWorldMessage.PlayerCommandenable;
                                                                 }
                                                                 else
                                                                 {
                                                                     player.nocost = false;
+                                                                    state = MineWorldMessage.PlayerCommanddisabled;
                                                                 }
                                                                 break;
                                                             }
@@ -217,6 +233,7 @@ namespace MineWorld
                                                                         {
                                                                             //We found the player woot
                                                                             argplayer = dummy.ID;
+                                                                            state = MineWorldMessage.PlayerCommandenable;
                                                                             //TODO Implent serverside of teleport
                                                                             //player.Position = dummy.Position;
                                                                             //IServer.SendPlayerPosition(player);
@@ -236,13 +253,7 @@ namespace MineWorld
                                                                     {
                                                                         if (dummy.Handle.ToLower() == splitted[1])
                                                                         {
-                                                                            //Todo Create a death function for the player
-                                                                            dummy.Ore = 0;
-                                                                            dummy.Cash = 0;
-                                                                            dummy.Weight = 0;
-                                                                            dummy.Health = 0;
-                                                                            dummy.Alive = false;
-
+                                                                            state = MineWorldMessage.PlayerCommandenable;
                                                                             IServer.SendResourceUpdate(dummy);
                                                                             IServer.KillPlayerSpecific(dummy);
                                                                             break;
@@ -254,30 +265,35 @@ namespace MineWorld
                                                         case "/setday":
                                                             {
                                                                 command = PlayerCommands.Setday;
+                                                                state = MineWorldMessage.PlayerCommandenable;
                                                                 IServer.dayManager.Light = 1.0f;
                                                                 break;
                                                             }
                                                         case "/setnight":
                                                             {
                                                                 command = PlayerCommands.Setnight;
+                                                                state = MineWorldMessage.PlayerCommandenable;
                                                                 IServer.dayManager.Light = 0.0f;
                                                                 break;
                                                             }
                                                         case "/announce":
                                                             {
                                                                 command = PlayerCommands.Announce;
+                                                                state = MineWorldMessage.PlayerCommandenable;
                                                                 IServer.ProcessCommand(commandstring, true);
                                                                 break;
                                                             }
                                                         case "/restart":
                                                             {
                                                                 command = PlayerCommands.Restart;
+                                                                state = MineWorldMessage.PlayerCommandenable;
                                                                 IServer.ProcessCommand(commandstring,true);
                                                                 break;
                                                             }
                                                         default:
                                                             {
                                                                 command = PlayerCommands.None;
+                                                                state = MineWorldMessage.None;
                                                                 break;
                                                             }
                                                     }
@@ -286,11 +302,13 @@ namespace MineWorld
                                                 else
                                                 {
                                                     command = PlayerCommands.Noadmin;
+                                                    state = MineWorldMessage.None;
                                                 }
 
                                                 NetBuffer chatPacket = netServer.CreateBuffer();
-                                                chatPacket.Write((byte)MineWorldMessage.PlayerCommandEnable);
+                                                chatPacket.Write((byte)MineWorldMessage.PlayerCommands);
                                                 chatPacket.Write((byte)command);
+                                                chatPacket.Write((byte)state);
                                                 chatPacket.Write(argplayer);
                                                 player.AddQueMsg(chatPacket, NetChannel.ReliableInOrder6);
                                                 break;
@@ -486,28 +504,33 @@ namespace MineWorld
                                         case MineWorldMessage.PlayerHurt:
                                             {
                                                 uint damage = msgBuffer.ReadUInt32();
+                                                bool flatdamage = msgBuffer.ReadBoolean();
 
                                                 //If the player has godmode then ignore
                                                 if (player.godmode)
                                                 {
                                                     break;
                                                 }
-                                                if (damage >= player.Health)
-                                                {
-                                                    //Todo Create a death function for the player
-                                                    player.Ore = 0;
-                                                    player.Cash = 0;
-                                                    player.Weight = 0;
-                                                    player.Health = 0;
-                                                    player.Alive = false;
 
-                                                    IServer.SendResourceUpdate(player);
-                                                    IServer.KillPlayerSpecific(player);
-                                                }
-                                                else
+                                                if (flatdamage)
                                                 {
                                                     player.Health = player.Health - damage;
                                                     IServer.SendResourceUpdate(player);
+                                                }
+                                                else//Then its in procents
+                                                {
+                                                    if (damage > 100)
+                                                    {
+                                                        damage = 100;
+                                                    }
+                                                    player.Health -= (player.HealthMax / 100) * damage;
+                                                    IServer.SendResourceUpdate(player);
+                                                }
+
+                                                if (player.Health <= 0)
+                                                {
+                                                    IServer.SendResourceUpdate(player);
+                                                    IServer.KillPlayerSpecific(player);
                                                 }
                                                 break;
                                             }

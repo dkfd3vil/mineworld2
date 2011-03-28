@@ -70,7 +70,13 @@ namespace MineWorld
         public float radarValue = 0;
         public float constructionGunAnimation = 0;
         //public bool godmode = false;
-        public bool nocost = false;
+        //public bool nocost = false;
+
+        //Movement flags
+        public bool movingOnRoad = false;
+        public bool sprinting = false;
+        public bool swimming = false;
+        public bool crouching = false;
 
         public float time = 1.0f;
 
@@ -587,11 +593,6 @@ namespace MineWorld
 
         public void FireConstructionGun(BlockType blockType)
         {
-            FireConstructionGun(blockType, false);
-        }
-
-        public void FireConstructionGun(BlockType blockType, bool alternate)
-        {
             if (netClient.Status != NetConnectionStatus.Connected)
                 return;
 
@@ -604,25 +605,7 @@ namespace MineWorld
             msgBuffer.Write(playerPosition);
             msgBuffer.Write(playerCamera.GetLookVector());
             msgBuffer.Write((byte)PlayerTools.ConstructionGun);
-            BlockType nb = blockType;
-            if (alternate)
-            {
-                switch (nb)
-                {
-                    // Code allows to use alternate colour of everything, but it's only enabled for translucents
-                    /*case BlockType.BankBlue: nb = BlockType.BankRed; break;
-                    case BlockType.BeaconBlue: nb = BlockType.BeaconRed; break;
-                    case BlockType.SolidBlue: nb = BlockType.SolidRed; break;*/
-                    case BlockType.TransBlue: nb = BlockType.TransRed; break;
-
-                    /*case BlockType.BankRed: nb = BlockType.BankBlue; break;
-                    case BlockType.BeaconRed: nb = BlockType.BeaconBlue; break;
-                    case BlockType.SolidRed: nb = BlockType.SolidBlue; break;*/
-                    case BlockType.TransRed: nb = BlockType.TransBlue; break;
-                    default: break;//Nothing
-                }
-            }
-            msgBuffer.Write((byte)nb);
+            msgBuffer.Write((byte)blockType);
             netClient.SendMessage(msgBuffer, NetChannel.ReliableUnordered);
         }
 
@@ -783,7 +766,7 @@ namespace MineWorld
             }
         }
 
-        public void SendPlayerHurt(uint damage)
+        public void SendPlayerHurt(uint damage,bool flatdamage)
         {
             if (netClient.Status != NetConnectionStatus.Connected)
                 return;
@@ -791,6 +774,7 @@ namespace MineWorld
             NetBuffer msgBuffer = netClient.CreateBuffer();
             msgBuffer.Write((byte)MineWorldMessage.PlayerHurt);
             msgBuffer.Write(damage);
+            msgBuffer.Write(flatdamage);
             netClient.SendMessage(msgBuffer, NetChannel.ReliableInOrder1);
         }
     }

@@ -68,7 +68,6 @@ namespace MineWorld
                     CalcGrass();
                     lastCalcGrass = DateTime.Now;
                 }
-
                 System.Threading.Thread.Sleep(25);
             }
         }
