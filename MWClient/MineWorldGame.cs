@@ -517,9 +517,11 @@ namespace MineWorld
                                             propertyBag.lasthearthbeatreceived = DateTime.Now;
                                             break;
                                         }
-                                    case MineWorldMessage.PlayerCommandEnable:
+                                    case MineWorldMessage.PlayerCommands:
                                         {
                                             PlayerCommands command = (PlayerCommands)msgBuffer.ReadByte();
+                                            MineWorldMessage state = (MineWorldMessage)msgBuffer.ReadByte();
+                                            uint playerId = (uint)msgBuffer.ReadInt32();
                                             switch (command)
                                             {
                                                 case PlayerCommands.None:
@@ -529,16 +531,14 @@ namespace MineWorld
                                                     }
                                                 case PlayerCommands.Godmode:
                                                     {
-                                                        //if (propertyBag.godmode == true)
-                                                        //{
-                                                            //propertyBag.godmode = false;
-                                                            //propertyBag.addChatMessage("Godmode disabled", ChatMessageType.SayAll, 10);
-                                                        //}
-                                                        //else
-                                                        //{
-                                                            //propertyBag.godmode = true;
-                                                            //propertyBag.addChatMessage("Godmode enabled", ChatMessageType.SayAll, 10);
-                                                        //}
+                                                        if (state == MineWorldMessage.PlayerCommandenable)
+                                                        {
+                                                            propertyBag.addChatMessage("Godmode enabled", ChatMessageType.SayAll, 10);
+                                                        }
+                                                        else
+                                                        {
+                                                            propertyBag.addChatMessage("Godmode disabled", ChatMessageType.SayAll, 10);
+                                                        }
                                                         break;
                                                     }
                                                 case PlayerCommands.Stopfluids:
@@ -553,21 +553,18 @@ namespace MineWorld
                                                     }
                                                 case PlayerCommands.Nocost:
                                                     {
-                                                        if (propertyBag.nocost == true)
+                                                        if (state == MineWorldMessage.PlayerCommandenable)
                                                         {
-                                                            propertyBag.nocost = false;
-                                                            propertyBag.addChatMessage("Nocost disabled", ChatMessageType.SayAll, 10);
+                                                            propertyBag.addChatMessage("Nocost enabled", ChatMessageType.SayAll, 10);
                                                         }
                                                         else
                                                         {
-                                                            propertyBag.nocost = true;
-                                                            propertyBag.addChatMessage("Nocost enabled", ChatMessageType.SayAll, 10);
+                                                            propertyBag.addChatMessage("Nocost disabled", ChatMessageType.SayAll, 10);
                                                         }
                                                         break;
                                                     }
                                                 case PlayerCommands.Teleportto:
                                                     {
-                                                        uint playerId = (uint)msgBuffer.ReadInt32();
                                                         if (propertyBag.playerList.ContainsKey(playerId))
                                                         {
                                                             Player player = propertyBag.playerList[playerId];
@@ -584,6 +581,7 @@ namespace MineWorld
                                                             else
                                                             {
                                                                 propertyBag.screenEffect = ScreenEffect.Teleport;
+                                                                propertyBag.screenEffectCounter = 0.5;
                                                                 propertyBag.PlaySoundForEveryone(MineWorldSound.Teleporter, propertyBag.playerPosition);
                                                                 propertyBag.playerPosition = player.Position;
                                                             }

@@ -15,7 +15,6 @@ namespace MineWorld
     {
         public BlockType[, ,] blockList = null;    // In game coordinates, where Y points up.
         PlayerTeam[, ,] blockCreatorTeam = null;
-        //const int MAPSIZE = 64;
 
 
         List<string> beaconIDList = new List<string>();
@@ -95,9 +94,6 @@ namespace MineWorld
             foreach (IClient player in playerList.Values)
                 //if (netConn.Status == NetConnectionStatus.Connected)
                     player.AddQueMsg(msgBuffer, NetChannel.ReliableUnordered);
-
-            //if (blockType == BlockType.Lava)
-                //lavaBlockCount += 1;
         }
 
         public void GenerateNewMap()
@@ -195,7 +191,7 @@ namespace MineWorld
                 || testpoint == BlockType.TransBlue && pl.Team == PlayerTeam.Blue 
                 || testpoint == BlockType.TransRed && pl.Team == PlayerTeam.Red)
             {
-                //Everthing is fine then
+                return pos;
             }
             else
             {
@@ -209,7 +205,6 @@ namespace MineWorld
                     return pl.Position;
                 }
             }
-            return pos;
         }
 
         public Vector3 Auth_Heading(Vector3 head)//check boundaries and legality of action
@@ -602,37 +597,37 @@ namespace MineWorld
                     {
                         for (int dz = -4; dz <= 4; dz++)
                         {
-                        // Check if it's inside the sphere
-                        if (Get3DDistance(dx + x, dy + y, dz + z, x, y, z) < 4)
-                        {
-                            if (x + dx <= 0 || y + dy <= 0 || z + dz <= 0 || x + dx >= Defines.MAPSIZE - 1 || y + dy >= Defines.MAPSIZE - 1 || z + dz >= Defines.MAPSIZE - 1)
+                            // Check if it's inside the sphere
+                            if (Get3DDistance(dx + x, dy + y, dz + z, x, y, z) < 4)
                             {
-                                break;
-                            }
-							// Chain reactions!
-							if (blockList[x + dx, y + dy, z + dz] == BlockType.Explosive)
-							{
-								DetonateAtPoint(x + dx, y + dy, z + dz);
-							}
+                                if (x + dx <= 0 || y + dy <= 0 || z + dz <= 0 || x + dx >= Defines.MAPSIZE - 1 || y + dy >= Defines.MAPSIZE - 1 || z + dz >= Defines.MAPSIZE - 1)
+                                {
+                                    break;
+                                }
+                                // Chain reactions!
+                                if (blockList[x + dx, y + dy, z + dz] == BlockType.Explosive)
+                                {
+                                    DetonateAtPoint(x + dx, y + dy, z + dz);
+                                }
 
-                            // Detonation of normal blocks.
-                            bool destroyBlock = true;
-                            switch (blockList[x + dx, y + dy, z + dz])
-                            {
-                                case BlockType.Adminblock:
-                                case BlockType.Metal:
-                                    {
-                                        destroyBlock = false;
-                                        break;
-                                    }
-                                
-                            }
-                            if (destroyBlock)
-                            {
-                                RemoveBlock((ushort)(x + dx), (ushort)(y + dy), (ushort)(z + dz));
+                                // Detonation of normal blocks.
+                                bool destroyBlock = true;
+                                switch (blockList[x + dx, y + dy, z + dz])
+                                {
+                                    case BlockType.Adminblock:
+                                    case BlockType.Metal:
+                                        {
+                                            destroyBlock = false;
+                                            break;
+                                        }
+
+                                }
+                                if (destroyBlock)
+                                {
+                                    RemoveBlock((ushort)(x + dx), (ushort)(y + dy), (ushort)(z + dz));
+                                }
                             }
                         }
-                    }
                 }
             }
             ExplosionEffectAtPoint(x, y, z);

@@ -669,6 +669,13 @@ namespace MineWorld
 
         public void KillPlayerSpecific(Player player)
         {
+            // Put variables to zero
+            player.Ore = 0;
+            player.Cash = 0;
+            player.Weight = 0;
+            player.Health = 0;
+            player.Alive = false;
+
             // Kill the player specific
             NetBuffer msgBufferb = netServer.CreateBuffer();
             msgBufferb.Write((byte)MineWorldMessage.Killed);

@@ -85,7 +85,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BlockInformation.cs" />
-    <Compile Include="DatafileLoader.cs" />
     <Compile Include="DataFileWriter.cs" />
     <Compile Include="GeneralEnums.cs" />
     <Compile Include="HTTPRequest.cs" />

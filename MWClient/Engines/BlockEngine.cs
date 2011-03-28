@@ -396,6 +396,18 @@ namespace MineWorld
                         basicEffect.CurrentTechnique = basicEffect.Techniques["Block"];
                         break;
                     }
+                case BlockTexture.TransBlue:
+                    {
+                        renderTranslucent = true;
+                        basicEffect.CurrentTechnique = basicEffect.Techniques["Block"];
+                        break;
+                    }
+                case BlockTexture.TransRed:
+                    {
+                        renderTranslucent = true;
+                        basicEffect.CurrentTechnique = basicEffect.Techniques["Block"];
+                        break;
+                    }
                 default:
                     {
                         basicEffect.CurrentTechnique = basicEffect.Techniques["Block"];
