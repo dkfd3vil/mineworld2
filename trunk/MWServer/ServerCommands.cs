@@ -217,6 +217,15 @@ namespace MineWorld
             }
         }
 
+        public void RemoveAdmin(string ip)
+        {
+            if (admins.Contains(ip))
+            {
+                admins.Remove(ip);
+                SaveAdminList();
+            }
+        }
+
         public void SaveLevel(string filename)
         {
             FileStream fs = new FileStream(filename, FileMode.Create);

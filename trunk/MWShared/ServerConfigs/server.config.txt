@@ -18,8 +18,10 @@ autoannounce = true
 # Else if empty then the server will generate a new level
 levelname =
 
-# If set, this message will be sent to newcomers - [name] will be replace with their name
-motd = Welcome [name] to my server!
+# If set, this message will be sent to newcomers
+# [name] will be replaced with their name
+# [team] will be replaced with their team
+motd = Welcome [name] to the [team] team on my server!
 
 # Sets the number of minutes between autosaves (zero disables autosave)
 autosave = 5

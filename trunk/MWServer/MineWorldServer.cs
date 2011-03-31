@@ -561,22 +561,20 @@ namespace MineWorld
             restartTime = DateTime.Now + TimeSpan.FromSeconds(5);
         }
 
-        public void SendServerMessageToPlayer(string message, NetConnection conn)
+        public void SendServerMessageToPlayer(string message, Player player)
         {
-            if (conn.Status == NetConnectionStatus.Connected)
-            {
-                NetBuffer msgBuffer = netServer.CreateBuffer();
-                msgBuffer = netServer.CreateBuffer();
-                msgBuffer.Write((byte)MineWorldMessage.ChatMessage);
-                msgBuffer.Write((byte)ChatMessageType.SayAll);
-                msgBuffer.Write(Defines.Sanitize(message));
-                
-                playerList[conn].AddQueMsg(msgBuffer, NetChannel.ReliableInOrder3);
-            }
+            message = "SERVER: " + message;
+            NetBuffer msgBuffer = netServer.CreateBuffer();
+            msgBuffer = netServer.CreateBuffer();
+            msgBuffer.Write((byte)MineWorldMessage.ChatMessage);
+            msgBuffer.Write((byte)ChatMessageType.SayAll);
+            msgBuffer.Write(Defines.Sanitize(message));
+            netServer.SendMessage(msgBuffer, player.NetConn, NetChannel.ReliableUnordered);
         }
 
         public void SendServerMessage(string message)
         {
+            message = "SERVER: " + message;
             NetBuffer msgBuffer = netServer.CreateBuffer();
             msgBuffer = netServer.CreateBuffer();
             msgBuffer.Write((byte)MineWorldMessage.ChatMessage);

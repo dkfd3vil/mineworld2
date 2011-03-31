@@ -74,9 +74,10 @@ namespace MineWorld
                     {
                         ConsoleWrite("SERVER CONSOLE COMMANDS:");
                         ConsoleWrite(" announce");
-                        ConsoleWrite(" admins");
-                        ConsoleWrite(" admin <ip>");
-                        ConsoleWrite(" players");
+                        ConsoleWrite(" listadmins");
+                        ConsoleWrite(" addadmin <ip>");
+                        ConsoleWrite(" removeadmin <ip>");
+                        ConsoleWrite(" listplayers");
                         ConsoleWrite(" kick <ip>");
                         ConsoleWrite(" kickn <name>");
                         ConsoleWrite(" ban <ip>");
@@ -94,12 +95,11 @@ namespace MineWorld
                     {
                         if (args.Length >= 2)
                         {
-                            string message = "SERVER: " + args[1];
-                            SendServerMessage(message);
+                            SendServerMessage(args[1]);
                         }
                         break;
                     }
-                case "players":
+                case "listplayers":
                     {
                         ConsoleWrite("( " + playerList.Count + " / " + Ssettings.Maxplayers + " )");
                         foreach (IClient p in playerList.Values)
@@ -116,7 +116,7 @@ namespace MineWorld
                         }
                         break;
                     }
-                case "admins":
+                case "listadmins":
                     {
                         ConsoleWrite("Admin list:");
                         foreach (IClient p in playerList.Values)
@@ -128,11 +128,19 @@ namespace MineWorld
                         }
                         break;
                     }
-                case "admin":
+                case "addadmin":
                     {
                         if (args.Length == 2)
                         {
                             AddAdmin(args[1]);
+                        }
+                        break;
+                    }
+                case "removeadmin":
+                    {
+                        if (args.Length == 2)
+                        {
+                            RemoveAdmin(args[1]);
                         }
                         break;
                     }

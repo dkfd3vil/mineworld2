@@ -4,9 +4,9 @@ namespace MineWorld
 {
     public class Defines
     {
-        public const string MINEWORLDSERVER_VERSION = "Mine World Alpha 3.5";
-        public const string MINEWORLDCLIENT_VERSION = "Mine World Alpha 3.5";
-        public const double MINEWORLD_VER = 3.5;
+        public const string MINEWORLDSERVER_VERSION = "Mine World Alpha 3.6";
+        public const string MINEWORLDCLIENT_VERSION = "Mine World Alpha 3.6";
+        public const double MINEWORLD_VER = 3.6;
 
         
         public const int MAPSIZE = 64;
