@@ -328,12 +328,12 @@ namespace MineWorld
 
                                     case MineWorldMessage.BlockSet:
                                         {
-                                           
+
                                             // x, y, z, type, all bytes
                                             byte x = msgBuffer.ReadByte();
                                             byte y = msgBuffer.ReadByte();
                                             byte z = msgBuffer.ReadByte();
-                                            
+
                                             BlockType blockType = (BlockType)msgBuffer.ReadByte();
                                             if (blockType == BlockType.None)
                                             {
@@ -368,9 +368,10 @@ namespace MineWorld
                                             if (distFromExplosive < 3)
                                                 //if (propertyBag.godmode == false)
                                                 //{
-                                                    //propertyBag.KillPlayer(Defines.deathByExpl);//"WAS KILLED IN AN EXPLOSION!");
+                                                //propertyBag.KillPlayer(Defines.deathByExpl);//"WAS KILLED IN AN EXPLOSION!");
                                                 //}
-                                                /*else*/ if (distFromExplosive < 8)
+                                                /*else*/
+                                                if (distFromExplosive < 8)
                                                 {
                                                     // If we're not in explosion mode, turn it on with the minimum ammount of shakiness.
                                                     if (propertyBag.screenEffect != ScreenEffect.Explosion)
@@ -517,92 +518,6 @@ namespace MineWorld
                                             propertyBag.lasthearthbeatreceived = DateTime.Now;
                                             break;
                                         }
-                                    case MineWorldMessage.PlayerCommands:
-                                        {
-                                            PlayerCommands command = (PlayerCommands)msgBuffer.ReadByte();
-                                            MineWorldMessage state = (MineWorldMessage)msgBuffer.ReadByte();
-                                            uint playerId = (uint)msgBuffer.ReadInt32();
-                                            switch (command)
-                                            {
-                                                case PlayerCommands.None:
-                                                    {
-                                                        propertyBag.addChatMessage("Command not regonized", ChatMessageType.SayAll, 10);
-                                                        break;
-                                                    }
-                                                case PlayerCommands.Godmode:
-                                                    {
-                                                        if (state == MineWorldMessage.PlayerCommandenable)
-                                                        {
-                                                            propertyBag.addChatMessage("Godmode enabled", ChatMessageType.SayAll, 10);
-                                                        }
-                                                        else
-                                                        {
-                                                            propertyBag.addChatMessage("Godmode disabled", ChatMessageType.SayAll, 10);
-                                                        }
-                                                        break;
-                                                    }
-                                                case PlayerCommands.Stopfluids:
-                                                    {
-                                                        propertyBag.addChatMessage("Stopfluids enabled", ChatMessageType.SayAll, 10);
-                                                        break;
-                                                    }
-                                                case PlayerCommands.Startfluids:
-                                                    {
-                                                        propertyBag.addChatMessage("Stopfluids disabled", ChatMessageType.SayAll, 10);
-                                                        break;
-                                                    }
-                                                case PlayerCommands.Nocost:
-                                                    {
-                                                        if (state == MineWorldMessage.PlayerCommandenable)
-                                                        {
-                                                            propertyBag.addChatMessage("Nocost enabled", ChatMessageType.SayAll, 10);
-                                                        }
-                                                        else
-                                                        {
-                                                            propertyBag.addChatMessage("Nocost disabled", ChatMessageType.SayAll, 10);
-                                                        }
-                                                        break;
-                                                    }
-                                                case PlayerCommands.Teleportto:
-                                                    {
-                                                        if (propertyBag.playerList.ContainsKey(playerId))
-                                                        {
-                                                            Player player = propertyBag.playerList[playerId];
-                                                            //Dont teleport to yourself :S
-                                                            if (propertyBag.playerMyId == player.ID)
-                                                            {
-                                                                propertyBag.addChatMessage("Cant teleport to yourself", ChatMessageType.SayAll, 10);
-                                                            }
-                                                            //Dont teleport to dead players
-                                                            else if (!player.Alive)
-                                                            {
-                                                                propertyBag.addChatMessage("Cant teleport to dead players", ChatMessageType.SayAll, 10);
-                                                            }
-                                                            else
-                                                            {
-                                                                propertyBag.screenEffect = ScreenEffect.Teleport;
-                                                                propertyBag.screenEffectCounter = 0.5;
-                                                                propertyBag.PlaySoundForEveryone(MineWorldSound.Teleporter, propertyBag.playerPosition);
-                                                                propertyBag.playerPosition = player.Position;
-                                                            }
-                                                        }
-                                                        break;
-                                                    }
-                                                case PlayerCommands.Kill:
-                                                    {
-                                                        propertyBag.addChatMessage("TOUCH OF DEATH", ChatMessageType.SayAll, 10);
-                                                        break;
-                                                    }
-                                                case PlayerCommands.Noadmin:
-                                                    {
-                                                        propertyBag.addChatMessage("You arent a admin", ChatMessageType.SayAll, 10);
-                                                        break;
-                                                    }
-                                                default:
-                                                    break;
-                                            }
-                                            break;
-                                    }
                                 }
                             }
                             catch { } //Error in a received message

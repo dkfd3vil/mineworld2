@@ -82,7 +82,6 @@ namespace MineWorld
 
     public enum MineWorldMessage : byte
     {
-        None,
         BlockBulkTransfer,      // x-value, y-value, followed by 64 bytes of blocktype ; 
         BlockSet,               // x, y, z, type
         UseTool,                // position, heading, tool, blocktype 
@@ -110,41 +109,19 @@ namespace MineWorld
         //Update by Oeds
         Hearthbeat,
         PlayerCommand,         // uint id, string command  This is sent by client
-        PlayerCommands,        // byte Playercommands this is sent by the server
-        PlayerCommandenable,   // byte send by the server to let the client know its enabled
-        PlayerCommanddisabled, // byte send by the server to let the client know its disabled
         PlayerUpdate1,         // minus position
         PlayerUpdate2,         // minus heading
         PlayerHurt,             // allows client to tell server of damage
         PlayerPosition,         // server sends client new position
         PlayerRespawn,          // allows the player to respawn
         Killed,                 // Send by the server to notify the player has been killed
-        //KillPlayer,            // Send by the server to notify that the player has died
-        //RespawnPlayer,         // vector 3 position, Send by the server to notify that the player has respawned
         DayUpdate,              // float , Send by the server to notify the player how dark or light the game is
-    }
-
-    public enum PlayerCommands : byte
-    {
-        None,
-        Help,
-        Godmode,
-        Stopfluids,
-        Startfluids,
-        Noadmin,
-        Nocost,
-        Teleportto,
-        Kill,
-        Setday,
-        Setnight,
-
-        Announce,
-        Restart,
     }
 
     public enum ChatMessageType
     {
         None,
+        SayServer,
         SayAll,
         SayRedTeam,
         SayBlueTeam,

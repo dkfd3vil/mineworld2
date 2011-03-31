@@ -161,9 +161,7 @@ namespace MineWorld
                                     {
                                         case MineWorldMessage.PlayerCommand:
                                             {
-                                                PlayerCommands command = PlayerCommands.None;
-                                                MineWorldMessage state = MineWorldMessage.None;
-                                                UInt32 argplayer = 0;
+                                                string answer = "";
 
                                                 if(IServer.GetAdmin(player.IP))
                                                 {
@@ -178,122 +176,151 @@ namespace MineWorld
                                                                 if (player.godmode == false)
                                                                 {
                                                                     player.godmode = true;
-                                                                    command = PlayerCommands.Godmode;
-                                                                    state = MineWorldMessage.PlayerCommandenable;
+                                                                    answer = "Godmode enabled";
                                                                 }
                                                                 else
                                                                 {
                                                                     player.godmode = false;
-                                                                    command = PlayerCommands.Godmode;
-                                                                    state = MineWorldMessage.PlayerCommanddisabled;
+                                                                    answer = "Godmode disabled";
                                                                 }
                                                                 break;
                                                             }
                                                         case "/stopfluids":
                                                             {
-                                                                command = PlayerCommands.Stopfluids;
-                                                                //HACK This needs refactoring
-                                                                state = MineWorldMessage.PlayerCommandenable;
                                                                 IServer.StopFluids = true;
+                                                                answer = "Stopfluids enabled";
                                                                 break;
                                                             }
                                                         case "/startfluids":
                                                             {
-                                                                command = PlayerCommands.Startfluids;
-                                                                //HACK This needs refactoring
-                                                                state = MineWorldMessage.PlayerCommandenable;
                                                                 IServer.StopFluids = false;
+                                                                answer = "Stopfluids disabled";
                                                                 break;
                                                             }
                                                         case "/nocost":
                                                             {
-                                                                command = PlayerCommands.Nocost;
                                                                 if (player.nocost == false)
                                                                 {
                                                                     player.nocost = true;
-                                                                    state = MineWorldMessage.PlayerCommandenable;
+                                                                    answer = "Nocost enabled";
                                                                 }
                                                                 else
                                                                 {
                                                                     player.nocost = false;
-                                                                    state = MineWorldMessage.PlayerCommanddisabled;
+                                                                    answer = "Nocost disabled";
                                                                 }
                                                                 break;
                                                             }
                                                         case "/teleportto":
                                                         case "/tpt":
                                                             {
+                                                                bool playerfound = false;
+
                                                                 if (splitted.Length > 1)
                                                                 {
-                                                                    command = PlayerCommands.Teleportto;
+                                                                    splitted[1] = splitted[1].ToLower();
 
+                                                                    if (player.Handle.ToLower() == splitted[1])
+                                                                    {
+                                                                        answer = "Cant teleport to yourself";
+                                                                        break;
+                                                                    }
                                                                     foreach (IClient dummy in IServer.playerList.Values)
                                                                     {
                                                                         if (dummy.Handle.ToLower() == splitted[1])
                                                                         {
-                                                                            //We found the player woot
-                                                                            argplayer = dummy.ID;
-                                                                            state = MineWorldMessage.PlayerCommandenable;
-                                                                            //TODO Implent serverside of teleport
-                                                                            //player.Position = dummy.Position;
-                                                                            //IServer.SendPlayerPosition(player);
+                                                                            playerfound = true;
+                                                                            if (!dummy.Alive)
+                                                                            {
+                                                                                answer = "Cant teleport to a dead player";
+                                                                                break;
+                                                                            }
+                                                                            player.Position = dummy.Position;
+                                                                            IServer.SendPlayerPosition(player);
+                                                                            answer = "Teleporting you to " + dummy.Handle;
                                                                             break;
                                                                         }
                                                                     }
+                                                                    if (!playerfound)
+                                                                    {
+                                                                        answer = "Didnt find the player";
+                                                                    }
+                                                                }
+                                                                else
+                                                                {
+                                                                    answer = "You didnt enter a name";
                                                                 }
                                                                 break;
                                                             }
                                                         case "/kill":
                                                             {
+                                                                bool playerfound = false;
+
                                                                 if (splitted.Length > 1)
                                                                 {
-                                                                    command = PlayerCommands.Kill;
+                                                                    splitted[1] = splitted[1].ToLower();
 
+                                                                    if (player.Handle.ToLower() == splitted[1])
+                                                                    {
+                                                                        answer = "Cant kill yourself";
+                                                                        break;
+                                                                    }
                                                                     foreach (IClient dummy in IServer.playerList.Values)
                                                                     {
                                                                         if (dummy.Handle.ToLower() == splitted[1])
                                                                         {
-                                                                            state = MineWorldMessage.PlayerCommandenable;
+                                                                            playerfound = true;
+                                                                            if (!dummy.Alive)
+                                                                            {
+                                                                                answer = "Player is already dead";
+                                                                                break;
+                                                                            }
                                                                             IServer.SendResourceUpdate(dummy);
                                                                             IServer.KillPlayerSpecific(dummy);
                                                                             break;
                                                                         }
                                                                     }
+                                                                    if (!playerfound)
+                                                                    {
+                                                                        answer = "Didnt find the player";
+                                                                    }
+                                                                }
+                                                                else
+                                                                {
+                                                                    answer = "You didnt enter a name";
                                                                 }
                                                                 break;
                                                             }
                                                         case "/setday":
                                                             {
-                                                                command = PlayerCommands.Setday;
-                                                                state = MineWorldMessage.PlayerCommandenable;
                                                                 IServer.dayManager.Light = 1.0f;
+                                                                answer = "Time changed to day";
                                                                 break;
                                                             }
                                                         case "/setnight":
                                                             {
-                                                                command = PlayerCommands.Setnight;
-                                                                state = MineWorldMessage.PlayerCommandenable;
                                                                 IServer.dayManager.Light = 0.0f;
+                                                                answer = "Time changed to night";
                                                                 break;
                                                             }
                                                         case "/announce":
                                                             {
-                                                                command = PlayerCommands.Announce;
-                                                                state = MineWorldMessage.PlayerCommandenable;
-                                                                IServer.ProcessCommand(commandstring, true);
+                                                                IServer.SendServerMessage(commandstring);
                                                                 break;
                                                             }
                                                         case "/restart":
                                                             {
-                                                                command = PlayerCommands.Restart;
-                                                                state = MineWorldMessage.PlayerCommandenable;
-                                                                IServer.ProcessCommand(commandstring,true);
+                                                                IServer.Restartserver();
+                                                                break;
+                                                            }
+                                                        case "/shutdown":
+                                                            {
+                                                                IServer.Shutdownserver();
                                                                 break;
                                                             }
                                                         default:
                                                             {
-                                                                command = PlayerCommands.None;
-                                                                state = MineWorldMessage.None;
+                                                                answer = "Command not regonized";
                                                                 break;
                                                             }
                                                     }
@@ -301,16 +328,10 @@ namespace MineWorld
                                                 }
                                                 else
                                                 {
-                                                    command = PlayerCommands.Noadmin;
-                                                    state = MineWorldMessage.None;
+                                                    answer = "You arent a admin";
                                                 }
 
-                                                NetBuffer chatPacket = netServer.CreateBuffer();
-                                                chatPacket.Write((byte)MineWorldMessage.PlayerCommands);
-                                                chatPacket.Write((byte)command);
-                                                chatPacket.Write((byte)state);
-                                                chatPacket.Write(argplayer);
-                                                player.AddQueMsg(chatPacket, NetChannel.ReliableInOrder6);
+                                                IServer.SendServerMessageToPlayer(answer, player);
                                                 break;
                                             }
                                         case MineWorldMessage.ChatMessage:
@@ -449,6 +470,7 @@ namespace MineWorld
                                                     {
                                                         string greeting = IServer.Ssettings.MOTD;
                                                         greeting = greeting.Replace("[name]", IServer.playerList[msgSender].Handle);
+                                                        greeting = greeting.Replace("[team]", IServer.playerList[msgSender].Team.ToString());
                                                         NetBuffer greetBuffer = netServer.CreateBuffer();
                                                         greetBuffer.Write((byte)MineWorldMessage.ChatMessage);
                                                         greetBuffer.Write((byte)ChatMessageType.SayAll);
@@ -515,7 +537,6 @@ namespace MineWorld
                                                 if (flatdamage)
                                                 {
                                                     player.Health = player.Health - damage;
-                                                    IServer.SendResourceUpdate(player);
                                                 }
                                                 else//Then its in procents
                                                 {
@@ -524,13 +545,19 @@ namespace MineWorld
                                                         damage = 100;
                                                     }
                                                     player.Health -= (player.HealthMax / 100) * damage;
-                                                    IServer.SendResourceUpdate(player);
                                                 }
 
                                                 if (player.Health <= 0)
                                                 {
+                                                    // Reset it back to zero or else the client sees weird stuff
+                                                    player.Health = 0;
                                                     IServer.SendResourceUpdate(player);
                                                     IServer.KillPlayerSpecific(player);
+                                                }
+                                                else
+                                                {
+                                                    // Let the client know what his new health is
+                                                    IServer.SendResourceUpdate(player);
                                                 }
                                                 break;
                                             }
