@@ -1,0 +1,1 @@
+﻿#A list of all banned names - just add one name per line
