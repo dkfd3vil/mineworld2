@@ -230,14 +230,12 @@ namespace MineWorld
         {
             FileStream fs = new FileStream(filename, FileMode.Create);
             StreamWriter sw = new StreamWriter(fs);
-            //Create level header with team info
-            sw.WriteLine(teamOreBlue+","+teamOreRed+","+teamCashBlue+","+teamCashRed);
 
             //Save block info
             for (int x = 0; x < Defines.MAPSIZE; x++)
                 for (int y = 0; y < Defines.MAPSIZE; y++)
                     for (int z = 0; z < Defines.MAPSIZE; z++)
-                        sw.WriteLine((byte)blockList[x, y, z] + "," + (byte)blockCreatorTeam[x, y, z]);
+                        sw.WriteLine((byte)blockList[x, y, z]);
             sw.Close();
             fs.Close();
         }
@@ -260,13 +258,6 @@ namespace MineWorld
 
                 FileStream fs = new FileStream(filename, FileMode.Open);
                 StreamReader sr = new StreamReader(fs);
-                //read level header
-                String header = sr.ReadLine().Trim();
-                String[] headerPart = header.Split(new char[] { ',' });
-                teamOreBlue = (uint)Int32.Parse(headerPart[0]);
-                teamOreRed = (uint)Int32.Parse(headerPart[1]);
-                teamCashBlue = (uint)Int32.Parse(headerPart[2]);
-                teamCashRed = (uint)Int32.Parse(headerPart[3]);
 
                 //read block info
                 for (int x = 0; x < Defines.MAPSIZE; x++)
@@ -274,12 +265,7 @@ namespace MineWorld
                         for (int z = 0; z < Defines.MAPSIZE; z++)
                         {
                             string line = sr.ReadLine();
-                            string[] fileArgs = line.Split(",".ToCharArray());
-                            if (fileArgs.Length == 2)
-                            {
-                                blockList[x, y, z] = (BlockType)int.Parse(fileArgs[0], System.Globalization.CultureInfo.InvariantCulture);
-                                blockCreatorTeam[x, y, z] = (PlayerTeam)int.Parse(fileArgs[1], System.Globalization.CultureInfo.InvariantCulture);
-                            }
+                            blockList[x, y, z] = (BlockType)int.Parse(line, System.Globalization.CultureInfo.InvariantCulture);
                         }
                 sr.Close();
                 fs.Close();

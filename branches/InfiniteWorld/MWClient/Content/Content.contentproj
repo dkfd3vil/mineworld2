@@ -151,25 +151,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="menus\tex_menu_class_blue.png">
-      <Name>tex_menu_class_blue</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-    <Compile Include="menus\tex_menu_class_red.png">
-      <Name>tex_menu_class_red</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="menus\tex_menu_team.png">
-      <Name>tex_menu_team</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="menus\tex_menu_server.png">
       <Name>tex_menu_server</Name>
       <Importer>TextureImporter</Importer>

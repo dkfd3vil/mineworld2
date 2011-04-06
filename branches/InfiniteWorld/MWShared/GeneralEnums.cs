@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace MineWorld
 {
-    public enum Buttons
+    public enum KeyBoardButtons
     {
         None=0,
 
@@ -23,11 +23,7 @@ namespace MineWorld
         Withdraw,
         
         //All buttons past this point will never be sent to the server
-        SayAll,
-        SayTeam,
-
-        ChangeClass,
-        ChangeTeam,
+        Say,
 
         Tool1,
         Tool2,
@@ -41,7 +37,7 @@ namespace MineWorld
         BlockDown
     }
 
-    public enum MouseButton
+    public enum MouseButtons
     {
         LeftButton,
         MiddleButton,
@@ -84,24 +80,18 @@ namespace MineWorld
     {
         BlockBulkTransfer,      // x-value, y-value, followed by 64 bytes of blocktype ; 
         BlockSet,               // x, y, z, type
-        UseTool,                // position, heading, tool, blocktype 
-        SelectClass,            // class
+        UseTool,                // position, heading, tool, blocktype
         ResourceUpdate,         // ore, cash, weight, max ore, max weight, team ore, red cash, blue cash: ReliableInOrder1
-        DepositOre,
-        DepositCash,
-        WithdrawOre,
         TriggerExplosion,       // position
 
         PlayerUpdate,           // (uint id for server), position, heading, current tool, animate using (bool): UnreliableInOrder1
         PlayerJoined,           // uint id, player name :ReliableInOrder2
         PlayerLeft,             // uint id              :ReliableInOrder2
-        PlayerSetTeam,          // (uint id for server), byte team   :ReliableInOrder2
         PlayerDead,             // (uint id for server) :ReliableInOrder2
         PlayerAlive,            // (uint id for server) :ReliableInOrder2
         PlayerPing,             // uint id
 
         ChatMessage,            // byte type, string message : ReliableInOrder3
-        GameOver,               // byte team
         PlaySound,              // byte sound, bool isPositional, ?Vector3 location : ReliableUnordered
         TriggerConstructionGunAnimation,
         SetBeacon,              // vector3 position, string text ("" means remove)
@@ -122,9 +112,7 @@ namespace MineWorld
     {
         None,
         SayServer,
-        SayAll,
-        SayRedTeam,
-        SayBlueTeam,
+        Say,
     }
 
     public enum Mapsize : byte
@@ -133,27 +121,5 @@ namespace MineWorld
         Normal = 64,
         Large = 128,
         Huge = 192,
-    }
-
-    public class ChatMessage
-    {
-        public string message;
-        public ChatMessageType type;
-        public float timestamp;
-        public int newlines;
-
-        public ChatMessage(string message, ChatMessageType type, float timestamp, int newlines)
-        {
-            this.message = message;
-            this.type = type;
-            this.timestamp = timestamp;
-            this.newlines = newlines;
-        }
-    }
-
-    public class Beacon
-    {
-        public string ID;
-        public PlayerTeam Team;
     }
 }

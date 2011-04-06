@@ -300,9 +300,7 @@ namespace MineWorld
         {
             if (blockType == BlockType.None)
                 return true;
-            if (gameInstance.propertyBag.playerTeam == PlayerTeam.Red && blockType == BlockType.TransRed)
-                return true;
-            if (gameInstance.propertyBag.playerTeam == PlayerTeam.Blue && blockType == BlockType.TransBlue)
+            if (blockType == BlockType.TransBlue || blockType == BlockType.TransRed)
                 return true;
             if(blockType == BlockType.Water)
                 return true;

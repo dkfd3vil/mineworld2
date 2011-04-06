@@ -84,6 +84,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Beacon.cs" />
     <Compile Include="BlockInformation.cs" />
     <Compile Include="DataFileWriter.cs" />
     <Compile Include="GeneralEnums.cs" />

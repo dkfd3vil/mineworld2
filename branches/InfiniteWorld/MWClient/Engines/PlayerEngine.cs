@@ -79,7 +79,7 @@ namespace MineWorld
                     // Figure out what text we should draw on the player - only for teammates and nearby enemies
                     string playerText = "";
                     bool continueDraw=false;
-                    if (p.ID != _P.playerMyId && p.Team == _P.playerTeam)
+                    if (p.ID != _P.playerMyId)
                         continueDraw = true;
                     else
                     {
@@ -103,7 +103,7 @@ namespace MineWorld
                         p.SpriteModel.DrawText(_P.playerCamera.ViewMatrix,
                                                _P.playerCamera.ProjectionMatrix,
                                                p.Position - Vector3.UnitY * 1.5f,
-                                               playerText, p.Team == PlayerTeam.Blue ? _P.blue : _P.red);//Defines.IM_BLUE : Defines.IM_RED);
+                                               playerText, Color.White);//Defines.IM_BLUE : Defines.IM_RED);
                     }
                 }
             }

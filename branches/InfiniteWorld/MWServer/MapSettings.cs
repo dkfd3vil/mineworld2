@@ -13,7 +13,6 @@
             public int Waterspawns;
             public int Treecount;
             public int Orefactor; // 10
-            public int Winningcashamount;
 
             //Not used by configs
             public string SettingsDir;

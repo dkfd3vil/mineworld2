@@ -8,38 +8,47 @@ namespace MineWorld
 {
     public enum BlockType : byte
     {
-        None,
-        Dirt,
-        Ore,
-        Gold,
-        Diamond,
-        Rock,
-        Ladder,
-        Explosive,
-        Jump,
-        Shock,
-        BankRed,
-        BankBlue,
-        BeaconRed,
-        BeaconBlue,
-        HomeRed,
-        HomeBlue,
-        Road,
-        SolidRed,
-        SolidBlue,
-        Metal,
-        DirtSign,
-        Adminblock,
-        Grass,
-        Lava,
-        Lamp,
-        TransRed,
-        TransBlue,
-        Water,
-        Leaves,
-        Wood,
-        //Spring,
-        MAXIMUM
+        None = 0,
+
+        //Nature blocks
+        //Start from 1 - 100 
+        Dirt = 1,
+        Ore = 3,
+        Gold = 4,
+        Diamond = 5,
+        Rock = 6,
+        Metal = 7,
+        Grass = 8,
+        Leaves = 9,
+        Wood = 10,
+        Water = 11,
+        Lava = 12,
+        Adminblock = 13,
+
+        //Nature + usermade blocks
+        //Range from 101 - 150
+        DirtSign = 101,
+
+        //Usermade blocks
+        //Range from 150 - 254
+        Ladder = 150,
+        Explosive = 151,
+        Jump = 152,
+        Shock = 153,
+        BankRed = 154,
+        BankBlue = 155,
+        BeaconRed = 156,
+        BeaconBlue = 157,
+        HomeRed = 158,
+        HomeBlue = 159,
+        Road = 160,
+        SolidRed = 161,
+        SolidBlue = 162,
+        Lamp = 163,
+        TransRed = 164,
+        TransBlue = 165,
+
+        MAXIMUM = 255
     }
 
     public enum BlockTexture : byte
@@ -87,7 +96,6 @@ namespace MineWorld
         Grass,
         GrassSide,
         Water,
-        //Spring,
         WoodSide,
         Wood,
         Leafs,
@@ -108,168 +116,112 @@ namespace MineWorld
     }
 
     public class BlockInformation
-    {
-        public static uint GetCost(BlockType blockType)
-        {
-            switch (blockType)
-            {
-                case BlockType.BankRed:
-                case BlockType.BankBlue:
-                case BlockType.BeaconRed:
-                case BlockType.BeaconBlue:
-                    return 50;
-
-                case BlockType.SolidRed:
-                case BlockType.SolidBlue:
-                    return 10;
-
-                case BlockType.TransRed:
-                case BlockType.TransBlue:
-                    return 25;
-
-                case BlockType.Road:
-                    return 10;
-                case BlockType.Jump:
-                    return 25;
-                case BlockType.Ladder:
-                    return 25;
-                case BlockType.Shock:
-                    return 50;
-                case BlockType.Explosive:
-                case BlockType.Lava:
-                    return 100;
-                case BlockType.Lamp:
-                    return 5;
-            }
-
-            return 1000;
-        }
-
+    {   
         public static BlockTexture GetTexture(BlockType blockType, BlockFaceDirection faceDir)
         {
-            return GetTexture(blockType, faceDir, BlockType.None);
-        }
-
-        public static String GetTopTextureFile(BlockType blockType)
-        {
             switch (blockType)
             {
                 case BlockType.Water:
-                    return "tex_block_trans_water";
+                    {
+                        return BlockTexture.Water;
+                    }
                 case BlockType.Metal:
-                    return "tex_block_metal";
+                    {
+                        return BlockTexture.Metal;
+                    }
                 case BlockType.Lava:
-                    return "tex_block_lava";
+                    {
+                        return BlockTexture.Lava;
+                    }
                 case BlockType.Rock:
-                    return "tex_block_rock";
+                    {
+                        return BlockTexture.Rock;
+                    }
                 case BlockType.Ore:
-                    return "tex_block_ore";
+                    {
+                        return BlockTexture.Ore;
+                    }
                 case BlockType.Gold:
-                    return "tex_block_silver";
+                    {
+                        return BlockTexture.Gold;
+                    }
                 case BlockType.Diamond:
-                    return "tex_block_diamond";
+                    {
+                        return BlockTexture.Diamond;
+                    }
                 case BlockType.DirtSign:
-                    return "tex_block_dirt";
+                    {
+                        return BlockTexture.DirtSign;
+                    }
                 case BlockType.Adminblock:
-                    return "tex_block_adminblock";
+                    {
+                        return BlockTexture.Adminblock;
+                    }
                 case BlockType.Dirt:
-                    return "tex_block_dirt";
-                case BlockType.Grass:
-                    return "tex_block_dirt";
-                case BlockType.Leaves:
-                    return "tex_block_leaves";
-                case BlockType.Wood:
-                    return "tex_block_tree_top";
-                case BlockType.BankRed:
-                    return "tex_block_bank_front_red";
-                case BlockType.BankBlue:
-                    return "tex_block_bank_front_blue";
-                case BlockType.HomeBlue:
-                    return "tex_block_home_blue";
-                case BlockType.HomeRed:
-                    return "tex_block_home_red";
-                case BlockType.BeaconRed:
-                    return "tex_block_beacon_top_red";
-                case BlockType.BeaconBlue:
-                    return "tex_block_beacon_top_blue";
-                case BlockType.Road:
-                    return "tex_block_road_top";
-                case BlockType.Shock:
-                    return "tex_block_teleporter_bottom";
-                case BlockType.Jump:
-                    return "tex_block_jump_top";
-                case BlockType.SolidRed:
-                    return "tex_block_red";
-                case BlockType.SolidBlue:
-                    return "tex_block_blue";
-                case BlockType.TransRed:
-                    return "tex_block_trans_red";
-                case BlockType.TransBlue:
-                    return "tex_block_trans_blue";
-                case BlockType.Ladder:
-                    return "tex_block_ladder";
-                case BlockType.Explosive:
-                    return "tex_block_explosive";
-                case BlockType.Lamp:
-                    return "tex_block_lamp";
-            }
-
-            return "";
-        }
-        
-
-        public static BlockTexture GetTexture(BlockType blockType, BlockFaceDirection faceDir, BlockType blockAbove)
-        {
-            switch (blockType)
-            {
-                case BlockType.Water:
-                    return BlockTexture.Water;
-                //case BlockType.Spring:
-                    //return BlockTexture.Spring;
-                case BlockType.Metal:
-                    return BlockTexture.Metal;
-                case BlockType.Lava:
-                    return BlockTexture.Lava;
-                case BlockType.Rock:
-                    return BlockTexture.Rock;
-                case BlockType.Ore:
-                    return BlockTexture.Ore;
-                case BlockType.Gold:
-                    return BlockTexture.Gold;
-                case BlockType.Diamond:
-                    return BlockTexture.Diamond;
-                case BlockType.DirtSign:
-                    return BlockTexture.DirtSign;
-                case BlockType.Adminblock:
-                    return BlockTexture.Adminblock;
-                case BlockType.Dirt:
-                    return BlockTexture.Dirt;
-
+                    {
+                        return BlockTexture.Dirt;
+                    }
                 case BlockType.Grass:
                     switch (faceDir)
                     {
-                        case BlockFaceDirection.YIncreasing: return BlockTexture.Grass;
-                        case BlockFaceDirection.ZDecreasing: return BlockTexture.GrassSide;
-                        case BlockFaceDirection.ZIncreasing: return BlockTexture.GrassSide;
-                        case BlockFaceDirection.XDecreasing: return BlockTexture.GrassSide;
-                        case BlockFaceDirection.XIncreasing: return BlockTexture.GrassSide;
-                        default: return BlockTexture.Dirt;
+                        case BlockFaceDirection.YIncreasing:
+                            {
+                                return BlockTexture.Grass;
+                            }
+                        case BlockFaceDirection.ZDecreasing: 
+                            { 
+                                return BlockTexture.GrassSide; 
+                            }
+                        case BlockFaceDirection.ZIncreasing:
+                            {
+                                return BlockTexture.GrassSide;
+                            }
+                        case BlockFaceDirection.XDecreasing:
+                            {
+                                return BlockTexture.GrassSide;
+                            }
+                        case BlockFaceDirection.XIncreasing:
+                            {
+                                return BlockTexture.GrassSide;
+                            }
+                        default:
+                            {
+                                return BlockTexture.Dirt;
+                            }
                     }
-
                 case BlockType.Leaves:
-                    return BlockTexture.Leafs;
+                    {
+                        return BlockTexture.Leafs;
+                    }
 
                 case BlockType.Wood:
                     switch (faceDir)
                     {
-                        case BlockFaceDirection.YIncreasing: return BlockTexture.Wood;
-                        case BlockFaceDirection.ZDecreasing: return BlockTexture.WoodSide;
-                        case BlockFaceDirection.ZIncreasing: return BlockTexture.WoodSide;
-                        case BlockFaceDirection.XDecreasing: return BlockTexture.WoodSide;
-                        case BlockFaceDirection.XIncreasing: return BlockTexture.WoodSide;
-                        default: return BlockTexture.Wood;
+                        case BlockFaceDirection.YIncreasing:
+                            {
+                                return BlockTexture.Wood;
+                            }
+                        case BlockFaceDirection.ZDecreasing:
+                            {
+                                return BlockTexture.WoodSide;
+                            }
+                        case BlockFaceDirection.ZIncreasing:
+                            {
+                                return BlockTexture.WoodSide;
+                            }
+                        case BlockFaceDirection.XDecreasing:
+                            {
+                                return BlockTexture.WoodSide;
+                            }
+                        case BlockFaceDirection.XIncreasing:
+                            {
+                                return BlockTexture.WoodSide;
+                            }
+                        default:
+                            {
+                                return BlockTexture.Wood;
+                            }
                     }
-
                 case BlockType.BankRed:
                     switch (faceDir)
                     {
@@ -326,12 +278,21 @@ namespace MineWorld
                     break;
 
                 case BlockType.Road:
-                    if (faceDir == BlockFaceDirection.YIncreasing)
-                        return BlockTexture.RoadTop;
-                    else if (faceDir == BlockFaceDirection.YDecreasing||blockAbove!=BlockType.None) //Looks better but won't work with current graphics setup...
-                        return BlockTexture.RoadBottom;
-                    return BlockTexture.Road;
-
+                    switch (faceDir)
+                    {
+                        case BlockFaceDirection.YIncreasing:
+                            {
+                                return BlockTexture.RoadTop;
+                            }
+                        case BlockFaceDirection.YDecreasing:
+                            {
+                                return BlockTexture.RoadBottom;
+                            }
+                        default:
+                            {
+                                return BlockTexture.Road;
+                            }
+                    }
                 case BlockType.Shock:
                     switch (faceDir)
                     {

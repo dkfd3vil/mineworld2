@@ -53,9 +53,6 @@ namespace MineWorld
             connectBuffer.Write(propertyBag.playerHandle);
             connectBuffer.Write(Defines.MINEWORLD_VER);
 
-            //Compression - will be ignored by regular servers.
-            //connectBuffer.Write(true);
-
             // Connect to the server.
             propertyBag.netClient.Connect(serverEndPoint, connectBuffer.ToArray());
         }
@@ -244,18 +241,15 @@ namespace MineWorld
                                                         }
                                                 if (downloadComplete)
                                                 {
-                                                    ChangeState("MineWorld.States.TeamSelectionState");
+                                                    ChangeState("MineWorld.States.MainGameState");
+                                                    propertyBag.equipWeps();
                                                     if (!Csettings.NoSound)
                                                         MediaPlayer.Stop();
                                                     propertyBag.blockEngine.DownloadComplete();
                                                 }
                                             }
-                                            catch (Exception e)
+                                            catch (Exception)
                                             {
-                                                //Console.OpenStandardError();
-                                                //Console.Error.WriteLine(e.Message);
-                                                //Console.Error.WriteLine(e.StackTrace);
-                                                //Console.Error.Close();
                                             }
                                         }
                                         break;
@@ -271,7 +265,6 @@ namespace MineWorld
                                         {
                                             Vector3 position = msgBuffer.ReadVector3();
                                             string text = msgBuffer.ReadString();
-                                            PlayerTeam team = (PlayerTeam)msgBuffer.ReadByte();
 
                                             if (text == "")
                                             {
@@ -282,7 +275,6 @@ namespace MineWorld
                                             {
                                                 Beacon newBeacon = new Beacon();
                                                 newBeacon.ID = text;
-                                                newBeacon.Team = team;
                                                 propertyBag.beaconList.Add(position, newBeacon);
                                             }
                                         }
@@ -300,14 +292,6 @@ namespace MineWorld
                                         {
                                             // ore, cash, weight, max ore, max weight, team ore, red cash, blue cash, all uint
                                             // Health, Healthmax also uint
-                                            propertyBag.playerOre = msgBuffer.ReadUInt32();
-                                            propertyBag.playerCash = msgBuffer.ReadUInt32();
-                                            propertyBag.playerWeight = msgBuffer.ReadUInt32();
-                                            propertyBag.playerOreMax = msgBuffer.ReadUInt32();
-                                            propertyBag.playerWeightMax = msgBuffer.ReadUInt32();
-                                            propertyBag.teamOre = msgBuffer.ReadUInt32();
-                                            propertyBag.teamRedCash = msgBuffer.ReadUInt32();
-                                            propertyBag.teamBlueCash = msgBuffer.ReadUInt32();
                                             propertyBag.playerHealth = msgBuffer.ReadUInt32();
                                             propertyBag.playerHealthMax = msgBuffer.ReadUInt32();
                                         }
@@ -385,17 +369,6 @@ namespace MineWorld
                                         }
                                         break;
 
-                                    case MineWorldMessage.PlayerSetTeam:
-                                        {
-                                            uint playerId = msgBuffer.ReadUInt32();
-                                            if (propertyBag.playerList.ContainsKey(playerId))
-                                            {
-                                                Player player = propertyBag.playerList[playerId];
-                                                player.Team = (PlayerTeam)msgBuffer.ReadByte();
-                                            }
-                                        }
-                                        break;
-
                                     case MineWorldMessage.PlayerJoined:
                                         {
                                             uint playerId = msgBuffer.ReadUInt32();
@@ -406,9 +379,7 @@ namespace MineWorld
                                             propertyBag.playerList[playerId].Handle = playerName;
                                             propertyBag.playerList[playerId].ID = playerId;
                                             propertyBag.playerList[playerId].Alive = playerAlive;
-                                            propertyBag.playerList[playerId].AltColours = Csettings.customColours;
-                                            propertyBag.playerList[playerId].redTeam = Csettings.red;
-                                            propertyBag.playerList[playerId].blueTeam = Csettings.blue;
+                                            propertyBag.playerList[playerId].Owncolor = Csettings.color;
                                             if (thisIsMe)
                                                 propertyBag.playerMyId = playerId;
                                         }
@@ -437,7 +408,7 @@ namespace MineWorld
                                             {
                                                 Player player = propertyBag.playerList[playerId];
                                                 player.Alive = false;
-                                                propertyBag.particleEngine.CreateBloodSplatter(player.Position, player.Team == PlayerTeam.Red ? Color.Red : Color.Blue);
+                                                propertyBag.particleEngine.CreateBloodSplatter(player.Position, player.Owncolor);
                                                 if (playerId != propertyBag.playerMyId)
                                                     propertyBag.PlaySound(MineWorldSound.Death, player.Position);
                                             }
@@ -465,15 +436,8 @@ namespace MineWorld
                                                 player.Heading = msgBuffer.ReadVector3();
                                                 player.Tool = (PlayerTools)msgBuffer.ReadByte();
                                                 player.UsingTool = msgBuffer.ReadBoolean();
-                                                player.Score = (uint)(msgBuffer.ReadUInt16() * 100);
                                                 player.Health = (uint)(msgBuffer.ReadUInt16() * 100);
                                             }
-                                        }
-                                        break;
-
-                                    case MineWorldMessage.GameOver:
-                                        {
-                                            propertyBag.teamWinners = (PlayerTeam)msgBuffer.ReadByte();
                                         }
                                         break;
 
@@ -481,8 +445,8 @@ namespace MineWorld
                                         {
                                             ChatMessageType chatType = (ChatMessageType)msgBuffer.ReadByte();
                                             string chatString = Defines.Sanitize(msgBuffer.ReadString());
-                                            //Time to break it up into multiple lines
-                                            propertyBag.addChatMessage(chatString, chatType, 10);
+                                            string author = Defines.Sanitize(msgBuffer.ReadString());
+                                            propertyBag.addChatMessage(chatString, chatType, author);
                                         }
                                         break;
 
@@ -491,11 +455,8 @@ namespace MineWorld
                                             uint playerId = (uint)msgBuffer.ReadInt32();
                                             if (propertyBag.playerList.ContainsKey(playerId))
                                             {
-                                                if (propertyBag.playerList[playerId].Team == propertyBag.playerTeam)
-                                                {
-                                                    propertyBag.playerList[playerId].Ping = 1;
-                                                    propertyBag.PlaySound(MineWorldSound.Ping);
-                                                }
+                                                propertyBag.playerList[playerId].Ping = 1;
+                                                propertyBag.PlaySound(MineWorldSound.Ping);
                                             }
                                         }
                                         break;
@@ -540,11 +501,7 @@ namespace MineWorld
             Csettings.InvertMouseYAxis = false;
             Csettings.NoSound = false;
             Csettings.mouseSensitivity = 0.005f;
-            Csettings.customColours = false;
-            Csettings.red = Defines.IM_RED;
-            Csettings.redName = "Red";
-            Csettings.blue = Defines.IM_BLUE;
-            Csettings.blueName = "Blue";
+            Csettings.color = Color.Red;
             Csettings.Width = 1024;
             Csettings.Height = 768;
             Csettings.Fullscreen = false;
@@ -574,55 +531,18 @@ namespace MineWorld
                 Csettings.volumeLevel = Math.Max(0, Math.Min(1, float.Parse(dataFile.Data["volume"], System.Globalization.CultureInfo.InvariantCulture)));
             if (dataFile.Data.ContainsKey("sensitivity"))
                 Csettings.mouseSensitivity = Math.Max(0.001f, Math.Min(0.05f, float.Parse(dataFile.Data["sensitivity"], System.Globalization.CultureInfo.InvariantCulture) / 1000f));
-            if (dataFile.Data.ContainsKey("red_name"))
-                Csettings.redName = dataFile.Data["red_name"].Trim();
-            if (dataFile.Data.ContainsKey("blue_name"))
-                Csettings.blueName = dataFile.Data["blue_name"].Trim();
-
-
-            if (dataFile.Data.ContainsKey("red"))
+            if (dataFile.Data.ContainsKey("color"))
             {
-                Color temp = new Color();
-                string[] data = dataFile.Data["red"].Split(',');
-                try
+                if (dataFile.Data["color"] == "red")
                 {
-                    temp.R = byte.Parse(data[0].Trim());
-                    temp.G = byte.Parse(data[1].Trim());
-                    temp.B = byte.Parse(data[2].Trim());
-                    temp.A = (byte)255;
+                    Csettings.color = Color.Red;
                 }
-                catch 
+                else
                 {
-                    //Console.WriteLine("Invalid colour values for red");
-                }
-                if (temp.A != 0)
-                {
-                    Csettings.red = temp;
-                    Csettings.customColours = true;
+                    Csettings.color = Color.Blue;
                 }
             }
 
-            if (dataFile.Data.ContainsKey("blue"))
-            {
-                Color temp = new Color();
-                string[] data = dataFile.Data["blue"].Split(',');
-                try
-                {
-                    temp.R = byte.Parse(data[0].Trim());
-                    temp.G = byte.Parse(data[1].Trim());
-                    temp.B = byte.Parse(data[2].Trim());
-                    temp.A = (byte)255;
-                }
-                catch 
-                {
-                    //Console.WriteLine("Invalid colour values for blue");
-                }
-                if (temp.A != 0)
-                {
-                    Csettings.blue = temp;
-                    Csettings.customColours = true;
-                }
-            }
 
             //Now to read the key bindings
             if (!File.Exists(Csettings.Directory + "/keymap.txt"))
@@ -637,8 +557,8 @@ namespace MineWorld
             {
                 try
                 {
-                    Buttons button = (Buttons)Enum.Parse(typeof(Buttons),dataFile.Data[key],true);
-                    if (Enum.IsDefined(typeof(Buttons), button))
+                    KeyBoardButtons button = (KeyBoardButtons)Enum.Parse(typeof(KeyBoardButtons),dataFile.Data[key],true);
+                    if (Enum.IsDefined(typeof(KeyBoardButtons), button))
                     {
                         if (keyBinds.BindKey(button, key, true))
                         {
@@ -692,10 +612,7 @@ namespace MineWorld
             propertyBag.volumeLevel = Csettings.volumeLevel;
             propertyBag.mouseSensitivity = Csettings.mouseSensitivity;
             propertyBag.keyBinds = keyBinds;
-            propertyBag.blue = Csettings.blue;
-            propertyBag.red = Csettings.red;
-            propertyBag.blueName = Csettings.blueName;
-            propertyBag.redName = Csettings.redName;
+            propertyBag.Owncolor = Csettings.color;
             msgBuffer = propertyBag.netClient.CreateBuffer();
         }
 

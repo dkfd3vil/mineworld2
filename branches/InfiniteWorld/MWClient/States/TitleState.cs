@@ -80,13 +80,13 @@ namespace MineWorld.States
 
         }
 
-        public override void OnMouseDown(MouseButton button, int x, int y)
+        public override void OnMouseDown(MouseButtons button, int x, int y)
         {
             nextState = "MineWorld.States.ServerBrowserState";
             _P.PlaySound(MineWorldSound.ClickHigh);
         }
 
-        public override void OnMouseUp(MouseButton button, int x, int y)
+        public override void OnMouseUp(MouseButtons button, int x, int y)
         {
 
         }

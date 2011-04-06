@@ -132,17 +132,17 @@ namespace StateMasher
                 if (WindowHasFocus())
                 {
                     if (msOld.LeftButton == ButtonState.Released && msNew.LeftButton == ButtonState.Pressed)
-                        currentState.OnMouseDown(MouseButton.LeftButton, msNew.X, msNew.Y);
+                        currentState.OnMouseDown(MouseButtons.LeftButton, msNew.X, msNew.Y);
                     if (msOld.MiddleButton == ButtonState.Released && msNew.MiddleButton == ButtonState.Pressed)
-                        currentState.OnMouseDown(MouseButton.MiddleButton, msNew.X, msNew.Y);
+                        currentState.OnMouseDown(MouseButtons.MiddleButton, msNew.X, msNew.Y);
                     if (msOld.RightButton == ButtonState.Released && msNew.RightButton == ButtonState.Pressed)
-                        currentState.OnMouseDown(MouseButton.RightButton, msNew.X, msNew.Y);
+                        currentState.OnMouseDown(MouseButtons.RightButton, msNew.X, msNew.Y);
                     if (msOld.LeftButton == ButtonState.Pressed && msNew.LeftButton == ButtonState.Released)
-                        currentState.OnMouseUp(MouseButton.LeftButton, msNew.X, msNew.Y);
+                        currentState.OnMouseUp(MouseButtons.LeftButton, msNew.X, msNew.Y);
                     if (msOld.MiddleButton == ButtonState.Pressed && msNew.MiddleButton == ButtonState.Released)
-                        currentState.OnMouseUp(MouseButton.MiddleButton, msNew.X, msNew.Y);
+                        currentState.OnMouseUp(MouseButtons.MiddleButton, msNew.X, msNew.Y);
                     if (msOld.RightButton == ButtonState.Pressed && msNew.RightButton == ButtonState.Released)
-                        currentState.OnMouseUp(MouseButton.RightButton, msNew.X, msNew.Y);
+                        currentState.OnMouseUp(MouseButtons.RightButton, msNew.X, msNew.Y);
                     if (msOld.ScrollWheelValue != msNew.ScrollWheelValue)
                         currentState.OnMouseScroll(msNew.ScrollWheelValue - msOld.ScrollWheelValue);
                 }

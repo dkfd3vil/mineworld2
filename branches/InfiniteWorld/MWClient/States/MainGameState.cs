@@ -293,18 +293,18 @@ namespace MineWorld.States
 
             if (_P.chatMode == ChatMessageType.None)
             {
-                if ((_SM as MineWorldGame).keyBinds.IsPressed(Buttons.Forward))//keyState.IsKeyDown(Keys.W))
+                if ((_SM as MineWorldGame).keyBinds.IsPressed(KeyBoardButtons.Forward))//keyState.IsKeyDown(Keys.W))
                     moveVector += _P.playerCamera.GetLookVector();
-                if ((_SM as MineWorldGame).keyBinds.IsPressed(Buttons.Backward))//keyState.IsKeyDown(Keys.S))
+                if ((_SM as MineWorldGame).keyBinds.IsPressed(KeyBoardButtons.Backward))//keyState.IsKeyDown(Keys.S))
                     moveVector -= _P.playerCamera.GetLookVector();
-                if ((_SM as MineWorldGame).keyBinds.IsPressed(Buttons.Right))//keyState.IsKeyDown(Keys.D))
+                if ((_SM as MineWorldGame).keyBinds.IsPressed(KeyBoardButtons.Right))//keyState.IsKeyDown(Keys.D))
                     moveVector += _P.playerCamera.GetRightVector();
-                if ((_SM as MineWorldGame).keyBinds.IsPressed(Buttons.Left))//keyState.IsKeyDown(Keys.A))
+                if ((_SM as MineWorldGame).keyBinds.IsPressed(KeyBoardButtons.Left))//keyState.IsKeyDown(Keys.A))
                     moveVector -= _P.playerCamera.GetRightVector();
                 //Sprinting
-                if ((_SM as MineWorldGame).keyBinds.IsPressed(Buttons.Sprint))//keyState.IsKeyDown(Keys.LeftShift) || keyState.IsKeyDown(Keys.RightShift))
+                if ((_SM as MineWorldGame).keyBinds.IsPressed(KeyBoardButtons.Sprint))//keyState.IsKeyDown(Keys.LeftShift) || keyState.IsKeyDown(Keys.RightShift))
                     _P.sprinting = true;
-                if ((_SM as MineWorldGame).keyBinds.IsPressed(Buttons.Crouch))
+                if ((_SM as MineWorldGame).keyBinds.IsPressed(KeyBoardButtons.Crouch))
                     _P.crouching = false;
             }
 
@@ -433,11 +433,11 @@ namespace MineWorld.States
             }
         }
 
-        private void HandleInput(Buttons input)
+        private void HandleInput(KeyBoardButtons input)
         {
             switch (input)
             {
-                case Buttons.Fire:
+                case KeyBoardButtons.Fire:
                     if (_P.playerToolCooldown <= 0)
                     {
                         switch (_P.playerTools[_P.playerToolSelected])
@@ -466,7 +466,7 @@ namespace MineWorld.States
                         }
                     }
                     break;
-                case Buttons.Jump:
+                case KeyBoardButtons.Jump:
                     {
                         Vector3 footPosition = _P.playerPosition + new Vector3(0f, -1.5f, 0f);
                         Vector3 midPosition = _P.playerPosition + new Vector3(0f, -0.7f, 0f);
@@ -483,49 +483,49 @@ namespace MineWorld.States
                         }
                     }
                     break;
-                case Buttons.ToolUp:
+                case KeyBoardButtons.ToolUp:
                     _P.PlaySound(MineWorldSound.ClickLow);
                     _P.playerToolSelected += 1;
                     if (_P.playerToolSelected >= _P.playerTools.Length)
                         _P.playerToolSelected = 0;
                     break;
-                case Buttons.ToolDown:
+                case KeyBoardButtons.ToolDown:
                     _P.PlaySound(MineWorldSound.ClickLow);
                     _P.playerToolSelected -= 1;
                     if (_P.playerToolSelected < 0)
                         _P.playerToolSelected = _P.playerTools.Length;
                     break;
-                case Buttons.Tool1:
+                case KeyBoardButtons.Tool1:
                     _P.playerToolSelected = 0;
                     _P.PlaySound(MineWorldSound.ClickLow);
                     if (_P.playerToolSelected >= _P.playerTools.Length)
                         _P.playerToolSelected = _P.playerTools.Length - 1;
                     break;
-                case Buttons.Tool2:
+                case KeyBoardButtons.Tool2:
                     _P.playerToolSelected = 1;
                     _P.PlaySound(MineWorldSound.ClickLow);
                     if (_P.playerToolSelected >= _P.playerTools.Length)
                         _P.playerToolSelected = _P.playerTools.Length - 1;
                     break;
-                case Buttons.Tool3:
+                case KeyBoardButtons.Tool3:
                     _P.playerToolSelected = 2;
                     _P.PlaySound(MineWorldSound.ClickLow);
                     if (_P.playerToolSelected >= _P.playerTools.Length)
                         _P.playerToolSelected = _P.playerTools.Length - 1;
                     break;
-                case Buttons.Tool4:
+                case KeyBoardButtons.Tool4:
                     _P.playerToolSelected = 3;
                     _P.PlaySound(MineWorldSound.ClickLow);
                     if (_P.playerToolSelected >= _P.playerTools.Length)
                         _P.playerToolSelected = _P.playerTools.Length - 1;
                     break;
-                case Buttons.Tool5:
+                case KeyBoardButtons.Tool5:
                     _P.playerToolSelected = 4;
                     _P.PlaySound(MineWorldSound.ClickLow);
                     if (_P.playerToolSelected >= _P.playerTools.Length)
                         _P.playerToolSelected = _P.playerTools.Length - 1;
                     break;
-                case Buttons.BlockUp:
+                case KeyBoardButtons.BlockUp:
                     if (_P.playerTools[_P.playerToolSelected] == PlayerTools.ConstructionGun)
                     {
                         _P.PlaySound(MineWorldSound.ClickLow);
@@ -534,7 +534,7 @@ namespace MineWorld.States
                             _P.playerBlockSelected = 0;
                     }
                     break;
-                case Buttons.BlockDown:
+                case KeyBoardButtons.BlockDown:
                     if (_P.playerTools[_P.playerToolSelected] == PlayerTools.ConstructionGun)
                     {
                         _P.PlaySound(MineWorldSound.ClickLow);
@@ -543,26 +543,7 @@ namespace MineWorld.States
                             _P.playerBlockSelected = _P.playerBlocks.Length-1;
                     }
                     break;
-                case Buttons.Deposit:
-                    if (_P.AtBankTerminal())
-                    {
-                        _P.DepositOre();
-                        _P.PlaySound(MineWorldSound.ClickHigh);
-                    }
-                    if (_P.AtHomeBase())
-                    {
-                        _P.DepositLoot();
-                        _P.PlaySound(MineWorldSound.ClickHigh);
-                    }
-                    break;
-                case Buttons.Withdraw:
-                    if (_P.AtBankTerminal())
-                    {
-                        _P.WithdrawOre();
-                        _P.PlaySound(MineWorldSound.ClickHigh);
-                    }
-                    break;
-                case Buttons.Ping:
+                case KeyBoardButtons.Ping:
                     {
                         NetBuffer msgBuffer = _P.netClient.CreateBuffer();
                         msgBuffer.Write((byte)MineWorldMessage.PlayerPing);
@@ -570,18 +551,8 @@ namespace MineWorld.States
                         _P.netClient.SendMessage(msgBuffer, NetChannel.ReliableUnordered);
                     }
                     break;
-                case Buttons.ChangeClass:
-                    nextState = "MineWorld.States.ClassSelectionState";
-                    break;
-                case Buttons.ChangeTeam:
-                    nextState = "MineWorld.States.TeamSelectionState";
-                    break;
-                case Buttons.SayAll:
-                    _P.chatMode = ChatMessageType.SayAll;
-                    startChat = DateTime.Now;
-                    break;
-                case Buttons.SayTeam:
-                    _P.chatMode = _P.playerTeam == PlayerTeam.Red ? ChatMessageType.SayRedTeam : ChatMessageType.SayBlueTeam;
+                case KeyBoardButtons.Say:
+                    _P.chatMode = ChatMessageType.Say;
                     startChat = DateTime.Now;
                     break;
             }
@@ -646,12 +617,9 @@ namespace MineWorld.States
                                 msgBuffer.Write((byte)MineWorldMessage.ChatMessage);
                                 msgBuffer.Write((byte)_P.chatMode);
                                 msgBuffer.Write(_P.chatEntryBuffer);
+                                msgBuffer.Write(_P.playerHandle);
                                 _P.netClient.SendMessage(msgBuffer, NetChannel.ReliableInOrder3);
                             }
-                        }
-                        else
-                        {
-                            _P.addChatMessage("Not connected to server.", ChatMessageType.SayAll, 10);
                         }
                     }
 
@@ -679,7 +647,7 @@ namespace MineWorld.States
 
         }
 
-        public override void OnMouseDown(MouseButton button, int x, int y)
+        public override void OnMouseDown(MouseButtons button, int x, int y)
         {
             // If we're dead, come back to life.
             if (_P.playerDead && _P.screenEffectCounter > 2)
@@ -688,7 +656,7 @@ namespace MineWorld.States
                 HandleInput((_SM as MineWorldGame).keyBinds.GetBound(button));
         }
 
-        public override void OnMouseUp(MouseButton button, int x, int y)
+        public override void OnMouseUp(MouseButtons button, int x, int y)
         {
 
         }
@@ -702,11 +670,11 @@ namespace MineWorld.States
                 if (scrollDelta >= 120)
                 {
                     //Console.WriteLine("Handling input for scroll up...");
-                    HandleInput((_SM as MineWorldGame).keyBinds.GetBound(MouseButton.WheelUp));//.keyBinds.GetBound(button));
+                    HandleInput((_SM as MineWorldGame).keyBinds.GetBound(MouseButtons.WheelUp));//.keyBinds.GetBound(button));
                 }
                 else if (scrollDelta <= -120)
                 {
-                    HandleInput((_SM as MineWorldGame).keyBinds.GetBound(MouseButton.WheelDown));
+                    HandleInput((_SM as MineWorldGame).keyBinds.GetBound(MouseButtons.WheelDown));
                 }
             }
         }

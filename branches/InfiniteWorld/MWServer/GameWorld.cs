@@ -14,8 +14,6 @@ namespace MineWorld
     public partial class MineWorldServer
     {
         public BlockType[, ,] blockList = null;    // In game coordinates, where Y points up.
-        PlayerTeam[, ,] blockCreatorTeam = null;
-
 
         List<string> beaconIDList = new List<string>();
         Dictionary<Vector3, Beacon> beaconList = new Dictionary<Vector3, Beacon>();
@@ -47,11 +45,10 @@ namespace MineWorld
             {
                 if (beaconList.ContainsKey(new Vector3(x, y, z)))
                     beaconList.Remove(new Vector3(x, y, z));
-                SendSetBeacon(new Vector3(x, y + 1, z), "", PlayerTeam.None);
+                SendSetBeacon(new Vector3(x, y + 1, z), "");
             }
 
             blockList[x, y, z] = BlockType.None;
-            blockCreatorTeam[x, y, z] = PlayerTeam.None;
 
             // x, y, z, type, all bytes
             NetBuffer msgBuffer = netServer.CreateBuffer();
@@ -65,7 +62,7 @@ namespace MineWorld
                 player.AddQueMsg(msgBuffer, NetChannel.ReliableUnordered);
         }
 
-        public void SetBlock(ushort x, ushort y, ushort z, BlockType blockType, PlayerTeam team)
+        public void SetBlock(ushort x, ushort y, ushort z, BlockType blockType)
         {
             Debug.Assert(blockType != BlockType.None, "Setblock used for removal", "Block was sent " + blockType.ToString());
 
@@ -76,13 +73,11 @@ namespace MineWorld
             {
                 Beacon newBeacon = new Beacon();
                 newBeacon.ID = GenerateBeaconID();
-                newBeacon.Team = blockType == BlockType.BeaconRed ? PlayerTeam.Red : PlayerTeam.Blue;
                 beaconList[new Vector3(x, y, z)] = newBeacon;
-                SendSetBeacon(new Vector3(x, y + 1, z), newBeacon.ID, newBeacon.Team);
+                SendSetBeacon(new Vector3(x, y + 1, z), newBeacon.ID);
             }
 
             blockList[x, y, z] = blockType;
-            blockCreatorTeam[x, y, z] = team;
 
             // x, y, z, type, all bytes
             NetBuffer msgBuffer = netServer.CreateBuffer();
@@ -104,7 +99,6 @@ namespace MineWorld
             CaveGenerator Cg = new CaveGenerator(Defines.MAPSIZE,Msettings);
             BlockType[, ,] worldData = Cg.GenerateCaveSystem();
             blockList = new BlockType[Defines.MAPSIZE, Defines.MAPSIZE, Defines.MAPSIZE];
-            blockCreatorTeam = new PlayerTeam[Defines.MAPSIZE, Defines.MAPSIZE, Defines.MAPSIZE];
             for (ushort i = 0; i < Defines.MAPSIZE; i++)
             {
                 for (ushort j = 0; j < Defines.MAPSIZE; j++)
@@ -112,7 +106,6 @@ namespace MineWorld
                     for (ushort k = 0; k < Defines.MAPSIZE; k++)
                     {
                         blockList[i, (ushort)(Defines.MAPSIZE - 1 - k), j] = worldData[i, j, k];
-                        blockCreatorTeam[i, j, k] = PlayerTeam.None;
                         if (blockList[i, j, k] == BlockType.Lava)
                         {
                             templavablockcount++;
@@ -148,20 +141,6 @@ namespace MineWorld
             return dist;
         }
 
-        public void DepositForPlayers()
-        {
-            foreach (IClient p in playerList.Values)
-            {
-                if (p.Position.Y > Defines.MAPSIZE - Defines.GROUND_LEVEL)
-                    DepositCash(p);
-            }
-
-            if (teamCashBlue >= Msettings.Winningcashamount && winningTeam == PlayerTeam.None)
-                winningTeam = PlayerTeam.Blue;
-            if (teamCashRed >= Msettings.Winningcashamount && winningTeam == PlayerTeam.None)
-                winningTeam = PlayerTeam.Red;
-        }
-
         public bool InDirectSunLight(ushort i, ushort j , ushort k)
         {
             ushort s;
@@ -188,8 +167,8 @@ namespace MineWorld
             if (testpoint == BlockType.None 
                 || testpoint == BlockType.Water 
                 || testpoint == BlockType.Lava 
-                || testpoint == BlockType.TransBlue && pl.Team == PlayerTeam.Blue 
-                || testpoint == BlockType.TransRed && pl.Team == PlayerTeam.Red)
+                || testpoint == BlockType.TransBlue
+                || testpoint == BlockType.TransRed)
             {
                 return pos;
             }
@@ -311,9 +290,6 @@ namespace MineWorld
 
             // Figure out what the result is.
             bool removeBlock = false;
-            uint giveOre = 0;
-            uint giveCash = 0;
-            uint giveWeight = 0;
             MineWorldSound sound = MineWorldSound.DigDirt;
 
             switch (BlockAtPoint(hitPoint))
@@ -333,21 +309,16 @@ namespace MineWorld
 
                 case BlockType.Ore:
                     removeBlock = true;
-                    giveOre = 20;
                     sound = MineWorldSound.DigMetal;
                     break;
 
                 case BlockType.Gold:
                     removeBlock = true;
-                    giveWeight = 1;
-                    giveCash = 100;
                     sound = MineWorldSound.DigMetal;
                     break;
 
                 case BlockType.Diamond:
                     removeBlock = true;
-                    giveWeight = 1;
-                    giveCash = 1000;
                     sound = MineWorldSound.DigMetal;
                     break;
                 
@@ -358,27 +329,6 @@ namespace MineWorld
                 case BlockType.Grass:
                     removeBlock = true;
                     break;
-            }
-
-            if (giveOre > 0)
-            {
-                if (player.Ore < player.OreMax)
-                {
-                    player.Ore = Math.Min(player.Ore + giveOre, player.OreMax);
-                    SendResourceUpdate(player);
-                }
-            }
-
-            if (giveWeight > 0)
-            {
-                if (player.Weight < player.WeightMax)
-                {
-                    player.Weight = Math.Min(player.Weight + giveWeight, player.WeightMax);
-                    player.Cash += giveCash;
-                    SendResourceUpdate(player);
-                }
-                else
-                    removeBlock = false;
             }
 
             if (removeBlock)
@@ -412,6 +362,7 @@ namespace MineWorld
 
             // If there's someone there currently, bail.
             bool actionFailed = false;
+
             ushort x = (ushort)buildPoint.X;
             ushort y = (ushort)buildPoint.Y;
             ushort z = (ushort)buildPoint.Z;
@@ -425,19 +376,6 @@ namespace MineWorld
             if (!SaneBlockPosition(x,y,z))
                 actionFailed = true;
 
-            // If the player is too poor, bail
-            // But if the got the nocost command enabled then build
-            uint blockCost = BlockInformation.GetCost(blockType);
-            if (player.nocost == true)
-            {
-                actionFailed = false;
-            }
-            else
-            {
-                if (blockCost > player.Ore)
-                    actionFailed = true;
-            }
-
             if (actionFailed)
             {
                 // Decharge the player's gun.
@@ -449,14 +387,7 @@ namespace MineWorld
                 TriggerConstructionGunAnimation(player, 0.5f);
 
                 // Build the block.
-                SetBlock(x, y, z, blockType, player.Team);
-
-                // Get the blockCost and substract it from the player
-                if (player.nocost == false)
-                {
-                    player.Ore -= blockCost;
-                    SendResourceUpdate(player);
-                }
+                SetBlock(x, y, z, blockType);
 
                 // Play the sound.
                 PlaySound(MineWorldSound.ConstructionGun, player.Position);
@@ -495,10 +426,6 @@ namespace MineWorld
             ushort x = (ushort)hitPoint.X;
             ushort y = (ushort)hitPoint.Y;
             ushort z = (ushort)hitPoint.Z;
-
-            // If this is another team's block, bail.
-            if (blockCreatorTeam[x, y, z] != player.Team)
-                actionFailed = true;
 
             BlockType blockType = blockList[x, y, z];
             if (!(blockType == BlockType.SolidBlue ||
@@ -557,12 +484,12 @@ namespace MineWorld
 
             if (blockList[x, y, z] == BlockType.Dirt)
             {
-                SetBlock(x, y, z, BlockType.DirtSign, PlayerTeam.None);
+                SetBlock(x, y, z, BlockType.DirtSign);
                 PlaySound(MineWorldSound.ConstructionGun, player.Position);
             }
             else if (blockList[x, y, z] == BlockType.DirtSign)
             {
-                SetBlock(x, y, z, BlockType.Dirt, PlayerTeam.None);
+                SetBlock(x, y, z, BlockType.Dirt);
                 PlaySound(MineWorldSound.ConstructionGun, player.Position);
             }
         }
@@ -649,16 +576,15 @@ namespace MineWorld
             }
         }
 
+        /*
         public void DepositOre(IClient player)
         {
             uint depositAmount = Math.Min(50, player.Ore);
             player.Ore -= depositAmount;
-            if (player.Team == PlayerTeam.Red)
-                teamOreRed = Math.Min(teamOreRed + depositAmount, 9999);
-            else
-                teamOreBlue = Math.Min(teamOreBlue + depositAmount, 9999);
         }
+         */
 
+        /*
         public void WithdrawOre(IClient player)
         {
             if (player.Team == PlayerTeam.Red)
@@ -674,7 +600,9 @@ namespace MineWorld
                 teamOreBlue -= withdrawAmount;
             }
         }
+         */
 
+        /*
         public void DepositCash(IClient player)
         {
             if (player.Cash <= 0)
@@ -696,5 +624,6 @@ namespace MineWorld
             foreach (IClient p in playerList.Values)
                 SendResourceUpdate(p);
         }
+         */
     }
 }

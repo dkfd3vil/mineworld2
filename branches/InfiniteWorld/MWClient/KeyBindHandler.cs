@@ -15,11 +15,11 @@ namespace MineWorld
             Shift
         }
 
-        Dictionary<Keys, Buttons> keyBinds = new Dictionary<Keys, Buttons>();
-        Dictionary<MouseButton, Buttons> mouseBinds = new Dictionary<MouseButton, Buttons>();
-        Dictionary<SpecialKeys, Buttons> specialKeyBinds = new Dictionary<SpecialKeys, Buttons>();
+        Dictionary<Keys, KeyBoardButtons> keyBinds = new Dictionary<Keys, KeyBoardButtons>();
+        Dictionary<MouseButtons, KeyBoardButtons> mouseBinds = new Dictionary<MouseButtons, KeyBoardButtons>();
+        Dictionary<SpecialKeys, KeyBoardButtons> specialKeyBinds = new Dictionary<SpecialKeys, KeyBoardButtons>();
 
-        public bool IsBound(Buttons button, Keys theKey)
+        public bool IsBound(KeyBoardButtons button, Keys theKey)
         {
             if (keyBinds.ContainsKey(theKey) && keyBinds[theKey] == button)
                 return true;
@@ -32,7 +32,7 @@ namespace MineWorld
             return false;
         }
 
-        public bool IsPressed(Buttons button)
+        public bool IsPressed(KeyBoardButtons button)
         {
             KeyboardState state = Keyboard.GetState();
             foreach (Keys key in keyBinds.Keys)
@@ -44,21 +44,21 @@ namespace MineWorld
                 }
             }
             MouseState ms = Mouse.GetState();
-            foreach (MouseButton mb in mouseBinds.Keys)
+            foreach (MouseButtons mb in mouseBinds.Keys)
             {
                 if (mouseBinds[mb] == button)
                 {
                     switch (mb)
                     {
-                        case MouseButton.LeftButton:
+                        case MouseButtons.LeftButton:
                             if (ms.LeftButton == ButtonState.Pressed)
                                 return true;
                             break;
-                        case MouseButton.MiddleButton:
+                        case MouseButtons.MiddleButton:
                             if (ms.MiddleButton == ButtonState.Pressed)
                                 return true;
                             break;
-                        case MouseButton.RightButton:
+                        case MouseButtons.RightButton:
                             if (ms.RightButton == ButtonState.Pressed)
                                 return true;
                             break;
@@ -89,14 +89,14 @@ namespace MineWorld
             return false;
         }
 
-        public bool IsBound(Buttons button, MouseButton mb)
+        public bool IsBound(KeyBoardButtons button, MouseButtons mb)
         {
             if (mouseBinds.ContainsKey(mb) && mouseBinds[mb] == button)
                 return true;
             return false;
         }
 
-        public Buttons GetBound(Keys theKey)
+        public KeyBoardButtons GetBound(Keys theKey)
         {
             if (keyBinds.ContainsKey(theKey))
                 return keyBinds[theKey];
@@ -106,18 +106,18 @@ namespace MineWorld
                 return specialKeyBinds[SpecialKeys.Shift];
             else if ((theKey == Keys.LeftControl || theKey == Keys.RightControl) && specialKeyBinds.ContainsKey(SpecialKeys.Control))
                 return specialKeyBinds[SpecialKeys.Control];
-            return Buttons.None;
+            return KeyBoardButtons.None;
         }
 
-        public Buttons GetBound(MouseButton theButton)
+        public KeyBoardButtons GetBound(MouseButtons theButton)
         {
             if (mouseBinds.ContainsKey(theButton))
                 return mouseBinds[theButton];
-            return Buttons.None;
+            return KeyBoardButtons.None;
         }
 
         //If overwrite is true then the previous entry for that button will be removed
-        public bool BindKey(Buttons button, string key, bool overwrite)
+        public bool BindKey(KeyBoardButtons button, string key, bool overwrite)
         {
             try
             {
@@ -125,7 +125,7 @@ namespace MineWorld
                 Keys actualKey = (Keys)Enum.Parse(typeof(Keys), key, true);
                 if (Enum.IsDefined(typeof(Keys), actualKey))
                 {
-                    keyBinds.Add(actualKey, (Buttons)button);
+                    keyBinds.Add(actualKey, (KeyBoardButtons)button);
                     return true;
                 }
             }
@@ -133,10 +133,10 @@ namespace MineWorld
             try
             {
                 //Mouse bind
-                MouseButton actualMB = (MouseButton)Enum.Parse(typeof(MouseButton), key, true);
-                if (Enum.IsDefined(typeof(MouseButton), actualMB))
+                MouseButtons actualMB = (MouseButtons)Enum.Parse(typeof(MouseButtons), key, true);
+                if (Enum.IsDefined(typeof(MouseButtons), actualMB))
                 {
-                    mouseBinds.Add(actualMB, (Buttons)button);
+                    mouseBinds.Add(actualMB, (KeyBoardButtons)button);
                     return true;
                 }
             }
@@ -144,17 +144,17 @@ namespace MineWorld
             //Special cases
             if (key.Equals("control", StringComparison.OrdinalIgnoreCase) || key.Equals("ctrl", StringComparison.OrdinalIgnoreCase))
             {
-                specialKeyBinds.Add(SpecialKeys.Control, (Buttons)button);
+                specialKeyBinds.Add(SpecialKeys.Control, (KeyBoardButtons)button);
                 return true;
             }
             if (key.Equals("shift", StringComparison.OrdinalIgnoreCase))
             {
-                specialKeyBinds.Add(SpecialKeys.Shift, (Buttons)button);
+                specialKeyBinds.Add(SpecialKeys.Shift, (KeyBoardButtons)button);
                 return true;
             }
             if (key.Equals("alt", StringComparison.OrdinalIgnoreCase))
             {
-                specialKeyBinds.Add(SpecialKeys.Alt, (Buttons)button);
+                specialKeyBinds.Add(SpecialKeys.Alt, (KeyBoardButtons)button);
                 return true;
             }
             return false;
@@ -168,7 +168,7 @@ namespace MineWorld
             {
                 output.Data[key.ToString()] = keyBinds[key].ToString();
             }
-            foreach (MouseButton button in mouseBinds.Keys)
+            foreach (MouseButtons button in mouseBinds.Keys)
             {
                 output.Data[button.ToString()] = mouseBinds[button].ToString();
             }
@@ -181,37 +181,33 @@ namespace MineWorld
 
         public void CreateDefaultSet()
         {
-            mouseBinds.Add(MouseButton.LeftButton, Buttons.Fire);
+            mouseBinds.Add(MouseButtons.LeftButton, KeyBoardButtons.Fire);
 
-            keyBinds.Add(Keys.W, Buttons.Forward);
-            keyBinds.Add(Keys.S, Buttons.Backward);
-            keyBinds.Add(Keys.A, Buttons.Left);
-            keyBinds.Add(Keys.D, Buttons.Right);
-            specialKeyBinds.Add(SpecialKeys.Shift, Buttons.Sprint);
-            specialKeyBinds.Add(SpecialKeys.Control, Buttons.Crouch);
-            keyBinds.Add(Keys.Space, Buttons.Jump);
+            keyBinds.Add(Keys.W, KeyBoardButtons.Forward);
+            keyBinds.Add(Keys.S, KeyBoardButtons.Backward);
+            keyBinds.Add(Keys.A, KeyBoardButtons.Left);
+            keyBinds.Add(Keys.D, KeyBoardButtons.Right);
+            specialKeyBinds.Add(SpecialKeys.Shift, KeyBoardButtons.Sprint);
+            specialKeyBinds.Add(SpecialKeys.Control, KeyBoardButtons.Crouch);
+            keyBinds.Add(Keys.Space, KeyBoardButtons.Jump);
 
-            keyBinds.Add(Keys.Q, Buttons.Ping);
-            keyBinds.Add(Keys.D8, Buttons.Deposit);
-            keyBinds.Add(Keys.D9, Buttons.Withdraw);
+            keyBinds.Add(Keys.Q, KeyBoardButtons.Ping);
+            keyBinds.Add(Keys.D8, KeyBoardButtons.Deposit);
+            keyBinds.Add(Keys.D9, KeyBoardButtons.Withdraw);
 
-            keyBinds.Add(Keys.T, Buttons.SayAll);
-            keyBinds.Add(Keys.U, Buttons.SayTeam);
+            keyBinds.Add(Keys.Y, KeyBoardButtons.Say);
 
-            keyBinds.Add(Keys.M, Buttons.ChangeClass);
-            keyBinds.Add(Keys.N, Buttons.ChangeTeam);
+            keyBinds.Add(Keys.D1, KeyBoardButtons.Tool1);
+            keyBinds.Add(Keys.D2, KeyBoardButtons.Tool2);
+            keyBinds.Add(Keys.D3, KeyBoardButtons.Tool3);
+            keyBinds.Add(Keys.D4, KeyBoardButtons.Tool4);
+            keyBinds.Add(Keys.D5, KeyBoardButtons.Tool5);
 
-            keyBinds.Add(Keys.D1, Buttons.Tool1);
-            keyBinds.Add(Keys.D2, Buttons.Tool2);
-            keyBinds.Add(Keys.D3, Buttons.Tool3);
-            keyBinds.Add(Keys.D4, Buttons.Tool4);
-            keyBinds.Add(Keys.D5, Buttons.Tool5);
+            keyBinds.Add(Keys.E, KeyBoardButtons.ToolUp);
 
-            keyBinds.Add(Keys.E, Buttons.ToolUp);
-
-            keyBinds.Add(Keys.R, Buttons.BlockUp);
-            mouseBinds.Add(MouseButton.WheelUp, Buttons.BlockUp);
-            mouseBinds.Add(MouseButton.WheelDown, Buttons.BlockDown);
+            keyBinds.Add(Keys.R, KeyBoardButtons.BlockUp);
+            mouseBinds.Add(MouseButtons.WheelUp, KeyBoardButtons.BlockUp);
+            mouseBinds.Add(MouseButtons.WheelDown, KeyBoardButtons.BlockDown);
         }
     }
 }
