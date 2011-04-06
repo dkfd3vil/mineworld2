@@ -123,7 +123,7 @@ namespace MineWorld
                             {
                                 if (j > 0)
                                 {
-                                    SetBlock(i, (ushort)(j - 1), k, BlockType.Lava, PlayerTeam.None);
+                                    SetBlock(i, (ushort)(j - 1), k, BlockType.Lava);
                                     RemoveBlock(i, j, k);
                                     flowSleep[i, j - 1, k] = true;
                                     //flowSleep[i, j, k] = true;
@@ -144,7 +144,7 @@ namespace MineWorld
                                 {
                                     if (i > 0)
                                     {
-                                        SetBlock((ushort)(i - 1), j, k, BlockType.Lava, PlayerTeam.None);
+                                        SetBlock((ushort)(i - 1), j, k, BlockType.Lava);
                                         flowSleep[i - 1, j, k] = true;
                                     }
                                 }
@@ -152,7 +152,7 @@ namespace MineWorld
                                 {
                                     if (i < Defines.MAPSIZE)
                                     {
-                                        SetBlock((ushort)(i + 1), j, k, BlockType.Lava, PlayerTeam.None);
+                                        SetBlock((ushort)(i + 1), j, k, BlockType.Lava);
                                         flowSleep[i + 1, j, k] = true;
                                     }
                                 }
@@ -160,7 +160,7 @@ namespace MineWorld
                                 {
                                     if (k > 0)
                                     {
-                                        SetBlock(i, j, (ushort)(k - 1), BlockType.Lava, PlayerTeam.None);
+                                        SetBlock(i, j, (ushort)(k - 1), BlockType.Lava);
                                         flowSleep[i, j, k - 1] = true;
                                     }
                                 }
@@ -168,7 +168,7 @@ namespace MineWorld
                                 {
                                     if (k < Defines.MAPSIZE)
                                     {
-                                        SetBlock(i, j, (ushort)(k + 1), BlockType.Lava, PlayerTeam.None);
+                                        SetBlock(i, j, (ushort)(k + 1), BlockType.Lava);
                                         flowSleep[i, j, k + 1] = true;
                                     }
                                 }
@@ -189,7 +189,7 @@ namespace MineWorld
                                 {
                                     if (randGen.Next(0, 6) == 3)
                                     {
-                                        SetBlock(i, j, k, BlockType.Grass, PlayerTeam.None);
+                                        SetBlock(i, j, k, BlockType.Grass);
                                     }
                                 }
                             }
@@ -239,35 +239,35 @@ namespace MineWorld
                             {
                                 if (j > 0)
                                 {
-                                    SetBlock(i, (ushort)(j - 1), k, BlockType.Rock, PlayerTeam.None);
+                                    SetBlock(i, (ushort)(j - 1), k, BlockType.Rock);
                                 }
                             }
                             if (typeIdesc == BlockType.Lava)
                             {
                                 if (i > 0)
                                 {
-                                    SetBlock((ushort)(i - 1), j, k, BlockType.Rock, PlayerTeam.None);
+                                    SetBlock((ushort)(i - 1), j, k, BlockType.Rock);
                                 }
                             }
                             if (typeIincr == BlockType.Lava)
                             {
                                 if (i < Defines.MAPSIZE)
                                 {
-                                    SetBlock((ushort)(i + 1), j, k, BlockType.Rock, PlayerTeam.None);
+                                    SetBlock((ushort)(i + 1), j, k, BlockType.Rock);
                                 }
                             }
                             if (typeKdesc == BlockType.Lava)
                             {
                                 if (k > 0)
                                 {
-                                    SetBlock(i, j, (ushort)(k - 1), BlockType.Rock, PlayerTeam.None);
+                                    SetBlock(i, j, (ushort)(k - 1), BlockType.Rock);
                                 }
                             }
                             if (typeKincr == BlockType.Lava)
                             {
                                 if (k < Defines.MAPSIZE)
                                 {
-                                    SetBlock(i, j, (ushort)(k + 1), BlockType.Rock, PlayerTeam.None);
+                                    SetBlock(i, j, (ushort)(k + 1), BlockType.Rock);
                                 }
                             }
                         }
@@ -303,7 +303,7 @@ namespace MineWorld
                             {
                                 if (j > 0)
                                 {
-                                    SetBlock(i, (ushort)(j - 1), k, BlockType.Water, PlayerTeam.None);
+                                    SetBlock(i, (ushort)(j - 1), k, BlockType.Water);
                                     RemoveBlock(i, j, k);
                                     flowSleep[i, j - 1, k] = true;
                                     //flowSleep[i, j, k] = true;
@@ -324,7 +324,7 @@ namespace MineWorld
                                 {
                                     if (i > 0)
                                     {
-                                        SetBlock((ushort)(i - 1), j, k, BlockType.Water, PlayerTeam.None);
+                                        SetBlock((ushort)(i - 1), j, k, BlockType.Water);
                                         flowSleep[i - 1, j, k] = true;
                                     }
                                 }
@@ -332,7 +332,7 @@ namespace MineWorld
                                 {
                                     if (i < Defines.MAPSIZE)
                                     {
-                                        SetBlock((ushort)(i + 1), j, k, BlockType.Water, PlayerTeam.None);
+                                        SetBlock((ushort)(i + 1), j, k, BlockType.Water);
                                         flowSleep[i + 1, j, k] = true;
                                     }
                                 }
@@ -340,7 +340,7 @@ namespace MineWorld
                                 {
                                     if (k > 0)
                                     {
-                                        SetBlock(i, j, (ushort)(k - 1), BlockType.Water, PlayerTeam.None);
+                                        SetBlock(i, j, (ushort)(k - 1), BlockType.Water);
                                         flowSleep[i, j, k - 1] = true;
                                     }
                                 }
@@ -348,7 +348,7 @@ namespace MineWorld
                                 {
                                     if (k < Defines.MAPSIZE)
                                     {
-                                        SetBlock(i, j, (ushort)(k + 1), BlockType.Water, PlayerTeam.None);
+                                        SetBlock(i, j, (ushort)(k + 1), BlockType.Water);
                                         flowSleep[i, j, k + 1] = true;
                                     }
                                 }

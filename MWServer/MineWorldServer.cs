@@ -47,14 +47,6 @@ namespace MineWorld
         public MapSettings Msettings = new MapSettings();
 
         //TODO Find a proper place
-        // Team variables
-        uint teamCashRed;
-        uint teamCashBlue;
-        uint teamOreRed;
-        uint teamOreBlue;
-        PlayerTeam winningTeam;
-
-        //TODO Find a proper place
         // Fluids count
         int Totallavablockcount;
         int Totalwaterblockcount;
@@ -112,9 +104,6 @@ namespace MineWorld
             // Load the bannednames-list.
             bannednames = LoadBannedNames();
 
-            // Load the team variables.
-            LoadTeamVariables();
-
             // Initialize the server.
             NetConfiguration netConfig = new NetConfiguration("MineWorldPlus");
             netConfig.MaxConnections = Ssettings.Maxplayers;
@@ -145,7 +134,6 @@ namespace MineWorld
             {
                 ConsoleWrite("AUTOLOAD MAP");
                 blockList = new BlockType[Defines.MAPSIZE, Defines.MAPSIZE, Defines.MAPSIZE];
-                blockCreatorTeam = new PlayerTeam[Defines.MAPSIZE, Defines.MAPSIZE, Defines.MAPSIZE];
                 loaded = LoadLevel(Ssettings.LevelName);
                 if (loaded == false)
                 {
@@ -276,14 +264,6 @@ namespace MineWorld
                         consoleInput += keyInfo.KeyChar;
                         ConsoleRedraw();
                     }
-                }
-
-                // Is the game over?
-                if (winningTeam != PlayerTeam.None && !restartTriggered)
-                {
-                    BroadcastGameOver();
-                    restartTriggered = true;
-                    restartTime = DateTime.Now.AddSeconds(10);
                 }
 
                 // Restart the server?
@@ -464,14 +444,6 @@ namespace MineWorld
                 ConsoleWrite("Couldnt find orefactor setting so we use the default (0)");
             }
 
-            if(dataFile.Data.ContainsKey("winningcash"))
-                Msettings.Winningcashamount = int.Parse(dataFile.Data["winningcash"]);
-            else
-            {
-                Msettings.Winningcashamount = 10000;
-                ConsoleWrite("Couldnt find winningcash setting so we use the default (10000)");
-            }
-
             if (dataFile.Data.ContainsKey("includewater"))
                 Msettings.Includewater = bool.Parse(dataFile.Data["includewater"]);
             else
@@ -536,15 +508,6 @@ namespace MineWorld
             Msettings.SettingsDir = "ServerConfigs";
         }
 
-        public void LoadTeamVariables()
-        {
-            teamCashRed = 0;
-            teamCashBlue = 0;
-            teamOreRed = 0;
-            teamOreBlue = 0;
-            winningTeam = PlayerTeam.None;
-        }
-
         public void Shutdownserver()
         {
             ConsoleWrite("Server is shutting down in 5 seconds.");
@@ -563,22 +526,18 @@ namespace MineWorld
 
         public void SendServerMessageToPlayer(string message, Player player)
         {
-            message = "SERVER: " + message;
             NetBuffer msgBuffer = netServer.CreateBuffer();
-            msgBuffer = netServer.CreateBuffer();
             msgBuffer.Write((byte)MineWorldMessage.ChatMessage);
-            msgBuffer.Write((byte)ChatMessageType.SayAll);
+            msgBuffer.Write((byte)ChatMessageType.SayServer);
             msgBuffer.Write(Defines.Sanitize(message));
             netServer.SendMessage(msgBuffer, player.NetConn, NetChannel.ReliableUnordered);
         }
 
         public void SendServerMessage(string message)
         {
-            message = "SERVER: " + message;
             NetBuffer msgBuffer = netServer.CreateBuffer();
-            msgBuffer = netServer.CreateBuffer();
             msgBuffer.Write((byte)MineWorldMessage.ChatMessage);
-            msgBuffer.Write((byte)ChatMessageType.SayAll);
+            msgBuffer.Write((byte)ChatMessageType.SayServer);
             msgBuffer.Write(Defines.Sanitize(message));
             foreach (IClient player in playerList.Values)
                 //if (netConn.Status == NetConnectionStatus.Connected)
@@ -594,14 +553,6 @@ namespace MineWorld
             // ore, cash, weight, max ore, max weight, team ore, red cash, blue cash, all uint
             NetBuffer msgBuffer = netServer.CreateBuffer();
             msgBuffer.Write((byte)MineWorldMessage.ResourceUpdate);
-            msgBuffer.Write((uint)player.Ore);
-            msgBuffer.Write((uint)player.Cash);
-            msgBuffer.Write((uint)player.Weight);
-            msgBuffer.Write((uint)player.OreMax);
-            msgBuffer.Write((uint)player.WeightMax);
-            msgBuffer.Write((uint)(player.Team == PlayerTeam.Red ? teamOreRed : teamOreBlue));
-            msgBuffer.Write((uint)teamCashRed);
-            msgBuffer.Write((uint)teamCashBlue);
             msgBuffer.Write((uint)player.Health);
             msgBuffer.Write((uint)player.HealthMax);
             player.AddQueMsg(msgBuffer, NetChannel.ReliableInOrder1);
@@ -668,9 +619,6 @@ namespace MineWorld
         public void KillPlayerSpecific(Player player)
         {
             // Put variables to zero
-            player.Ore = 0;
-            player.Cash = 0;
-            player.Weight = 0;
             player.Health = 0;
             player.Alive = false;
 
@@ -718,7 +666,6 @@ namespace MineWorld
             else
                 msgBuffer.Write(player.UsingTool);
 
-            msgBuffer.Write((ushort)player.Score / 100);
             msgBuffer.Write((ushort)player.Health / 100);
 
             foreach (IClient iplayer in playerList.Values)
@@ -726,13 +673,12 @@ namespace MineWorld
                 iplayer.AddQueMsg(msgBuffer, NetChannel.UnreliableInOrder1);
         }
 
-        public void SendSetBeacon(Vector3 position, string text, PlayerTeam team)
+        public void SendSetBeacon(Vector3 position, string text)
         {
             NetBuffer msgBuffer = netServer.CreateBuffer();
             msgBuffer.Write((byte)MineWorldMessage.SetBeacon);
             msgBuffer.Write(position);
             msgBuffer.Write(text);
-            msgBuffer.Write((byte)team);
             foreach (IClient player in playerList.Values)
                 //if (netConn.Status == NetConnectionStatus.Connected)
                 player.AddQueMsg(msgBuffer, NetChannel.ReliableInOrder2);
@@ -755,9 +701,7 @@ namespace MineWorld
                     player.AddQueMsg(msgBuffer, NetChannel.ReliableInOrder2);
 
                 msgBuffer = netServer.CreateBuffer();
-                msgBuffer.Write((byte)MineWorldMessage.PlayerSetTeam);
                 msgBuffer.Write((uint)p.ID);
-                msgBuffer.Write((byte)p.Team);
                 //if (player.NetConn.Status == NetConnectionStatus.Connected)
                     player.AddQueMsg(msgBuffer, NetChannel.ReliableInOrder2);
             }
@@ -771,7 +715,6 @@ namespace MineWorld
                 msgBuffer.Write((byte)MineWorldMessage.SetBeacon);
                 msgBuffer.Write(position);
                 msgBuffer.Write(bPair.Value.ID);
-                msgBuffer.Write((byte)bPair.Value.Team);
                 //if (player.NetConn.Status == NetConnectionStatus.Connected)
                     player.AddQueMsg(msgBuffer,  NetChannel.ReliableInOrder2);
             }
@@ -789,28 +732,22 @@ namespace MineWorld
                 iplayer.AddQueMsg(msgBuffer, NetChannel.ReliableInOrder2);
 
             SendPlayerRespawn(player);
-            // Send this out just incase someone is joining at the last minute.
-            if (winningTeam != PlayerTeam.None)
-                BroadcastGameOver();
 
             // Send out a chat message.
             msgBuffer = netServer.CreateBuffer();
             msgBuffer.Write((byte)MineWorldMessage.ChatMessage);
-            msgBuffer.Write((byte)ChatMessageType.SayAll);
+            msgBuffer.Write((byte)ChatMessageType.Say);
             msgBuffer.Write(player.Handle + " HAS JOINED THE ADVENTURE!");
             foreach (IClient iplayer in playerList.Values)
+            {
                 //if (netConn.Status == NetConnectionStatus.Connected)
+                // Dont send the joined message to ourself
+                if (player.ID == iplayer.ID)
+                {
+                    break;
+                }
                 iplayer.AddQueMsg(msgBuffer, NetChannel.ReliableInOrder3);
-        }
-
-        public void BroadcastGameOver()
-        {
-            NetBuffer msgBuffer = netServer.CreateBuffer();
-            msgBuffer.Write((byte)MineWorldMessage.GameOver);
-            msgBuffer.Write((byte)winningTeam);
-            foreach (IClient player in playerList.Values)
-                //if (netConn.Status == NetConnectionStatus.Connected)
-                player.AddQueMsg(msgBuffer, NetChannel.ReliableUnordered);    
+            }
         }
 
         public void SendPlayerLeft(IClient player, string reason)
@@ -825,22 +762,11 @@ namespace MineWorld
             // Send out a chat message.
             msgBuffer = netServer.CreateBuffer();
             msgBuffer.Write((byte)MineWorldMessage.ChatMessage);
-            msgBuffer.Write((byte)ChatMessageType.SayAll);
+            msgBuffer.Write((byte)ChatMessageType.Say);
             msgBuffer.Write(player.Handle + " " + reason);
             foreach (IClient iplayer in playerList.Values)
                 //if (netConn.Status == NetConnectionStatus.Connected)
                 iplayer.AddQueMsg(msgBuffer, NetChannel.ReliableInOrder3);
-        }
-
-        public void SendPlayerSetTeam(IClient player)
-        {
-            NetBuffer msgBuffer = netServer.CreateBuffer();
-            msgBuffer.Write((byte)MineWorldMessage.PlayerSetTeam);
-            msgBuffer.Write((uint)player.ID);
-            msgBuffer.Write((byte)player.Team);
-            foreach (IClient iplayer in playerList.Values)
-                //if (netConn.Status == NetConnectionStatus.Connected)
-                iplayer.AddQueMsg(msgBuffer, NetChannel.ReliableInOrder2);
         }
 
         public void SendPlayerDead(IClient player)

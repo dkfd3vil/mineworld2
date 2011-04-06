@@ -20,8 +20,7 @@ levelname =
 
 # If set, this message will be sent to newcomers
 # [name] will be replaced with their name
-# [team] will be replaced with their team
-motd = Welcome [name] to the [team] team on my server!
+motd = Welcome [name] on my server!
 
 # Sets the number of minutes between autosaves (zero disables autosave)
 autosave = 5

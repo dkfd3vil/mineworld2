@@ -15,15 +15,6 @@ using Microsoft.Xna.Framework.Storage;
 
 namespace MineWorld
 {
-    public enum PlayerClass
-    {
-        None,
-        Prospector,
-        Miner,
-        Engineer,
-        Sapper
-    }
-
     public enum PlayerTools
     {
         Pickaxe,
@@ -33,30 +24,15 @@ namespace MineWorld
         Detonator,
     }
 
-    public enum PlayerTeam
-    {
-        None,
-        Red,
-        Blue
-    }
-
     public class Player
     {
         public bool Kicked = false; // set to true when a player is kicked to let other clients know they were kicked
         public bool godmode = false;
-        public bool nocost = false;
-        public bool AltColours = false;
-        public Color redTeam = new Color();
-        public Color blueTeam = new Color();
+        public Color Owncolor = new Color();
         //public bool compression = false;
         public string Handle = "";
         public uint Health = 0;
         public uint HealthMax = 0;
-        public uint OreMax = 0;
-        public uint WeightMax = 0;
-        public uint Ore = 0;
-        public uint Weight = 0;
-        public uint Cash = 0;
         public bool Alive = false;
         //TODO change this vector3 to a vector3i
         public List<Vector3> ExplosiveList = new List<Vector3>();
@@ -64,7 +40,6 @@ namespace MineWorld
         public Vector3 Heading = Vector3.Zero;
         public NetConnection NetConn;
         public float TimeIdle = 0;
-        public uint Score = 0;
         public float Ping = 0;
         public string IP = "";
         public Vector3 Velocity = Vector3.Zero;
@@ -153,19 +128,6 @@ namespace MineWorld
             }
         }
 
-        private PlayerTeam team = PlayerTeam.None;
-        public PlayerTeam Team
-        {
-            get { return team; }
-            set
-            {
-                if (value != team)
-                {
-                    team = value;
-                    UpdateSpriteTexture();
-                }
-            }
-        }
         private PlayerTools tool = PlayerTools.Pickaxe;
         public PlayerTools Tool
         {
@@ -217,7 +179,7 @@ namespace MineWorld
                 return;
 
             string textureName = "sprites/tex_sprite_";
-            if (team == PlayerTeam.Red)
+            if (Owncolor == Color.Red)
             {
                 textureName += "red_";
             }
@@ -245,18 +207,7 @@ namespace MineWorld
                     break;
             }
             Texture2D orig = gameInstance.Content.Load<Texture2D>(textureName);
-            if (AltColours)// && ((team == PlayerTeam.Blue && blueTeam != Defines.IM_BLUE) || (team == PlayerTeam.Red && redTeam != Defines.IM_RED)))
-            {
-                Color[] data = new Color[orig.Width * orig.Height];
-                orig.GetData<Color>(data);
-                Texture2D temp = new Texture2D(orig.GraphicsDevice,orig.Width,orig.Height);
-                temp.SetData<Color>(data);
-                Defines.generateShadedTexture(team == PlayerTeam.Blue ? blueTeam : redTeam, orig, ref temp);
-                Console.WriteLine("Team: " + team.ToString() + "; Red col: " + redTeam.ToString() + "; Blue col: " + blueTeam.ToString());
-                this.SpriteModel.SetSpriteTexture(temp);
-            }
-            else
-                this.SpriteModel.SetSpriteTexture(orig);
+            this.SpriteModel.SetSpriteTexture(orig);
         }
 
         static uint uniqueId = 0;

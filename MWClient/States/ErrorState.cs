@@ -74,15 +74,15 @@ namespace MineWorld.States
 
         }
 
-        public override void OnMouseDown(MouseButton button, int x, int y)
+        public override void OnMouseDown(MouseButtons button, int x, int y)
         {
-            if (button == MouseButton.LeftButton)
+            if (button == MouseButtons.LeftButton)
             {
                 nextState = _P.connectionerrornewstate;
             }
         }
 
-        public override void OnMouseUp(MouseButton button, int x, int y)
+        public override void OnMouseUp(MouseButtons button, int x, int y)
         {
 
         }

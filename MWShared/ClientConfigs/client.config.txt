@@ -1,6 +1,10 @@
 # This value specifies your name - please change it to something unique!
 handle = Player
 
+# This value specifies your in-game color of your character.
+# For now there are only 2 colors red and blue.
+color = red
+
 # These values specifies your resolution
 width = 1024
 height = 780
@@ -14,7 +18,10 @@ pretty = true
 # If your performance is bad, try turning this off.
 vsync = true
 
+# If this flag is set to true, Your in-game frames per seconde will be displayed.
 showfps = true
+
+# If this flag is set to true, Your y axis of your mouse will be inverted
 yinvert = false
 
 # This value specifies the override volume multiplier, for people who find the sounds too loud.

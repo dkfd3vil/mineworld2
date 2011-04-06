@@ -43,21 +43,14 @@ namespace MineWorld
         public Vector3 playerVelocity = Vector3.Zero;
         public Vector3 lastPosition = Vector3.Zero;
         public Vector3 lastHeading = Vector3.Zero;
-        public PlayerClass playerClass = PlayerClass.None;
         public PlayerTools[] playerTools = new PlayerTools[1] { PlayerTools.Pickaxe };
         public int playerToolSelected = 0;
         public BlockType[] playerBlocks = new BlockType[1] { BlockType.None };
         public int playerBlockSelected = 0;
-        public PlayerTeam playerTeam = PlayerTeam.None;
         public bool playerDead = true;
         public bool allowRespawn = false;
         public uint playerHealth = 0;
         public uint playerHealthMax = 0;
-        public uint playerOre = 0;
-        public uint playerCash = 0;
-        public uint playerWeight = 0;
-        public uint playerOreMax = 0;
-        public uint playerWeightMax = 0;
         public float playerHoldBreath = 20;
         public DateTime lastBreath = DateTime.Now;
         public bool playerRadarMute = false;
@@ -69,8 +62,7 @@ namespace MineWorld
         public float radarDistance = 0;
         public float radarValue = 0;
         public float constructionGunAnimation = 0;
-        //public bool godmode = false;
-        //public bool nocost = false;
+        public Color Owncolor = new Color();
 
         //Movement flags
         public bool movingOnRoad = false;
@@ -86,24 +78,13 @@ namespace MineWorld
 
         public float mouseSensitivity = 0.005f;
 
-        // Team variables.
-        public uint teamOre = 0;
-        public uint teamRedCash = 0;
-        public uint teamBlueCash = 0;
-        public PlayerTeam teamWinners = PlayerTeam.None;
+        // Beacon variables.
         public Dictionary<Vector3, Beacon> beaconList = new Dictionary<Vector3, Beacon>();
 
         // Screen effect stuff.
         private Random randGen = new Random();
         public ScreenEffect screenEffect = ScreenEffect.None;
         public double screenEffectCounter = 0;
-
-        //Team colour stuff
-        public bool customColours = false;
-        public Color red = Defines.IM_RED;
-        public Color blue = Defines.IM_BLUE;
-        public string redName = "Red";
-        public string blueName = "Blue";
 
         // Sound stuff.
         public Dictionary<MineWorldSound, SoundEffect> soundList = new Dictionary<MineWorldSound, SoundEffect>();
@@ -112,7 +93,7 @@ namespace MineWorld
         public ChatMessageType chatMode = ChatMessageType.None;
         public int chatMaxBuffer = 5;
         public List<ChatMessage> chatBuffer = new List<ChatMessage>(); // chatBuffer[0] is most recent
-        public List<ChatMessage> chatFullBuffer = new List<ChatMessage>(); //same as above, holds last several messages
+        //public List<ChatMessage> chatFullBuffer = new List<ChatMessage>(); //same as above, holds last several messages
         public string chatEntryBuffer = "";
 
         public PropertyBag(MineWorldGame gameInstance)
@@ -160,48 +141,12 @@ namespace MineWorld
             }
         }
 
-        public PlayerTeam TeamFromBlock(BlockType bt)
-        {
-            switch (bt)
-            {
-                case BlockType.TransBlue:
-                case BlockType.SolidBlue:
-                case BlockType.BeaconBlue:
-                case BlockType.BankBlue:
-                    return PlayerTeam.Blue;
-                case BlockType.TransRed:
-                case BlockType.SolidRed:
-                case BlockType.BeaconRed:
-                case BlockType.BankRed:
-                    return PlayerTeam.Red;
-                default:
-                    return PlayerTeam.None;
-            }
-        }
-
-        /*
-        public void SaveMap()
-        {
-            string filename = "saved_" + serverName.Replace(" ","") + "_" + (UInt64)DateTime.Now.ToBinary() + ".lvl";
-            FileStream fs = new FileStream(filename, FileMode.Create);
-            StreamWriter sw = new StreamWriter(fs);
-            for (int x = 0; x < 64; x++)
-                for (int y = 0; y < 64; y++)
-                    for (int z = 0; z < 64; z++)
-                        sw.WriteLine((byte)blockEngine.blockList[x, y, z] + "," + (byte)TeamFromBlock(blockEngine.blockList[x, y, z]));//(byte)blockEngine.blockCreatorTeam[x, y, z]);
-            sw.Close();
-            fs.Close();
-            addChatMessage("Map saved to " + filename, ChatMessageType.SayAll, 10f);//DateTime.Now.ToUniversalTime());
-        }
-         */
-
         public void KillPlayer(string deathMessage)
         {
             if (netClient.Status != NetConnectionStatus.Connected)
                 return;
 
             PlaySound(MineWorldSound.Death);
-            //playerPosition = new Vector3(randGen.Next(2, 62), 66, randGen.Next(2, 62));
             playerVelocity = Vector3.Zero;
             playerDead = true;
             allowRespawn = false;
@@ -287,8 +232,9 @@ namespace MineWorld
             netClient.SendMessage(msgBuffer, NetChannel.ReliableUnordered);
         }
 
-        public void addChatMessage(string chatString, ChatMessageType chatType, float timestamp)
+        public void addChatMessage(string ChatString, ChatMessageType ChatType,string Author)
         {
+            /*
             string[] text = chatString.Split(' ');
             string textFull = "";
             string textLine = "";
@@ -331,11 +277,12 @@ namespace MineWorld
 
             if (textFull == "")
                 textFull = chatString;
+             */
 
-            ChatMessage chatMsg = new ChatMessage(textFull, chatType, 10,newlines);
+            ChatMessage chatMsg = new ChatMessage(ChatString, ChatType, Author);
             
             chatBuffer.Insert(0, chatMsg);
-            chatFullBuffer.Insert(0, chatMsg);
+            //chatFullBuffer.Insert(0, chatMsg);
             PlaySound(MineWorldSound.ClickLow);
         }
 
@@ -395,67 +342,13 @@ namespace MineWorld
             UpdateCamera(null);
         }
 
-        public void DepositLoot()
-        {
-            if (netClient.Status != NetConnectionStatus.Connected)
-                return;
-
-            NetBuffer msgBuffer = netClient.CreateBuffer();
-            msgBuffer.Write((byte)MineWorldMessage.DepositCash);
-            netClient.SendMessage(msgBuffer, NetChannel.ReliableUnordered);
-        }
-
-        public void DepositOre()
-        {
-            if (netClient.Status != NetConnectionStatus.Connected)
-                return;
-
-            NetBuffer msgBuffer = netClient.CreateBuffer();
-            msgBuffer.Write((byte)MineWorldMessage.DepositOre);
-            netClient.SendMessage(msgBuffer, NetChannel.ReliableUnordered);
-        }
-
-        public void WithdrawOre()
-        {
-            if (netClient.Status != NetConnectionStatus.Connected)
-                return;
-
-            NetBuffer msgBuffer = netClient.CreateBuffer();
-            msgBuffer.Write((byte)MineWorldMessage.WithdrawOre);
-            netClient.SendMessage(msgBuffer, NetChannel.ReliableUnordered);
-        }
-
-        public void SetPlayerTeam(PlayerTeam playerTeam)
-        {
-            if (netClient.Status != NetConnectionStatus.Connected)
-                return;
-
-            if (this.playerTeam != playerTeam)
-            {
-                this.playerTeam = playerTeam;
-
-                NetBuffer msgBuffer = netClient.CreateBuffer();
-                msgBuffer.Write((byte)MineWorldMessage.PlayerSetTeam);
-                msgBuffer.Write((byte)playerTeam);
-                netClient.SendMessage(msgBuffer, NetChannel.ReliableUnordered);
-
-                if (playerTeam == PlayerTeam.Red)
-                {
-                    //this.KillPlayer("HAS JOINED THE RED TEAM");
-                }
-                else
-                {
-                    //this.KillPlayer("HAS JOINED THE BLUE TEAM");
-                }
-            }
-        }
-
-        public bool allWeps = false; //Needs to be true on sandbox servers, though that requires a server mod
-
         public void equipWeps()
         {
+            bool allWeps = true;//TODO We are giving every player all tools
+
             playerToolSelected = 0;
             playerBlockSelected = 0;
+            //HACK !!!!!!!
             if (allWeps)
             {
                 playerTools = new PlayerTools[5] { PlayerTools.Pickaxe,
@@ -464,98 +357,23 @@ namespace MineWorld
                 PlayerTools.ProspectingRadar,
                 PlayerTools.Detonator };
 
-                playerBlocks = new BlockType[13] {   playerTeam == PlayerTeam.Red ? BlockType.SolidRed : BlockType.SolidBlue,
-                                             playerTeam == PlayerTeam.Red ? BlockType.TransRed : BlockType.TransBlue,
+                playerBlocks = new BlockType[16] {
+                                             BlockType.SolidRed,
+                                             BlockType.SolidBlue,
+                                             BlockType.TransRed,
+                                             BlockType.TransBlue,
                                              BlockType.Road,
                                              BlockType.Ladder,
                                              BlockType.Jump,
                                              BlockType.Shock,
-                                             playerTeam == PlayerTeam.Red ? BlockType.BeaconRed : BlockType.BeaconBlue,
-                                             playerTeam == PlayerTeam.Red ? BlockType.BankRed : BlockType.BankBlue,
+                                             BlockType.BeaconRed,
+                                             BlockType.BeaconBlue,
+                                             BlockType.BankRed,
+                                             BlockType.BankBlue,
                                              BlockType.Explosive,
                                              BlockType.Road,
                                              BlockType.Lava,
-                                             BlockType.Adminblock,
-                                             BlockType.Dirt };
-            }
-            else
-            {
-                switch (playerClass)
-                {
-                    case PlayerClass.Prospector:
-                        playerTools = new PlayerTools[3] {  PlayerTools.Pickaxe,
-                                                        PlayerTools.ConstructionGun,
-                                                        PlayerTools.ProspectingRadar     };
-                        playerBlocks = new BlockType[4] {   playerTeam == PlayerTeam.Red ? BlockType.SolidRed : BlockType.SolidBlue,
-                                                        playerTeam == PlayerTeam.Red ? BlockType.TransRed : BlockType.TransBlue,
-                                                        playerTeam == PlayerTeam.Red ? BlockType.BeaconRed : BlockType.BeaconBlue,
-                                                        BlockType.Ladder    };
-                        break;
-
-                    case PlayerClass.Miner:
-                        playerTools = new PlayerTools[2] {  PlayerTools.Pickaxe,
-                                                        PlayerTools.ConstructionGun     };
-                        playerBlocks = new BlockType[5] {   playerTeam == PlayerTeam.Red ? BlockType.SolidRed : BlockType.SolidBlue,
-                                                        playerTeam == PlayerTeam.Red ? BlockType.TransRed : BlockType.TransBlue,
-                                                        BlockType.Ladder,BlockType.Lava,BlockType.Lamp    };
-                        break;
-
-                    case PlayerClass.Engineer:
-                        playerTools = new PlayerTools[3] {  PlayerTools.Pickaxe,
-                                                        PlayerTools.ConstructionGun,     
-                                                        PlayerTools.DeconstructionGun   };
-                        playerBlocks = new BlockType[9] {   playerTeam == PlayerTeam.Red ? BlockType.SolidRed : BlockType.SolidBlue,
-                                                        BlockType.TransRed,
-                                                        BlockType.TransBlue, //playerTeam == PlayerTeam.Red ? BlockType.TransRed : BlockType.TransBlue, //Only need one entry due to right-click
-                                                        BlockType.Road,
-                                                        BlockType.Ladder,
-                                                        BlockType.Jump,
-                                                        BlockType.Shock,
-                                                        playerTeam == PlayerTeam.Red ? BlockType.BeaconRed : BlockType.BeaconBlue,
-                                                        playerTeam == PlayerTeam.Red ? BlockType.BankRed : BlockType.BankBlue  };
-                        break;
-
-                    case PlayerClass.Sapper:
-                        playerTools = new PlayerTools[3] {  PlayerTools.Pickaxe,
-                                                        PlayerTools.ConstructionGun,
-                                                        PlayerTools.Detonator     };
-                        playerBlocks = new BlockType[4] {   playerTeam == PlayerTeam.Red ? BlockType.SolidRed : BlockType.SolidBlue,
-                                                        playerTeam == PlayerTeam.Red ? BlockType.TransRed : BlockType.TransBlue,
-                                                        BlockType.Ladder,
-                                                        BlockType.Explosive     };
-                        break;
-                }
-            }
-        }
-
-        public void SetPlayerClass(PlayerClass playerClass)
-        {
-            if (this.playerClass != playerClass)
-            {
-                if (netClient.Status != NetConnectionStatus.Connected)
-                    return;
-
-                if (this.playerClass != PlayerClass.None)
-                {
-                    //this.KillPlayer("");
-                }
-
-                this.playerClass = playerClass;
-
-                NetBuffer msgBuffer = netClient.CreateBuffer();
-                msgBuffer.Write((byte)MineWorldMessage.SelectClass);
-                msgBuffer.Write((byte)playerClass);
-                netClient.SendMessage(msgBuffer, NetChannel.ReliableUnordered);
-
-                playerToolSelected = 0;
-                playerBlockSelected = 0;
-
-                equipWeps();
-                this.RespawnPlayer();
-            }
-            else
-            {
-                equipWeps();
+                                             BlockType.Adminblock,};
             }
         }
 
@@ -681,6 +499,7 @@ namespace MineWorld
         }
 
         // Returns true if the player is able to use a bank right now.
+        /*
         public bool AtBankTerminal()
         {
             // Figure out what we're looking at.
@@ -697,8 +516,10 @@ namespace MineWorld
                 return true;
             return false;
         }
+         */
 
         // Returns true if the player is looking at it's own homebase
+        /*
         public bool AtHomeBase()
         {
             // Figure out what we're looking at.
@@ -715,6 +536,7 @@ namespace MineWorld
                 return true;
             return false;
         }
+         */
 
         public float GetToolCooldown(PlayerTools tool)
         {

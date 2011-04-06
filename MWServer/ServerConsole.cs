@@ -105,10 +105,6 @@ namespace MineWorld
                         foreach (IClient p in playerList.Values)
                         {
                             string teamIdent = "";
-                            if (p.Team == PlayerTeam.Red)
-                                teamIdent = " (R)";
-                            else if (p.Team == PlayerTeam.Blue)
-                                teamIdent = " (B)";
                             if (GetAdmin(p.IP))
                                 teamIdent += " (Admin)";
                             ConsoleWrite(p.Handle + teamIdent);

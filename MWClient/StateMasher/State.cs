@@ -53,11 +53,11 @@ namespace StateMasher
         {
         }
 
-        public virtual void OnMouseDown(MouseButton button, int x, int y)
+        public virtual void OnMouseDown(MouseButtons button, int x, int y)
         {
         }
 
-        public virtual void OnMouseUp(MouseButton button, int x, int y)
+        public virtual void OnMouseUp(MouseButtons button, int x, int y)
         {
         }
 

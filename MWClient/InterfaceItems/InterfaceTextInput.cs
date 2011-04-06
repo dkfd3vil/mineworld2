@@ -43,7 +43,7 @@ namespace InterfaceItems
             //keyMap = new MineWorld.KeyMap();
         }
 
-        public override void OnMouseDown(MouseButton button, int x, int y)
+        public override void OnMouseDown(MouseButtons button, int x, int y)
         {
             if (enabled && size.Contains(x, y))
                 partialInFocus = true;
@@ -51,7 +51,7 @@ namespace InterfaceItems
                 inFocus = false;
         }
 
-        public override void OnMouseUp(MouseButton button, int x, int y)
+        public override void OnMouseUp(MouseButtons button, int x, int y)
         {
             if (enabled && partialInFocus && size.Contains(x, y))
             {

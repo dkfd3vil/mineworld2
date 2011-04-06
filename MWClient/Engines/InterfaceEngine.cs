@@ -107,7 +107,7 @@ namespace MineWorld
             int drawX = screenWidth / 2 - 60 * 3;
             int drawY = screenHeight - 91 * 3;
             Texture2D toDraw;
-            if (_P.playerTeam == PlayerTeam.Red)
+            if (_P.Owncolor == Color.Red)
             {
                 toDraw = texToolPickaxeRed;
             }
@@ -127,7 +127,7 @@ namespace MineWorld
 
         private static bool MessageExpired(ChatMessage msg)
         {
-            return msg.timestamp <= 0;
+            return msg.TimeStamp <= 0;
         }
 
         public void Update(GameTime gameTime)
@@ -136,12 +136,12 @@ namespace MineWorld
                 return;
 
             foreach (ChatMessage msg in _P.chatBuffer)
-                msg.timestamp -= (float)gameTime.ElapsedGameTime.TotalSeconds;
+                msg.TimeStamp -= (float)gameTime.ElapsedGameTime.TotalSeconds;
             _P.chatBuffer.RemoveAll(MessageExpired);
 
-            int bufferSize = 10;
-            if (_P.chatFullBuffer.Count > bufferSize)
-                _P.chatFullBuffer.RemoveRange(bufferSize, _P.chatFullBuffer.Count - bufferSize);
+            //int bufferSize = 10;
+            //if (_P.chatFullBuffer.Count > bufferSize)
+                //_P.chatFullBuffer.RemoveRange(bufferSize, _P.chatFullBuffer.Count - bufferSize);
 
             if (_P.constructionGunAnimation > 0)
             {
@@ -218,9 +218,27 @@ namespace MineWorld
 
             Texture2D textureToUse;
             if (Mouse.GetState().LeftButton == ButtonState.Pressed || Mouse.GetState().MiddleButton == ButtonState.Pressed || Mouse.GetState().RightButton == ButtonState.Pressed)
-                textureToUse = _P.playerTeam == PlayerTeam.Red ? texToolDetonatorDownRed : texToolDetonatorDownBlue;
+            {
+                if (_P.Owncolor == Color.Red)
+                {
+                    textureToUse = texToolDetonatorDownRed;
+                }
+                else
+                {
+                    textureToUse = texToolDetonatorDownBlue;
+                }
+            }
             else
-                textureToUse = _P.playerTeam == PlayerTeam.Red ? texToolDetonatorUpRed : texToolDetonatorUpBlue;
+            {
+                if (_P.Owncolor == Color.Red)
+                {
+                    textureToUse = texToolDetonatorUpRed;
+                }
+                else
+                {
+                    textureToUse = texToolDetonatorUpBlue;
+                }
+            }
 
             spriteBatch.Draw(textureToUse, new Rectangle(screenWidth / 2 /*- 22 * 3*/, screenHeight - 77 * 3 + 14 * 3, 75 * 3, 77 * 3), Color.White);
         }
@@ -234,7 +252,7 @@ namespace MineWorld
             int drawX = screenWidth / 2 - 32 * 3;
             int drawY = screenHeight - 102 * 3;
 
-            spriteBatch.Draw(_P.playerTeam == PlayerTeam.Red ? texToolRadarRed : texToolRadarBlue, new Rectangle(drawX, drawY, 70 * 3, 102 * 3), Color.White);
+            spriteBatch.Draw(_P.Owncolor == Color.Red ? texToolRadarRed : texToolRadarBlue, new Rectangle(drawX, drawY, 70 * 3, 102 * 3), Color.White);
 
             if (_P.radarValue > 0)
                 spriteBatch.Draw(texToolRadarLED, new Rectangle(drawX, drawY, 70 * 3, 102 * 3), Color.White);
@@ -276,19 +294,38 @@ namespace MineWorld
             int newlines = 0;
             for (int i = 0; i < messages.Count; i++)
             {
+                newlines++;
                 Color chatColor = Color.White;
-                if (messages[i].type == ChatMessageType.SayRedTeam)
-                    chatColor = _P.red;// Defines.IM_RED;
-                if (messages[i].type == ChatMessageType.SayBlueTeam)
-                    chatColor = _P.blue;// Defines.IM_BLUE;
+                string chat = "";
 
+                if (messages[i].Type == ChatMessageType.SayServer)
+                    chatColor = Color.Blue;
+
+                switch(messages[i].Type)
+                {
+                    case ChatMessageType.Say:
+                        {
+                            chat = messages[i].Author + ": " + messages[i].Message;
+                            break;
+                        }
+                    case ChatMessageType.SayServer:
+                        {
+                            chat = "Server: " + messages[i].Message;
+                            break;
+                        }
+                    default:
+                        {
+                            chat = "Unkown Chatmessage Type : " + messages[i].Type.ToString();
+                            break;
+                        }
+                }
                 int y = graphicsDevice.Viewport.Height - 114;
-                newlines += messages[i].newlines;
+                //newlines += messages[i].NewLines;
                 y -= 16 * newlines;
                 //y -= 16 * i;
 
-                spriteBatch.DrawString(uiFont, messages[i].message, new Vector2(22, y), Color.Black);
-                spriteBatch.DrawString(uiFont, messages[i].message, new Vector2(20, y-2), chatColor);//graphicsDevice.Viewport.Height - 116 - 16 * i), chatColor);
+                spriteBatch.DrawString(uiFont, chat, new Vector2(22, y), Color.Black);
+                spriteBatch.DrawString(uiFont, chat, new Vector2(20, y-2), chatColor);
             }
         }
 
@@ -337,8 +374,8 @@ namespace MineWorld
                         BlockType currentBlock = _P.playerBlocks[_P.playerBlockSelected];
                         string equipment = currentTool.ToString();
                         if (currentTool == PlayerTools.ConstructionGun)
-                            equipment += " - " + currentBlock.ToString() + " (" + BlockInformation.GetCost(currentBlock) + ")";
-                        RenderMessageCenter(spriteBatch, equipment, new Vector2(graphicsDevice.Viewport.Width / 2, graphicsDevice.Viewport.Height - 20), Color.White, Color.Black);
+                            equipment += " - " + currentBlock.ToString() + " (" + ")";
+                        RenderMessageCenter(spriteBatch, "TODO REMOVE?", new Vector2(graphicsDevice.Viewport.Width / 2, graphicsDevice.Viewport.Height - 20), Color.White, Color.Black);
                     }
                     break;
             }
@@ -348,51 +385,35 @@ namespace MineWorld
 
             // Show the altimeter.
             int altitude = (int)(_P.playerPosition.Y - Defines.MAPSIZE + Defines.GROUND_LEVEL);
-            RenderMessageCenter(spriteBatch, String.Format("ALTITUDE: {0:00}", altitude), new Vector2(graphicsDevice.Viewport.Width - 90, graphicsDevice.Viewport.Height - 20), altitude >= 0 ? Color.Gray : Defines.IM_RED, Color.Black);
-            
-            // Draw bank instructions.
-            if (_P.AtBankTerminal())
-                RenderMessageCenter(spriteBatch, "8: DEPOSIT 50 ORE  9: WITHDRAW 50 ORE", new Vector2(graphicsDevice.Viewport.Width / 2, graphicsDevice.Viewport.Height / 2 + 60), Color.White, Color.Black);
-
-            // Draw homebase instructions.
-            if (_P.AtHomeBase())
-                RenderMessageCenter(spriteBatch, "8: DEPOSIT LOOT", new Vector2(graphicsDevice.Viewport.Width / 2, graphicsDevice.Viewport.Height / 2 + 60), Color.White, Color.Black);
+            RenderMessageCenter(spriteBatch, String.Format("ALTITUDE: {0:00}", altitude), new Vector2(graphicsDevice.Viewport.Width - 90, graphicsDevice.Viewport.Height - 20), altitude >= 0 ? Color.Gray : Color.White, Color.Black);
 
             // Draw the text-based information panel.
             int textStart = (graphicsDevice.Viewport.Width - 1024) / 2;
             spriteBatch.Draw(texBlank, new Rectangle(0, 0, graphicsDevice.Viewport.Width, 20), Color.Black);
-            spriteBatch.DrawString(uiFont, "ORE: " + _P.playerOre + "/" + _P.playerOreMax, new Vector2(textStart + 3, 2), Color.White);
-            spriteBatch.DrawString(uiFont, "LOOT: $" + _P.playerCash, new Vector2(textStart + 170, 2), Color.White);
-            RenderMessageCenter(spriteBatch, String.Format("Health: {0:000}", _P.playerHealth) + "/" + String.Format("{0:000}", _P.playerHealthMax), new Vector2(graphicsDevice.Viewport.Width - 300, graphicsDevice.Viewport.Height - 20), _P.playerHealth >= _P.playerHealthMax / 4 ? _P.playerHealth >= _P.playerHealthMax * 0.8f ? Color.Green : Color.Gray : Defines.IM_RED, Color.Black);
-            spriteBatch.DrawString(uiFont, "WEIGHT: " + _P.playerWeight + "/" + _P.playerWeightMax, new Vector2(textStart + 360, 2), Color.White);
-            spriteBatch.DrawString(uiFont, "TEAM ORE: " + _P.teamOre, new Vector2(textStart + 515, 2), Color.White);
-            spriteBatch.DrawString(uiFont, _P.redName + ": $" + _P.teamRedCash, new Vector2(textStart + 700, 2), _P.red);// Defines.IM_RED);
-            spriteBatch.DrawString(uiFont, _P.blueName + ": $" + _P.teamBlueCash, new Vector2(textStart + 860, 2), _P.blue);// Defines.IM_BLUE);
+            //spriteBatch.DrawString(uiFont, "ORE: " + _P.playerOre + "/" + _P.playerOreMax, new Vector2(textStart + 3, 2), Color.White);
+            //spriteBatch.DrawString(uiFont, "LOOT: $" + _P.playerCash, new Vector2(textStart + 170, 2), Color.White);
+            RenderMessageCenter(spriteBatch, String.Format("Health: {0:000}", _P.playerHealth) + "/" + String.Format("{0:000}", _P.playerHealthMax), new Vector2(graphicsDevice.Viewport.Width - 300, graphicsDevice.Viewport.Height - 20), _P.playerHealth >= _P.playerHealthMax / 4 ? _P.playerHealth >= _P.playerHealthMax * 0.8f ? Color.Green : Color.Gray : Color.Red, Color.Black);
+            //spriteBatch.DrawString(uiFont, "WEIGHT: " + _P.playerWeight + "/" + _P.playerWeightMax, new Vector2(textStart + 360, 2), Color.White);
+            //spriteBatch.DrawString(uiFont, "TEAM ORE: " + _P.teamOre, new Vector2(textStart + 515, 2), Color.White);
+            //spriteBatch.DrawString(uiFont, _P.redName + ": $" + _P.teamRedCash, new Vector2(textStart + 700, 2), _P.red);// Defines.IM_RED);
+            //spriteBatch.DrawString(uiFont, _P.blueName + ": $" + _P.teamBlueCash, new Vector2(textStart + 860, 2), _P.blue);// Defines.IM_BLUE);
 
             // Draw player information.
-            if ((Keyboard.GetState().IsKeyDown(Keys.Tab) && _P.screenEffect == ScreenEffect.None) || _P.teamWinners != PlayerTeam.None)
+            if ((Keyboard.GetState().IsKeyDown(Keys.Tab) && _P.screenEffect == ScreenEffect.None))
             {
                 spriteBatch.Draw(texBlank, new Rectangle(0, 0, graphicsDevice.Viewport.Width, graphicsDevice.Viewport.Height), new Color(Color.Black, 0.7f));
 
                 //Server name
-                RenderMessageCenter(spriteBatch, _P.serverName, new Vector2(graphicsDevice.Viewport.Width / 2, 32), _P.playerTeam == PlayerTeam.Blue ? _P.blue : _P.red, Color.Black);//Defines.IM_BLUE : Defines.IM_RED, Color.Black);
-                
-                if (_P.teamWinners != PlayerTeam.None)
-                {
-                    string teamName = _P.teamWinners == PlayerTeam.Red ? "RED" : "BLUE";
-                    Color teamColor = _P.teamWinners == PlayerTeam.Red ? _P.red : _P.blue;//Defines.IM_RED : Defines.IM_BLUE;
-                    string gameOverMessage = "GAME OVER - " + teamName + " TEAM WINS!";
-                    RenderMessageCenter(spriteBatch, gameOverMessage, new Vector2(graphicsDevice.Viewport.Width / 2, 150), teamColor, new Color(0, 0, 0, 0));
-                }
+                RenderMessageCenter(spriteBatch, _P.serverName, new Vector2(graphicsDevice.Viewport.Width / 2, 32), Color.White, Color.Black);
 
+                //TODO Make sure we splitt this up if the left side is full
                 int drawY = 200;
                 foreach (Player p in _P.playerList.Values)
                 {
-                    if (p.Team != PlayerTeam.Red)
-                        continue;
-                    RenderMessageCenter(spriteBatch, p.Handle + " ( $" + p.Score + " )", new Vector2(graphicsDevice.Viewport.Width / 4, drawY), _P.red, new Color(0, 0, 0, 0));//Defines.IM_RED
+                    RenderMessageCenter(spriteBatch, p.Handle, new Vector2(graphicsDevice.Viewport.Width / 4, drawY), Color.White, new Color(0, 0, 0, 0));
                     drawY += 35;
                 }
+                /*
                 drawY = 200;
                 foreach (Player p in _P.playerList.Values)
                 {
@@ -401,43 +422,37 @@ namespace MineWorld
                     RenderMessageCenter(spriteBatch, p.Handle + " ( $" + p.Score + " )", new Vector2(graphicsDevice.Viewport.Width * 3 / 4, drawY), _P.blue, new Color(0, 0, 0, 0)); //Defines.IM_BLUE
                     drawY += 35;
                 }
+                 */
             }
 
             // Draw the chat buffer.
-            if (_P.chatMode == ChatMessageType.SayAll)
+            if (_P.chatMode == ChatMessageType.Say)
             {
-                spriteBatch.DrawString(uiFont, "ALL> " + _P.chatEntryBuffer, new Vector2(22, graphicsDevice.Viewport.Height - 98), Color.Black);
-                spriteBatch.DrawString(uiFont, "ALL> " + _P.chatEntryBuffer, new Vector2(20, graphicsDevice.Viewport.Height - 100), Color.White);
+                drawChat(_P.chatBuffer, graphicsDevice);
+                spriteBatch.DrawString(uiFont, "Say> " + _P.chatEntryBuffer, new Vector2(22, graphicsDevice.Viewport.Height - 98), Color.Black);
+                spriteBatch.DrawString(uiFont, "Say> " + _P.chatEntryBuffer, new Vector2(20, graphicsDevice.Viewport.Height - 100), Color.White);
             }
-            else if (_P.chatMode == ChatMessageType.SayBlueTeam || _P.chatMode == ChatMessageType.SayRedTeam)
+            else
             {
-                spriteBatch.DrawString(uiFont, "TEAM> " + _P.chatEntryBuffer, new Vector2(22, graphicsDevice.Viewport.Height - 98), Color.Black);
-                spriteBatch.DrawString(uiFont, "TEAM> " + _P.chatEntryBuffer, new Vector2(20, graphicsDevice.Viewport.Height - 100), Color.White);
+                drawChat(_P.chatBuffer, graphicsDevice);
             }
+            /*
             if (_P.chatMode != ChatMessageType.None)
             {
-                drawChat(_P.chatFullBuffer,graphicsDevice);
-                /*for (int i = 0; i < _P.chatFullBuffer.Count; i++)
-                {
-                    Color chatColor = Color.White;
-                    chatColor = _P.chatFullBuffer[i].type == ChatMessageType.SayAll ? Color.White : _P.chatFullBuffer[i].type == ChatMessageType.SayRedTeam ? MineWorldGame.IM_RED : MineWorldGame.IM_BLUE;
-                    
-                    spriteBatch.DrawString(uiFont, _P.chatFullBuffer[i].message, new Vector2(22, graphicsDevice.Viewport.Height - 114 - 16 * i), Color.Black);
-                    spriteBatch.DrawString(uiFont, _P.chatFullBuffer[i].message, new Vector2(20, graphicsDevice.Viewport.Height - 116 - 16 * i), chatColor);
-                }*/
+                drawChat(_P.chatBuffer,graphicsDevice);
             }
             else
             {
                 drawChat(_P.chatBuffer,graphicsDevice);
             }
+             */
 
             // Draw the player radar.
             spriteBatch.Draw(texRadarBackground, new Vector2(10, 30), Color.White);
             foreach (Player p in _P.playerList.Values)
-                if (p.Team == _P.playerTeam && p.Alive)
-                    RenderRadarBlip(spriteBatch, p.ID == _P.playerMyId ? _P.playerPosition : p.Position, p.Team == PlayerTeam.Red ? _P.red : _P.blue, p.Ping > 0, ""); //Defines.IM_RED : Defines.IM_BLUE, p.Ping > 0, "");
+                if (p.Alive)
+                    RenderRadarBlip(spriteBatch, p.ID == _P.playerMyId ? _P.playerPosition : p.Position, Color.White, p.Ping > 0, "");
             foreach (KeyValuePair<Vector3, Beacon> bPair in _P.beaconList)
-                if (bPair.Value.Team == _P.playerTeam)
                     RenderRadarBlip(spriteBatch, bPair.Key, Color.White, false, bPair.Value.ID);
             RenderRadarBlip(spriteBatch, new Vector3(100000, 0, 32), Color.White, false, "NORTH");
 
@@ -495,7 +510,7 @@ namespace MineWorld
             if (Keyboard.GetState().IsKeyDown(Keys.F1))
             {
                 spriteBatch.Draw(texBlank, new Rectangle(0, 0, graphicsDevice.Viewport.Width, graphicsDevice.Viewport.Height), Color.Black);
-                if (_P.playerTeam == PlayerTeam.Red)
+                if (_P.Owncolor == Color.Red)
                 {
                     spriteBatch.Draw(texHelpRed, drawRect, Color.White);
                 }

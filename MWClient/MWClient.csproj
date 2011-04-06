@@ -93,6 +93,7 @@
   <ItemGroup>
     <Compile Include="BloomEffect\BloomComponent.cs" />
     <Compile Include="BloomEffect\BloomSettings.cs" />
+    <Compile Include="ChatMessage.cs" />
     <Compile Include="ClientSettings.cs" />
     <Compile Include="Engines\BlockEngine.cs" />
     <Compile Include="Camera.cs" />
@@ -117,13 +118,11 @@
     <Compile Include="ServerInformation.cs" />
     <Compile Include="StateMasher\State.cs" />
     <Compile Include="StateMasher\StateMachine.cs" />
-    <Compile Include="States\ClassSelectionState.cs" />
     <Compile Include="States\ErrorState.cs" />
     <Compile Include="States\LoadingState.cs" />
     <Compile Include="States\MainGameState.cs" />
     <Compile Include="States\ServerBrowserState.cs" />
     <Compile Include="States\SettingsState.cs" />
-    <Compile Include="States\TeamSelectionState.cs" />
     <Compile Include="States\TitleState.cs" />
     <Compile Include="TestGeometryRenderer.cs" />
   </ItemGroup>

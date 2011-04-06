@@ -24,9 +24,4 @@ R = BlockUp
 
 #Misc
 Q = Ping
-D8 = Deposit
-D9 = Withdraw
-Y = SayAll
-U = SayTeam
-M = ChangeClass
-N = ChangeTeam
+Y = Say

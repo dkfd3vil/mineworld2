@@ -40,7 +40,7 @@ namespace InterfaceItems
             _P = pb;
         }
 
-        public override void OnMouseDown(MouseButton button, int x, int y)
+        public override void OnMouseDown(MouseButtons button, int x, int y)
         {
             if (enabled && size.Contains(x, y))
             {
@@ -50,7 +50,7 @@ namespace InterfaceItems
                 midClick = false;
         }
 
-        public override void OnMouseUp(MouseButton button, int x, int y)
+        public override void OnMouseUp(MouseButtons button, int x, int y)
         {
             if (enabled && midClick && size.Contains(x, y))
             {

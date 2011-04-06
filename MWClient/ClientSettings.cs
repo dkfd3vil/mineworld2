@@ -26,10 +26,6 @@ namespace MineWorld
         public bool InvertMouseYAxis;
         public bool NoSound;
         public float mouseSensitivity;
-        public bool customColours;
-        public Color red;
-        public string redName;
-        public Color blue;
-        public string blueName;
+        public Color color;
     }
 }
