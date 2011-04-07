@@ -292,6 +292,8 @@ namespace MineWorld
         private void AddTrees(ref BlockType[, ,] data, int size)
         {
             int treecount = 0;
+            // Prevents deadlock
+            int maxtries = 100;
 
             if (Cgsettings.Treecount == 0)
             {
@@ -308,6 +310,13 @@ namespace MineWorld
                 int y = randGen.Next(2, Defines.MAPSIZE - 2);
                 int z = Defines.GROUND_LEVEL;
 
+                maxtries--;
+                if (maxtries <= 0)
+                {
+                    //We couldnt place it lets try it again in the next loop
+                    treecount--;
+                    maxtries = 100;
+                }
                 if(EnoughSpaceForTree(ref data, x,y,z))
                 {
                     if (data[x, y, z+1] != BlockType.None)
