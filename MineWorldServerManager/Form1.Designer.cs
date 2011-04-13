@@ -42,6 +42,7 @@
             this.BTNstart = new System.Windows.Forms.ToolStripButton();
             this.BTNstop = new System.Windows.Forms.ToolStripButton();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.LBLstatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
             this.button2 = new System.Windows.Forms.Button();
@@ -63,32 +64,32 @@
             this.TXTservername = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.tabPage4 = new System.Windows.Forms.TabPage();
-            this.button3 = new System.Windows.Forms.Button();
-            this.button4 = new System.Windows.Forms.Button();
+            this.BTNreloadmapconfig = new System.Windows.Forms.Button();
+            this.BTNsavemapconfig = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.textBox10 = new System.Windows.Forms.TextBox();
+            this.TXTtreecount = new System.Windows.Forms.TextBox();
             this.label11 = new System.Windows.Forms.Label();
-            this.textBox9 = new System.Windows.Forms.TextBox();
+            this.TXTlavafactor = new System.Windows.Forms.TextBox();
             this.label10 = new System.Windows.Forms.Label();
-            this.textBox8 = new System.Windows.Forms.TextBox();
+            this.TXTwaterfactor = new System.Windows.Forms.TextBox();
             this.label9 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.checkBox5 = new System.Windows.Forms.CheckBox();
-            this.checkBox6 = new System.Windows.Forms.CheckBox();
-            this.checkBox8 = new System.Windows.Forms.CheckBox();
-            this.checkBox7 = new System.Windows.Forms.CheckBox();
+            this.CHKadmin = new System.Windows.Forms.CheckBox();
+            this.CHKwater = new System.Windows.Forms.CheckBox();
+            this.CHKtrees = new System.Windows.Forms.CheckBox();
+            this.CHKlava = new System.Windows.Forms.CheckBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.textBox7 = new System.Windows.Forms.TextBox();
+            this.TXTorefactor = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
-            this.comboBox1 = new System.Windows.Forms.ComboBox();
+            this.TXTmapsize = new System.Windows.Forms.ComboBox();
             this.tabPage3 = new System.Windows.Forms.TabPage();
-            this.button5 = new System.Windows.Forms.Button();
-            this.button6 = new System.Windows.Forms.Button();
+            this.BTNreloadadmin = new System.Windows.Forms.Button();
+            this.BTNsaveadmin = new System.Windows.Forms.Button();
             this.label14 = new System.Windows.Forms.Label();
-            this.textBox12 = new System.Windows.Forms.TextBox();
+            this.TXTbans = new System.Windows.Forms.TextBox();
             this.label13 = new System.Windows.Forms.Label();
-            this.textBox11 = new System.Windows.Forms.TextBox();
+            this.TXTadmins = new System.Windows.Forms.TextBox();
             this.label12 = new System.Windows.Forms.Label();
             this.listView1 = new System.Windows.Forms.ListView();
             this.tabPage2 = new System.Windows.Forms.TabPage();
@@ -96,6 +97,7 @@
             this.TXTconsole = new System.Windows.Forms.TextBox();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
+            this.statusStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage4.SuspendLayout();
@@ -150,6 +152,7 @@
             this.quitManagerToolStripMenuItem.Name = "quitManagerToolStripMenuItem";
             this.quitManagerToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
             this.quitManagerToolStripMenuItem.Text = "Quit Manager";
+            this.quitManagerToolStripMenuItem.Click += new System.EventHandler(this.quitManagerToolStripMenuItem_Click);
             // 
             // serverToolStripMenuItem
             // 
@@ -191,6 +194,7 @@
             this.BTNstart.Name = "BTNstart";
             this.BTNstart.Size = new System.Drawing.Size(23, 22);
             this.BTNstart.Text = "toolStripButton1";
+            this.BTNstart.Click += new System.EventHandler(this.BTNstart_Click);
             // 
             // BTNstop
             // 
@@ -203,11 +207,19 @@
             // 
             // statusStrip1
             // 
+            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.LBLstatus});
             this.statusStrip1.Location = new System.Drawing.Point(0, 368);
             this.statusStrip1.Name = "statusStrip1";
             this.statusStrip1.Size = new System.Drawing.Size(567, 22);
             this.statusStrip1.TabIndex = 2;
             this.statusStrip1.Text = "statusStrip1";
+            // 
+            // LBLstatus
+            // 
+            this.LBLstatus.Name = "LBLstatus";
+            this.LBLstatus.Size = new System.Drawing.Size(107, 17);
+            this.LBLstatus.Text = "Application started";
             // 
             // tabControl1
             // 
@@ -409,8 +421,8 @@
             // 
             // tabPage4
             // 
-            this.tabPage4.Controls.Add(this.button3);
-            this.tabPage4.Controls.Add(this.button4);
+            this.tabPage4.Controls.Add(this.BTNreloadmapconfig);
+            this.tabPage4.Controls.Add(this.BTNsavemapconfig);
             this.tabPage4.Controls.Add(this.groupBox3);
             this.tabPage4.Controls.Add(this.groupBox2);
             this.tabPage4.Controls.Add(this.groupBox1);
@@ -422,31 +434,33 @@
             this.tabPage4.Text = "Map settings";
             this.tabPage4.UseVisualStyleBackColor = true;
             // 
-            // button3
+            // BTNreloadmapconfig
             // 
-            this.button3.Location = new System.Drawing.Point(332, 264);
-            this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(114, 23);
-            this.button3.TabIndex = 19;
-            this.button3.Text = "Reload from config";
-            this.button3.UseVisualStyleBackColor = true;
+            this.BTNreloadmapconfig.Location = new System.Drawing.Point(332, 264);
+            this.BTNreloadmapconfig.Name = "BTNreloadmapconfig";
+            this.BTNreloadmapconfig.Size = new System.Drawing.Size(114, 23);
+            this.BTNreloadmapconfig.TabIndex = 19;
+            this.BTNreloadmapconfig.Text = "Reload from config";
+            this.BTNreloadmapconfig.UseVisualStyleBackColor = true;
+            this.BTNreloadmapconfig.Click += new System.EventHandler(this.button3_Click);
             // 
-            // button4
+            // BTNsavemapconfig
             // 
-            this.button4.Location = new System.Drawing.Point(452, 264);
-            this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(99, 23);
-            this.button4.TabIndex = 18;
-            this.button4.Text = "Save settings";
-            this.button4.UseVisualStyleBackColor = true;
+            this.BTNsavemapconfig.Location = new System.Drawing.Point(452, 264);
+            this.BTNsavemapconfig.Name = "BTNsavemapconfig";
+            this.BTNsavemapconfig.Size = new System.Drawing.Size(99, 23);
+            this.BTNsavemapconfig.TabIndex = 18;
+            this.BTNsavemapconfig.Text = "Save settings";
+            this.BTNsavemapconfig.UseVisualStyleBackColor = true;
+            this.BTNsavemapconfig.Click += new System.EventHandler(this.BTNsavemapconfig_Click);
             // 
             // groupBox3
             // 
-            this.groupBox3.Controls.Add(this.textBox10);
+            this.groupBox3.Controls.Add(this.TXTtreecount);
             this.groupBox3.Controls.Add(this.label11);
-            this.groupBox3.Controls.Add(this.textBox9);
+            this.groupBox3.Controls.Add(this.TXTlavafactor);
             this.groupBox3.Controls.Add(this.label10);
-            this.groupBox3.Controls.Add(this.textBox8);
+            this.groupBox3.Controls.Add(this.TXTwaterfactor);
             this.groupBox3.Controls.Add(this.label9);
             this.groupBox3.Location = new System.Drawing.Point(282, 9);
             this.groupBox3.Name = "groupBox3";
@@ -455,12 +469,12 @@
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Advanced map settings";
             // 
-            // textBox10
+            // TXTtreecount
             // 
-            this.textBox10.Location = new System.Drawing.Point(6, 126);
-            this.textBox10.Name = "textBox10";
-            this.textBox10.Size = new System.Drawing.Size(257, 20);
-            this.textBox10.TabIndex = 5;
+            this.TXTtreecount.Location = new System.Drawing.Point(6, 126);
+            this.TXTtreecount.Name = "TXTtreecount";
+            this.TXTtreecount.Size = new System.Drawing.Size(257, 20);
+            this.TXTtreecount.TabIndex = 5;
             // 
             // label11
             // 
@@ -471,12 +485,12 @@
             this.label11.TabIndex = 4;
             this.label11.Text = "Tree count";
             // 
-            // textBox9
+            // TXTlavafactor
             // 
-            this.textBox9.Location = new System.Drawing.Point(3, 81);
-            this.textBox9.Name = "textBox9";
-            this.textBox9.Size = new System.Drawing.Size(257, 20);
-            this.textBox9.TabIndex = 3;
+            this.TXTlavafactor.Location = new System.Drawing.Point(3, 81);
+            this.TXTlavafactor.Name = "TXTlavafactor";
+            this.TXTlavafactor.Size = new System.Drawing.Size(257, 20);
+            this.TXTlavafactor.TabIndex = 3;
             // 
             // label10
             // 
@@ -487,12 +501,12 @@
             this.label10.TabIndex = 2;
             this.label10.Text = "Lava factor";
             // 
-            // textBox8
+            // TXTwaterfactor
             // 
-            this.textBox8.Location = new System.Drawing.Point(6, 38);
-            this.textBox8.Name = "textBox8";
-            this.textBox8.Size = new System.Drawing.Size(257, 20);
-            this.textBox8.TabIndex = 1;
+            this.TXTwaterfactor.Location = new System.Drawing.Point(6, 38);
+            this.TXTwaterfactor.Name = "TXTwaterfactor";
+            this.TXTwaterfactor.Size = new System.Drawing.Size(257, 20);
+            this.TXTwaterfactor.TabIndex = 1;
             // 
             // label9
             // 
@@ -505,10 +519,10 @@
             // 
             // groupBox2
             // 
-            this.groupBox2.Controls.Add(this.checkBox5);
-            this.groupBox2.Controls.Add(this.checkBox6);
-            this.groupBox2.Controls.Add(this.checkBox8);
-            this.groupBox2.Controls.Add(this.checkBox7);
+            this.groupBox2.Controls.Add(this.CHKadmin);
+            this.groupBox2.Controls.Add(this.CHKwater);
+            this.groupBox2.Controls.Add(this.CHKtrees);
+            this.groupBox2.Controls.Add(this.CHKlava);
             this.groupBox2.Location = new System.Drawing.Point(8, 135);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(257, 120);
@@ -516,52 +530,52 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Map features";
             // 
-            // checkBox5
+            // CHKadmin
             // 
-            this.checkBox5.AutoSize = true;
-            this.checkBox5.Location = new System.Drawing.Point(9, 19);
-            this.checkBox5.Name = "checkBox5";
-            this.checkBox5.Size = new System.Drawing.Size(126, 17);
-            this.checkBox5.TabIndex = 0;
-            this.checkBox5.Text = "Include admin blocks";
-            this.checkBox5.UseVisualStyleBackColor = true;
+            this.CHKadmin.AutoSize = true;
+            this.CHKadmin.Location = new System.Drawing.Point(9, 19);
+            this.CHKadmin.Name = "CHKadmin";
+            this.CHKadmin.Size = new System.Drawing.Size(126, 17);
+            this.CHKadmin.TabIndex = 0;
+            this.CHKadmin.Text = "Include admin blocks";
+            this.CHKadmin.UseVisualStyleBackColor = true;
             // 
-            // checkBox6
+            // CHKwater
             // 
-            this.checkBox6.AutoSize = true;
-            this.checkBox6.Location = new System.Drawing.Point(9, 42);
-            this.checkBox6.Name = "checkBox6";
-            this.checkBox6.Size = new System.Drawing.Size(124, 17);
-            this.checkBox6.TabIndex = 1;
-            this.checkBox6.Text = "Include water blocks";
-            this.checkBox6.UseVisualStyleBackColor = true;
+            this.CHKwater.AutoSize = true;
+            this.CHKwater.Location = new System.Drawing.Point(9, 42);
+            this.CHKwater.Name = "CHKwater";
+            this.CHKwater.Size = new System.Drawing.Size(124, 17);
+            this.CHKwater.TabIndex = 1;
+            this.CHKwater.Text = "Include water blocks";
+            this.CHKwater.UseVisualStyleBackColor = true;
             // 
-            // checkBox8
+            // CHKtrees
             // 
-            this.checkBox8.AutoSize = true;
-            this.checkBox8.Location = new System.Drawing.Point(9, 88);
-            this.checkBox8.Name = "checkBox8";
-            this.checkBox8.Size = new System.Drawing.Size(87, 17);
-            this.checkBox8.TabIndex = 3;
-            this.checkBox8.Text = "Include trees";
-            this.checkBox8.UseVisualStyleBackColor = true;
+            this.CHKtrees.AutoSize = true;
+            this.CHKtrees.Location = new System.Drawing.Point(9, 88);
+            this.CHKtrees.Name = "CHKtrees";
+            this.CHKtrees.Size = new System.Drawing.Size(87, 17);
+            this.CHKtrees.TabIndex = 3;
+            this.CHKtrees.Text = "Include trees";
+            this.CHKtrees.UseVisualStyleBackColor = true;
             // 
-            // checkBox7
+            // CHKlava
             // 
-            this.checkBox7.AutoSize = true;
-            this.checkBox7.Location = new System.Drawing.Point(9, 65);
-            this.checkBox7.Name = "checkBox7";
-            this.checkBox7.Size = new System.Drawing.Size(118, 17);
-            this.checkBox7.TabIndex = 2;
-            this.checkBox7.Text = "Include lava blocks";
-            this.checkBox7.UseVisualStyleBackColor = true;
+            this.CHKlava.AutoSize = true;
+            this.CHKlava.Location = new System.Drawing.Point(9, 65);
+            this.CHKlava.Name = "CHKlava";
+            this.CHKlava.Size = new System.Drawing.Size(118, 17);
+            this.CHKlava.TabIndex = 2;
+            this.CHKlava.Text = "Include lava blocks";
+            this.CHKlava.UseVisualStyleBackColor = true;
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.textBox7);
+            this.groupBox1.Controls.Add(this.TXTorefactor);
             this.groupBox1.Controls.Add(this.label8);
             this.groupBox1.Controls.Add(this.label7);
-            this.groupBox1.Controls.Add(this.comboBox1);
+            this.groupBox1.Controls.Add(this.TXTmapsize);
             this.groupBox1.Location = new System.Drawing.Point(8, 6);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(257, 123);
@@ -569,12 +583,12 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Basic map settings";
             // 
-            // textBox7
+            // TXTorefactor
             // 
-            this.textBox7.Location = new System.Drawing.Point(6, 83);
-            this.textBox7.Name = "textBox7";
-            this.textBox7.Size = new System.Drawing.Size(245, 20);
-            this.textBox7.TabIndex = 3;
+            this.TXTorefactor.Location = new System.Drawing.Point(6, 83);
+            this.TXTorefactor.Name = "TXTorefactor";
+            this.TXTorefactor.Size = new System.Drawing.Size(245, 20);
+            this.TXTorefactor.TabIndex = 3;
             // 
             // label8
             // 
@@ -594,26 +608,26 @@
             this.label7.TabIndex = 1;
             this.label7.Text = "Map size";
             // 
-            // comboBox1
+            // TXTmapsize
             // 
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Items.AddRange(new object[] {
+            this.TXTmapsize.FormattingEnabled = true;
+            this.TXTmapsize.Items.AddRange(new object[] {
             "(1) Small (32x32x32)",
             "(2) Normal (64x64x64)",
             "(3) Large (128x128x128)"});
-            this.comboBox1.Location = new System.Drawing.Point(6, 40);
-            this.comboBox1.Name = "comboBox1";
-            this.comboBox1.Size = new System.Drawing.Size(245, 21);
-            this.comboBox1.TabIndex = 0;
+            this.TXTmapsize.Location = new System.Drawing.Point(6, 40);
+            this.TXTmapsize.Name = "TXTmapsize";
+            this.TXTmapsize.Size = new System.Drawing.Size(245, 21);
+            this.TXTmapsize.TabIndex = 0;
             // 
             // tabPage3
             // 
-            this.tabPage3.Controls.Add(this.button5);
-            this.tabPage3.Controls.Add(this.button6);
+            this.tabPage3.Controls.Add(this.BTNreloadadmin);
+            this.tabPage3.Controls.Add(this.BTNsaveadmin);
             this.tabPage3.Controls.Add(this.label14);
-            this.tabPage3.Controls.Add(this.textBox12);
+            this.tabPage3.Controls.Add(this.TXTbans);
             this.tabPage3.Controls.Add(this.label13);
-            this.tabPage3.Controls.Add(this.textBox11);
+            this.tabPage3.Controls.Add(this.TXTadmins);
             this.tabPage3.Controls.Add(this.label12);
             this.tabPage3.Controls.Add(this.listView1);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
@@ -624,57 +638,59 @@
             this.tabPage3.Text = "Players";
             this.tabPage3.UseVisualStyleBackColor = true;
             // 
-            // button5
+            // BTNreloadadmin
             // 
-            this.button5.Location = new System.Drawing.Point(332, 264);
-            this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(114, 23);
-            this.button5.TabIndex = 21;
-            this.button5.Text = "Reload from config";
-            this.button5.UseVisualStyleBackColor = true;
+            this.BTNreloadadmin.Location = new System.Drawing.Point(332, 264);
+            this.BTNreloadadmin.Name = "BTNreloadadmin";
+            this.BTNreloadadmin.Size = new System.Drawing.Size(114, 23);
+            this.BTNreloadadmin.TabIndex = 21;
+            this.BTNreloadadmin.Text = "Reload from config";
+            this.BTNreloadadmin.UseVisualStyleBackColor = true;
+            this.BTNreloadadmin.Click += new System.EventHandler(this.BTNreloadadmin_Click);
             // 
-            // button6
+            // BTNsaveadmin
             // 
-            this.button6.Location = new System.Drawing.Point(452, 264);
-            this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(99, 23);
-            this.button6.TabIndex = 20;
-            this.button6.Text = "Save settings";
-            this.button6.UseVisualStyleBackColor = true;
+            this.BTNsaveadmin.Location = new System.Drawing.Point(452, 264);
+            this.BTNsaveadmin.Name = "BTNsaveadmin";
+            this.BTNsaveadmin.Size = new System.Drawing.Size(99, 23);
+            this.BTNsaveadmin.TabIndex = 20;
+            this.BTNsaveadmin.Text = "Save settings";
+            this.BTNsaveadmin.UseVisualStyleBackColor = true;
+            this.BTNsaveadmin.Click += new System.EventHandler(this.BTNsaveadmin_Click);
             // 
             // label14
             // 
             this.label14.AutoSize = true;
             this.label14.Location = new System.Drawing.Point(254, 109);
             this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(106, 13);
+            this.label14.Size = new System.Drawing.Size(80, 13);
             this.label14.TabIndex = 5;
-            this.label14.Text = "Banned players (csv)";
+            this.label14.Text = "Banned players";
             // 
-            // textBox12
+            // TXTbans
             // 
-            this.textBox12.Location = new System.Drawing.Point(257, 125);
-            this.textBox12.Multiline = true;
-            this.textBox12.Name = "textBox12";
-            this.textBox12.Size = new System.Drawing.Size(296, 77);
-            this.textBox12.TabIndex = 4;
+            this.TXTbans.Location = new System.Drawing.Point(257, 125);
+            this.TXTbans.Multiline = true;
+            this.TXTbans.Name = "TXTbans";
+            this.TXTbans.Size = new System.Drawing.Size(296, 77);
+            this.TXTbans.TabIndex = 4;
             // 
             // label13
             // 
             this.label13.AutoSize = true;
             this.label13.Location = new System.Drawing.Point(252, 12);
             this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(80, 13);
+            this.label13.Size = new System.Drawing.Size(54, 13);
             this.label13.TabIndex = 3;
-            this.label13.Text = "Admin ip\'s (csv)";
+            this.label13.Text = "Admin ip\'s";
             // 
-            // textBox11
+            // TXTadmins
             // 
-            this.textBox11.Location = new System.Drawing.Point(255, 28);
-            this.textBox11.Multiline = true;
-            this.textBox11.Name = "textBox11";
-            this.textBox11.Size = new System.Drawing.Size(296, 77);
-            this.textBox11.TabIndex = 2;
+            this.TXTadmins.Location = new System.Drawing.Point(255, 28);
+            this.TXTadmins.Multiline = true;
+            this.TXTadmins.Name = "TXTadmins";
+            this.TXTadmins.Size = new System.Drawing.Size(296, 77);
+            this.TXTadmins.TabIndex = 2;
             // 
             // label12
             // 
@@ -741,6 +757,8 @@
             this.menuStrip1.PerformLayout();
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
+            this.statusStrip1.ResumeLayout(false);
+            this.statusStrip1.PerformLayout();
             this.tabControl1.ResumeLayout(false);
             this.tabPage1.ResumeLayout(false);
             this.tabPage1.PerformLayout();
@@ -799,34 +817,35 @@
         private System.Windows.Forms.TextBox TXTmaxplayers;
         private System.Windows.Forms.TabPage tabPage4;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.TextBox textBox7;
+        private System.Windows.Forms.TextBox TXTorefactor;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.ComboBox comboBox1;
-        private System.Windows.Forms.CheckBox checkBox8;
-        private System.Windows.Forms.CheckBox checkBox7;
-        private System.Windows.Forms.CheckBox checkBox6;
-        private System.Windows.Forms.CheckBox checkBox5;
-        private System.Windows.Forms.Button button3;
-        private System.Windows.Forms.Button button4;
+        private System.Windows.Forms.ComboBox TXTmapsize;
+        private System.Windows.Forms.CheckBox CHKtrees;
+        private System.Windows.Forms.CheckBox CHKlava;
+        private System.Windows.Forms.CheckBox CHKwater;
+        private System.Windows.Forms.CheckBox CHKadmin;
+        private System.Windows.Forms.Button BTNreloadmapconfig;
+        private System.Windows.Forms.Button BTNsavemapconfig;
         private System.Windows.Forms.GroupBox groupBox3;
-        private System.Windows.Forms.TextBox textBox10;
+        private System.Windows.Forms.TextBox TXTtreecount;
         private System.Windows.Forms.Label label11;
-        private System.Windows.Forms.TextBox textBox9;
+        private System.Windows.Forms.TextBox TXTlavafactor;
         private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.TextBox textBox8;
+        private System.Windows.Forms.TextBox TXTwaterfactor;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.Button button5;
-        private System.Windows.Forms.Button button6;
+        private System.Windows.Forms.Button BTNreloadadmin;
+        private System.Windows.Forms.Button BTNsaveadmin;
         private System.Windows.Forms.Label label14;
-        private System.Windows.Forms.TextBox textBox12;
+        private System.Windows.Forms.TextBox TXTbans;
         private System.Windows.Forms.Label label13;
-        private System.Windows.Forms.TextBox textBox11;
+        private System.Windows.Forms.TextBox TXTadmins;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.ListView listView1;
         private System.Windows.Forms.TextBox textBox13;
         private System.Windows.Forms.TextBox TXTconsole;
+        private System.Windows.Forms.ToolStripStatusLabel LBLstatus;
     }
 }
 

@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using System.IO;
+using System.Diagnostics;
 
 namespace MineWorldServerManager
 {
@@ -20,10 +21,47 @@ namespace MineWorldServerManager
         private void Form1_Load(object sender, EventArgs e)
         {
             loadServerConfig();
+            loadMapConfig();
+            loadAdminsBans();
         }
 
+        public Process p;
+        public BackgroundWorker bw;
+        private void startServer()
+        {
+            p = new Process();
+            p.StartInfo.FileName = "MWServer.exe";
+            p.StartInfo.UseShellExecute = false;
+            //p.StartInfo.RedirectStandardOutput = true;
+            p.Start();
+            //bw = new BackgroundWorker();
+            //bw.WorkerSupportsCancellation = true;
+            //bw.DoWork += new DoWorkEventHandler(bw_DoWork);
+            LBLstatus.Text = "Server started";
+        }
 
+        private void stopServer()
+        {
+            p.Kill();
+            p = null;
+            bw = null;
+            LBLstatus.Text = "Server stopped";
+        }
 
+        void bw_DoWork(object sender, DoWorkEventArgs e)
+        {
+            while (true)
+            {
+                System.Threading.Thread.Sleep(10);
+                if (p.HasExited)
+                {
+                    bw.CancelAsync();
+                }
+                String line = p.StandardOutput.ReadLine();
+                TXTconsole.Text += line + "\n";
+            }
+        }
+        
 
 
         private void loadServerConfig()
@@ -40,6 +78,20 @@ namespace MineWorldServerManager
             CHKproxy.Checked = bool.Parse(settings["proxy"]);
             CHKannounce.Checked = bool.Parse(settings["autoannounce"]);
             CHKlogging.Checked = bool.Parse(settings["logs"]);
+        }
+
+        private void loadMapConfig()
+        {
+            Dictionary<String, String> settings = parseConfig("serverconfigs/map.config.txt");
+            CHKadmin.Checked = bool.Parse(settings["includeadminblocks"]);
+            CHKwater.Checked = bool.Parse(settings["includewater"]);
+            CHKlava.Checked = bool.Parse(settings["includelava"]);
+            CHKtrees.Checked = bool.Parse(settings["includetrees"]);
+            TXTwaterfactor.Text = settings["waterspawns"];
+            TXTlavafactor.Text = settings["lavaspawns"];
+            TXTtreecount.Text = settings["treecount"];
+            TXTorefactor.Text = settings["orefactor"];
+            //todo: implement mapsize in mineworld
         }
 
         private void BTNsavebasic_Click(object sender, EventArgs e)
@@ -95,6 +147,55 @@ namespace MineWorldServerManager
         private void button2_Click(object sender, EventArgs e)
         {
             loadServerConfig();
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            loadMapConfig();
+        }
+
+        private void quitManagerToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void BTNstart_Click(object sender, EventArgs e)
+        {
+            startServer();
+        }
+
+        private void BTNsavemapconfig_Click(object sender, EventArgs e)
+        {
+            Dictionary<String, Setting> newsettings = new Dictionary<string, Setting>();
+            newsettings.Add("includeadminblocks", new Setting(CHKadmin.Checked.ToString(), "Place a layer of indestructable admin blocks under the map"));
+            newsettings.Add("includewater", new Setting(CHKwater.Checked.ToString(), "Enable random water placement in the map"));
+            newsettings.Add("includelava", new Setting(CHKlava.Checked.ToString(), "Enable random lava placement in the map"));
+            newsettings.Add("includetrees", new Setting(CHKtrees.Checked.ToString(), "Enable random tree placement in the map"));
+            newsettings.Add("waterspawns", new Setting(TXTwaterfactor.Text, "Amount of water in map (0 for default random values)"));
+            newsettings.Add("lavaspawns", new Setting(TXTlavafactor.Text, "Amount of lava in map (0 for default random values)"));
+            newsettings.Add("treecount", new Setting(TXTtreecount.Text, "Amount of trees in the map (0 for default)"));
+            newsettings.Add("orefactor", new Setting(TXTorefactor.Text, "The amount of ore in the map (0 for random)"));
+            //Todo: insert mapsize setting here as soon as mineworld supports it
+            writeConfig(newsettings, "serverConfigs/map.config.txt");
+        }
+
+        private void loadAdminsBans()
+        {
+            TXTadmins.Text = File.ReadAllText("ServerConfigs/admins.txt");
+            TXTbans.Text = File.ReadAllText("ServerConfigs/banlist.txt");
+        }
+
+        private void BTNreloadadmin_Click(object sender, EventArgs e)
+        {
+            loadAdminsBans();
+        }
+
+        private void BTNsaveadmin_Click(object sender, EventArgs e)
+        {
+            File.Delete("ServerConfigs/admins.txt");
+            File.Delete("ServerConfigs/banlist.txt");
+            File.WriteAllText("ServerConfigs/admins.txt", TXTadmins.Text);
+            File.WriteAllText("ServerConfigs/banlist.txt", TXTbans.Text);
         }
     }
     public class Setting
