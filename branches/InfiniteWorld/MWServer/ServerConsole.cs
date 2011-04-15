@@ -53,7 +53,6 @@ namespace MineWorld
 
         public bool ProcessCommand(string input,bool clientcommand)
         {
-            //string[] args = input.Split(' '.ToString().ToCharArray(), 2);
             String[] args = input.Split(new char[] { ' ' });
             if (clientcommand == true)
             {
@@ -107,7 +106,7 @@ namespace MineWorld
                             string teamIdent = "";
                             if (GetAdmin(p.IP))
                                 teamIdent += " (Admin)";
-                            ConsoleWrite(p.Handle + teamIdent);
+                            ConsoleWrite(p.Name + teamIdent);
                             ConsoleWrite(" - " + p.IP);
                         }
                         break;
@@ -119,7 +118,7 @@ namespace MineWorld
                         {
                             if(GetAdmin(p.IP))
                             {
-                                ConsoleWrite(p.Handle + " - " + p.IP);
+                                ConsoleWrite(p.Name + " - " + p.IP);
                             }
                         }
                         break;

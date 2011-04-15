@@ -22,11 +22,11 @@ namespace MineWorld
         public List<NetConnection> toGreet = new List<NetConnection>();
         public List<string> admins = new List<string>(); //List of strings with all the admins
         public List<string> bannednames = new List<string>(); // List of strings with all names that cannot be chosen
+        public List<string> banList = new List<string>(); // List of string with all thhe banned ip's
 
         DateTime lasthearthbeatsend = DateTime.Now;
         DateTime lastServerListUpdate = DateTime.Now;
         DateTime lastMapBackup = DateTime.Now;
-        public List<string> banList = null;
 
         public String serverIP;
         int frameCount = 100;
@@ -116,7 +116,7 @@ namespace MineWorld
             //netServer.SimulatedDuplicates = 0.05f;
 
             // Initialize the daymanager.
-            dayManager = new DayManager();
+            dayManager = new DayManager(Ssettings);
 
             // Store the last time that we did a physics calculation.
             DateTime lastCalc = DateTime.Now;
@@ -221,14 +221,13 @@ namespace MineWorld
                 }
 
                 //Check the time
-                dayManager.Update(Ssettings.Lightsteps);
+                dayManager.Update();
 
                 // Look if the time is changed so that wel tell the clients
                 if (dayManager.Timechanged())
                 {
                     Senddaytimeupdate(dayManager.Light);
                 }
-
 
                 //Time to backup map?
                 // If Ssettings.autosavetimer is 0 then autosave is disabled
@@ -545,14 +544,14 @@ namespace MineWorld
         }
 
         // Lets a player know about their resources.
-        public void SendResourceUpdate(IClient player)
+        public void SendHealthUpdate(IClient player)
         {
             if (player.NetConn.Status != NetConnectionStatus.Connected)
                 return;
 
-            // ore, cash, weight, max ore, max weight, team ore, red cash, blue cash, all uint
+            // Health, HealthMax both uint
             NetBuffer msgBuffer = netServer.CreateBuffer();
-            msgBuffer.Write((byte)MineWorldMessage.ResourceUpdate);
+            msgBuffer.Write((byte)MineWorldMessage.HealthUpdate);
             msgBuffer.Write((uint)player.Health);
             msgBuffer.Write((uint)player.HealthMax);
             player.AddQueMsg(msgBuffer, NetChannel.ReliableInOrder1);
@@ -697,7 +696,7 @@ namespace MineWorld
                 msgBuffer = netServer.CreateBuffer();
                 msgBuffer.Write((byte)MineWorldMessage.PlayerJoined);
                 msgBuffer.Write((uint)p.ID);
-                msgBuffer.Write(p.Handle);
+                msgBuffer.Write(p.Name);
                 msgBuffer.Write(p == player);
                 msgBuffer.Write(p.Alive);
                 //if (player.NetConn.Status == NetConnectionStatus.Connected)
@@ -713,7 +712,7 @@ namespace MineWorld
             msgBuffer = netServer.CreateBuffer();
             msgBuffer.Write((byte)MineWorldMessage.PlayerJoined);
             msgBuffer.Write((uint)player.ID);
-            msgBuffer.Write(player.Handle);
+            msgBuffer.Write(player.Name);
             msgBuffer.Write(false);
             msgBuffer.Write(player.Alive);
 
@@ -727,7 +726,7 @@ namespace MineWorld
             msgBuffer = netServer.CreateBuffer();
             msgBuffer.Write((byte)MineWorldMessage.ChatMessage);
             msgBuffer.Write((byte)ChatMessageType.Say);
-            msgBuffer.Write(player.Handle + " HAS JOINED THE ADVENTURE!");
+            msgBuffer.Write(player.Name + " HAS JOINED THE ADVENTURE!");
             foreach (IClient iplayer in playerList.Values)
             {
                 //if (netConn.Status == NetConnectionStatus.Connected)
@@ -753,7 +752,7 @@ namespace MineWorld
             msgBuffer = netServer.CreateBuffer();
             msgBuffer.Write((byte)MineWorldMessage.ChatMessage);
             msgBuffer.Write((byte)ChatMessageType.Say);
-            msgBuffer.Write(player.Handle + " " + reason);
+            msgBuffer.Write(player.Name + " " + reason);
             foreach (IClient iplayer in playerList.Values)
                 //if (netConn.Status == NetConnectionStatus.Connected)
                 iplayer.AddQueMsg(msgBuffer, NetChannel.ReliableInOrder3);

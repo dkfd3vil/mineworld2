@@ -290,10 +290,9 @@ namespace MineWorld
                                         }
                                         break;
                                         */
-                                    case MineWorldMessage.ResourceUpdate:
+                                    case MineWorldMessage.HealthUpdate:
                                         {
-                                            // ore, cash, weight, max ore, max weight, team ore, red cash, blue cash, all uint
-                                            // Health, Healthmax also uint
+                                            // Health, Healthmax both uint
                                             propertyBag.playerHealth = msgBuffer.ReadUInt32();
                                             propertyBag.playerHealthMax = msgBuffer.ReadUInt32();
                                         }
@@ -378,7 +377,7 @@ namespace MineWorld
                                             bool thisIsMe = msgBuffer.ReadBoolean();
                                             bool playerAlive = msgBuffer.ReadBoolean();
                                             propertyBag.playerList[playerId] = new Player(null, (Game)this);
-                                            propertyBag.playerList[playerId].Handle = playerName;
+                                            propertyBag.playerList[playerId].Name = playerName;
                                             propertyBag.playerList[playerId].ID = playerId;
                                             propertyBag.playerList[playerId].Alive = playerAlive;
                                             propertyBag.playerList[playerId].Owncolor = Csettings.color;

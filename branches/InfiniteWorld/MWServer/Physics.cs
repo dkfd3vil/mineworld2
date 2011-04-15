@@ -85,9 +85,9 @@ namespace MineWorld
                     else
                     {
                         p.Health = p.Health + 1;
-                        IClient player = playerList[p.NetConn];
-                        SendResourceUpdate(player);
                     }
+                    IClient player = playerList[p.NetConn];
+                    SendHealthUpdate(player);
                 }
             }
 
@@ -95,18 +95,10 @@ namespace MineWorld
 
         public void CalcLava()
         {
-            // If some admin disabled fluids we can skip this
-            bool[, ,] flowSleep = new bool[Defines.MAPSIZE, Defines.MAPSIZE, Defines.MAPSIZE]; //if true, do not calculate this turn
-
             for (ushort i = 0; i < Defines.MAPSIZE; i++)
                 for (ushort j = 0; j < Defines.MAPSIZE; j++)
                     for (ushort k = 0; k < Defines.MAPSIZE; k++)
-                        flowSleep[i, j, k] = false;
-
-            for (ushort i = 0; i < Defines.MAPSIZE; i++)
-                for (ushort j = 0; j < Defines.MAPSIZE; j++)
-                    for (ushort k = 0; k < Defines.MAPSIZE; k++)
-                        if (blockList[i, j, k] == BlockType.Lava && !flowSleep[i, j, k])
+                        if (blockList[i, j, k] == BlockType.Lava)
                         {
                             // RULES FOR LAVA EXPANSION:
                             // if the block below is lava, do nothing (not even horisontal)
@@ -125,8 +117,6 @@ namespace MineWorld
                                 {
                                     SetBlock(i, (ushort)(j - 1), k, BlockType.Lava);
                                     RemoveBlock(i, j, k);
-                                    flowSleep[i, j - 1, k] = true;
-                                    //flowSleep[i, j, k] = true;
                                     doHorisontal = false;
                                 }
                             }
@@ -145,7 +135,6 @@ namespace MineWorld
                                     if (i > 0)
                                     {
                                         SetBlock((ushort)(i - 1), j, k, BlockType.Lava);
-                                        flowSleep[i - 1, j, k] = true;
                                     }
                                 }
                                 if (typeIincr == BlockType.None)
@@ -153,7 +142,6 @@ namespace MineWorld
                                     if (i < Defines.MAPSIZE)
                                     {
                                         SetBlock((ushort)(i + 1), j, k, BlockType.Lava);
-                                        flowSleep[i + 1, j, k] = true;
                                     }
                                 }
                                 if (typeKdesc == BlockType.None)
@@ -161,7 +149,6 @@ namespace MineWorld
                                     if (k > 0)
                                     {
                                         SetBlock(i, j, (ushort)(k - 1), BlockType.Lava);
-                                        flowSleep[i, j, k - 1] = true;
                                     }
                                 }
                                 if (typeKincr == BlockType.None)
@@ -169,7 +156,6 @@ namespace MineWorld
                                     if (k < Defines.MAPSIZE)
                                     {
                                         SetBlock(i, j, (ushort)(k + 1), BlockType.Lava);
-                                        flowSleep[i, j, k + 1] = true;
                                     }
                                 }
                             }
@@ -223,6 +209,7 @@ namespace MineWorld
                     //no more explosives in chain reaction
                 }
             }
+
             // If water touches lava or otherwise around turn it into stone then
             for (ushort i = 0; i < Defines.MAPSIZE; i++)
                 for (ushort j = 0; j < Defines.MAPSIZE; j++)
@@ -275,18 +262,10 @@ namespace MineWorld
 
         public void CalcWater()
         {
-            // If some admin disabled fluids we can skip this
-            bool[, ,] flowSleep = new bool[Defines.MAPSIZE, Defines.MAPSIZE, Defines.MAPSIZE]; //if true, do not calculate this turn
-
             for (ushort i = 0; i < Defines.MAPSIZE; i++)
                 for (ushort j = 0; j < Defines.MAPSIZE; j++)
                     for (ushort k = 0; k < Defines.MAPSIZE; k++)
-                        flowSleep[i, j, k] = false;
-
-            for (ushort i = 0; i < Defines.MAPSIZE; i++)
-                for (ushort j = 0; j < Defines.MAPSIZE; j++)
-                    for (ushort k = 0; k < Defines.MAPSIZE; k++)
-                        if (blockList[i, j, k] == BlockType.Water && !flowSleep[i, j, k])
+                        if (blockList[i, j, k] == BlockType.Water)
                         {
                             // RULES FOR WATER EXPANSION:
                             // if the block below is water, do nothing (not even horisontal)
@@ -305,8 +284,6 @@ namespace MineWorld
                                 {
                                     SetBlock(i, (ushort)(j - 1), k, BlockType.Water);
                                     RemoveBlock(i, j, k);
-                                    flowSleep[i, j - 1, k] = true;
-                                    //flowSleep[i, j, k] = true;
                                     doHorisontal = false;
                                 }
                             }
@@ -325,7 +302,6 @@ namespace MineWorld
                                     if (i > 0)
                                     {
                                         SetBlock((ushort)(i - 1), j, k, BlockType.Water);
-                                        flowSleep[i - 1, j, k] = true;
                                     }
                                 }
                                 if (typeIincr == BlockType.None)
@@ -333,7 +309,6 @@ namespace MineWorld
                                     if (i < Defines.MAPSIZE)
                                     {
                                         SetBlock((ushort)(i + 1), j, k, BlockType.Water);
-                                        flowSleep[i + 1, j, k] = true;
                                     }
                                 }
                                 if (typeKdesc == BlockType.None)
@@ -341,7 +316,6 @@ namespace MineWorld
                                     if (k > 0)
                                     {
                                         SetBlock(i, j, (ushort)(k - 1), BlockType.Water);
-                                        flowSleep[i, j, k - 1] = true;
                                     }
                                 }
                                 if (typeKincr == BlockType.None)
@@ -349,7 +323,6 @@ namespace MineWorld
                                     if (k < Defines.MAPSIZE)
                                     {
                                         SetBlock(i, j, (ushort)(k + 1), BlockType.Water);
-                                        flowSleep[i, j, k + 1] = true;
                                     }
                                 }
                             }

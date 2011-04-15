@@ -16,10 +16,9 @@ public class qmsg
     }
     
 }
+
 namespace MineWorld
 {
-
-   
     public class IClient : Player
     {
         public System.Collections.ObjectModel.Collection<qmsg> Que;
@@ -28,7 +27,6 @@ namespace MineWorld
         public bool Active = true;
         public System.Threading.EventWaitHandle WH;
         int msgs = 0;
-        //int qmsgs = 0;
 
         public IClient(NetConnection conn, Game gameInstance):base(conn,gameInstance)
         {
@@ -68,7 +66,6 @@ namespace MineWorld
                 }
                 if (msgs == 0)
                 {
-                    //System.Threading.Thread.Sleep(25);
                     WH.WaitOne();
                 }
             }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-
 using System.Text;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -37,16 +36,14 @@ namespace MineWorld
         Shock = 153,
         BankRed = 154,
         BankBlue = 155,
-        //BeaconRed = 156,
-        //BeaconBlue = 157,
-        HomeRed = 158,
-        HomeBlue = 159,
-        Road = 160,
-        SolidRed = 161,
-        SolidBlue = 162,
-        Lamp = 163,
-        TransRed = 164,
-        TransBlue = 165,
+        HomeRed = 156,
+        HomeBlue = 157,
+        Road = 158,
+        SolidRed = 159,
+        SolidBlue = 160,
+        Lamp = 161,
+        TransRed = 162,
+        TransBlue = 163,
 
         MAXIMUM = 255
     }
@@ -89,8 +86,6 @@ namespace MineWorld
         Road,
         RoadTop,
         RoadBottom,
-        //BeaconRed,
-        //BeaconBlue,
         Adminblock,
         Lamp,
         Grass,
@@ -259,25 +254,6 @@ namespace MineWorld
                         case BlockFaceDirection.ZDecreasing: return BlockTexture.HomeRed;
                         default: return BlockTexture.Metal;
                     }
-                    /*
-                case BlockType.BeaconRed:
-                case BlockType.BeaconBlue:
-                    switch (faceDir)
-                    {
-                        case BlockFaceDirection.YDecreasing:
-                            return BlockTexture.LadderTop;
-                        case BlockFaceDirection.YIncreasing:
-                            return blockType == BlockType.BeaconRed ? BlockTexture.BeaconRed : BlockTexture.BeaconBlue;
-                        case BlockFaceDirection.XDecreasing:
-                        case BlockFaceDirection.XIncreasing:
-                            return BlockTexture.TeleSideA;
-                        case BlockFaceDirection.ZDecreasing:
-                        case BlockFaceDirection.ZIncreasing:
-                            return BlockTexture.TeleSideB;
-                    }
-                    break;
-                     */
-
                 case BlockType.Road:
                     switch (faceDir)
                     {

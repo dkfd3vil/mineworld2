@@ -416,7 +416,7 @@ namespace MineWorld
                 int drawY = 200;
                 foreach (Player p in _P.playerList.Values)
                 {
-                    RenderMessageCenter(spriteBatch, p.Handle, new Vector2(graphicsDevice.Viewport.Width / 4, drawY), Color.White, new Color(0, 0, 0, 0));
+                    RenderMessageCenter(spriteBatch, p.Name, new Vector2(graphicsDevice.Viewport.Width / 4, drawY), Color.White, new Color(0, 0, 0, 0));
                     drawY += 35;
                 }
                 /*

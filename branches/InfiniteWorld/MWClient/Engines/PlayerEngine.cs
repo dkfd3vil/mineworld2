@@ -96,7 +96,7 @@ namespace MineWorld
                     }
                     if (continueDraw)//p.ID != _P.playerMyId && p.Team == _P.playerTeam)
                     {
-                        playerText = p.Handle;
+                        playerText = p.Name;
                         if (p.Ping > 0)
                             playerText = "*** " + playerText + " ***";
 

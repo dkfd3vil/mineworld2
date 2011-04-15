@@ -66,27 +66,23 @@ namespace MineWorld
     {
         BlockBulkTransfer,      // x-value, y-value, followed by 64 bytes of blocktype ; 
         BlockSet,               // x, y, z, type
-        UseTool,                // position, heading, tool, blocktype
-        ResourceUpdate,         // ore, cash, weight, max ore, max weight, team ore, red cash, blue cash: ReliableInOrder1
+        UseTool,                // position, heading, blocktype
+        HealthUpdate,         // ore, cash, weight, max ore, max weight, team ore, red cash, blue cash: ReliableInOrder1
         TriggerExplosion,       // position
 
-        PlayerUpdate,           // (uint id for server), position, heading, current tool, animate using (bool): UnreliableInOrder1
+        PlayerUpdate,           // (uint id for server), position, heading : UnreliableInOrder1
+        PlayerUpdate1,          // (uint id for server), heading : UnreliableInOrder1
         PlayerJoined,           // uint id, player name :ReliableInOrder2
         PlayerLeft,             // uint id              :ReliableInOrder2
         PlayerDead,             // (uint id for server) :ReliableInOrder2
         PlayerAlive,            // (uint id for server) :ReliableInOrder2
-        //PlayerPing,             // uint id
 
         ChatMessage,            // byte type, string message : ReliableInOrder3
         PlaySound,              // byte sound, bool isPositional, ?Vector3 location : ReliableUnordered
-        //TriggerConstructionGunAnimation,
-        //SetBeacon,              // vector3 position, string text ("" means remove)
 
         //Update by Oeds
         Hearthbeat,
         PlayerCommand,         // uint id, string command  This is sent by client
-        PlayerUpdate1,         // minus position
-        //PlayerUpdate2,         // minus heading
         PlayerHurt,             // allows client to tell server of damage
         PlayerPosition,         // server sends client new position
         PlayerRespawn,          // allows the player to respawn
