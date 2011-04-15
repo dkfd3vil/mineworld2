@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Input;
 
 namespace MineWorld
 {
-    public enum KeyBoardButtons
+    public enum KeyBoardButtons : byte
     {
         None=0,
 
@@ -14,27 +14,13 @@ namespace MineWorld
         Backward,
         Left,
         Right,
+
         Sprint,
         Jump,
         Crouch,
-
-        Ping,
-        Deposit,
-        Withdraw,
         
         //All buttons past this point will never be sent to the server
         Say,
-
-        Tool1,
-        Tool2,
-        Tool3,
-        Tool4,
-        Tool5,
-        ToolUp,
-        ToolDown,
-        
-        BlockUp,
-        BlockDown
     }
 
     public enum MouseButtons
@@ -89,18 +75,18 @@ namespace MineWorld
         PlayerLeft,             // uint id              :ReliableInOrder2
         PlayerDead,             // (uint id for server) :ReliableInOrder2
         PlayerAlive,            // (uint id for server) :ReliableInOrder2
-        PlayerPing,             // uint id
+        //PlayerPing,             // uint id
 
         ChatMessage,            // byte type, string message : ReliableInOrder3
         PlaySound,              // byte sound, bool isPositional, ?Vector3 location : ReliableUnordered
-        TriggerConstructionGunAnimation,
-        SetBeacon,              // vector3 position, string text ("" means remove)
+        //TriggerConstructionGunAnimation,
+        //SetBeacon,              // vector3 position, string text ("" means remove)
 
         //Update by Oeds
         Hearthbeat,
         PlayerCommand,         // uint id, string command  This is sent by client
         PlayerUpdate1,         // minus position
-        PlayerUpdate2,         // minus heading
+        //PlayerUpdate2,         // minus heading
         PlayerHurt,             // allows client to tell server of damage
         PlayerPosition,         // server sends client new position
         PlayerRespawn,          // allows the player to respawn

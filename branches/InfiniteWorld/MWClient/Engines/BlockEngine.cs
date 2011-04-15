@@ -194,8 +194,8 @@ namespace MineWorld
             blockTextures[(byte)BlockTexture.Road] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_road"));
             blockTextures[(byte)BlockTexture.RoadTop] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_road_top"));
             blockTextures[(byte)BlockTexture.RoadBottom] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_road_bottom"));
-            blockTextures[(byte)BlockTexture.BeaconRed] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_beacon_top_red"));
-            blockTextures[(byte)BlockTexture.BeaconBlue] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_beacon_top_blue"));
+            //blockTextures[(byte)BlockTexture.BeaconRed] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_beacon_top_red"));
+            //blockTextures[(byte)BlockTexture.BeaconBlue] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_beacon_top_blue"));
             blockTextures[(byte)BlockTexture.TransRed] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_trans_red"));
             blockTextures[(byte)BlockTexture.TransBlue] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_trans_blue"));
             blockTextures[(byte)BlockTexture.Wood] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_tree_top"));
@@ -412,8 +412,8 @@ namespace MineWorld
                         break;
                     }
             }
- 
 
+            //graphicsDevice.RenderState.SourceBlend = Blend.Zero;
             basicEffect.Parameters["xWorld"].SetValue(Matrix.Identity);
             basicEffect.Parameters["xView"].SetValue(gameInstance.propertyBag.playerCamera.ViewMatrix);
             basicEffect.Parameters["xProjection"].SetValue(gameInstance.propertyBag.playerCamera.ProjectionMatrix);

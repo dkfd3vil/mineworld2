@@ -17,11 +17,8 @@ namespace MineWorld
 {
     public enum PlayerTools
     {
-        Pickaxe,
-        ConstructionGun,
-        DeconstructionGun,
-        ProspectingRadar,
-        Detonator,
+        BlockAdder,
+        BlockRemover,
     }
 
     public class Player
@@ -128,19 +125,20 @@ namespace MineWorld
             }
         }
 
-        private PlayerTools tool = PlayerTools.Pickaxe;
-        public PlayerTools Tool
-        {
-            get { return tool; }
-            set
-            {
-                if (value != tool)
-                {
-                    tool = value;
-                    UpdateSpriteTexture();
-                }
-            }
-        }
+        //private PlayerTools tool = PlayerTools.Pickaxe;
+        //public PlayerTools Tool
+        //{
+            //get { return tool; }
+            //set
+            //{
+                //if (value != tool)
+                //{
+                    //tool = value;
+                    //UpdateSpriteTexture();
+                //}
+            //}
+        //}
+        /*
         private bool usingTool = false;
         public bool UsingTool
         {
@@ -155,6 +153,7 @@ namespace MineWorld
                 }
             }
         }
+         */
 
         public Player(NetConnection netConn, Game gameInstance)
         {
@@ -168,11 +167,12 @@ namespace MineWorld
             if (gameInstance != null)
             {
                 this.SpriteModel = new SpriteModel(gameInstance, 4);
-                UpdateSpriteTexture();
+                //UpdateSpriteTexture();
                 this.IdleAnimation = true;
             }
         }
 
+        /*
         private void UpdateSpriteTexture()
         {
             if (gameInstance == null)
@@ -209,6 +209,7 @@ namespace MineWorld
             Texture2D orig = gameInstance.Content.Load<Texture2D>(textureName);
             this.SpriteModel.SetSpriteTexture(orig);
         }
+         */
 
         static uint uniqueId = 0;
         public static uint GetUniqueId()

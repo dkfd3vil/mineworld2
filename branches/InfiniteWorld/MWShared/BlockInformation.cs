@@ -37,8 +37,8 @@ namespace MineWorld
         Shock = 153,
         BankRed = 154,
         BankBlue = 155,
-        BeaconRed = 156,
-        BeaconBlue = 157,
+        //BeaconRed = 156,
+        //BeaconBlue = 157,
         HomeRed = 158,
         HomeBlue = 159,
         Road = 160,
@@ -89,8 +89,8 @@ namespace MineWorld
         Road,
         RoadTop,
         RoadBottom,
-        BeaconRed,
-        BeaconBlue,
+        //BeaconRed,
+        //BeaconBlue,
         Adminblock,
         Lamp,
         Grass,
@@ -259,7 +259,7 @@ namespace MineWorld
                         case BlockFaceDirection.ZDecreasing: return BlockTexture.HomeRed;
                         default: return BlockTexture.Metal;
                     }
-
+                    /*
                 case BlockType.BeaconRed:
                 case BlockType.BeaconBlue:
                     switch (faceDir)
@@ -276,6 +276,7 @@ namespace MineWorld
                             return BlockTexture.TeleSideB;
                     }
                     break;
+                     */
 
                 case BlockType.Road:
                     switch (faceDir)

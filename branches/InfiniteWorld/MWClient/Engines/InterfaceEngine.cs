@@ -23,11 +23,11 @@ namespace MineWorld
         Rectangle drawRect;
 
         Texture2D texCrosshairs, texBlank, texHelpRed,texHelpBlue;
-        Texture2D texRadarBackground, texRadarForeground, texRadarPlayerSame, texRadarPlayerAbove, texRadarPlayerBelow, texRadarPlayerPing, texRadarNorth;
-        Texture2D texToolRadarRed, texToolRadarBlue, texToolRadarGold, texToolRadarDiamond, texToolRadarLED, texToolRadarPointer, texToolRadarFlash;
-        Texture2D texToolDetonatorDownRed, texToolDetonatorUpRed, texToolDetonatorDownBlue, texToolDetonatorUpBlue;
-        Texture2D texToolBuild, texToolBuildCharge, texToolBuildBlast, texToolBuildSmoke;
-        Texture2D texToolPickaxeRed, texToolPickaxeBlue;
+        //Texture2D texRadarBackground, texRadarForeground, texRadarPlayerSame, texRadarPlayerAbove, texRadarPlayerBelow, texRadarPlayerPing, texRadarNorth;
+        //Texture2D texToolRadarRed, texToolRadarBlue, texToolRadarGold, texToolRadarDiamond, texToolRadarLED, texToolRadarPointer, texToolRadarFlash;
+        //Texture2D texToolDetonatorDownRed, texToolDetonatorUpRed, texToolDetonatorDownBlue, texToolDetonatorUpBlue;
+        //Texture2D texToolBuild, texToolBuildCharge, texToolBuildBlast, texToolBuildSmoke;
+        //Texture2D texToolPickaxeRed, texToolPickaxeBlue;
 
         Dictionary<BlockType, Texture2D> blockIcons = new Dictionary<BlockType, Texture2D>();
 
@@ -40,36 +40,36 @@ namespace MineWorld
             texCrosshairs = gameInstance.Content.Load<Texture2D>("ui/tex_ui_crosshair");
             texBlank = new Texture2D(gameInstance.GraphicsDevice, 1, 1);
             texBlank.SetData(new uint[1] { 0xFFFFFFFF });
-            texRadarBackground = gameInstance.Content.Load<Texture2D>("ui/tex_radar_background");
-            texRadarForeground = gameInstance.Content.Load<Texture2D>("ui/tex_radar_foreground");
-            texRadarPlayerSame = gameInstance.Content.Load<Texture2D>("ui/tex_radar_player_same");
-            texRadarPlayerAbove = gameInstance.Content.Load<Texture2D>("ui/tex_radar_player_above");
-            texRadarPlayerBelow = gameInstance.Content.Load<Texture2D>("ui/tex_radar_player_below");
-            texRadarPlayerPing = gameInstance.Content.Load<Texture2D>("ui/tex_radar_player_ping");
-            texRadarNorth = gameInstance.Content.Load<Texture2D>("ui/tex_radar_north");
+            //texRadarBackground = gameInstance.Content.Load<Texture2D>("ui/tex_radar_background");
+            //texRadarForeground = gameInstance.Content.Load<Texture2D>("ui/tex_radar_foreground");
+            //texRadarPlayerSame = gameInstance.Content.Load<Texture2D>("ui/tex_radar_player_same");
+            //texRadarPlayerAbove = gameInstance.Content.Load<Texture2D>("ui/tex_radar_player_above");
+            //texRadarPlayerBelow = gameInstance.Content.Load<Texture2D>("ui/tex_radar_player_below");
+            //texRadarPlayerPing = gameInstance.Content.Load<Texture2D>("ui/tex_radar_player_ping");
+            //texRadarNorth = gameInstance.Content.Load<Texture2D>("ui/tex_radar_north");
             texHelpRed = gameInstance.Content.Load<Texture2D>("menus/tex_menu_help_red");
             texHelpBlue = gameInstance.Content.Load<Texture2D>("menus/tex_menu_help_blue");
 
-            texToolRadarRed = gameInstance.Content.Load<Texture2D>("tools/tex_tool_radar_red");
-            texToolRadarBlue = gameInstance.Content.Load<Texture2D>("tools/tex_tool_radar_blue");
-            texToolRadarGold = gameInstance.Content.Load<Texture2D>("tools/tex_tool_radar_screen_gold");
-            texToolRadarDiamond = gameInstance.Content.Load<Texture2D>("tools/tex_tool_radar_screen_diamond");
-            texToolRadarLED = gameInstance.Content.Load<Texture2D>("tools/tex_tool_radar_led");
-            texToolRadarPointer = gameInstance.Content.Load<Texture2D>("tools/tex_tool_radar_pointer");
-            texToolRadarFlash = gameInstance.Content.Load<Texture2D>("tools/tex_tool_radar_flash");
+            //texToolRadarRed = gameInstance.Content.Load<Texture2D>("tools/tex_tool_radar_red");
+            //texToolRadarBlue = gameInstance.Content.Load<Texture2D>("tools/tex_tool_radar_blue");
+            //texToolRadarGold = gameInstance.Content.Load<Texture2D>("tools/tex_tool_radar_screen_gold");
+            //texToolRadarDiamond = gameInstance.Content.Load<Texture2D>("tools/tex_tool_radar_screen_diamond");
+            //texToolRadarLED = gameInstance.Content.Load<Texture2D>("tools/tex_tool_radar_led");
+            //texToolRadarPointer = gameInstance.Content.Load<Texture2D>("tools/tex_tool_radar_pointer");
+            //texToolRadarFlash = gameInstance.Content.Load<Texture2D>("tools/tex_tool_radar_flash");
 
-            texToolBuild = gameInstance.Content.Load<Texture2D>("tools/tex_tool_build");
-            texToolBuildCharge = gameInstance.Content.Load<Texture2D>("tools/tex_tool_build_charge");
-            texToolBuildBlast = gameInstance.Content.Load<Texture2D>("tools/tex_tool_build_blast");
-            texToolBuildSmoke = gameInstance.Content.Load<Texture2D>("tools/tex_tool_build_smoke");
+            //texToolBuild = gameInstance.Content.Load<Texture2D>("tools/tex_tool_build");
+            //texToolBuildCharge = gameInstance.Content.Load<Texture2D>("tools/tex_tool_build_charge");
+            //texToolBuildBlast = gameInstance.Content.Load<Texture2D>("tools/tex_tool_build_blast");
+            //texToolBuildSmoke = gameInstance.Content.Load<Texture2D>("tools/tex_tool_build_smoke");
 
-            texToolDetonatorDownRed = gameInstance.Content.Load<Texture2D>("tools/tex_tool_detonator_down_red");
-            texToolDetonatorUpRed = gameInstance.Content.Load<Texture2D>("tools/tex_tool_detonator_up_red");
-            texToolDetonatorDownBlue = gameInstance.Content.Load<Texture2D>("tools/tex_tool_detonator_down_blue");
-            texToolDetonatorUpBlue = gameInstance.Content.Load<Texture2D>("tools/tex_tool_detonator_up_blue");
+            //texToolDetonatorDownRed = gameInstance.Content.Load<Texture2D>("tools/tex_tool_detonator_down_red");
+            //texToolDetonatorUpRed = gameInstance.Content.Load<Texture2D>("tools/tex_tool_detonator_up_red");
+            //texToolDetonatorDownBlue = gameInstance.Content.Load<Texture2D>("tools/tex_tool_detonator_down_blue");
+            //texToolDetonatorUpBlue = gameInstance.Content.Load<Texture2D>("tools/tex_tool_detonator_up_blue");
 
-            texToolPickaxeRed = gameInstance.Content.Load<Texture2D>("tools/tex_tool_drill_red");
-            texToolPickaxeBlue = gameInstance.Content.Load<Texture2D>("tools/tex_tool_drill_blue");
+            //texToolPickaxeRed = gameInstance.Content.Load<Texture2D>("tools/tex_tool_drill_red");
+            //texToolPickaxeBlue = gameInstance.Content.Load<Texture2D>("tools/tex_tool_drill_blue");
 
             drawRect = new Rectangle(gameInstance.GraphicsDevice.Viewport.Width / 2 - 1024 / 2,
                                      gameInstance.GraphicsDevice.Viewport.Height / 2 - 768 / 2,
@@ -87,8 +87,8 @@ namespace MineWorld
             blockIcons[BlockType.Shock] = gameInstance.Content.Load<Texture2D>("icons/tex_icon_spikes");
             blockIcons[BlockType.TransBlue] = gameInstance.Content.Load<Texture2D>("icons/tex_icon_translucent_blue");
             blockIcons[BlockType.TransRed] = gameInstance.Content.Load<Texture2D>("icons/tex_icon_translucent_red");
-            blockIcons[BlockType.BeaconRed] = gameInstance.Content.Load<Texture2D>("icons/tex_icon_beacon");
-            blockIcons[BlockType.BeaconBlue] = gameInstance.Content.Load<Texture2D>("icons/tex_icon_beacon");
+            //blockIcons[BlockType.BeaconRed] = gameInstance.Content.Load<Texture2D>("icons/tex_icon_beacon");
+            //blockIcons[BlockType.BeaconBlue] = gameInstance.Content.Load<Texture2D>("icons/tex_icon_beacon");
             blockIcons[BlockType.Lava] = gameInstance.Content.Load<Texture2D>("icons/tex_icon_lava");
             blockIcons[BlockType.Road] = gameInstance.Content.Load<Texture2D>("icons/tex_icon_road");
             blockIcons[BlockType.None] = gameInstance.Content.Load<Texture2D>("icons/tex_icon_deconstruction");
@@ -106,16 +106,16 @@ namespace MineWorld
             graphicsDevice.SamplerStates[0].MagFilter = TextureFilter.Point;
             int drawX = screenWidth / 2 - 60 * 3;
             int drawY = screenHeight - 91 * 3;
-            Texture2D toDraw;
+            //Texture2D toDraw;
             if (_P.Owncolor == Color.Red)
             {
-                toDraw = texToolPickaxeRed;
+                //toDraw = texToolPickaxeRed;
             }
             else
             {
-                toDraw = texToolPickaxeBlue;
+                //toDraw = texToolPickaxeBlue;
             }
-            spriteBatch.Draw(toDraw, new Rectangle(drawX, drawY, 120 * 3, 126 * 3), Color.White);
+            //spriteBatch.Draw(toDraw, new Rectangle(drawX, drawY, 120 * 3, 126 * 3), Color.White);
         }
 
         public void RenderMessageCenter(SpriteBatch spriteBatch, string text, Vector2 pointCenter, Color colorText, Color colorBackground)
@@ -143,22 +143,23 @@ namespace MineWorld
             //if (_P.chatFullBuffer.Count > bufferSize)
                 //_P.chatFullBuffer.RemoveRange(bufferSize, _P.chatFullBuffer.Count - bufferSize);
 
-            if (_P.constructionGunAnimation > 0)
-            {
-                if (_P.constructionGunAnimation > gameTime.ElapsedGameTime.TotalSeconds)
-                    _P.constructionGunAnimation -= (float)gameTime.ElapsedGameTime.TotalSeconds;
-                else
-                    _P.constructionGunAnimation = 0;
-            }
-            else
-            {
-                if (_P.constructionGunAnimation < -gameTime.ElapsedGameTime.TotalSeconds)
-                    _P.constructionGunAnimation += (float)gameTime.ElapsedGameTime.TotalSeconds;
-                else
-                    _P.constructionGunAnimation = 0;
-            }
+            //if (_P.constructionGunAnimation > 0)
+            //{//
+                //if (_P.constructionGunAnimation > gameTime.ElapsedGameTime.TotalSeconds)
+                    //_P.constructionGunAnimation -= (float)gameTime.ElapsedGameTime.TotalSeconds;
+                //else
+                    //_P.constructionGunAnimation = 0;
+            //}
+            //else
+            //{
+                //if (_P.constructionGunAnimation < -gameTime.ElapsedGameTime.TotalSeconds)
+                    //_P.constructionGunAnimation += (float)gameTime.ElapsedGameTime.TotalSeconds;
+                //else
+                    //_P.constructionGunAnimation = 0;
+            //}
         }
 
+        /*
         public void RenderRadarBlip(SpriteBatch spriteBatch, Vector3 position, Color color, bool ping, string text)
         {
             // Figure out the relative position for the radar blip.
@@ -239,10 +240,12 @@ namespace MineWorld
                     textureToUse = texToolDetonatorUpBlue;
                 }
             }
+         */
 
-            spriteBatch.Draw(textureToUse, new Rectangle(screenWidth / 2 /*- 22 * 3*/, screenHeight - 77 * 3 + 14 * 3, 75 * 3, 77 * 3), Color.White);
-        }
+            //spriteBatch.Draw(textureToUse, new Rectangle(screenWidth / 2 /*- 22 * 3*/, screenHeight - 77 * 3 + 14 * 3, 75 * 3, 77 * 3), Color.White);
+        //}
 
+        /*
         public void RenderProspectron(GraphicsDevice graphicsDevice, SpriteBatch spriteBatch)
         {
             int screenWidth = graphicsDevice.Viewport.Width;
@@ -288,6 +291,7 @@ namespace MineWorld
             spriteBatch.Draw(gunSprite, new Rectangle(drawX, drawY, 120 * 3, 126 * 3), Color.White);
             spriteBatch.Draw(blockIcons[blockType], new Rectangle(drawX + 37 * 3, drawY + 50 * 3, 117, 63), Color.White);
         }
+         */
 
         public void drawChat(List<ChatMessage>messages, GraphicsDevice graphicsDevice)
         {
@@ -346,6 +350,7 @@ namespace MineWorld
                                                             texCrosshairs.Height), Color.White);
 
             // If equipped, draw the tool.
+            /*
             switch (_P.playerTools[_P.playerToolSelected])
             {
                 case PlayerTools.Detonator:
@@ -379,6 +384,7 @@ namespace MineWorld
                     }
                     break;
             }
+                          */
 
             if (gameInstance.Csettings.DrawFrameRate)
                 RenderMessageCenter(spriteBatch, String.Format("FPS: {0:000}", gameInstance.FrameRate), new Vector2(60, graphicsDevice.Viewport.Height - 20), Color.Gray, Color.Black);
@@ -448,6 +454,7 @@ namespace MineWorld
              */
 
             // Draw the player radar.
+            /*
             spriteBatch.Draw(texRadarBackground, new Vector2(10, 30), Color.White);
             foreach (Player p in _P.playerList.Values)
                 if (p.Alive)
@@ -458,6 +465,7 @@ namespace MineWorld
 
             spriteBatch.Draw(texRadarForeground, new Vector2(10, 30), Color.White);
 
+             */
             // Draw escape message.
             if (Keyboard.GetState().IsKeyDown(Keys.Escape))
             {

@@ -242,7 +242,7 @@ namespace MineWorld
                                                 if (downloadComplete)
                                                 {
                                                     ChangeState("MineWorld.States.MainGameState");
-                                                    propertyBag.equipWeps();
+                                                    //propertyBag.equipWeps();
                                                     if (!Csettings.NoSound)
                                                         MediaPlayer.Stop();
                                                     propertyBag.blockEngine.DownloadComplete();
@@ -261,6 +261,7 @@ namespace MineWorld
                                             break;
                                         }
 
+                                        /*
                                     case MineWorldMessage.SetBeacon:
                                         {
                                             Vector3 position = msgBuffer.ReadVector3();
@@ -268,26 +269,27 @@ namespace MineWorld
 
                                             if (text == "")
                                             {
-                                                if (propertyBag.beaconList.ContainsKey(position))
-                                                    propertyBag.beaconList.Remove(position);
+                                                //if (propertyBag.beaconList.ContainsKey(position))
+                                                    //propertyBag.beaconList.Remove(position);
                                             }
                                             else
                                             {
-                                                Beacon newBeacon = new Beacon();
-                                                newBeacon.ID = text;
-                                                propertyBag.beaconList.Add(position, newBeacon);
+                                                //Beacon newBeacon = new Beacon();
+                                                //newBeacon.ID = text;
+                                                //propertyBag.beaconList.Add(position, newBeacon);
                                             }
                                         }
                                         break;
-
+                                        */
+                                        /*
                                     case MineWorldMessage.TriggerConstructionGunAnimation:
                                         {
-                                            propertyBag.constructionGunAnimation = msgBuffer.ReadFloat();
-                                            if (propertyBag.constructionGunAnimation <= -0.1)
-                                                propertyBag.PlaySound(MineWorldSound.RadarSwitch);
+                                            //propertyBag.constructionGunAnimation = msgBuffer.ReadFloat();
+                                            //if (propertyBag.constructionGunAnimation <= -0.1)
+                                                //propertyBag.PlaySound(MineWorldSound.RadarSwitch);
                                         }
                                         break;
-
+                                        */
                                     case MineWorldMessage.ResourceUpdate:
                                         {
                                             // ore, cash, weight, max ore, max weight, team ore, red cash, blue cash, all uint
@@ -434,8 +436,8 @@ namespace MineWorld
                                                 Player player = propertyBag.playerList[playerId];
                                                 player.UpdatePosition(msgBuffer.ReadVector3(), gameTime.TotalGameTime.TotalSeconds);
                                                 player.Heading = msgBuffer.ReadVector3();
-                                                player.Tool = (PlayerTools)msgBuffer.ReadByte();
-                                                player.UsingTool = msgBuffer.ReadBoolean();
+                                                //player.Tool = (PlayerTools)msgBuffer.ReadByte();
+                                                //player.UsingTool = msgBuffer.ReadBoolean();
                                                 player.Health = (uint)(msgBuffer.ReadUInt16() * 100);
                                             }
                                         }
@@ -449,7 +451,7 @@ namespace MineWorld
                                             propertyBag.addChatMessage(chatString, chatType, author);
                                         }
                                         break;
-
+                                        /*
                                     case MineWorldMessage.PlayerPing:
                                         {
                                             uint playerId = (uint)msgBuffer.ReadInt32();
@@ -460,7 +462,7 @@ namespace MineWorld
                                             }
                                         }
                                         break;
-
+                                        */
                                     case MineWorldMessage.PlaySound:
                                         {
                                             MineWorldSound sound = (MineWorldSound)msgBuffer.ReadByte();

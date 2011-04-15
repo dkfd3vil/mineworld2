@@ -4,8 +4,10 @@ using System.Text;
 
 namespace MineWorld
 {
+    /*
     public class Beacon
     {
         public string ID;
     }
+     */
 }

@@ -55,12 +55,12 @@ namespace MineWorld.States
             _P.interfaceEngine.Update(gameTime);
 
             // Count down the tool cooldown.
-                if (_P.playerToolCooldown > 0)
-                {
-                    _P.playerToolCooldown -= (float)gameTime.ElapsedGameTime.TotalSeconds;
-                    if (_P.playerToolCooldown <= 0)
-                        _P.playerToolCooldown = 0;
-                }
+                //if (_P.playerToolCooldown > 0)
+                //{
+                    //_P.playerToolCooldown -= (float)gameTime.ElapsedGameTime.TotalSeconds;
+                    //if (_P.playerToolCooldown <= 0)
+                        //_P.playerToolCooldown = 0;
+                //}
 
             // Moving the mouse changes where we look.
             if (_SM.WindowHasFocus())
@@ -86,6 +86,7 @@ namespace MineWorld.States
                 mouseInitialized = false;
 
             // Prospector radar stuff.
+            /*
             if (!_P.playerDead && _P.playerToolCooldown == 0 && _P.playerTools[_P.playerToolSelected] == PlayerTools.ProspectingRadar)
             {
                 float oldValue = _P.radarValue;
@@ -98,6 +99,7 @@ namespace MineWorld.States
                         _P.PlaySound(MineWorldSound.RadarHigh);
                 }
             }
+             */
 
             // Update the player's position.
             if (!_P.playerDead)
@@ -185,40 +187,24 @@ namespace MineWorld.States
 
                 // If we"re hitting the ground with a high velocity, die!
                 // Except if we have godmode ;)
-                if (false)//!_P.godmode)
+                if (standingOnBlock != BlockType.None && _P.playerVelocity.Y < 0)
                 {
-                    if (standingOnBlock != BlockType.None && _P.playerVelocity.Y < 0)
+                    float fallDamage = Math.Abs(_P.playerVelocity.Y) / DIEVELOCITY;
+                    if (fallDamage >= 0.5)
                     {
-                        float fallDamage = Math.Abs(_P.playerVelocity.Y) / DIEVELOCITY;
-                        if (fallDamage >= 0.5)
+                        // Fall damage of 0.5 maps to a screenEffectCounter value of 2, meaning that the effect doesn't appear.
+                        // Fall damage of 1.0 maps to a screenEffectCounter value of 0, making the effect very strong.
+                        if (standingOnBlock != BlockType.Jump)
                         {
-                            // Fall damage of 0.5 maps to a screenEffectCounter value of 2, meaning that the effect doesn't appear.
-                            // Fall damage of 1.0 maps to a screenEffectCounter value of 0, making the effect very strong.
-                            if (standingOnBlock != BlockType.Jump)
-                            {
-                                _P.screenEffect = ScreenEffect.Fall;
-                                //if (((int)_P.playerHealth - (fallDamage * 100)) > 0)
-                                //{
-                                    //_P.playerHealth -= (uint)(fallDamage * 100);
-                                //}
-                                //else
-                                //{
-                                    //_P.playerHealth = 0;
-                                //}
-                                //if (_P.playerHealth <= 0)
-                                //{
-                                    //_P.KillPlayer(Defines.deathByFall);
-                                //}
-                                _P.screenEffectCounter = 2 - (fallDamage - 0.5) * 4;
-                                _P.PlaySoundForEveryone(MineWorldSound.GroundHit, _P.playerPosition);
-                                //_P.SendPlayerHurt();
-                            }
+                            _P.screenEffect = ScreenEffect.Fall;
+                            _P.screenEffectCounter = 2 - (fallDamage - 0.5) * 4;
+                            _P.PlaySoundForEveryone(MineWorldSound.GroundHit, _P.playerPosition);
                         }
                     }
                 }
                 else
                 {
-                    //_P.PlaySoundForEveryone(MineWorldSound.GroundHit, _P.playerPosition);
+                    _P.PlaySoundForEveryone(MineWorldSound.GroundHit, _P.playerPosition);
                 }
 
                 if (_P.blockEngine.SolidAtPointForPlayer(midPosition))
@@ -437,35 +423,20 @@ namespace MineWorld.States
         {
             switch (input)
             {
+                case KeyBoardButtons.AltFire:
                 case KeyBoardButtons.Fire:
-                    if (_P.playerToolCooldown <= 0)
                     {
-                        switch (_P.playerTools[_P.playerToolSelected])
+                        // If we're dead, come back to life.
+                        if (_P.playerDead && _P.screenEffectCounter > 2)
                         {
-                            // Disabled as everyone speed-mines now.
-                            case PlayerTools.Pickaxe:
-                                _P.FirePickaxe();
-                                break;
-
-                            case PlayerTools.ConstructionGun:
-                                _P.FireConstructionGun(_P.playerBlocks[_P.playerBlockSelected]);
-                                break;
-
-                            case PlayerTools.DeconstructionGun:
-                                _P.FireDeconstructionGun();
-                                break;
-
-                            case PlayerTools.Detonator:
-                                _P.PlaySound(MineWorldSound.ClickHigh);
-                                _P.FireDetonator();
-                                break;
-
-                            case PlayerTools.ProspectingRadar:
-                                _P.FireRadar();
-                                break;
+                            _P.RespawnPlayer();
                         }
+                        else if (!_P.playerDead)
+                        {
+                            _P.UseTool(input);
+                        }
+                        break;
                     }
-                    break;
                 case KeyBoardButtons.Jump:
                     {
                         Vector3 footPosition = _P.playerPosition + new Vector3(0f, -1.5f, 0f);
@@ -481,74 +452,6 @@ namespace MineWorld.States
                         {
                             _P.playerVelocity.Y = JUMPVELOCITY * 0.4f;
                         }
-                    }
-                    break;
-                case KeyBoardButtons.ToolUp:
-                    _P.PlaySound(MineWorldSound.ClickLow);
-                    _P.playerToolSelected += 1;
-                    if (_P.playerToolSelected >= _P.playerTools.Length)
-                        _P.playerToolSelected = 0;
-                    break;
-                case KeyBoardButtons.ToolDown:
-                    _P.PlaySound(MineWorldSound.ClickLow);
-                    _P.playerToolSelected -= 1;
-                    if (_P.playerToolSelected < 0)
-                        _P.playerToolSelected = _P.playerTools.Length;
-                    break;
-                case KeyBoardButtons.Tool1:
-                    _P.playerToolSelected = 0;
-                    _P.PlaySound(MineWorldSound.ClickLow);
-                    if (_P.playerToolSelected >= _P.playerTools.Length)
-                        _P.playerToolSelected = _P.playerTools.Length - 1;
-                    break;
-                case KeyBoardButtons.Tool2:
-                    _P.playerToolSelected = 1;
-                    _P.PlaySound(MineWorldSound.ClickLow);
-                    if (_P.playerToolSelected >= _P.playerTools.Length)
-                        _P.playerToolSelected = _P.playerTools.Length - 1;
-                    break;
-                case KeyBoardButtons.Tool3:
-                    _P.playerToolSelected = 2;
-                    _P.PlaySound(MineWorldSound.ClickLow);
-                    if (_P.playerToolSelected >= _P.playerTools.Length)
-                        _P.playerToolSelected = _P.playerTools.Length - 1;
-                    break;
-                case KeyBoardButtons.Tool4:
-                    _P.playerToolSelected = 3;
-                    _P.PlaySound(MineWorldSound.ClickLow);
-                    if (_P.playerToolSelected >= _P.playerTools.Length)
-                        _P.playerToolSelected = _P.playerTools.Length - 1;
-                    break;
-                case KeyBoardButtons.Tool5:
-                    _P.playerToolSelected = 4;
-                    _P.PlaySound(MineWorldSound.ClickLow);
-                    if (_P.playerToolSelected >= _P.playerTools.Length)
-                        _P.playerToolSelected = _P.playerTools.Length - 1;
-                    break;
-                case KeyBoardButtons.BlockUp:
-                    if (_P.playerTools[_P.playerToolSelected] == PlayerTools.ConstructionGun)
-                    {
-                        _P.PlaySound(MineWorldSound.ClickLow);
-                        _P.playerBlockSelected += 1;
-                        if (_P.playerBlockSelected >= _P.playerBlocks.Length)
-                            _P.playerBlockSelected = 0;
-                    }
-                    break;
-                case KeyBoardButtons.BlockDown:
-                    if (_P.playerTools[_P.playerToolSelected] == PlayerTools.ConstructionGun)
-                    {
-                        _P.PlaySound(MineWorldSound.ClickLow);
-                        _P.playerBlockSelected -= 1;
-                        if (_P.playerBlockSelected < 0)
-                            _P.playerBlockSelected = _P.playerBlocks.Length-1;
-                    }
-                    break;
-                case KeyBoardButtons.Ping:
-                    {
-                        NetBuffer msgBuffer = _P.netClient.CreateBuffer();
-                        msgBuffer.Write((byte)MineWorldMessage.PlayerPing);
-                        msgBuffer.Write(_P.playerMyId);
-                        _P.netClient.SendMessage(msgBuffer, NetChannel.ReliableUnordered);
                     }
                     break;
                 case KeyBoardButtons.Say:
@@ -644,21 +547,15 @@ namespace MineWorld.States
 
         public override void OnKeyUp(Keys key)
         {
-
         }
 
         public override void OnMouseDown(MouseButtons button, int x, int y)
         {
-            // If we're dead, come back to life.
-            if (_P.playerDead && _P.screenEffectCounter > 2)
-                _P.RespawnPlayer();
-            else if (!_P.playerDead)
                 HandleInput((_SM as MineWorldGame).keyBinds.GetBound(button));
         }
 
         public override void OnMouseUp(MouseButtons button, int x, int y)
         {
-
         }
 
         public override void OnMouseScroll(int scrollDelta)
@@ -669,8 +566,7 @@ namespace MineWorld.States
             {
                 if (scrollDelta >= 120)
                 {
-                    //Console.WriteLine("Handling input for scroll up...");
-                    HandleInput((_SM as MineWorldGame).keyBinds.GetBound(MouseButtons.WheelUp));//.keyBinds.GetBound(button));
+                    HandleInput((_SM as MineWorldGame).keyBinds.GetBound(MouseButtons.WheelUp));
                 }
                 else if (scrollDelta <= -120)
                 {
