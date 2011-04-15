@@ -43,10 +43,10 @@ namespace MineWorld
         public Vector3 playerVelocity = Vector3.Zero;
         public Vector3 lastPosition = Vector3.Zero;
         public Vector3 lastHeading = Vector3.Zero;
-        public PlayerTools[] playerTools = new PlayerTools[1] { PlayerTools.Pickaxe };
-        public int playerToolSelected = 0;
-        public BlockType[] playerBlocks = new BlockType[1] { BlockType.None };
-        public int playerBlockSelected = 0;
+        //public PlayerTools[] playerTools = new PlayerTools[1] { PlayerTools.Pickaxe };
+        //public int playerToolSelected = 0;
+        //public BlockType[] playerBlocks = new BlockType[1] { BlockType.None };
+        //public int playerBlockSelected = 0;
         public bool playerDead = true;
         public bool allowRespawn = false;
         public uint playerHealth = 0;
@@ -54,14 +54,14 @@ namespace MineWorld
         public float playerHoldBreath = 20;
         public DateTime lastBreath = DateTime.Now;
         public bool playerRadarMute = false;
-        public float playerToolCooldown = 0;
+        //public float playerToolCooldown = 0;
         public string playerHandle = "Player";
         public float volumeLevel = 1.0f;
         public uint playerMyId = 0;
-        public float radarCooldown = 0;
-        public float radarDistance = 0;
-        public float radarValue = 0;
-        public float constructionGunAnimation = 0;
+        //public float radarCooldown = 0;
+        //public float radarDistance = 0;
+        //public float radarValue = 0;
+        //public float constructionGunAnimation = 0;
         public Color Owncolor = new Color();
 
         //Movement flags
@@ -79,7 +79,7 @@ namespace MineWorld
         public float mouseSensitivity = 0.005f;
 
         // Beacon variables.
-        public Dictionary<Vector3, Beacon> beaconList = new Dictionary<Vector3, Beacon>();
+        //public Dictionary<Vector3, Beacon> beaconList = new Dictionary<Vector3, Beacon>();
 
         // Screen effect stuff.
         private Random randGen = new Random();
@@ -342,6 +342,7 @@ namespace MineWorld
             UpdateCamera(null);
         }
 
+        /*
         public void equipWeps()
         {
             bool allWeps = true;//TODO We are giving every player all tools
@@ -376,7 +377,22 @@ namespace MineWorld
                                              BlockType.Adminblock,};
             }
         }
+         */
 
+        public void UseTool(KeyBoardButtons key)
+        {
+            if (netClient.Status != NetConnectionStatus.Connected)
+                return;
+
+            NetBuffer msgBuffer = netClient.CreateBuffer();
+            msgBuffer.Write((byte)MineWorldMessage.UseTool);
+            msgBuffer.Write((byte)key);
+            msgBuffer.Write(playerPosition);
+            msgBuffer.Write(playerCamera.GetLookVector());
+            msgBuffer.Write((byte)BlockType.Leaves);
+            netClient.SendMessage(msgBuffer, NetChannel.ReliableUnordered);
+        }
+        /*
         public void FireRadar()
         {
             if (netClient.Status != NetConnectionStatus.Connected)
@@ -392,7 +408,8 @@ namespace MineWorld
             msgBuffer.Write((byte)BlockType.None);
             netClient.SendMessage(msgBuffer, NetChannel.ReliableUnordered);
         }
-
+        */
+        /*
         public void FirePickaxe()
         {
             if (netClient.Status != NetConnectionStatus.Connected)
@@ -408,7 +425,8 @@ namespace MineWorld
             msgBuffer.Write((byte)BlockType.None);
             netClient.SendMessage(msgBuffer, NetChannel.ReliableUnordered);
         }
-
+         */
+        /*
         public void FireConstructionGun(BlockType blockType)
         {
             if (netClient.Status != NetConnectionStatus.Connected)
@@ -426,7 +444,9 @@ namespace MineWorld
             msgBuffer.Write((byte)blockType);
             netClient.SendMessage(msgBuffer, NetChannel.ReliableUnordered);
         }
+         */
 
+        /*
         public void FireDeconstructionGun()
         {
             if (netClient.Status != NetConnectionStatus.Connected)
@@ -444,7 +464,9 @@ namespace MineWorld
             msgBuffer.Write((byte)BlockType.None);
             netClient.SendMessage(msgBuffer, NetChannel.ReliableUnordered);
         }
+         */
 
+        /*
         public void FireDetonator()
         {
             if (netClient.Status != NetConnectionStatus.Connected)
@@ -461,13 +483,16 @@ namespace MineWorld
             msgBuffer.Write((byte)BlockType.None);
             netClient.SendMessage(msgBuffer, NetChannel.ReliableUnordered);
         }
+         */
 
+        /*
         public void ToggleRadar()
         {
             playerRadarMute = !playerRadarMute;
             PlaySound(MineWorldSound.RadarSwitch);
         }
-
+        */
+        /*
         public void ReadRadar(ref float distanceReading, ref float valueReading)
         {
             valueReading = 0;
@@ -497,6 +522,7 @@ namespace MineWorld
                     }
                 }
         }
+         */
 
         // Returns true if the player is able to use a bank right now.
         /*
@@ -537,7 +563,7 @@ namespace MineWorld
             return false;
         }
          */
-
+        /*
         public float GetToolCooldown(PlayerTools tool)
         {
             switch (tool)
@@ -550,7 +576,7 @@ namespace MineWorld
                 default: return 0;
             }
         }
-
+        */
         public void SendPlayerUpdate()
         {
             if (netClient.Status != NetConnectionStatus.Connected)
@@ -564,8 +590,8 @@ namespace MineWorld
                 msgBuffer.Write((byte)MineWorldMessage.PlayerUpdate);//full
                 msgBuffer.Write(playerPosition);
                 msgBuffer.Write(playerCamera.GetLookVector());
-                msgBuffer.Write((byte)playerTools[playerToolSelected]);
-                msgBuffer.Write(playerToolCooldown > 0.001f);
+                //msgBuffer.Write((byte)playerTools[playerToolSelected]);
+                //msgBuffer.Write(playerToolCooldown > 0.001f);
                 netClient.SendMessage(msgBuffer, NetChannel.UnreliableInOrder1);
             }
             else if (lastHeading != playerCamera.GetLookVector())
@@ -574,18 +600,20 @@ namespace MineWorld
                 NetBuffer msgBuffer = netClient.CreateBuffer();
                 msgBuffer.Write((byte)MineWorldMessage.PlayerUpdate1);//just heading
                 msgBuffer.Write(lastHeading);
-                msgBuffer.Write((byte)playerTools[playerToolSelected]);
-                msgBuffer.Write(playerToolCooldown > 0.001f);
+                //msgBuffer.Write((byte)playerTools[playerToolSelected]);
+                //msgBuffer.Write(playerToolCooldown > 0.001f);
                 netClient.SendMessage(msgBuffer, NetChannel.UnreliableInOrder1);
             }
+            /*
             else
             {
                 NetBuffer msgBuffer = netClient.CreateBuffer();
                 msgBuffer.Write((byte)MineWorldMessage.PlayerUpdate2);//just tools
-                msgBuffer.Write((byte)playerTools[playerToolSelected]);
-                msgBuffer.Write(playerToolCooldown > 0.001f);
+                //msgBuffer.Write((byte)playerTools[playerToolSelected]);
+                //msgBuffer.Write(playerToolCooldown > 0.001f);
                 netClient.SendMessage(msgBuffer, NetChannel.UnreliableInOrder1);
             }
+             */
         }
 
         public void SendPlayerHurt(uint damage,bool flatdamage)

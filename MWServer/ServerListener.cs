@@ -344,26 +344,18 @@ namespace MineWorld
 
                                         case MineWorldMessage.UseTool:
                                             {
+                                                KeyBoardButtons key = (KeyBoardButtons)msgBuffer.ReadByte();
                                                 Vector3 playerPosition = msgBuffer.ReadVector3();
                                                 Vector3 playerHeading = msgBuffer.ReadVector3();
-                                                PlayerTools playerTool = (PlayerTools)msgBuffer.ReadByte();
                                                 BlockType blockType = (BlockType)msgBuffer.ReadByte();
-                                                switch (playerTool)
+
+                                                switch (key)
                                                 {
-                                                    case PlayerTools.Pickaxe:
+                                                    case KeyBoardButtons.AltFire:
                                                         IServer.UsePickaxe(player, playerPosition, playerHeading);
                                                         break;
-                                                    case PlayerTools.ConstructionGun:
+                                                    case KeyBoardButtons.Fire:
                                                         IServer.UseConstructionGun(player, playerPosition, playerHeading, blockType);
-                                                        break;
-                                                    case PlayerTools.DeconstructionGun:
-                                                        IServer.UseDeconstructionGun(player, playerPosition, playerHeading);
-                                                        break;
-                                                    case PlayerTools.ProspectingRadar:
-                                                        IServer.UseSignPainter(player, playerPosition, playerHeading);
-                                                        break;
-                                                    case PlayerTools.Detonator:
-                                                        IServer.UseDetonator(player);
                                                         break;
                                                 }
                                             }
@@ -426,8 +418,8 @@ namespace MineWorld
                                             {
                                                 player.Position = IServer.Auth_Position(msgBuffer.ReadVector3(), player);
                                                 player.Heading = IServer.Auth_Heading(msgBuffer.ReadVector3());
-                                                player.Tool = (PlayerTools)msgBuffer.ReadByte();
-                                                player.UsingTool = msgBuffer.ReadBoolean();
+                                                //player.Tool = (PlayerTools)msgBuffer.ReadByte();
+                                                //player.UsingTool = msgBuffer.ReadBoolean();
                                                 IServer.SendPlayerUpdate(player);
                                             }
                                             break;
@@ -435,12 +427,13 @@ namespace MineWorld
                                         case MineWorldMessage.PlayerUpdate1://minus position
                                             {
                                                 player.Heading = IServer.Auth_Heading(msgBuffer.ReadVector3());
-                                                player.Tool = (PlayerTools)msgBuffer.ReadByte();
-                                                player.UsingTool = msgBuffer.ReadBoolean();
+                                                //player.Tool = (PlayerTools)msgBuffer.ReadByte();
+                                                //player.UsingTool = msgBuffer.ReadBoolean();
                                                 IServer.SendPlayerUpdate(player);
                                                 break;
                                             }
 
+                                            /*
                                         case MineWorldMessage.PlayerUpdate2://minus position and heading
                                             {
                                                 player.Tool = (PlayerTools)msgBuffer.ReadByte();
@@ -448,6 +441,7 @@ namespace MineWorld
                                                 IServer.SendPlayerUpdate(player);
                                                 break;
                                             }
+                                             */
 
                                         case MineWorldMessage.PlayerHurt:
                                             {
@@ -488,11 +482,13 @@ namespace MineWorld
                                                 break;
                                             }
 
+                                            /*
                                         case MineWorldMessage.PlayerPing:
                                             {
                                                 IServer.SendPlayerPing((uint)msgBuffer.ReadInt32());
                                             }
                                             break;
+                                            */
 
                                         case MineWorldMessage.PlaySound:
                                             {

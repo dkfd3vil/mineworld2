@@ -605,6 +605,7 @@ namespace MineWorld
         }
          */
 
+        /*
         public void SendPlayerPing(uint playerId)
         {
             NetBuffer msgBuffer = netServer.CreateBuffer();
@@ -615,7 +616,7 @@ namespace MineWorld
                 //if (netConn.Status == NetConnectionStatus.Connected)
                 player.AddQueMsg(msgBuffer, NetChannel.ReliableUnordered);
         }
-
+        */
         public void KillPlayerSpecific(Player player)
         {
             // Put variables to zero
@@ -656,7 +657,7 @@ namespace MineWorld
             msgBuffer.Write((uint)player.ID);
             msgBuffer.Write(player.Position);
             msgBuffer.Write(player.Heading);
-            msgBuffer.Write((byte)player.Tool);
+            //msgBuffer.Write((byte)player.Tool);
 
             if (player.QueueAnimationBreak)
             {
@@ -664,7 +665,7 @@ namespace MineWorld
                 msgBuffer.Write(false);
             }
             else
-                msgBuffer.Write(player.UsingTool);
+                //msgBuffer.Write(player.UsingTool);
 
             msgBuffer.Write((ushort)player.Health / 100);
 
@@ -673,6 +674,7 @@ namespace MineWorld
                 iplayer.AddQueMsg(msgBuffer, NetChannel.UnreliableInOrder1);
         }
 
+        /*
         public void SendSetBeacon(Vector3 position, string text)
         {
             NetBuffer msgBuffer = netServer.CreateBuffer();
@@ -683,6 +685,7 @@ namespace MineWorld
                 //if (netConn.Status == NetConnectionStatus.Connected)
                 player.AddQueMsg(msgBuffer, NetChannel.ReliableInOrder2);
         }
+         */
 
         public void SendPlayerJoined(IClient player)
         {
@@ -704,19 +707,6 @@ namespace MineWorld
                 msgBuffer.Write((uint)p.ID);
                 //if (player.NetConn.Status == NetConnectionStatus.Connected)
                     player.AddQueMsg(msgBuffer, NetChannel.ReliableInOrder2);
-            }
-
-            // Let this player know about all placed beacons.
-            foreach (KeyValuePair<Vector3, Beacon> bPair in beaconList)
-            {
-                Vector3 position = bPair.Key;
-                position.Y += 1; // beacon is shown a block below its actually position to make altitude show up right
-                msgBuffer = netServer.CreateBuffer();
-                msgBuffer.Write((byte)MineWorldMessage.SetBeacon);
-                msgBuffer.Write(position);
-                msgBuffer.Write(bPair.Value.ID);
-                //if (player.NetConn.Status == NetConnectionStatus.Connected)
-                    player.AddQueMsg(msgBuffer,  NetChannel.ReliableInOrder2);
             }
 
             // Let other players know about this player.

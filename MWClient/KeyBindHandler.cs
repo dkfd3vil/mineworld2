@@ -182,6 +182,7 @@ namespace MineWorld
         public void CreateDefaultSet()
         {
             mouseBinds.Add(MouseButtons.LeftButton, KeyBoardButtons.Fire);
+            mouseBinds.Add(MouseButtons.RightButton, KeyBoardButtons.AltFire);
 
             keyBinds.Add(Keys.W, KeyBoardButtons.Forward);
             keyBinds.Add(Keys.S, KeyBoardButtons.Backward);
@@ -191,23 +192,7 @@ namespace MineWorld
             specialKeyBinds.Add(SpecialKeys.Control, KeyBoardButtons.Crouch);
             keyBinds.Add(Keys.Space, KeyBoardButtons.Jump);
 
-            keyBinds.Add(Keys.Q, KeyBoardButtons.Ping);
-            keyBinds.Add(Keys.D8, KeyBoardButtons.Deposit);
-            keyBinds.Add(Keys.D9, KeyBoardButtons.Withdraw);
-
             keyBinds.Add(Keys.Y, KeyBoardButtons.Say);
-
-            keyBinds.Add(Keys.D1, KeyBoardButtons.Tool1);
-            keyBinds.Add(Keys.D2, KeyBoardButtons.Tool2);
-            keyBinds.Add(Keys.D3, KeyBoardButtons.Tool3);
-            keyBinds.Add(Keys.D4, KeyBoardButtons.Tool4);
-            keyBinds.Add(Keys.D5, KeyBoardButtons.Tool5);
-
-            keyBinds.Add(Keys.E, KeyBoardButtons.ToolUp);
-
-            keyBinds.Add(Keys.R, KeyBoardButtons.BlockUp);
-            mouseBinds.Add(MouseButtons.WheelUp, KeyBoardButtons.BlockUp);
-            mouseBinds.Add(MouseButtons.WheelDown, KeyBoardButtons.BlockDown);
         }
     }
 }
