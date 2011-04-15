@@ -26,12 +26,10 @@ namespace MineWorld
         public bool Kicked = false; // set to true when a player is kicked to let other clients know they were kicked
         public bool godmode = false;
         public Color Owncolor = new Color();
-        //public bool compression = false;
-        public string Handle = "";
+        public string Name = "";
         public uint Health = 0;
         public uint HealthMax = 0;
         public bool Alive = false;
-        //TODO change this vector3 to a vector3i
         public List<Vector3> ExplosiveList = new List<Vector3>();
         public uint ID;
         public Vector3 Heading = Vector3.Zero;
@@ -125,36 +123,6 @@ namespace MineWorld
             }
         }
 
-        //private PlayerTools tool = PlayerTools.Pickaxe;
-        //public PlayerTools Tool
-        //{
-            //get { return tool; }
-            //set
-            //{
-                //if (value != tool)
-                //{
-                    //tool = value;
-                    //UpdateSpriteTexture();
-                //}
-            //}
-        //}
-        /*
-        private bool usingTool = false;
-        public bool UsingTool
-        {
-            get { return usingTool; }
-            set
-            {
-                if (value != usingTool)
-                {
-                    usingTool = value;
-                    if (usingTool == true && gameInstance != null)
-                        SpriteModel.StartActiveAnimation("3,0.15");
-                }
-            }
-        }
-         */
-
         public Player(NetConnection netConn, Game gameInstance)
         {
             this.gameInstance = gameInstance;
@@ -167,49 +135,9 @@ namespace MineWorld
             if (gameInstance != null)
             {
                 this.SpriteModel = new SpriteModel(gameInstance, 4);
-                //UpdateSpriteTexture();
                 this.IdleAnimation = true;
             }
         }
-
-        /*
-        private void UpdateSpriteTexture()
-        {
-            if (gameInstance == null)
-                return;
-
-            string textureName = "sprites/tex_sprite_";
-            if (Owncolor == Color.Red)
-            {
-                textureName += "red_";
-            }
-            else
-            {
-                textureName += "blue_";
-            }
-            switch (tool)
-            {
-                case PlayerTools.ConstructionGun:
-                case PlayerTools.DeconstructionGun:
-                    textureName += "construction";
-                    break;
-                case PlayerTools.Detonator:
-                    textureName += "detonator";
-                    break;
-                case PlayerTools.Pickaxe:
-                    textureName += "pickaxe";
-                    break;
-                case PlayerTools.ProspectingRadar:
-                    textureName += "radar";
-                    break;
-                default:
-                    textureName += "pickaxe";
-                    break;
-            }
-            Texture2D orig = gameInstance.Content.Load<Texture2D>(textureName);
-            this.SpriteModel.SetSpriteTexture(orig);
-        }
-         */
 
         static uint uniqueId = 0;
         public static uint GetUniqueId()

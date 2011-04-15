@@ -8,8 +8,7 @@ using Lidgren.Network.Xna;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-//Contains assorted server settings
-
+//Contains assorted client settings
 namespace MineWorld
 {
     public struct ClientSettings

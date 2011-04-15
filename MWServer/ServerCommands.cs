@@ -13,15 +13,6 @@ namespace MineWorld
 {
     public partial class MineWorldServer
     {
-        /*
-        public void MessageAll(string text)
-        {
-            if (announceChanges)
-                SendServerMessage(text);
-            ConsoleWrite(text);
-        }
-         */
-
         public List<string> LoadAdminList()
         {
             ConsoleWrite("LOADING ADMINLIST");
@@ -169,17 +160,12 @@ namespace MineWorld
             return retList;
         }
 
-        //public void KickPlayer(string ip)
-        //{
-            //KickPlayer(ip, false);
-        //}
-
         public void KickPlayer(string ip, bool name)
         {
             List<Player> playersToKick = new List<Player>();
             foreach (IClient p in playerList.Values)
             {
-                if ((p.IP == ip && !name) || (p.Handle.ToLower().Contains(ip.ToLower()) && name))
+                if ((p.IP == ip && !name) || (p.Name.ToLower().Contains(ip.ToLower()) && name))
                     playersToKick.Add(p);
             }
             foreach (IClient p in playersToKick)
@@ -239,6 +225,7 @@ namespace MineWorld
             sw.Close();
             fs.Close();
         }
+
         public void BackupLevel()
         {
             SaveLevel(Ssettings.BackupDir + "/backup" + GetTime(false) + ".lvl");
@@ -276,12 +263,6 @@ namespace MineWorld
             return false;
         }
 
-        public void ResetLevel()
-        {
-            disconnectAll();
-            GenerateNewMap();
-        }
-
         public void disconnectAll()
         {
             foreach (IClient p in playerList.Values)
@@ -289,6 +270,7 @@ namespace MineWorld
                 p.NetConn.Disconnect("", 0);
             }
         }
+
         public void status()
         {
             ConsoleWrite("ServerName: " + Ssettings.Servername);//serverName);

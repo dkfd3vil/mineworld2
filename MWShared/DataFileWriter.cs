@@ -13,10 +13,6 @@ namespace MineWorld
     {
         public string fullContent="";
         public Dictionary<string, string> Data = new Dictionary<string, string>();
-        /*public Dictionary<string, string> Data
-        {
-            get { return dataDict; }
-        }*/
 
         public Datafile(string filename)
         {

@@ -33,7 +33,7 @@ namespace MineWorld
 
         private Queue<Light> toLight = new Queue<Light>();
         private Queue<Light> toDark = new Queue<Light>();
-        private Dictionary<Vector3i,bool> toSun = new Dictionary<Vector3i,bool>();
+        private Dictionary<Vector3,bool> toSun = new Dictionary<Vector3,bool>();
 
 
         public Lighting()

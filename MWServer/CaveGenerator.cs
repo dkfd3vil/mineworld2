@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-
 using System.Text;
 using System.Diagnostics;
 using Microsoft.Xna.Framework;
@@ -17,7 +16,6 @@ namespace MineWorld
 {
     public class CaveGenerator
     {
-        //public string CaveInfo = "";
         private static Random randGen = new Random();
         private int mapsize;
         private MineWorldServer.MapSettings Cgsettings;
@@ -105,10 +103,6 @@ namespace MineWorld
             AddStartingPosition(ref caveData, size, size - 5, size - 5, Defines.GROUND_LEVEL, BlockType.HomeRed);
             AddStartingPosition(ref caveData, size, 5, 5, Defines.GROUND_LEVEL, BlockType.HomeBlue);
 
-            // Its auto collected
-            //oreNoise = null;
-            //caveNoise = null;
-            //gradient = null;
             GC.Collect();
 
             return caveData;
@@ -156,7 +150,7 @@ namespace MineWorld
         private void AddRocks(ref BlockType[, ,] data, int size)
         {
             int numRocks = randGen.Next(size, 2*size);
-            //CaveInfo += " numRocks=" + numRocks;
+
             for (int i = 0; i < numRocks; i++)
             {
                 int x = randGen.Next(0, size);
@@ -194,14 +188,6 @@ namespace MineWorld
                 int x = randGen.Next(0, size);
                 int y = randGen.Next(0, size);
 
-                //switch (randGen.Next(0, 4))
-                //{
-                //    case 0: x = 0; break;
-                //    case 1: x = size - 1; break;
-                //    case 2: y = 0; break;
-                //    case 3: y = size - 1; break;
-                //}
-
                 // generate a random z-value weighted toward a medium depth
                 float zf = 0;
                 for (int j = 0; j < 4; j++)
@@ -236,28 +222,11 @@ namespace MineWorld
             {
                 int x = randGen.Next(0, size);
                 int y = randGen.Next(0, size);
-
-                //switch (randGen.Next(0, 4))
-                //{
-                //    case 0: x = 0; break;
-                //    case 1: x = size - 1; break;
-                //    case 2: y = 0; break;
-                //    case 3: y = size - 1; break;
-                //}
-
-                // generate a random z-value weighted toward a medium depth
-                //float zf = 0;
-                //for (int j = 0; j < 4; j++)
-                    //zf += (float)randGen.NextDouble();
-                //zf /= 2;
-                //zf = 1 - Math.Abs(zf - 1);
-                //int z = (int)(zf * size);
                 int z = Defines.GROUND_LEVEL;
 
                 if (data[x, y, z] == BlockType.None && z + 1 < size - 1)
                 {
-                    //data[x, y, z] = BlockType.Spring;
-                    data[x, y, z + 1] = BlockType.Water;
+                    data[x, y, z] = BlockType.Water;
                     if (z + 2 < size - 2)
                     {
                         data[x, y, z + 2] = BlockType.Water;
@@ -269,8 +238,6 @@ namespace MineWorld
 
         private void AddDiamond(ref BlockType[, ,] data, int size)
         {
-            //CaveInfo += "diamond";
-
             int numDiamonds = 16;
             for (int i = 0; i < numDiamonds; i++)
             {
@@ -317,20 +284,21 @@ namespace MineWorld
                     treecount--;
                     maxtries = 100;
                 }
-                if(EnoughSpaceForTree(ref data, x,y,z))
+                if (EnoughSpaceForTree(ref data, x, y, z))
                 {
-                    if (data[x, y, z+1] != BlockType.None)
-                    {
-                        BuildTree(ref data, x, y, z);
-                    }
+                    BuildTree(ref data, x, y, z);
                     treecount--;
                 }
             }
-
         }
 
         private bool EnoughSpaceForTree(ref BlockType[, ,] data, int x, int y, int z)
         {
+            if (data[x, y, z + 1] == BlockType.None)
+            {
+                return false;
+            }
+
             if (data[x, y, z] == BlockType.None &&
                 data[x, y, z - 1] == BlockType.None &&
                 data[x, y, z - 2] == BlockType.None &&
@@ -394,7 +362,6 @@ namespace MineWorld
 
         private void AddAdminblocks(ref BlockType[, ,] data, int size)
         {
-            //CaveInfo += "Adminblocks";
             int x = 0;
             int y = 0;
             int z = Defines.MAPSIZE - 1;
@@ -410,8 +377,6 @@ namespace MineWorld
         // Gold appears in fairly numerous streaks, located at medium depths.
         private void AddGold(ref BlockType[, ,] data, int size)
         {
-            //CaveInfo += "gold";
-
             int numVeins = 16;
             for (int i = 0; i < numVeins; i++)
             {

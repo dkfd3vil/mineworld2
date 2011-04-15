@@ -7,7 +7,6 @@ using Lidgren.Network;
 using Lidgren.Network.Xna;
 using Microsoft.Xna.Framework;
 
-
 namespace MineWorld
 {
     public class DayManager
@@ -16,6 +15,12 @@ namespace MineWorld
         float light = 1f;
         float prevlight = 1f;
         DateTime lastcalclight = DateTime.Now;
+        ServerSettings serversettings;
+
+        public DayManager(ServerSettings ss)
+        {
+            serversettings = ss;
+        }
 
         public float Light
         {
@@ -29,12 +34,11 @@ namespace MineWorld
             }
         }
 
-        //TODO Load struct Serversettings for this
-        public void Update(int dirty)
+        public void Update()
         {
             TimeSpan timespanlastcalclight = DateTime.Now - lastcalclight;
 
-            if (timespanlastcalclight.Seconds > dirty)
+            if (timespanlastcalclight.Seconds > serversettings.Lightsteps)
             {
                 if (goingup)
                 {

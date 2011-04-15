@@ -11,7 +11,6 @@ namespace MineWorld
     {
         private MineWorldNetServer netServer;
         private MineWorldServer IServer;
-        //private NetBuffer msgBuffer;
         private NetMessageType msgType;
         private NetConnection msgSender;
         uint duplicateNameCount = 0;
@@ -85,7 +84,7 @@ namespace MineWorld
 
                                         foreach (Player oldPlayer in IServer.playerList.Values)
                                         {
-                                            if (temphandle.ToLower() == oldPlayer.Handle.ToLower())
+                                            if (temphandle.ToLower() == oldPlayer.Name.ToLower())
                                             {
                                                 duplicateNameCount++;
                                                 temphandle += "." + duplicateNameCount.ToString();
@@ -93,7 +92,7 @@ namespace MineWorld
                                             }
                                         }
 
-                                        newPlayer.Handle = temphandle;
+                                        newPlayer.Name = temphandle;
                                         IServer.playerList[msgSender] = newPlayer;
                                         System.Threading.Thread SenderThread = new System.Threading.Thread(new System.Threading.ThreadStart(newPlayer.start));
                                         SenderThread.Start();
@@ -120,13 +119,13 @@ namespace MineWorld
 
                                     if (msgSender.Status == NetConnectionStatus.Connected)
                                     {
-                                        IServer.ConsoleWrite("CONNECT: " + IServer.playerList[msgSender].Handle + " ( " + IServer.playerList[msgSender].IP + " )");
+                                        IServer.ConsoleWrite("CONNECT: " + IServer.playerList[msgSender].Name + " ( " + IServer.playerList[msgSender].IP + " )");
                                         IServer.SendCurrentMap(msgSender);
                                         IServer.SendPlayerJoined(player);
                                     }
                                     else if (msgSender.Status == NetConnectionStatus.Disconnected)
                                     {
-                                        IServer.ConsoleWrite("DISCONNECT: " + IServer.playerList[msgSender].Handle);
+                                        IServer.ConsoleWrite("DISCONNECT: " + IServer.playerList[msgSender].Name);
                                         IServer.SendPlayerLeft(player, player.Kicked ? "WAS KICKED FROM THE GAME!" : "HAS ABANDONED THEIR DUTIES!");
 
                                         if (IServer.playerList.ContainsKey(msgSender))
@@ -206,14 +205,14 @@ namespace MineWorld
                                                                 {
                                                                     splitted[1] = splitted[1].ToLower();
 
-                                                                    if (player.Handle.ToLower() == splitted[1])
+                                                                    if (player.Name.ToLower() == splitted[1])
                                                                     {
                                                                         answer = "Cant teleport to yourself";
                                                                         break;
                                                                     }
                                                                     foreach (IClient dummy in IServer.playerList.Values)
                                                                     {
-                                                                        if (dummy.Handle.ToLower() == splitted[1])
+                                                                        if (dummy.Name.ToLower() == splitted[1])
                                                                         {
                                                                             playerfound = true;
                                                                             if (!dummy.Alive)
@@ -223,7 +222,7 @@ namespace MineWorld
                                                                             }
                                                                             player.Position = dummy.Position;
                                                                             IServer.SendPlayerPosition(player);
-                                                                            answer = "Teleporting you to " + dummy.Handle;
+                                                                            answer = "Teleporting you to " + dummy.Name;
                                                                             break;
                                                                         }
                                                                     }
@@ -246,14 +245,14 @@ namespace MineWorld
                                                                 {
                                                                     splitted[1] = splitted[1].ToLower();
 
-                                                                    if (player.Handle.ToLower() == splitted[1])
+                                                                    if (player.Name.ToLower() == splitted[1])
                                                                     {
                                                                         answer = "Cant kill yourself";
                                                                         break;
                                                                     }
                                                                     foreach (IClient dummy in IServer.playerList.Values)
                                                                     {
-                                                                        if (dummy.Handle.ToLower() == splitted[1])
+                                                                        if (dummy.Name.ToLower() == splitted[1])
                                                                         {
                                                                             playerfound = true;
                                                                             if (!dummy.Alive)
@@ -261,7 +260,7 @@ namespace MineWorld
                                                                                 answer = "Player is already dead";
                                                                                 break;
                                                                             }
-                                                                            IServer.SendResourceUpdate(dummy);
+                                                                            IServer.SendHealthUpdate(dummy);
                                                                             IServer.KillPlayerSpecific(dummy);
                                                                             break;
                                                                         }
@@ -310,13 +309,12 @@ namespace MineWorld
                                                                 break;
                                                             }
                                                     }
-                                                    IServer.ConsoleWrite("COMMAND: (" + commandstring + ") has been used by (" + player.Handle + ")"); 
+                                                    IServer.ConsoleWrite("COMMAND: (" + commandstring + ") has been used by (" + player.Name + ")"); 
                                                 }
                                                 else
                                                 {
                                                     answer = "You arent a admin";
                                                 }
-
                                                 IServer.SendServerMessageToPlayer(answer, player);
                                                 break;
                                             }
@@ -363,11 +361,11 @@ namespace MineWorld
 
                                         case MineWorldMessage.PlayerDead:
                                             {
-                                                IServer.ConsoleWrite("PLAYER_DEAD: " + player.Handle);
+                                                IServer.ConsoleWrite("PLAYER_DEAD: " + player.Name);
                                                 player.Alive = false;
                                                 string deathMessage = msgBuffer.ReadString();
 
-                                                IServer.SendResourceUpdate(player);
+                                                IServer.SendHealthUpdate(player);
                                                 IServer.SendPlayerDead(player);
 
                                                 if (deathMessage != "")
@@ -375,7 +373,7 @@ namespace MineWorld
                                                     msgBuffer = netServer.CreateBuffer();
                                                     msgBuffer.Write((byte)MineWorldMessage.ChatMessage);
                                                     msgBuffer.Write((byte)ChatMessageType.Say);
-                                                    msgBuffer.Write(player.Handle + " " + deathMessage);
+                                                    msgBuffer.Write(player.Name + " " + deathMessage);
                                                     foreach (IClient iplayer in IServer.playerList.Values)
                                                         //if (netConn.Status == NetConnectionStatus.Connected)
                                                         iplayer.AddQueMsg(msgBuffer, NetChannel.ReliableInOrder3);
@@ -391,7 +389,7 @@ namespace MineWorld
                                                     if (IServer.Ssettings.MOTD != "")
                                                     {
                                                         string greeting = IServer.Ssettings.MOTD;
-                                                        greeting = greeting.Replace("[name]", IServer.playerList[msgSender].Handle);
+                                                        greeting = greeting.Replace("[name]", IServer.playerList[msgSender].Name);
                                                         NetBuffer greetBuffer = netServer.CreateBuffer();
                                                         greetBuffer.Write((byte)MineWorldMessage.ChatMessage);
                                                         greetBuffer.Write((byte)ChatMessageType.SayServer);
@@ -400,10 +398,10 @@ namespace MineWorld
                                                     }
                                                     IServer.toGreet.Remove(msgSender);
                                                 }
-                                                IServer.ConsoleWrite("PLAYER_ALIVE: " + player.Handle);
+                                                IServer.ConsoleWrite("PLAYER_ALIVE: " + player.Name);
                                                 player.Health = player.HealthMax;
                                                 player.Alive = true;
-                                                IServer.SendResourceUpdate(player);
+                                                IServer.SendHealthUpdate(player);
                                                 IServer.SendPlayerAlive(player);
                                             }
                                             break;
@@ -418,8 +416,6 @@ namespace MineWorld
                                             {
                                                 player.Position = IServer.Auth_Position(msgBuffer.ReadVector3(), player);
                                                 player.Heading = IServer.Auth_Heading(msgBuffer.ReadVector3());
-                                                //player.Tool = (PlayerTools)msgBuffer.ReadByte();
-                                                //player.UsingTool = msgBuffer.ReadBoolean();
                                                 IServer.SendPlayerUpdate(player);
                                             }
                                             break;
@@ -427,21 +423,9 @@ namespace MineWorld
                                         case MineWorldMessage.PlayerUpdate1://minus position
                                             {
                                                 player.Heading = IServer.Auth_Heading(msgBuffer.ReadVector3());
-                                                //player.Tool = (PlayerTools)msgBuffer.ReadByte();
-                                                //player.UsingTool = msgBuffer.ReadBoolean();
                                                 IServer.SendPlayerUpdate(player);
                                                 break;
                                             }
-
-                                            /*
-                                        case MineWorldMessage.PlayerUpdate2://minus position and heading
-                                            {
-                                                player.Tool = (PlayerTools)msgBuffer.ReadByte();
-                                                player.UsingTool = msgBuffer.ReadBoolean();
-                                                IServer.SendPlayerUpdate(player);
-                                                break;
-                                            }
-                                             */
 
                                         case MineWorldMessage.PlayerHurt:
                                             {
@@ -471,24 +455,16 @@ namespace MineWorld
                                                 {
                                                     // Reset it back to zero or else the client sees weird stuff
                                                     player.Health = 0;
-                                                    IServer.SendResourceUpdate(player);
+                                                    IServer.SendHealthUpdate(player);
                                                     IServer.KillPlayerSpecific(player);
                                                 }
                                                 else
                                                 {
                                                     // Let the client know what his new health is
-                                                    IServer.SendResourceUpdate(player);
+                                                    IServer.SendHealthUpdate(player);
                                                 }
                                                 break;
                                             }
-
-                                            /*
-                                        case MineWorldMessage.PlayerPing:
-                                            {
-                                                IServer.SendPlayerPing((uint)msgBuffer.ReadInt32());
-                                            }
-                                            break;
-                                            */
 
                                         case MineWorldMessage.PlaySound:
                                             {

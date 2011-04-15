@@ -14,39 +14,12 @@ namespace MineWorld
     public partial class MineWorldServer
     {
         public BlockType[, ,] blockList = null;    // In game coordinates, where Y points up.
-
-        List<string> beaconIDList = new List<string>();
-        //Dictionary<Vector3, Beacon> beaconList = new Dictionary<Vector3, Beacon>();
         Random randGen = new Random();
-
-        public string _GenerateBeaconID()
-        {
-            string id = "K";
-            for (int i = 0; i < 3; i++)
-                id += (char)randGen.Next(48, 58);
-            return id;
-        }
-
-        public string GenerateBeaconID()
-        {
-            string newId = _GenerateBeaconID();
-            while (beaconIDList.Contains(newId))
-                newId = _GenerateBeaconID();
-            beaconIDList.Add(newId);
-            return newId;
-        }
 
         public void RemoveBlock(ushort x, ushort y, ushort z)
         {
             if (!SaneBlockPosition(x, y, z))
                 return;
-
-            //if (blockList[x, y, z] == BlockType.BeaconRed || blockList[x, y, z] == BlockType.BeaconBlue)
-            //{
-                //if (beaconList.ContainsKey(new Vector3(x, y, z)))
-                    //beaconList.Remove(new Vector3(x, y, z));
-                //SendSetBeacon(new Vector3(x, y + 1, z), "");
-            //}
 
             blockList[x, y, z] = BlockType.None;
 
@@ -68,14 +41,6 @@ namespace MineWorld
 
             if(!SaneBlockPosition(x,y,z))
                 return;
-
-            //if (blockType == BlockType.BeaconRed || blockType == BlockType.BeaconBlue)
-            //{
-                //Beacon newBeacon = new Beacon();
-                //newBeacon.ID = GenerateBeaconID();
-                //beaconList[new Vector3(x, y, z)] = newBeacon;
-                //SendSetBeacon(new Vector3(x, y + 1, z), newBeacon.ID);
-            //}
 
             blockList[x, y, z] = blockType;
 
@@ -176,7 +141,7 @@ namespace MineWorld
             {
                 if (pl.Alive)
                 {
-                    ConsoleWrite("refused " + pl.Handle + " " + pos.X + "/" + pos.Y + "/" + pos.Z);
+                    ConsoleWrite("refused " + pl.Name + " " + pos.X + "/" + pos.Y + "/" + pos.Z);
                     return pl.Position;
                 }
                 else//player is dead, return position silent
@@ -188,6 +153,7 @@ namespace MineWorld
 
         public Vector3 Auth_Heading(Vector3 head)//check boundaries and legality of action
         {
+            //TODO Code Auth_Heading
             return head;
         }
 
