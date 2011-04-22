@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-
+using MineWorld;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
@@ -21,12 +21,12 @@ namespace InterfaceItems
         {
         }
 
-        public InterfaceLabel(MineWorld.MineWorldGame gameInstance)
+        public InterfaceLabel(MineWorldGame gameInstance)
         {
             uiFont = gameInstance.Content.Load<SpriteFont>("font_04b08");
         }
 
-        public InterfaceLabel(MineWorld.MineWorldGame gameInstance, MineWorld.PropertyBag pb)
+        public InterfaceLabel(MineWorldGame gameInstance, PropertyBag pb)
         {
             uiFont = gameInstance.Content.Load<SpriteFont>("font_04b08");
             _P = pb;

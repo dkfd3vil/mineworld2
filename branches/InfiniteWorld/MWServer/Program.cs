@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
 using System.Text;
+
 namespace MineWorld.Server
 {
     class Program
@@ -45,6 +46,5 @@ namespace MineWorld.Server
             }
             Environment.Exit(0);
         }
-
     }
 }

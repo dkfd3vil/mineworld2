@@ -242,7 +242,6 @@ namespace MineWorld
                                                 if (downloadComplete)
                                                 {
                                                     ChangeState("MineWorld.States.MainGameState");
-                                                    //propertyBag.equipWeps();
                                                     if (!Csettings.NoSound)
                                                         MediaPlayer.Stop();
                                                     propertyBag.blockEngine.DownloadComplete();
@@ -608,7 +607,7 @@ namespace MineWorld
             if (propertyBag != null)
                 propertyBag.netClient.Shutdown("");
 
-            propertyBag = new MineWorld.PropertyBag(this);
+            propertyBag = new PropertyBag(this);
             propertyBag.playerHandle = Csettings.playerHandle;
             propertyBag.volumeLevel = Csettings.volumeLevel;
             propertyBag.mouseSensitivity = Csettings.mouseSensitivity;
