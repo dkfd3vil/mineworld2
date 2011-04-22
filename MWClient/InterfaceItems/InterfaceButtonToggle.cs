@@ -29,12 +29,12 @@ namespace InterfaceItems
         {
         }
 
-        public InterfaceButtonToggle(MineWorld.MineWorldGame gameInstance)
+        public InterfaceButtonToggle(MineWorldGame gameInstance)
         {
             uiFont = gameInstance.Content.Load<SpriteFont>("font_04b08");
         }
 
-        public InterfaceButtonToggle(MineWorld.MineWorldGame gameInstance, MineWorld.PropertyBag pb)
+        public InterfaceButtonToggle(MineWorldGame gameInstance, PropertyBag pb)
         {
             uiFont = gameInstance.Content.Load<SpriteFont>("font_04b08");
             _P = pb;
@@ -55,7 +55,7 @@ namespace InterfaceItems
             if (enabled && midClick && size.Contains(x, y))
             {
                 clicked = !clicked;
-                _P.PlaySound(MineWorld.MineWorldSound.ClickLow);
+                _P.PlaySound(MineWorldSound.ClickLow);
             }
             midClick = false;
         }

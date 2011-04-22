@@ -22,16 +22,15 @@ namespace InterfaceItems
         public bool visible = false;
         public bool enabled = false;
         public string text = "";
-        //public Vector2 position = Vector2.Zero;
         public Rectangle size = Rectangle.Empty;
         public SpriteFont uiFont;
-        public MineWorld.PropertyBag _P;
+        public PropertyBag _P;
 
         public InterfaceElement()
         {
         }
 
-        public InterfaceElement(MineWorld.MineWorldGame gameInstance, MineWorld.PropertyBag pb)
+        public InterfaceElement(MineWorldGame gameInstance, PropertyBag pb)
         {
             uiFont = gameInstance.Content.Load<SpriteFont>("font_04b08");
             _P = pb;

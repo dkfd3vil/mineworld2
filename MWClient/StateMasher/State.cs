@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
@@ -18,7 +17,7 @@ namespace StateMasher
     public class State
     {
         public StateMachine _SM = null;
-        public MineWorld.PropertyBag _P = null;
+        public PropertyBag _P = null;
 
         public virtual void OnEnter(string oldState)
         {

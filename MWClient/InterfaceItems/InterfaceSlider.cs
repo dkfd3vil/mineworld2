@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-
 using System.Text;
 using System.Diagnostics;
 using StateMasher;
@@ -20,7 +19,6 @@ namespace InterfaceItems
 {
     class InterfaceSlider : InterfaceElement
     {
-        //public float sliderPercent = 0f;
         public float minVal = 0f;
         public float maxVal = 1f;
         private bool sliding = false;
@@ -31,12 +29,12 @@ namespace InterfaceItems
         {
         }
 
-        public InterfaceSlider(MineWorld.MineWorldGame gameInstance)
+        public InterfaceSlider(MineWorldGame gameInstance)
         {
             uiFont = gameInstance.Content.Load<SpriteFont>("font_04b08");
         }
 
-        public InterfaceSlider(MineWorld.MineWorldGame gameInstance, MineWorld.PropertyBag pb)
+        public InterfaceSlider(MineWorldGame gameInstance, PropertyBag pb)
         {
             uiFont = gameInstance.Content.Load<SpriteFont>("font_04b08");
             _P = pb;

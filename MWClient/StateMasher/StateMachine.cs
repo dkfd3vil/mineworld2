@@ -25,7 +25,7 @@ namespace StateMasher
         public static extern int GetForegroundWindow(); 
 
         public GraphicsDeviceManager graphicsDeviceManager;
-        public MineWorld.PropertyBag propertyBag = null;
+        public PropertyBag propertyBag = null;
 
         private string currentStateType = "";
         public string CurrentStateType
