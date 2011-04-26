@@ -14,33 +14,33 @@ namespace MineWorld
 {
     public partial class MineWorldServer
     {
+        public void ConsoleWrite(string text, ConsoleColor color)
+        {
+            ConsoleColor oldColor=Console.ForegroundColor;
+            Console.ForegroundColor = color;
+            Console.WriteLine(text);
+            Console.ForegroundColor = oldColor;
+        }
 
-        const int CONSOLE_SIZE = 30;
-        List<string> consoleText = new List<string>();
-        string consoleInput = "";
-
+        public void ConsoleWriteError(String text)
+        {
+            ConsoleWrite(text, ConsoleColor.Red);
+        }
 
         public void ConsoleWrite(string text)
         {
-            if (Ssettings.Logs == true)
-            {
-                LogWrite(text);
-            }
-            consoleText.Add(text);
-            if (consoleText.Count > CONSOLE_SIZE)
-                consoleText.RemoveAt(0);
-            ConsoleRedraw();
+            Console.WriteLine(text);
         }
 
         public void ConsoleClearScreen()
         {
-            while (consoleText.Count > 0)
+            for (int i = 0; i < 80 * 25; i++)
             {
-                consoleText.RemoveAt(0);
+                Console.Write(" ");
             }
-            ConsoleRedraw();
         }
 
+        public String consoleInput = "";
         public void ConsoleProcessInput()
         {
             ConsoleWrite("> " + consoleInput);
@@ -48,7 +48,6 @@ namespace MineWorld
             ProcessCommand(consoleInput,false);
 
             consoleInput = "";
-            ConsoleRedraw();
         }
 
         public bool ProcessCommand(string input,bool clientcommand)
@@ -230,28 +229,6 @@ namespace MineWorld
                     
             }
             return true;
-        }
-        public void ConsoleRedraw()
-        {
-            Console.Clear();
-            ConsoleDrawCentered(Defines.MINEWORLDSERVER_VERSION + " SERVER", 0);
-            ConsoleDraw("================================================================================", 0, 1);
-            for (int i = 0; i < consoleText.Count; i++)
-                ConsoleDraw(consoleText[i], 0, i + 2);
-            ConsoleDraw("================================================================================", 0, CONSOLE_SIZE + 2);
-            ConsoleDraw("> " + consoleInput, 0, CONSOLE_SIZE + 3);
-        }
-
-        public void ConsoleDraw(string text, int x, int y)
-        {
-            Console.SetCursorPosition(x, y);
-            Console.Write(text);
-        }
-
-        public void ConsoleDrawCentered(string text, int y)
-        {
-            Console.SetCursorPosition(40 - text.Length / 2, y);
-            Console.Write(text);
         }
     }
  }

@@ -61,9 +61,6 @@ namespace MineWorld
 
         public MineWorldServer()
         {
-            Console.SetWindowSize(1, 1);
-            Console.SetBufferSize(80, CONSOLE_SIZE + 4);
-            Console.SetWindowSize(80, CONSOLE_SIZE + 4);
         }
         public String GetExternalIp()
         {
@@ -94,6 +91,9 @@ namespace MineWorld
 
         public bool Start()
         {
+            //Display server version in console
+            ConsoleWrite(Defines.MINEWORLDSERVER_VERSION, ConsoleColor.Cyan);
+
             // Load the directory's.
             LoadDirectorys();
 
@@ -131,6 +131,7 @@ namespace MineWorld
 
             // Store the last time that we did a physics calculation.
             DateTime lastCalc = DateTime.Now;
+
 
             //Display external IP
             //Dont bother if it isnt public
@@ -200,14 +201,14 @@ namespace MineWorld
                 // Check the state of our core threads
                 if (!listenerthread.IsAlive)
                 {
-                    ConsoleWrite("Listenerthread died");
-                    ConsoleWrite("Server is shutting down");
+                    ConsoleWrite("Listenerthread died", ConsoleColor.Red);
+                    ConsoleWrite("Server is shutting down",ConsoleColor.Red);
                     return false;
                 }
                 if (!physicsthread.IsAlive)
                 {
-                    ConsoleWrite("Physicsthread died");
-                    ConsoleWrite("Server is shutting down");
+                    ConsoleWrite("Physicsthread died", ConsoleColor.Red);
+                    ConsoleWrite("Server is shutting down", ConsoleColor.Red);
                     return false;
                 }
 
@@ -219,7 +220,7 @@ namespace MineWorld
                     frameRate = frameCount;
                     if (frameCount <= 20)
                     {
-                        ConsoleWrite("Heavy load: " + frameCount + " FPS");
+                        ConsoleWrite("Heavy load: " + frameCount + " FPS", ConsoleColor.Red);
                     }
                     frameCount = 0;
                 }
@@ -260,22 +261,10 @@ namespace MineWorld
                 TerminateFinishedThreads();
 
                 // Handle console keypresses.
-                while (Console.KeyAvailable)
+                while (true)
                 {
-                    ConsoleKeyInfo keyInfo = Console.ReadKey();
-                    if (keyInfo.Key == ConsoleKey.Enter)
-                        ConsoleProcessInput();
-                    else if (keyInfo.Key == ConsoleKey.Backspace)
-                    {
-                        if (consoleInput.Length > 0)
-                            consoleInput = consoleInput.Substring(0, consoleInput.Length - 1);
-                        ConsoleRedraw();
-                    }
-                    else
-                    {
-                        consoleInput += keyInfo.KeyChar;
-                        ConsoleRedraw();
-                    }
+                    consoleInput = Console.ReadLine();
+                    ConsoleProcessInput();
                 }
 
                 // Is the game over?
@@ -555,7 +544,7 @@ namespace MineWorld
 
         public void Restartserver()
         {
-            ConsoleWrite("Server restarting in 5 seconds.");
+            ConsoleWrite("Server restarting in 5 seconds.", ConsoleColor.Yellow);
             SendServerMessage("Server restarting in 5 seconds.");
             restartTriggered = true;
             restartTime = DateTime.Now + TimeSpan.FromSeconds(5);

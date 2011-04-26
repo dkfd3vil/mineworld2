@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -91,10 +92,14 @@
             this.label13 = new System.Windows.Forms.Label();
             this.TXTadmins = new System.Windows.Forms.TextBox();
             this.label12 = new System.Windows.Forms.Label();
-            this.listView1 = new System.Windows.Forms.ListView();
+            this.LSTplayers = new System.Windows.Forms.ListView();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.textBox13 = new System.Windows.Forms.TextBox();
             this.TXTconsole = new System.Windows.Forms.TextBox();
+            this.ReadStream = new System.Windows.Forms.Timer(this.components);
+            this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
+            this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
+            this.columnHeader3 = new System.Windows.Forms.ColumnHeader();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
@@ -127,30 +132,30 @@
             this.toolStripSeparator1,
             this.quitManagerToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(35, 20);
             this.fileToolStripMenuItem.Text = "File";
             // 
             // saveLogToolStripMenuItem
             // 
             this.saveLogToolStripMenuItem.Name = "saveLogToolStripMenuItem";
-            this.saveLogToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
+            this.saveLogToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
             this.saveLogToolStripMenuItem.Text = "Save log";
             // 
             // backupWorldToolStripMenuItem
             // 
             this.backupWorldToolStripMenuItem.Name = "backupWorldToolStripMenuItem";
-            this.backupWorldToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
+            this.backupWorldToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
             this.backupWorldToolStripMenuItem.Text = "Backup world";
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(144, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(147, 6);
             // 
             // quitManagerToolStripMenuItem
             // 
             this.quitManagerToolStripMenuItem.Name = "quitManagerToolStripMenuItem";
-            this.quitManagerToolStripMenuItem.Size = new System.Drawing.Size(147, 22);
+            this.quitManagerToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
             this.quitManagerToolStripMenuItem.Text = "Quit Manager";
             this.quitManagerToolStripMenuItem.Click += new System.EventHandler(this.quitManagerToolStripMenuItem_Click);
             // 
@@ -166,14 +171,16 @@
             // startToolStripMenuItem
             // 
             this.startToolStripMenuItem.Name = "startToolStripMenuItem";
-            this.startToolStripMenuItem.Size = new System.Drawing.Size(98, 22);
+            this.startToolStripMenuItem.Size = new System.Drawing.Size(109, 22);
             this.startToolStripMenuItem.Text = "Start";
+            this.startToolStripMenuItem.Click += new System.EventHandler(this.startToolStripMenuItem_Click);
             // 
             // stopToolStripMenuItem
             // 
             this.stopToolStripMenuItem.Name = "stopToolStripMenuItem";
-            this.stopToolStripMenuItem.Size = new System.Drawing.Size(98, 22);
+            this.stopToolStripMenuItem.Size = new System.Drawing.Size(109, 22);
             this.stopToolStripMenuItem.Text = "Stop";
+            this.stopToolStripMenuItem.Click += new System.EventHandler(this.stopToolStripMenuItem_Click);
             // 
             // toolStrip1
             // 
@@ -204,6 +211,7 @@
             this.BTNstop.Name = "BTNstop";
             this.BTNstop.Size = new System.Drawing.Size(23, 22);
             this.BTNstop.Text = "toolStripButton1";
+            this.BTNstop.Click += new System.EventHandler(this.BTNstop_Click);
             // 
             // statusStrip1
             // 
@@ -218,7 +226,7 @@
             // LBLstatus
             // 
             this.LBLstatus.Name = "LBLstatus";
-            this.LBLstatus.Size = new System.Drawing.Size(107, 17);
+            this.LBLstatus.Size = new System.Drawing.Size(97, 17);
             this.LBLstatus.Text = "Application started";
             // 
             // tabControl1
@@ -629,7 +637,7 @@
             this.tabPage3.Controls.Add(this.label13);
             this.tabPage3.Controls.Add(this.TXTadmins);
             this.tabPage3.Controls.Add(this.label12);
-            this.tabPage3.Controls.Add(this.listView1);
+            this.tabPage3.Controls.Add(this.LSTplayers);
             this.tabPage3.Location = new System.Drawing.Point(4, 22);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
@@ -701,13 +709,18 @@
             this.label12.TabIndex = 1;
             this.label12.Text = "Current player list";
             // 
-            // listView1
+            // LSTplayers
             // 
-            this.listView1.Location = new System.Drawing.Point(8, 28);
-            this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(224, 259);
-            this.listView1.TabIndex = 0;
-            this.listView1.UseCompatibleStateImageBehavior = false;
+            this.LSTplayers.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.columnHeader1,
+            this.columnHeader2,
+            this.columnHeader3});
+            this.LSTplayers.Location = new System.Drawing.Point(8, 28);
+            this.LSTplayers.Name = "LSTplayers";
+            this.LSTplayers.Size = new System.Drawing.Size(224, 259);
+            this.LSTplayers.TabIndex = 0;
+            this.LSTplayers.UseCompatibleStateImageBehavior = false;
+            this.LSTplayers.View = System.Windows.Forms.View.Details;
             // 
             // tabPage2
             // 
@@ -727,6 +740,7 @@
             this.textBox13.Name = "textBox13";
             this.textBox13.Size = new System.Drawing.Size(545, 20);
             this.textBox13.TabIndex = 1;
+            this.textBox13.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBox13_KeyPress);
             // 
             // TXTconsole
             // 
@@ -739,6 +753,26 @@
             this.TXTconsole.Name = "TXTconsole";
             this.TXTconsole.Size = new System.Drawing.Size(545, 255);
             this.TXTconsole.TabIndex = 0;
+            // 
+            // ReadStream
+            // 
+            this.ReadStream.Enabled = true;
+            this.ReadStream.Tick += new System.EventHandler(this.ReadStream_Tick);
+            // 
+            // columnHeader1
+            // 
+            this.columnHeader1.Text = "Name";
+            this.columnHeader1.Width = 100;
+            // 
+            // columnHeader2
+            // 
+            this.columnHeader2.Text = "IP";
+            this.columnHeader2.Width = 70;
+            // 
+            // columnHeader3
+            // 
+            this.columnHeader3.Text = "Team";
+            this.columnHeader3.Width = 49;
             // 
             // Form1
             // 
@@ -842,10 +876,14 @@
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.TextBox TXTadmins;
         private System.Windows.Forms.Label label12;
-        private System.Windows.Forms.ListView listView1;
+        private System.Windows.Forms.ListView LSTplayers;
         private System.Windows.Forms.TextBox textBox13;
         private System.Windows.Forms.TextBox TXTconsole;
         private System.Windows.Forms.ToolStripStatusLabel LBLstatus;
+        private System.Windows.Forms.Timer ReadStream;
+        private System.Windows.Forms.ColumnHeader columnHeader1;
+        private System.Windows.Forms.ColumnHeader columnHeader2;
+        private System.Windows.Forms.ColumnHeader columnHeader3;
     }
 }
 

@@ -32,12 +32,24 @@ namespace MineWorldServerManager
             p = new Process();
             p.StartInfo.FileName = "MWServer.exe";
             p.StartInfo.UseShellExecute = false;
-            //p.StartInfo.RedirectStandardOutput = true;
+            p.StartInfo.RedirectStandardOutput = true;
+            p.StartInfo.RedirectStandardInput = true;
+            p.StartInfo.CreateNoWindow = true;
             p.Start();
-            //bw = new BackgroundWorker();
-            //bw.WorkerSupportsCancellation = true;
-            //bw.DoWork += new DoWorkEventHandler(bw_DoWork);
+            bw = new BackgroundWorker();
+            bw.WorkerSupportsCancellation = true;
+            bw.DoWork += new DoWorkEventHandler(bw_DoWork);
+            bw.RunWorkerAsync();
             LBLstatus.Text = "Server started";
+        }
+
+        private void textBox13_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == 13)
+            {
+                p.StandardInput.WriteLine(textBox13.Text);
+                textBox13.Text = "";
+            }
         }
 
         private void stopServer()
@@ -47,7 +59,7 @@ namespace MineWorldServerManager
             bw = null;
             LBLstatus.Text = "Server stopped";
         }
-
+        public String consoleOutput = "";
         void bw_DoWork(object sender, DoWorkEventArgs e)
         {
             while (true)
@@ -58,7 +70,8 @@ namespace MineWorldServerManager
                     bw.CancelAsync();
                 }
                 String line = p.StandardOutput.ReadLine();
-                TXTconsole.Text += line + "\n";
+                consoleOutput += line + "\r\n";
+                lastLine = line;
             }
         }
         
@@ -197,6 +210,58 @@ namespace MineWorldServerManager
             File.WriteAllText("ServerConfigs/admins.txt", TXTadmins.Text);
             File.WriteAllText("ServerConfigs/banlist.txt", TXTbans.Text);
         }
+        public String lastLine = "";
+        private void ReadStream_Tick(object sender, EventArgs e)
+        {
+            TXTconsole.Text = consoleOutput;
+            TXTconsole.ScrollBars = ScrollBars.Vertical;
+            TXTconsole.SelectionStart = TXTconsole.Text.Length;
+            TXTconsole.ScrollToCaret();
+            TXTconsole.Refresh();
+            if (lastLine.Contains("DISCONNECT: "))
+            {
+                LSTplayers.Items.RemoveByKey(lastLine.Substring(12).Trim());
+            }
+            else
+            {
+                if (lastLine.Contains("CONNECT: "))
+                {
+                    String[] part = lastLine.Substring(9).Split("(".ToCharArray());
+                    String username = part[0].Trim();
+                    String IP = part[1].Replace(")","").Trim();
+                    ListViewItem lvi = new ListViewItem(username);
+                    lvi.SubItems.Add(IP);
+                    lvi.SubItems.Add("None"); //team
+                    
+                    LSTplayers.Items.Add(lvi);
+                }
+                if (lastLine.Contains("SELECT_TEAM: "))
+                {
+                    String[] part = lastLine.Substring("SELECT_TEAM: ".Length).Split(",".ToCharArray());
+                    String username = part[0].Trim();
+                    String team = part[1].Trim();
+                    LSTplayers.Items[username].SubItems[2].Text = team;
+                }
+            }
+
+            lastLine = "";
+        }
+
+        private void BTNstop_Click(object sender, EventArgs e)
+        {
+            stopServer();
+        }
+
+        private void stopToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            stopServer();
+        }
+
+        private void startToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            startServer();
+        }
+
     }
     public class Setting
     {
