@@ -6,3 +6,11 @@ F:\mw2\branches\ServerManager\MineWorldServerManager\obj\Debug\MineWorldServerMa
 F:\mw2\branches\ServerManager\MineWorldServerManager\obj\Debug\MineWorldServerManager.csproj.GenerateResource.Cache
 F:\mw2\branches\ServerManager\MineWorldServerManager\obj\Debug\MineWorldServerManager.exe
 F:\mw2\branches\ServerManager\MineWorldServerManager\obj\Debug\MineWorldServerManager.pdb
+C:\mw\branches\ServerManager\MineWorldServerManager\obj\Debug\MineWorldServerManager.exe
+C:\mw\branches\ServerManager\MineWorldServerManager\obj\Debug\MineWorldServerManager.pdb
+C:\mw\branches\ServerManager\MineWorldServerManager\bin\Debug\MineWorldServerManager.exe
+C:\mw\branches\ServerManager\MineWorldServerManager\bin\Debug\MineWorldServerManager.pdb
+C:\mw\branches\ServerManager\MineWorldServerManager\obj\Debug\ResolveAssemblyReference.cache
+C:\mw\branches\ServerManager\MineWorldServerManager\obj\Debug\MineWorldServerManager.Form1.resources
+C:\mw\branches\ServerManager\MineWorldServerManager\obj\Debug\MineWorldServerManager.Properties.Resources.resources
+C:\mw\branches\ServerManager\MineWorldServerManager\obj\Debug\MineWorldServerManager.csproj.GenerateResource.Cache
