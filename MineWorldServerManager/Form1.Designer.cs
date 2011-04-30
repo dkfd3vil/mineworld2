@@ -29,19 +29,12 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.saveLogToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.backupWorldToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.quitManagerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.serverToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.startToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.stopToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-            this.BTNstart = new System.Windows.Forms.ToolStripButton();
-            this.BTNstop = new System.Windows.Forms.ToolStripButton();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.LBLstatus = new System.Windows.Forms.ToolStripStatusLabel();
             this.tabControl1 = new System.Windows.Forms.TabControl();
@@ -93,13 +86,19 @@
             this.TXTadmins = new System.Windows.Forms.TextBox();
             this.label12 = new System.Windows.Forms.Label();
             this.LSTplayers = new System.Windows.Forms.ListView();
+            this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
+            this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
+            this.columnHeader3 = new System.Windows.Forms.ColumnHeader();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.textBox13 = new System.Windows.Forms.TextBox();
             this.TXTconsole = new System.Windows.Forms.TextBox();
             this.ReadStream = new System.Windows.Forms.Timer(this.components);
-            this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
-            this.columnHeader2 = new System.Windows.Forms.ColumnHeader();
-            this.columnHeader3 = new System.Windows.Forms.ColumnHeader();
+            this.BTNstart = new System.Windows.Forms.ToolStripButton();
+            this.BTNstop = new System.Windows.Forms.ToolStripButton();
+            this.saveLogToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.quitManagerToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.startToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.stopToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
@@ -120,7 +119,7 @@
             this.serverToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(567, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(567, 25);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -132,32 +131,20 @@
             this.toolStripSeparator1,
             this.quitManagerToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            this.fileToolStripMenuItem.Size = new System.Drawing.Size(35, 20);
+            this.fileToolStripMenuItem.Size = new System.Drawing.Size(41, 21);
             this.fileToolStripMenuItem.Text = "File";
-            // 
-            // saveLogToolStripMenuItem
-            // 
-            this.saveLogToolStripMenuItem.Name = "saveLogToolStripMenuItem";
-            this.saveLogToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
-            this.saveLogToolStripMenuItem.Text = "Save log";
             // 
             // backupWorldToolStripMenuItem
             // 
+            this.backupWorldToolStripMenuItem.Image = global::MineWorldServerManager.Properties.Resources.server_go;
             this.backupWorldToolStripMenuItem.Name = "backupWorldToolStripMenuItem";
-            this.backupWorldToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
+            this.backupWorldToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
             this.backupWorldToolStripMenuItem.Text = "Backup world";
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(147, 6);
-            // 
-            // quitManagerToolStripMenuItem
-            // 
-            this.quitManagerToolStripMenuItem.Name = "quitManagerToolStripMenuItem";
-            this.quitManagerToolStripMenuItem.Size = new System.Drawing.Size(150, 22);
-            this.quitManagerToolStripMenuItem.Text = "Quit Manager";
-            this.quitManagerToolStripMenuItem.Click += new System.EventHandler(this.quitManagerToolStripMenuItem_Click);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(158, 6);
             // 
             // serverToolStripMenuItem
             // 
@@ -165,53 +152,19 @@
             this.startToolStripMenuItem,
             this.stopToolStripMenuItem});
             this.serverToolStripMenuItem.Name = "serverToolStripMenuItem";
-            this.serverToolStripMenuItem.Size = new System.Drawing.Size(51, 20);
+            this.serverToolStripMenuItem.Size = new System.Drawing.Size(58, 21);
             this.serverToolStripMenuItem.Text = "Server";
-            // 
-            // startToolStripMenuItem
-            // 
-            this.startToolStripMenuItem.Name = "startToolStripMenuItem";
-            this.startToolStripMenuItem.Size = new System.Drawing.Size(109, 22);
-            this.startToolStripMenuItem.Text = "Start";
-            this.startToolStripMenuItem.Click += new System.EventHandler(this.startToolStripMenuItem_Click);
-            // 
-            // stopToolStripMenuItem
-            // 
-            this.stopToolStripMenuItem.Name = "stopToolStripMenuItem";
-            this.stopToolStripMenuItem.Size = new System.Drawing.Size(109, 22);
-            this.stopToolStripMenuItem.Text = "Stop";
-            this.stopToolStripMenuItem.Click += new System.EventHandler(this.stopToolStripMenuItem_Click);
             // 
             // toolStrip1
             // 
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.BTNstart,
             this.BTNstop});
-            this.toolStrip1.Location = new System.Drawing.Point(0, 24);
+            this.toolStrip1.Location = new System.Drawing.Point(0, 25);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(567, 25);
             this.toolStrip1.TabIndex = 1;
             this.toolStrip1.Text = "toolStrip1";
-            // 
-            // BTNstart
-            // 
-            this.BTNstart.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.BTNstart.Image = ((System.Drawing.Image)(resources.GetObject("BTNstart.Image")));
-            this.BTNstart.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.BTNstart.Name = "BTNstart";
-            this.BTNstart.Size = new System.Drawing.Size(23, 22);
-            this.BTNstart.Text = "toolStripButton1";
-            this.BTNstart.Click += new System.EventHandler(this.BTNstart_Click);
-            // 
-            // BTNstop
-            // 
-            this.BTNstop.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.BTNstop.Image = ((System.Drawing.Image)(resources.GetObject("BTNstop.Image")));
-            this.BTNstop.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.BTNstop.Name = "BTNstop";
-            this.BTNstop.Size = new System.Drawing.Size(23, 22);
-            this.BTNstop.Text = "toolStripButton1";
-            this.BTNstop.Click += new System.EventHandler(this.BTNstop_Click);
             // 
             // statusStrip1
             // 
@@ -226,7 +179,7 @@
             // LBLstatus
             // 
             this.LBLstatus.Name = "LBLstatus";
-            this.LBLstatus.Size = new System.Drawing.Size(97, 17);
+            this.LBLstatus.Size = new System.Drawing.Size(123, 17);
             this.LBLstatus.Text = "Application started";
             // 
             // tabControl1
@@ -236,10 +189,10 @@
             this.tabControl1.Controls.Add(this.tabPage3);
             this.tabControl1.Controls.Add(this.tabPage2);
             this.tabControl1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabControl1.Location = new System.Drawing.Point(0, 49);
+            this.tabControl1.Location = new System.Drawing.Point(0, 50);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(567, 319);
+            this.tabControl1.Size = new System.Drawing.Size(567, 318);
             this.tabControl1.TabIndex = 3;
             // 
             // tabPage1
@@ -262,10 +215,10 @@
             this.tabPage1.Controls.Add(this.label2);
             this.tabPage1.Controls.Add(this.TXTservername);
             this.tabPage1.Controls.Add(this.label1);
-            this.tabPage1.Location = new System.Drawing.Point(4, 22);
+            this.tabPage1.Location = new System.Drawing.Point(4, 23);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(559, 293);
+            this.tabPage1.Size = new System.Drawing.Size(559, 291);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Basic settings";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -302,7 +255,7 @@
             this.label6.AutoSize = true;
             this.label6.Location = new System.Drawing.Point(260, 214);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(223, 13);
+            this.label6.Size = new System.Drawing.Size(239, 13);
             this.label6.TabIndex = 14;
             this.label6.Text = "Light transition time in multiplies of 10 seconds";
             // 
@@ -311,7 +264,7 @@
             this.CHKlogging.AutoSize = true;
             this.CHKlogging.Location = new System.Drawing.Point(263, 170);
             this.CHKlogging.Name = "CHKlogging";
-            this.CHKlogging.Size = new System.Drawing.Size(96, 17);
+            this.CHKlogging.Size = new System.Drawing.Size(99, 17);
             this.CHKlogging.TabIndex = 13;
             this.CHKlogging.Text = "Enable logging";
             this.CHKlogging.UseVisualStyleBackColor = true;
@@ -328,7 +281,7 @@
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(260, 117);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(130, 13);
+            this.label5.Size = new System.Drawing.Size(136, 13);
             this.label5.TabIndex = 11;
             this.label5.Text = "Auto save every * minutes";
             // 
@@ -337,7 +290,7 @@
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(260, 13);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(100, 13);
+            this.label4.Size = new System.Drawing.Size(103, 13);
             this.label4.TabIndex = 10;
             this.label4.Text = "Message of the day";
             // 
@@ -361,7 +314,7 @@
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(8, 214);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(62, 13);
+            this.label3.Size = new System.Drawing.Size(64, 13);
             this.label3.TabIndex = 7;
             this.label3.Text = "Level name";
             // 
@@ -380,7 +333,7 @@
             this.CHKproxy.AutoSize = true;
             this.CHKproxy.Location = new System.Drawing.Point(11, 149);
             this.CHKproxy.Name = "CHKproxy";
-            this.CHKproxy.Size = new System.Drawing.Size(120, 17);
+            this.CHKproxy.Size = new System.Drawing.Size(126, 17);
             this.CHKproxy.TabIndex = 5;
             this.CHKproxy.Text = "Server behind proxy";
             this.CHKproxy.UseVisualStyleBackColor = true;
@@ -390,7 +343,7 @@
             this.CHKpublic.AutoSize = true;
             this.CHKpublic.Location = new System.Drawing.Point(11, 117);
             this.CHKpublic.Name = "CHKpublic";
-            this.CHKpublic.Size = new System.Drawing.Size(87, 17);
+            this.CHKpublic.Size = new System.Drawing.Size(92, 17);
             this.CHKpublic.TabIndex = 4;
             this.CHKpublic.Text = "Public server";
             this.CHKpublic.UseVisualStyleBackColor = true;
@@ -407,7 +360,7 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(8, 63);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(120, 13);
+            this.label2.Size = new System.Drawing.Size(128, 13);
             this.label2.TabIndex = 2;
             this.label2.Text = "Maximum player amount";
             // 
@@ -423,7 +376,7 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(8, 13);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(67, 13);
+            this.label1.Size = new System.Drawing.Size(70, 13);
             this.label1.TabIndex = 0;
             this.label1.Text = "Server name";
             // 
@@ -434,10 +387,10 @@
             this.tabPage4.Controls.Add(this.groupBox3);
             this.tabPage4.Controls.Add(this.groupBox2);
             this.tabPage4.Controls.Add(this.groupBox1);
-            this.tabPage4.Location = new System.Drawing.Point(4, 22);
+            this.tabPage4.Location = new System.Drawing.Point(4, 23);
             this.tabPage4.Name = "tabPage4";
             this.tabPage4.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage4.Size = new System.Drawing.Size(559, 293);
+            this.tabPage4.Size = new System.Drawing.Size(559, 291);
             this.tabPage4.TabIndex = 3;
             this.tabPage4.Text = "Map settings";
             this.tabPage4.UseVisualStyleBackColor = true;
@@ -489,7 +442,7 @@
             this.label11.AutoSize = true;
             this.label11.Location = new System.Drawing.Point(6, 109);
             this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(59, 13);
+            this.label11.Size = new System.Drawing.Size(60, 13);
             this.label11.TabIndex = 4;
             this.label11.Text = "Tree count";
             // 
@@ -505,7 +458,7 @@
             this.label10.AutoSize = true;
             this.label10.Location = new System.Drawing.Point(3, 64);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(61, 13);
+            this.label10.Size = new System.Drawing.Size(62, 13);
             this.label10.TabIndex = 2;
             this.label10.Text = "Lava factor";
             // 
@@ -521,7 +474,7 @@
             this.label9.AutoSize = true;
             this.label9.Location = new System.Drawing.Point(6, 21);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(66, 13);
+            this.label9.Size = new System.Drawing.Size(67, 13);
             this.label9.TabIndex = 0;
             this.label9.Text = "Water factor";
             // 
@@ -543,7 +496,7 @@
             this.CHKadmin.AutoSize = true;
             this.CHKadmin.Location = new System.Drawing.Point(9, 19);
             this.CHKadmin.Name = "CHKadmin";
-            this.CHKadmin.Size = new System.Drawing.Size(126, 17);
+            this.CHKadmin.Size = new System.Drawing.Size(131, 17);
             this.CHKadmin.TabIndex = 0;
             this.CHKadmin.Text = "Include admin blocks";
             this.CHKadmin.UseVisualStyleBackColor = true;
@@ -553,7 +506,7 @@
             this.CHKwater.AutoSize = true;
             this.CHKwater.Location = new System.Drawing.Point(9, 42);
             this.CHKwater.Name = "CHKwater";
-            this.CHKwater.Size = new System.Drawing.Size(124, 17);
+            this.CHKwater.Size = new System.Drawing.Size(128, 17);
             this.CHKwater.TabIndex = 1;
             this.CHKwater.Text = "Include water blocks";
             this.CHKwater.UseVisualStyleBackColor = true;
@@ -563,7 +516,7 @@
             this.CHKtrees.AutoSize = true;
             this.CHKtrees.Location = new System.Drawing.Point(9, 88);
             this.CHKtrees.Name = "CHKtrees";
-            this.CHKtrees.Size = new System.Drawing.Size(87, 17);
+            this.CHKtrees.Size = new System.Drawing.Size(90, 17);
             this.CHKtrees.TabIndex = 3;
             this.CHKtrees.Text = "Include trees";
             this.CHKtrees.UseVisualStyleBackColor = true;
@@ -573,7 +526,7 @@
             this.CHKlava.AutoSize = true;
             this.CHKlava.Location = new System.Drawing.Point(9, 65);
             this.CHKlava.Name = "CHKlava";
-            this.CHKlava.Size = new System.Drawing.Size(118, 17);
+            this.CHKlava.Size = new System.Drawing.Size(122, 17);
             this.CHKlava.TabIndex = 2;
             this.CHKlava.Text = "Include lava blocks";
             this.CHKlava.UseVisualStyleBackColor = true;
@@ -603,7 +556,7 @@
             this.label8.AutoSize = true;
             this.label8.Location = new System.Drawing.Point(3, 67);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(54, 13);
+            this.label8.Size = new System.Drawing.Size(57, 13);
             this.label8.TabIndex = 2;
             this.label8.Text = "Ore factor";
             // 
@@ -612,7 +565,7 @@
             this.label7.AutoSize = true;
             this.label7.Location = new System.Drawing.Point(6, 24);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(49, 13);
+            this.label7.Size = new System.Drawing.Size(52, 13);
             this.label7.TabIndex = 1;
             this.label7.Text = "Map size";
             // 
@@ -638,10 +591,10 @@
             this.tabPage3.Controls.Add(this.TXTadmins);
             this.tabPage3.Controls.Add(this.label12);
             this.tabPage3.Controls.Add(this.LSTplayers);
-            this.tabPage3.Location = new System.Drawing.Point(4, 22);
+            this.tabPage3.Location = new System.Drawing.Point(4, 23);
             this.tabPage3.Name = "tabPage3";
             this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage3.Size = new System.Drawing.Size(559, 293);
+            this.tabPage3.Size = new System.Drawing.Size(559, 291);
             this.tabPage3.TabIndex = 2;
             this.tabPage3.Text = "Players";
             this.tabPage3.UseVisualStyleBackColor = true;
@@ -671,7 +624,7 @@
             this.label14.AutoSize = true;
             this.label14.Location = new System.Drawing.Point(254, 109);
             this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(80, 13);
+            this.label14.Size = new System.Drawing.Size(84, 13);
             this.label14.TabIndex = 5;
             this.label14.Text = "Banned players";
             // 
@@ -688,7 +641,7 @@
             this.label13.AutoSize = true;
             this.label13.Location = new System.Drawing.Point(252, 12);
             this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(54, 13);
+            this.label13.Size = new System.Drawing.Size(58, 13);
             this.label13.TabIndex = 3;
             this.label13.Text = "Admin ip\'s";
             // 
@@ -705,7 +658,7 @@
             this.label12.AutoSize = true;
             this.label12.Location = new System.Drawing.Point(8, 12);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(87, 13);
+            this.label12.Size = new System.Drawing.Size(96, 13);
             this.label12.TabIndex = 1;
             this.label12.Text = "Current player list";
             // 
@@ -722,14 +675,29 @@
             this.LSTplayers.UseCompatibleStateImageBehavior = false;
             this.LSTplayers.View = System.Windows.Forms.View.Details;
             // 
+            // columnHeader1
+            // 
+            this.columnHeader1.Text = "Name";
+            this.columnHeader1.Width = 100;
+            // 
+            // columnHeader2
+            // 
+            this.columnHeader2.Text = "IP";
+            this.columnHeader2.Width = 70;
+            // 
+            // columnHeader3
+            // 
+            this.columnHeader3.Text = "Team";
+            this.columnHeader3.Width = 49;
+            // 
             // tabPage2
             // 
             this.tabPage2.Controls.Add(this.textBox13);
             this.tabPage2.Controls.Add(this.TXTconsole);
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Location = new System.Drawing.Point(4, 23);
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(559, 293);
+            this.tabPage2.Size = new System.Drawing.Size(559, 291);
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "Console";
             this.tabPage2.UseVisualStyleBackColor = true;
@@ -759,20 +727,56 @@
             this.ReadStream.Enabled = true;
             this.ReadStream.Tick += new System.EventHandler(this.ReadStream_Tick);
             // 
-            // columnHeader1
+            // BTNstart
             // 
-            this.columnHeader1.Text = "Name";
-            this.columnHeader1.Width = 100;
+            this.BTNstart.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.BTNstart.Image = global::MineWorldServerManager.Properties.Resources.control_play_blue;
+            this.BTNstart.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.BTNstart.Name = "BTNstart";
+            this.BTNstart.Size = new System.Drawing.Size(23, 22);
+            this.BTNstart.Text = "toolStripButton1";
+            this.BTNstart.Click += new System.EventHandler(this.BTNstart_Click);
             // 
-            // columnHeader2
+            // BTNstop
             // 
-            this.columnHeader2.Text = "IP";
-            this.columnHeader2.Width = 70;
+            this.BTNstop.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.BTNstop.Image = global::MineWorldServerManager.Properties.Resources.control_stop_blue;
+            this.BTNstop.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.BTNstop.Name = "BTNstop";
+            this.BTNstop.Size = new System.Drawing.Size(23, 22);
+            this.BTNstop.Text = "toolStripButton1";
+            this.BTNstop.Click += new System.EventHandler(this.BTNstop_Click);
             // 
-            // columnHeader3
+            // saveLogToolStripMenuItem
             // 
-            this.columnHeader3.Text = "Team";
-            this.columnHeader3.Width = 49;
+            this.saveLogToolStripMenuItem.Image = global::MineWorldServerManager.Properties.Resources.disk;
+            this.saveLogToolStripMenuItem.Name = "saveLogToolStripMenuItem";
+            this.saveLogToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
+            this.saveLogToolStripMenuItem.Text = "Save log";
+            // 
+            // quitManagerToolStripMenuItem
+            // 
+            this.quitManagerToolStripMenuItem.Image = global::MineWorldServerManager.Properties.Resources.door_in;
+            this.quitManagerToolStripMenuItem.Name = "quitManagerToolStripMenuItem";
+            this.quitManagerToolStripMenuItem.Size = new System.Drawing.Size(161, 22);
+            this.quitManagerToolStripMenuItem.Text = "Quit Manager";
+            this.quitManagerToolStripMenuItem.Click += new System.EventHandler(this.quitManagerToolStripMenuItem_Click);
+            // 
+            // startToolStripMenuItem
+            // 
+            this.startToolStripMenuItem.Image = global::MineWorldServerManager.Properties.Resources.control_play_blue;
+            this.startToolStripMenuItem.Name = "startToolStripMenuItem";
+            this.startToolStripMenuItem.Size = new System.Drawing.Size(108, 22);
+            this.startToolStripMenuItem.Text = "Start";
+            this.startToolStripMenuItem.Click += new System.EventHandler(this.startToolStripMenuItem_Click);
+            // 
+            // stopToolStripMenuItem
+            // 
+            this.stopToolStripMenuItem.Image = global::MineWorldServerManager.Properties.Resources.control_stop_blue;
+            this.stopToolStripMenuItem.Name = "stopToolStripMenuItem";
+            this.stopToolStripMenuItem.Size = new System.Drawing.Size(108, 22);
+            this.stopToolStripMenuItem.Text = "Stop";
+            this.stopToolStripMenuItem.Click += new System.EventHandler(this.stopToolStripMenuItem_Click);
             // 
             // Form1
             // 
