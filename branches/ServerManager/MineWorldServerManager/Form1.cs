@@ -65,6 +65,10 @@ namespace MineWorldServerManager
             while (true)
             {
                 System.Threading.Thread.Sleep(10);
+                if (p == null)
+                {
+                    bw.CancelAsync();
+                }
                 if (p.HasExited)
                 {
                     bw.CancelAsync();
