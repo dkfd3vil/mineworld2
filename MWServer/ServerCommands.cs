@@ -45,9 +45,9 @@ namespace MineWorld
             }
             catch
             {
-                ConsoleWrite("Unable to load admin list.");
+                ConsoleWriteError("Unable to load admin list.");
             }
-            ConsoleWrite(temp.Count + " ADMINS LOADED");
+            ConsoleWriteSucces(temp.Count + " ADMINS LOADED");
             return temp;
         }
 
@@ -101,9 +101,9 @@ namespace MineWorld
             }
             catch
             {
-                ConsoleWrite("Unable to load banlist");
+                ConsoleWriteError("Unable to load banlist");
             }
-            ConsoleWrite(retList.Count + " BANNED IP's LOADED");
+            ConsoleWriteSucces(retList.Count + " BANNED IP's LOADED");
             return retList;
         }
 
@@ -154,9 +154,9 @@ namespace MineWorld
             }
             catch
             {
-                ConsoleWrite("Unable to load bannednames");
+                ConsoleWriteError("Unable to load bannednames");
             }
-            ConsoleWrite(retList.Count + " BANNEDNAMES LOADED");
+            ConsoleWriteSucces(retList.Count + " BANNEDNAMES LOADED");
             return retList;
         }
 
@@ -237,7 +237,7 @@ namespace MineWorld
             {
                 if (!File.Exists(filename))
                 {
-                    ConsoleWrite("Unable to load level - " + filename + " does not exist!");
+                    ConsoleWriteError("Unable to load level - " + filename + " does not exist!");
                     return false;
                 }
                 SendServerMessage("Changing map to " + filename + "!");
@@ -256,7 +256,7 @@ namespace MineWorld
                         }
                 sr.Close();
                 fs.Close();
-                ConsoleWrite("Level loaded successfully - now playing " + filename + "!");
+                ConsoleWriteSucces("Level loaded successfully - now playing " + filename + "!");
                 return true;
             }
             catch { }
@@ -273,7 +273,7 @@ namespace MineWorld
 
         public void status()
         {
-            ConsoleWrite("ServerName: " + Ssettings.Servername);//serverName);
+            ConsoleWrite("ServerName: " + Ssettings.Servername);
             ConsoleWrite(playerList.Count + " / " + Ssettings.Maxplayers + " players");
             ConsoleWrite("Public: " + Ssettings.Public.ToString());
             ConsoleWrite("Proxy: " + Ssettings.Proxy.ToString());

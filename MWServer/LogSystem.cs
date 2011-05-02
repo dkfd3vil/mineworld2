@@ -13,12 +13,12 @@ namespace MineWorld
 
             try
             {
-                if (!File.Exists(Ssettings.LogsDir + "/" + GetDate() + ".txt"))
+                if (!File.Exists(Ssettings.LogsDir + "/" + GetDate(false) + ".txt"))
                 {
-                    FileStream fs = File.Create(Ssettings.LogsDir + "/" + GetDate() + ".txt");
+                    FileStream fs = File.Create(Ssettings.LogsDir + "/" + GetDate(false) + ".txt");
                     fs.Close();
                 }
-                FileStream file = new FileStream(Ssettings.LogsDir + "/" + GetDate() + ".txt", FileMode.Append, FileAccess.Write);
+                FileStream file = new FileStream(Ssettings.LogsDir + "/" + GetDate(false) + ".txt", FileMode.Append, FileAccess.Write);
                 StreamWriter sw = new StreamWriter(file);
                 sw.WriteLine(text + consoletext);
                 sw.Close();
@@ -26,7 +26,6 @@ namespace MineWorld
             }
             catch
             {
-
             }
         }
 
@@ -43,9 +42,19 @@ namespace MineWorld
             }
             return DateTime.Now.ToString(DateFormat);
         }
-        public string GetDate()
+
+        public string GetDate(bool usedots)
         {
-            return DateTime.Now.ToString("yyyy-MM-dd");
+            String DateFormat = "";
+            if (usedots)
+            {
+                DateFormat = "yyyy:MM:dd";
+            }
+            else
+            {
+                DateFormat = "yyyy-MM-dd";
+            }
+            return DateTime.Now.ToString(DateFormat);
         }
     }
 }

@@ -141,7 +141,7 @@ namespace MineWorld
             {
                 if (pl.Alive)
                 {
-                    ConsoleWrite("refused " + pl.Name + " " + pos.X + "/" + pos.Y + "/" + pos.Z);
+                    ConsoleWrite("refused " + pl.Name + " " + pos.X + "/" + pos.Y + "/" + pos.Z, ConsoleColor.Yellow);
                     return pl.Position;
                 }
                 else//player is dead, return position silent
@@ -303,20 +303,6 @@ namespace MineWorld
                 PlaySound(sound, player.Position);
             }
         }
-
-        //private bool LocationNearBase(ushort x, ushort y, ushort z)
-        //{
-        //    for (int i=0; i<MAPSIZE; i++)
-        //        for (int j=0; j<MAPSIZE; j++)
-        //            for (int k = 0; k < MAPSIZE; k++)
-        //                if (blockList[i, j, k] == BlockType.HomeBlue || blockList[i, j, k] == BlockType.HomeRed)
-        //                {
-        //                    double dist = Math.Sqrt(Math.Pow(x - i, 2) + Math.Pow(y - j, 2) + Math.Pow(z - k, 2));
-        //                    if (dist < 3)
-        //                        return true;
-        //                }
-        //    return false;
-        //}
 
         public void UseConstructionGun(IClient player, Vector3 playerPosition, Vector3 playerHeading, BlockType blockType)
         {
