@@ -259,36 +259,6 @@ namespace MineWorld
                                             propertyBag.time = light;
                                             break;
                                         }
-
-                                        /*
-                                    case MineWorldMessage.SetBeacon:
-                                        {
-                                            Vector3 position = msgBuffer.ReadVector3();
-                                            string text = msgBuffer.ReadString();
-
-                                            if (text == "")
-                                            {
-                                                //if (propertyBag.beaconList.ContainsKey(position))
-                                                    //propertyBag.beaconList.Remove(position);
-                                            }
-                                            else
-                                            {
-                                                //Beacon newBeacon = new Beacon();
-                                                //newBeacon.ID = text;
-                                                //propertyBag.beaconList.Add(position, newBeacon);
-                                            }
-                                        }
-                                        break;
-                                        */
-                                        /*
-                                    case MineWorldMessage.TriggerConstructionGunAnimation:
-                                        {
-                                            //propertyBag.constructionGunAnimation = msgBuffer.ReadFloat();
-                                            //if (propertyBag.constructionGunAnimation <= -0.1)
-                                                //propertyBag.PlaySound(MineWorldSound.RadarSwitch);
-                                        }
-                                        break;
-                                        */
                                     case MineWorldMessage.HealthUpdate:
                                         {
                                             // Health, Healthmax both uint
@@ -296,23 +266,19 @@ namespace MineWorld
                                             propertyBag.playerHealthMax = msgBuffer.ReadUInt32();
                                         }
                                         break;
-
                                     case MineWorldMessage.PlayerPosition:
                                         {
                                             propertyBag.playerPosition = msgBuffer.ReadVector3();
                                             break;
                                         }
-
                                     case MineWorldMessage.PlayerRespawn:
                                         {
                                             propertyBag.playerPosition = msgBuffer.ReadVector3();
                                             propertyBag.allowRespawn = true;
                                             break;
                                         }
-
                                     case MineWorldMessage.BlockSet:
                                         {
-
                                             // x, y, z, type, all bytes
                                             byte x = msgBuffer.ReadByte();
                                             byte y = msgBuffer.ReadByte();
@@ -434,8 +400,6 @@ namespace MineWorld
                                                 Player player = propertyBag.playerList[playerId];
                                                 player.UpdatePosition(msgBuffer.ReadVector3(), gameTime.TotalGameTime.TotalSeconds);
                                                 player.Heading = msgBuffer.ReadVector3();
-                                                //player.Tool = (PlayerTools)msgBuffer.ReadByte();
-                                                //player.UsingTool = msgBuffer.ReadBoolean();
                                                 player.Health = (uint)(msgBuffer.ReadUInt16() * 100);
                                             }
                                         }
@@ -449,18 +413,6 @@ namespace MineWorld
                                             propertyBag.addChatMessage(chatString, chatType, author);
                                         }
                                         break;
-                                        /*
-                                    case MineWorldMessage.PlayerPing:
-                                        {
-                                            uint playerId = (uint)msgBuffer.ReadInt32();
-                                            if (propertyBag.playerList.ContainsKey(playerId))
-                                            {
-                                                propertyBag.playerList[playerId].Ping = 1;
-                                                propertyBag.PlaySound(MineWorldSound.Ping);
-                                            }
-                                        }
-                                        break;
-                                        */
                                     case MineWorldMessage.PlaySound:
                                         {
                                             MineWorldSound sound = (MineWorldSound)msgBuffer.ReadByte();
@@ -486,7 +438,6 @@ namespace MineWorld
                         break;
                 }
             }
-
             // Make sure our network thread actually gets to run.
             Thread.Sleep(1);
         }

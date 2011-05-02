@@ -53,10 +53,8 @@ namespace MineWorld
 
         public MineWorldServer()
         {
-            Console.SetWindowSize(1, 1);
-            Console.SetBufferSize(80, CONSOLE_SIZE + 4);
-            Console.SetWindowSize(80, CONSOLE_SIZE + 4);
         }
+
         public String GetExternalIp()
         {
             string whatIsMyIp = "http://www.whatismyip.com/automation/n09230945.asp";
@@ -86,6 +84,9 @@ namespace MineWorld
 
         public bool Start()
         {
+            //Display server version in console
+            ConsoleWrite(Defines.MINEWORLDSERVER_VERSION, ConsoleColor.Cyan);
+
             // Load the directory's.
             LoadDirectorys();
 
@@ -137,18 +138,18 @@ namespace MineWorld
                 loaded = LoadLevel(Ssettings.LevelName);
                 if (loaded == false)
                 {
-                    ConsoleWrite("AUTOLOAD FAILED");
+                    ConsoleWriteError("AUTOLOAD FAILED");
                 }
                 else
                 {
-                    ConsoleWrite("AUTLOAD SUCCESFULL");
+                    ConsoleWriteSucces("AUTLOAD SUCCESFULL");
                 }
             }
             if(loaded == false)
             {
                 ConsoleWrite("GENERATING NEW MAP");
                 GenerateNewMap();
-                ConsoleWrite("NEW MAP GENERATED");
+                ConsoleWriteSucces("NEW MAP GENERATED");
                 ConsoleWrite("MAPSIZE = [" + Defines.MAPSIZE + "] [" + Defines.MAPSIZE + "] [" + Defines.MAPSIZE + "]");
             }
 
@@ -181,21 +182,21 @@ namespace MineWorld
             }
 
             // Main server loop!
-            ConsoleWrite("SERVER READY");
+            ConsoleWriteSucces("SERVER READY");
 
             while (keepRunning)
             {
                 // Check the state of our core threads
                 if (!listenerthread.IsAlive)
                 {
-                    ConsoleWrite("Listenerthread died");
-                    ConsoleWrite("Server is shutting down");
+                    ConsoleWriteError("Listenerthread died");
+                    ConsoleWriteError("Server is shutting down");
                     return false;
                 }
                 if (!physicsthread.IsAlive)
                 {
-                    ConsoleWrite("Physicsthread died");
-                    ConsoleWrite("Server is shutting down");
+                    ConsoleWriteError("Physicsthread died");
+                    ConsoleWriteError("Server is shutting down");
                     return false;
                 }
 
@@ -207,7 +208,7 @@ namespace MineWorld
                     frameRate = frameCount;
                     if (frameCount <= 20)
                     {
-                        ConsoleWrite("Heavy load: " + frameCount + " FPS");
+                        ConsoleWrite("Heavy load: " + frameCount + " FPS", ConsoleColor.Yellow);
                     }
                     frameCount = 0;
                 }
@@ -237,10 +238,10 @@ namespace MineWorld
                     if (mapUpdateTimeSpan.TotalMinutes > Ssettings.Autosavetimer)
                     {
                         ConsoleWrite("BACK-UP STARTED");
-                        System.Threading.Thread backupthread = new System.Threading.Thread(new ThreadStart(BackupLevel));
+                        Thread backupthread = new Thread(new ThreadStart(BackupLevel));
                         backupthread.Start();
                         lastMapBackup = DateTime.Now;
-                        ConsoleWrite("BACK-UP DONE");
+                        ConsoleWriteSucces("BACK-UP DONE");
                     }
                 }
                 //Time to terminate finished map sending threads?
@@ -249,20 +250,8 @@ namespace MineWorld
                 // Handle console keypresses.
                 while (Console.KeyAvailable)
                 {
-                    ConsoleKeyInfo keyInfo = Console.ReadKey();
-                    if (keyInfo.Key == ConsoleKey.Enter)
-                        ConsoleProcessInput();
-                    else if (keyInfo.Key == ConsoleKey.Backspace)
-                    {
-                        if (consoleInput.Length > 0)
-                            consoleInput = consoleInput.Substring(0, consoleInput.Length - 1);
-                        ConsoleRedraw();
-                    }
-                    else
-                    {
-                        consoleInput += keyInfo.KeyChar;
-                        ConsoleRedraw();
-                    }
+                    consoleInput = Console.ReadLine();
+                    ConsoleProcessInput();
                 }
 
                 // Restart the server?
@@ -297,7 +286,7 @@ namespace MineWorld
             else
             {
                 Ssettings.Logs = false;
-                ConsoleWrite("Couldnt find logs settings so we use the default (false)");
+                ConsoleWriteError("Couldnt find logs settings so we use the default (false)");
             }
             ConsoleWrite("LOADING SETTINGS");
 
@@ -307,7 +296,7 @@ namespace MineWorld
             else
             {
                 Ssettings.Maxplayers = 16;
-                ConsoleWrite("Couldnt find maxplayers setting so we use the default (16)");
+                ConsoleWriteError("Couldnt find maxplayers setting so we use the default (16)");
             }
 
             if (dataFile.Data.ContainsKey("public"))
@@ -315,14 +304,14 @@ namespace MineWorld
             else
             {
                 Ssettings.Public = false;
-                ConsoleWrite("Couldnt find public setting so we use the default (FALSE)");
+                ConsoleWriteError("Couldnt find public setting so we use the default (FALSE)");
             }
             if (dataFile.Data.ContainsKey("proxy"))
                 Ssettings.Proxy = bool.Parse(dataFile.Data["proxy"]);
             else
             {
                 Ssettings.Proxy = false;
-                ConsoleWrite("Couldnt find proxy setting so we use the default (false)");
+                ConsoleWriteError("Couldnt find proxy setting so we use the default (false)");
             }
 
             if (dataFile.Data.ContainsKey("servername"))
@@ -330,7 +319,7 @@ namespace MineWorld
             else
             {
                 Ssettings.Servername = "Default";
-                ConsoleWrite("Couldnt find servername setting so we use the default (Default)");
+                ConsoleWriteError("Couldnt find servername setting so we use the default (Default)");
             }
 
             if (dataFile.Data.ContainsKey("levelname"))
@@ -338,7 +327,7 @@ namespace MineWorld
             else
             {
                 Ssettings.LevelName = "";
-                ConsoleWrite("Couldnt find levelname setting so we use the default ()");
+                ConsoleWriteError("Couldnt find levelname setting so we use the default ()");
             }
 
             if (dataFile.Data.ContainsKey("motd"))
@@ -346,7 +335,7 @@ namespace MineWorld
             else
             {
                 Ssettings.MOTD = "Welcome";
-                ConsoleWrite("Couldnt find MOTD setting so we use the default (Welcome)");
+                ConsoleWriteError("Couldnt find MOTD setting so we use the default (Welcome)");
             }
 
             if (dataFile.Data.ContainsKey("autoannounce"))
@@ -354,7 +343,7 @@ namespace MineWorld
             else
             {
                 Ssettings.AutoAnnouce = false;
-                ConsoleWrite("Couldnt find autoannounce setting so we use the default (false)");
+                ConsoleWriteError("Couldnt find autoannounce setting so we use the default (false)");
             }
 
             if (dataFile.Data.ContainsKey("autosave"))
@@ -362,7 +351,7 @@ namespace MineWorld
             else
             {
                 Ssettings.Autosavetimer = 5;
-                ConsoleWrite("Couldnt find autosave setting so we use the default (5)");
+                ConsoleWriteError("Couldnt find autosave setting so we use the default (5)");
             }
 
             if (dataFile.Data.ContainsKey("lightsteps"))
@@ -370,23 +359,23 @@ namespace MineWorld
             else
             {
                 Ssettings.Lightsteps = 60;
-                ConsoleWrite("Couldnt find lightsteps setting so we use the default (60)");
+                ConsoleWriteError("Couldnt find lightsteps setting so we use the default (60)");
             }
 
             if (!(Ssettings.Maxplayers >= 1 && Ssettings.Maxplayers <= 16))
             {
                 Ssettings.Maxplayers = 16;
-                ConsoleWrite("The value of maxplayers must be between 1 and 16 for now");
+                ConsoleWriteError("The value of maxplayers must be between 1 and 16 for now");
                 ConsoleWrite("Setting Maxplayers to 16");
             }
 
             if (!(Ssettings.Autosavetimer >= 0 && Ssettings.Autosavetimer <= 60))
             {
                 Ssettings.Autosavetimer = 5;
-                ConsoleWrite("The value of autosave must be between 0 and 60 for now");
+                ConsoleWriteError("The value of autosave must be between 0 and 60 for now");
                 ConsoleWrite("Setting autosave to 5");
             }
-            ConsoleWrite("SETTINGS LOADED");
+            ConsoleWriteSucces("SETTINGS LOADED");
         }
 
         public void LoadMapSettings()
@@ -400,7 +389,7 @@ namespace MineWorld
             else
             {
                 Msettings.Includetrees = true;
-                ConsoleWrite("Couldnt find includetrees setting so we use the default (true)");
+                ConsoleWriteError("Couldnt find includetrees setting so we use the default (true)");
             }
 
             if (dataFile.Data.ContainsKey("includelava"))
@@ -408,7 +397,7 @@ namespace MineWorld
             else
             {
                 Msettings.Includelava = true;
-                ConsoleWrite("Couldnt find includelava setting so we use the default (true)");
+                ConsoleWriteError("Couldnt find includelava setting so we use the default (true)");
             }
 
             if (dataFile.Data.ContainsKey("includeadminblocks"))
@@ -416,7 +405,7 @@ namespace MineWorld
             else
             {
                 Msettings.IncludeAdminblocks = true;
-                ConsoleWrite("Couldnt find includeadminblocks setting so we use the default (true)");
+                ConsoleWriteError("Couldnt find includeadminblocks setting so we use the default (true)");
             }
 
             if (dataFile.Data.ContainsKey("lavaspawns"))
@@ -424,7 +413,7 @@ namespace MineWorld
             else
             {
                 Msettings.Lavaspawns = 0;
-                ConsoleWrite("Couldnt find lavaspawns setting so we use the default (0)");
+                ConsoleWriteError("Couldnt find lavaspawns setting so we use the default (0)");
             }
 
             if (dataFile.Data.ContainsKey("treecount"))
@@ -432,7 +421,7 @@ namespace MineWorld
             else
             {
                 Msettings.Treecount = 0;
-                ConsoleWrite("Couldnt find treecount setting so we use the default (0)");
+                ConsoleWriteError("Couldnt find treecount setting so we use the default (0)");
             }
 
             if (dataFile.Data.ContainsKey("orefactor"))
@@ -440,7 +429,7 @@ namespace MineWorld
             else
             {
                 Msettings.Orefactor = 0;
-                ConsoleWrite("Couldnt find orefactor setting so we use the default (0)");
+                ConsoleWriteError("Couldnt find orefactor setting so we use the default (0)");
             }
 
             if (dataFile.Data.ContainsKey("includewater"))
@@ -448,7 +437,7 @@ namespace MineWorld
             else
             {
                 Msettings.Includewater = true;
-                ConsoleWrite("Couldnt find includewater setting so we use the default (true)");
+                ConsoleWriteError("Couldnt find includewater setting so we use the default (true)");
             }
 
             if (dataFile.Data.ContainsKey("waterspawns"))
@@ -456,7 +445,7 @@ namespace MineWorld
             else
             {
                 Msettings.Waterspawns = 0;
-                ConsoleWrite("Couldnt find waterspawns setting so we use the default (0)");
+                ConsoleWriteError("Couldnt find waterspawns setting so we use the default (0)");
             }
 
             /*
@@ -496,7 +485,7 @@ namespace MineWorld
                 ConsoleWrite("Invalid number in mapsize settings so we use the default ((2)normal)");
             }*/
 
-            ConsoleWrite("MAPSETTINGS LOADED");
+            ConsoleWriteSucces("MAPSETTINGS LOADED");
         }
 
         public void LoadDirectorys()
@@ -509,7 +498,7 @@ namespace MineWorld
 
         public void Shutdownserver()
         {
-            ConsoleWrite("Server is shutting down in 5 seconds.");
+            ConsoleWrite("Server is shutting down in 5 seconds.", ConsoleColor.Yellow);
             SendServerMessage("Server is shutting down in 5 seconds.");
             shutdownTriggerd = true;
             shutdownTime = DateTime.Now + TimeSpan.FromSeconds(5);
@@ -517,7 +506,7 @@ namespace MineWorld
 
         public void Restartserver()
         {
-            ConsoleWrite("Server restarting in 5 seconds.");
+            ConsoleWrite("Server restarting in 5 seconds.", ConsoleColor.Yellow);
             SendServerMessage("Server restarting in 5 seconds.");
             restartTriggered = true;
             restartTime = DateTime.Now + TimeSpan.FromSeconds(5);
@@ -582,40 +571,6 @@ namespace MineWorld
             mapSendingProgress.Add(ms);
         }
 
-        //TODO: SendcurrentMapB is not used maybe remove it?
-        /*
-        public void SendCurrentMapB(NetConnection client)
-        {
-            Debug.Assert(MAPSIZE == 64, "The BlockBulkTransfer message requires a map size of 64.");
-            
-            for (byte x = 0; x < MAPSIZE; x++)
-                for (byte y=0; y<MAPSIZE; y+=16)
-                {
-                    NetBuffer msgBuffer = netServer.CreateBuffer();
-                    msgBuffer.Write((byte)MineWorldMessage.BlockBulkTransfer);
-                    msgBuffer.Write(x);
-                    msgBuffer.Write(y);
-                    for (byte dy=0; dy<16; dy++)
-                        for (byte z = 0; z < MAPSIZE; z++)
-                            msgBuffer.Write((byte)(blockList[x, y+dy, z]));
-                    if (client.Status == NetConnectionStatus.Connected)
-                        netServer.SendMessage(msgBuffer, client, NetChannel.ReliableUnordered);
-                }
-        }
-         */
-
-        /*
-        public void SendPlayerPing(uint playerId)
-        {
-            NetBuffer msgBuffer = netServer.CreateBuffer();
-            msgBuffer.Write((byte)MineWorldMessage.PlayerPing);
-            msgBuffer.Write(playerId);
-
-            foreach (IClient player in playerList.Values)
-                //if (netConn.Status == NetConnectionStatus.Connected)
-                player.AddQueMsg(msgBuffer, NetChannel.ReliableUnordered);
-        }
-        */
         public void KillPlayerSpecific(Player player)
         {
             // Put variables to zero
@@ -656,15 +611,11 @@ namespace MineWorld
             msgBuffer.Write((uint)player.ID);
             msgBuffer.Write(player.Position);
             msgBuffer.Write(player.Heading);
-            //msgBuffer.Write((byte)player.Tool);
 
             if (player.QueueAnimationBreak)
             {
                 player.QueueAnimationBreak = false;
-                msgBuffer.Write(false);
             }
-            else
-                //msgBuffer.Write(player.UsingTool);
 
             msgBuffer.Write((ushort)player.Health / 100);
 
@@ -672,19 +623,6 @@ namespace MineWorld
                 //if (netConn.Status == NetConnectionStatus.Connected)
                 iplayer.AddQueMsg(msgBuffer, NetChannel.UnreliableInOrder1);
         }
-
-        /*
-        public void SendSetBeacon(Vector3 position, string text)
-        {
-            NetBuffer msgBuffer = netServer.CreateBuffer();
-            msgBuffer.Write((byte)MineWorldMessage.SetBeacon);
-            msgBuffer.Write(position);
-            msgBuffer.Write(text);
-            foreach (IClient player in playerList.Values)
-                //if (netConn.Status == NetConnectionStatus.Connected)
-                player.AddQueMsg(msgBuffer, NetChannel.ReliableInOrder2);
-        }
-         */
 
         public void SendPlayerJoined(IClient player)
         {
@@ -782,7 +720,6 @@ namespace MineWorld
         {
             if (!player.Alive)
             {
-                //create respawn script
                 // Respawn a few blocks above a safe position above altitude 0.
                 bool positionFound = false;
 

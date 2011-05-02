@@ -4,6 +4,7 @@ using System.Text;
 using Lidgren.Network;
 using Lidgren.Network.Xna;
 using Microsoft.Xna.Framework;
+using System.Threading;
 
 namespace MineWorld
 {
@@ -40,17 +41,17 @@ namespace MineWorld
 
                                     if (authcode != Defines.MINEWORLD_VER)
                                     {
-                                        IServer.ConsoleWrite("CONNECTION REJECTED: " + temphandle + " (VERSION WRONG)");
+                                        IServer.ConsoleWriteError("CONNECTION REJECTED: " + temphandle + " (VERSION WRONG)");
                                         msgSender.Disapprove("versionwrong");
                                     }
                                     else if (IServer.banList.Contains(msgSender.RemoteEndpoint.Address.ToString()))
                                     {
-                                        IServer.ConsoleWrite("CONNECTION REJECTED: " + temphandle + " (IP BANNED)");
+                                        IServer.ConsoleWriteError("CONNECTION REJECTED: " + temphandle + " (IP BANNED)");
                                         msgSender.Disapprove("banned");
                                     }
                                     else if (IServer.playerList.Count == IServer.Ssettings.Maxplayers)
                                     {
-                                        IServer.ConsoleWrite("CONNECTION REJECTED: " + temphandle + " (SERVER FULL)");
+                                        IServer.ConsoleWriteError("CONNECTION REJECTED: " + temphandle + " (SERVER FULL)");
                                         msgSender.Disapprove("serverfull");
                                     }
                                     else
@@ -59,7 +60,7 @@ namespace MineWorld
                                         {
                                             if (temphandle.ToLower() == "player")
                                             {
-                                                IServer.ConsoleWrite("CONNECTION REJECTED: " + temphandle + " (CHANGE NAME)");
+                                                IServer.ConsoleWriteError("CONNECTION REJECTED: " + temphandle + " (CHANGE NAME)");
                                                 msgSender.Disapprove("changename");
                                             }
                                             else
@@ -68,7 +69,7 @@ namespace MineWorld
                                                 {
                                                     if (name.ToLower() == temphandle.ToLower())
                                                     {
-                                                        IServer.ConsoleWrite("CONNECTION REJECTED: " + temphandle + " (BANNED NAME)");
+                                                        IServer.ConsoleWriteError("CONNECTION REJECTED: " + temphandle + " (BANNED NAME)");
                                                         msgSender.Disapprove("bannedname");
                                                     }
                                                 }
@@ -76,7 +77,7 @@ namespace MineWorld
                                                 }
                                         else
                                         {
-                                            IServer.ConsoleWrite("CONNECTION REJECTED: (NO NAME)");
+                                            IServer.ConsoleWriteError("CONNECTION REJECTED: (NO NAME)");
                                             msgSender.Disapprove("noname");
                                         }
 
@@ -94,7 +95,7 @@ namespace MineWorld
 
                                         newPlayer.Name = temphandle;
                                         IServer.playerList[msgSender] = newPlayer;
-                                        System.Threading.Thread SenderThread = new System.Threading.Thread(new System.Threading.ThreadStart(newPlayer.start));
+                                        Thread SenderThread = new Thread(new ThreadStart(newPlayer.start));
                                         SenderThread.Start();
                                         IServer.toGreet.Add(msgSender);
                                         this.netServer.SanityCheck(msgSender);
@@ -480,7 +481,7 @@ namespace MineWorld
                     }
                     catch { }
                 }
-                System.Threading.Thread.Sleep(25);
+                Thread.Sleep(25);
             }
         }
 

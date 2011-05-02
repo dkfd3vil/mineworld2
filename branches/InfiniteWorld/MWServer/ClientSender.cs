@@ -4,18 +4,7 @@ using System.Text;
 using Lidgren.Network;
 using Lidgren.Network.Xna;
 using Microsoft.Xna.Framework;
- 
-public class qmsg
-{
-    public NetBuffer Buffer;
-    public NetChannel Channel;
-    public qmsg(NetBuffer buff, NetChannel chan)
-    {
-        Buffer = buff;
-        Channel = chan;
-    }
-    
-}
+using System.Threading;
 
 namespace MineWorld
 {
@@ -25,7 +14,7 @@ namespace MineWorld
         private System.Collections.ObjectModel.Collection<qmsg> InternalQue;
         public NetConnection Connection;
         public bool Active = true;
-        public System.Threading.EventWaitHandle WH;
+        public EventWaitHandle WH;
         int msgs = 0;
 
         public IClient(NetConnection conn, Game gameInstance):base(conn,gameInstance)
@@ -33,9 +22,10 @@ namespace MineWorld
             Que = new System.Collections.ObjectModel.Collection<qmsg>();
             InternalQue = new System.Collections.ObjectModel.Collection<qmsg>();
             Connection = conn;
-            WH = new System.Threading.AutoResetEvent(false);
+            WH = new AutoResetEvent(false);
 
         }
+
         public void start()
         {
             while(Active)
@@ -70,6 +60,7 @@ namespace MineWorld
                 }
             }
         }
+
         public void AddQueMsg(NetBuffer buff, NetChannel chan)
         {
             lock (Que)
@@ -79,7 +70,17 @@ namespace MineWorld
             }
             WH.Set();
         }
-    }
 
-    
+        public class qmsg
+        {
+            public NetBuffer Buffer;
+            public NetChannel Channel;
+            public qmsg(NetBuffer buff, NetChannel chan)
+            {
+                Buffer = buff;
+                Channel = chan;
+            }
+
+        }
+    } 
 }

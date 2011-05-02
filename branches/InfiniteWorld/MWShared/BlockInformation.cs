@@ -90,10 +90,10 @@ namespace MineWorld
         Lamp,
         Grass,
         GrassSide,
-        Water,
         WoodSide,
         Wood,
         Leafs,
+        Water,
         TransRed,   // THESE MUST BE THE LAST TWO TEXTURES
         TransBlue,
         MAXIMUM
