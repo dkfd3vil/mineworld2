@@ -150,20 +150,20 @@ namespace MineWorld
             {
                 System.Environment.FailFast("Texture hack detected");
             }
-
             // Load the textures we'll use.
             blockTextures = new IMTexture[(byte)BlockTexture.MAXIMUM];
             blockTextures[(byte)BlockTexture.None] = new IMTexture(null);
-            blockTextures[(byte)BlockTexture.Water] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_trans_water"));
+            blockTextures[(byte)BlockTexture.Water] = new IMTexture(loadTextureFromMinecraft("terrain.png", 13, 12));
             //blockTextures[(byte)BlockTexture.Spring] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_spring"));
-            blockTextures[(byte)BlockTexture.GrassSide] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_grass_side"));
-            blockTextures[(byte)BlockTexture.Grass] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_grass"));
-            blockTextures[(byte)BlockTexture.Adminblock] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_adminblock"));
-            blockTextures[(byte)BlockTexture.Dirt] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_dirt"));
-            blockTextures[(byte)BlockTexture.Rock] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_rock"));
-            blockTextures[(byte)BlockTexture.Ore] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_ore"));
-            blockTextures[(byte)BlockTexture.Gold] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_silver"));
-            blockTextures[(byte)BlockTexture.Diamond] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_diamond"));
+            blockTextures[(byte)BlockTexture.GrassSide] = new IMTexture(loadTextureFromMinecraft("terrain.png", 3, 0));
+            //blockTextures[(byte)BlockTexture.Grass] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_grass"));
+            blockTextures[(byte)BlockTexture.Grass] = new IMTexture(loadTextureFromMinecraft("terrain.png", 0, 0, true));
+            blockTextures[(byte)BlockTexture.Adminblock] = new IMTexture(loadTextureFromMinecraft("terrain.png", 5, 2));
+            blockTextures[(byte)BlockTexture.Dirt] = new IMTexture(loadTextureFromMinecraft("terrain.png", 2, 0));
+            blockTextures[(byte)BlockTexture.Rock] = new IMTexture(loadTextureFromMinecraft("terrain.png", 0, 1));
+            blockTextures[(byte)BlockTexture.Ore] = new IMTexture(loadTextureFromMinecraft("terrain.png", 1, 0));
+            blockTextures[(byte)BlockTexture.Gold] = new IMTexture(loadTextureFromMinecraft("terrain.png", 0, 2));
+            blockTextures[(byte)BlockTexture.Diamond] = new IMTexture(loadTextureFromMinecraft("terrain.png", 2, 3));
             blockTextures[(byte)BlockTexture.HomeRed] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_home_red"));
             blockTextures[(byte)BlockTexture.HomeBlue] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_home_blue"));
             blockTextures[(byte)BlockTexture.SolidRed] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_red"));
@@ -173,8 +173,8 @@ namespace MineWorld
             blockTextures[(byte)BlockTexture.Spikes] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_spikes"));
             blockTextures[(byte)BlockTexture.Jump] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_jump"));
             blockTextures[(byte)BlockTexture.JumpTop] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_jump_top"));
-            blockTextures[(byte)BlockTexture.Explosive] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_explosive"));
-            blockTextures[(byte)BlockTexture.Metal] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_metal"));
+            blockTextures[(byte)BlockTexture.Explosive] = new IMTexture(loadTextureFromMinecraft("terrain.png", 8, 0));
+            blockTextures[(byte)BlockTexture.Metal] = new IMTexture(loadTextureFromMinecraft("terrain.png", 6, 1));
             blockTextures[(byte)BlockTexture.DirtSign] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_dirt_sign"));
             blockTextures[(byte)BlockTexture.BankTopRed] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_bank_top_red"));
             blockTextures[(byte)BlockTexture.BankLeftRed] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_bank_left_red"));
@@ -190,7 +190,7 @@ namespace MineWorld
             blockTextures[(byte)BlockTexture.TeleSideB] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_teleporter_b"));
             blockTextures[(byte)BlockTexture.TeleTop] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_teleporter_top"));
             blockTextures[(byte)BlockTexture.TeleBottom] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_teleporter_bottom"));
-            blockTextures[(byte)BlockTexture.Lava] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_lava"));
+            blockTextures[(byte)BlockTexture.Lava] = new IMTexture(loadTextureFromMinecraft("terrain.png", 15, 15));
             blockTextures[(byte)BlockTexture.Road] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_road"));
             blockTextures[(byte)BlockTexture.RoadTop] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_road_top"));
             blockTextures[(byte)BlockTexture.RoadBottom] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_road_bottom"));
@@ -198,10 +198,10 @@ namespace MineWorld
             blockTextures[(byte)BlockTexture.BeaconBlue] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_beacon_top_blue"));
             blockTextures[(byte)BlockTexture.TransRed] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_trans_red"));
             blockTextures[(byte)BlockTexture.TransBlue] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_trans_blue"));
-            blockTextures[(byte)BlockTexture.Wood] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_tree_top"));
-            blockTextures[(byte)BlockTexture.WoodSide] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_tree_side"));
-            blockTextures[(byte)BlockTexture.Leafs] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_tree_leaves"));
-            blockTextures[(byte)BlockTexture.Lamp] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_lamp"));
+            blockTextures[(byte)BlockTexture.Wood] = new IMTexture(loadTextureFromMinecraft("terrain.png", 5, 1));
+            blockTextures[(byte)BlockTexture.WoodSide] = new IMTexture(loadTextureFromMinecraft("terrain.png", 4, 1));
+            blockTextures[(byte)BlockTexture.Leafs] = new IMTexture(loadTextureFromMinecraft("terrain.png", 4, 3, true));
+            blockTextures[(byte)BlockTexture.Lamp] = new IMTexture(loadTextureFromMinecraft("terrain.png", 9, 6));
 
             // Load our effects.
             basicEffect = gameInstance.Content.Load<Effect>("effect_basic");
@@ -224,6 +224,63 @@ namespace MineWorld
             }
             else
                 bloomPosteffect = null;
+        }
+
+        public Texture2D loadTextureFromMinecraft(String file, int tileX, int tileY)
+        {
+            return loadTextureFromMinecraft(file, tileX, tileY, false);
+        }
+
+        public Texture2D loadTextureFromMinecraft(String file, int tileX, int tileY,bool unBiome)
+        {
+            Texture2D sheet = Texture2D.FromFile(gameInstance.GraphicsDevice, file);
+
+            //calculate rectangle for tile in sheet
+            int totalWidth = sheet.Width;
+            int totalHeight = sheet.Height;
+            int tileLeft = (totalWidth / 16) * tileX;
+            int tileTop = (totalHeight / 16) * tileY;
+            int tileRight = (totalWidth / 16) * (tileX+1);
+            int tileBottom = (totalHeight / 16) * (tileY+1);
+
+            //load sheet in array
+            Color[] sheetPixels = new Color[totalWidth * totalHeight];
+            sheet.GetData<Color>(sheetPixels);
+
+            //Create array for tile
+            Texture2D newtile = new Texture2D(gameInstance.GraphicsDevice, totalWidth / 16, totalHeight / 16);
+            Color[] tilePixels = new Color[(totalWidth / 16) * (totalHeight / 16)];
+            
+            //Fill the tilepixels array
+            int j = 0;
+            for (int i = 0; i < sheetPixels.Length; i++)
+            {
+                int currentX = i % totalWidth;
+                int currentY = i / totalWidth;
+                if (currentX >= tileLeft && currentX < tileRight) //good column
+                {
+                    if (currentY >= tileTop && currentY < tileBottom) //good row
+                    {
+                        if (unBiome)
+                        {
+                            Color biome = new Color(58, 203, 0);
+
+                            tilePixels[j] = Color.Lerp(biome, sheetPixels[i], 0.7f);
+                        }
+                        else
+                        {
+                            tilePixels[j] = sheetPixels[i];
+                        }
+                        j++;
+                    }
+                }
+            }
+
+            //put the array in a texture
+            newtile.SetData<Color>(tilePixels);
+            
+            //and put it in the game :)
+            return newtile;
         }
 
         // Check if someone removed some block textures (anti-hack)

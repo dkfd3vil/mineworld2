@@ -92,6 +92,7 @@ namespace MineWorld
             // Discover remote servers.
             try
             {
+                /*
                 string publicList = HttpRequest.Get("http://www.humorco.nl/mineworld/servers.php", null);
                 foreach (string s in publicList.Split("\r\n".ToCharArray()))
                 {
@@ -106,6 +107,7 @@ namespace MineWorld
                         }
                     }
                 }
+                */
             }
             catch (Exception)
             {
@@ -250,12 +252,9 @@ namespace MineWorld
                                                     propertyBag.blockEngine.DownloadComplete();
                                                 }
                                             }
-                                            catch (Exception e)
+                                            catch
                                             {
-                                                //Console.OpenStandardError();
-                                                //Console.Error.WriteLine(e.Message);
-                                                //Console.Error.WriteLine(e.StackTrace);
-                                                //Console.Error.Close();
+                                                MessageBox.Show("Map bulk transfer failed");
                                             }
                                         }
                                         break;
