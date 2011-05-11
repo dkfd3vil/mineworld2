@@ -175,7 +175,8 @@ namespace MineWorld
                                 {
                                     if (randGen.Next(0, 6) == 3)
                                     {
-                                        SetBlock(i, j, k, BlockType.Grass);
+                                        SetBlock(i,++j, k, BlockType.Grass);
+                                        j--;
                                     }
                                 }
                             }
@@ -184,32 +185,6 @@ namespace MineWorld
 
         public void CalcBlocks()
         {
-            ushort x;
-            ushort y;
-            ushort z;
-            // Explode TNT if lava touches it
-            foreach (IClient p in playerList.Values)
-            {
-                try
-                {
-                    foreach (Vector3 explosive in p.ExplosiveList)
-                    {
-
-                        x = (ushort)explosive.X;
-                        y = (ushort)explosive.Y;
-                        z = (ushort)explosive.Z;
-                        if (blockList[x + 1, y, z] == BlockType.Lava || blockList[x - 1, y, z] == BlockType.Lava || blockList[x, y, z + 1] == BlockType.Lava || blockList[x, y, z - 1] == BlockType.Lava || blockList[x, y + 1, z] == BlockType.Lava || blockList[x, y - 1, z] == BlockType.Lava)
-                        {
-                            DetonateAtPoint(x, y, z);
-                        }
-                    }
-                }
-                catch
-                {
-                    //no more explosives in chain reaction
-                }
-            }
-
             // If water touches lava or otherwise around turn it into stone then
             for (ushort i = 0; i < Defines.MAPSIZE; i++)
                 for (ushort j = 0; j < Defines.MAPSIZE; j++)

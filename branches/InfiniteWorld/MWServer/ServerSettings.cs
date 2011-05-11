@@ -1,7 +1,6 @@
 ﻿//Contains assorted server settings
 namespace MineWorld
 {
-    //TODO Convert from struct to class
     public struct ServerSettings
     {
         public string Servername;

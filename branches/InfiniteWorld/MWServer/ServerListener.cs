@@ -14,7 +14,6 @@ namespace MineWorld
         private MineWorldServer IServer;
         private NetMessageType msgType;
         private NetConnection msgSender;
-        uint duplicateNameCount = 0;
 
         public ServerListener(MineWorldNetServer serv,MineWorldServer iserv)
         {
@@ -26,6 +25,8 @@ namespace MineWorld
         public void start()
         {
             NetBuffer msgBuffer = netServer.CreateBuffer();
+            uint duplicateNameCount = 0;
+
             while (true)
             {
                 while (netServer.ReadMessage(msgBuffer, out msgType, out msgSender))
@@ -351,10 +352,10 @@ namespace MineWorld
                                                 switch (key)
                                                 {
                                                     case KeyBoardButtons.AltFire:
-                                                        IServer.UsePickaxe(player, playerPosition, playerHeading);
+                                                        IServer.RemoveBlock(player, playerPosition, playerHeading);
                                                         break;
                                                     case KeyBoardButtons.Fire:
-                                                        IServer.UseConstructionGun(player, playerPosition, playerHeading, blockType);
+                                                        IServer.PlaceBlock(player, playerPosition, playerHeading, blockType);
                                                         break;
                                                 }
                                             }
