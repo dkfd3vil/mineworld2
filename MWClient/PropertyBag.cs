@@ -342,43 +342,6 @@ namespace MineWorld
             UpdateCamera(null);
         }
 
-        /*
-        public void equipWeps()
-        {
-            bool allWeps = true;//TODO We are giving every player all tools
-
-            playerToolSelected = 0;
-            playerBlockSelected = 0;
-            //HACK !!!!!!!
-            if (allWeps)
-            {
-                playerTools = new PlayerTools[5] { PlayerTools.Pickaxe,
-                PlayerTools.ConstructionGun,
-                PlayerTools.DeconstructionGun,
-                PlayerTools.ProspectingRadar,
-                PlayerTools.Detonator };
-
-                playerBlocks = new BlockType[16] {
-                                             BlockType.SolidRed,
-                                             BlockType.SolidBlue,
-                                             BlockType.TransRed,
-                                             BlockType.TransBlue,
-                                             BlockType.Road,
-                                             BlockType.Ladder,
-                                             BlockType.Jump,
-                                             BlockType.Shock,
-                                             BlockType.BeaconRed,
-                                             BlockType.BeaconBlue,
-                                             BlockType.BankRed,
-                                             BlockType.BankBlue,
-                                             BlockType.Explosive,
-                                             BlockType.Road,
-                                             BlockType.Lava,
-                                             BlockType.Adminblock,};
-            }
-        }
-         */
-
         public void UseTool(KeyBoardButtons key)
         {
             if (netClient.Status != NetConnectionStatus.Connected)
@@ -389,7 +352,7 @@ namespace MineWorld
             msgBuffer.Write((byte)key);
             msgBuffer.Write(playerPosition);
             msgBuffer.Write(playerCamera.GetLookVector());
-            msgBuffer.Write((byte)BlockType.Leaves);
+            msgBuffer.Write((byte)BlockType.Leafs);
             netClient.SendMessage(msgBuffer, NetChannel.ReliableUnordered);
         }
         /*

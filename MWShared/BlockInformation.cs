@@ -18,11 +18,12 @@ namespace MineWorld
         Rock = 6,
         Metal = 7,
         Grass = 8,
-        Leaves = 9,
+        Leafs = 9,
         Wood = 10,
         Water = 11,
         Lava = 12,
         Adminblock = 13,
+        RedFlower = 14,
 
         //Nature + usermade blocks
         //Range from 101 - 150
@@ -83,6 +84,7 @@ namespace MineWorld
         Metal,
         DirtSign,
         Lava,
+        RedFlower,
         Road,
         RoadTop,
         RoadBottom,
@@ -184,7 +186,7 @@ namespace MineWorld
                                 return BlockTexture.Dirt;
                             }
                     }
-                case BlockType.Leaves:
+                case BlockType.Leafs:
                     {
                         return BlockTexture.Leafs;
                     }
@@ -326,15 +328,96 @@ namespace MineWorld
             return BlockTexture.None;
         }
 
+        public static bool IsDiggable(BlockType type)
+        {
+            switch (type)
+            {
+                case BlockType.Adminblock:
+                case BlockType.None:
+                case BlockType.Water:
+                    return false;
+                default:
+                    return true;
+            }
+        }
+
+        public static MineWorldSound GetBlockSound(BlockType type)
+        {
+            switch (type)
+            {
+                case BlockType.Ore:
+                case BlockType.Diamond:
+                case BlockType.Gold:
+                    return MineWorldSound.DigMetal;
+                default:
+                    return MineWorldSound.DigDirt;
+            }
+        }
+
         public static bool IsLightEmittingBlock(BlockType type)
         {
-            if (type == BlockType.Lava || type == BlockType.Shock || type==BlockType.Road || type==BlockType.Lamp) return true;
-            return false;
+            switch (type)
+            {
+                case BlockType.Lava:
+                case BlockType.Shock:
+                case BlockType.Road:
+                case BlockType.Lamp:
+                    return true;
+                default:
+                    return false;
+            }
         }
 
         public static bool IsLightTransparentBlock(BlockType type)
         {
-            if (type == BlockType.None || type == BlockType.Water) return true;
+            switch (type)
+            {
+                case BlockType.None:
+                case BlockType.Water:
+                case BlockType.Leafs:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
+        public static bool IsTransparentBlock(BlockType type)
+        {
+            switch (type)
+            {
+                case BlockType.Water:
+                case BlockType.Grass:
+                case BlockType.Leafs:
+                case BlockType.TransBlue:
+                case BlockType.TransRed:
+                    return true;
+
+                default:
+                    return false;
+            }
+        }
+
+        public static bool IsPassibleBlock(BlockType type)
+        {
+            switch (type)
+            {
+                case BlockType.None:
+                case BlockType.Water:
+                case BlockType.TransBlue:
+                case BlockType.TransRed:
+                case BlockType.Grass:
+                case BlockType.Lava:
+                case BlockType.RedFlower:
+                    return true;
+
+                default:
+                    return false;
+            }
+        }
+
+        public static bool IsPlantBlock(BlockTexture text)
+        {
+            if (text == BlockTexture.RedFlower) return true;
             return false;
         }
     }

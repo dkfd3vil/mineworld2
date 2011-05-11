@@ -331,31 +331,31 @@ namespace MineWorld
             }
 
             //basic leaves
-            data[x, y, z - (trunklength+1)] = BlockType.Leaves;
-            data[x, y + 1, z - trunklength] = BlockType.Leaves;
-            data[x, y - 1, z - trunklength] = BlockType.Leaves;
-            data[x + 1, y, z - trunklength] = BlockType.Leaves;
-            data[x - 1, y, z - trunklength] = BlockType.Leaves;
+            data[x, y, z - (trunklength+1)] = BlockType.Leafs;
+            data[x, y + 1, z - trunklength] = BlockType.Leafs;
+            data[x, y - 1, z - trunklength] = BlockType.Leafs;
+            data[x + 1, y, z - trunklength] = BlockType.Leafs;
+            data[x - 1, y, z - trunklength] = BlockType.Leafs;
 
             if (trunklength > 3)
             {
-                data[x, y + 1, z - (trunklength - 1)] = BlockType.Leaves;
-                data[x, y - 1, z - (trunklength - 1)] = BlockType.Leaves;
-                data[x + 1, y, z - (trunklength - 1)] = BlockType.Leaves;
-                data[x - 1, y, z - (trunklength - 1)] = BlockType.Leaves;
+                data[x, y + 1, z - (trunklength - 1)] = BlockType.Leafs;
+                data[x, y - 1, z - (trunklength - 1)] = BlockType.Leafs;
+                data[x + 1, y, z - (trunklength - 1)] = BlockType.Leafs;
+                data[x - 1, y, z - (trunklength - 1)] = BlockType.Leafs;
             }
 
             //random leaves
-            data[x, y + 2, z - (trunklength - randGen.Next(1,3))] = BlockType.Leaves;
-            data[x, y - 2, z - (trunklength - randGen.Next(1, 3))] = BlockType.Leaves;
-            data[x - 2, y, z - (trunklength - randGen.Next(1, 3))] = BlockType.Leaves;
+            data[x, y + 2, z - (trunklength - randGen.Next(1,3))] = BlockType.Leafs;
+            data[x, y - 2, z - (trunklength - randGen.Next(1, 3))] = BlockType.Leafs;
+            data[x - 2, y, z - (trunklength - randGen.Next(1, 3))] = BlockType.Leafs;
 
-            data[x, y + 1, z - (trunklength - randGen.Next(1, 3))] = BlockType.Leaves;
-            data[x, y - 1, z - (trunklength - randGen.Next(1, 3))] = BlockType.Leaves;
-            data[x + 1, y, z - (trunklength - randGen.Next(1, 3))] = BlockType.Leaves;
-            data[x - 1, y, z - (trunklength - randGen.Next(1, 3))] = BlockType.Leaves;
-            data[x, y + 1, z - (trunklength - randGen.Next(1, 3))] = BlockType.Leaves;
-            data[x - 1, y, z - (trunklength - randGen.Next(1, 3))] = BlockType.Leaves;
+            data[x, y + 1, z - (trunklength - randGen.Next(1, 3))] = BlockType.Leafs;
+            data[x, y - 1, z - (trunklength - randGen.Next(1, 3))] = BlockType.Leafs;
+            data[x + 1, y, z - (trunklength - randGen.Next(1, 3))] = BlockType.Leafs;
+            data[x - 1, y, z - (trunklength - randGen.Next(1, 3))] = BlockType.Leafs;
+            data[x, y + 1, z - (trunklength - randGen.Next(1, 3))] = BlockType.Leafs;
+            data[x - 1, y, z - (trunklength - randGen.Next(1, 3))] = BlockType.Leafs;
 
 
         }
