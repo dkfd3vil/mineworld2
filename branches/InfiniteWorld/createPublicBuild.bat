@@ -10,6 +10,8 @@ copy Output\debug\MWServer.exe PublicBuild\MWServer.exe
 mkdir PublicBuild\ClientConfigs
 mkdir PublicBuild\ServerConfigs
 mkdir PublicBuild\Content
+mkdir PublicBuild\Logs
+mkdir PublicBuild\Backups
 xcopy Output\debug\ClientConfigs\* PublicBuild\ClientConfigs\ /S /y
 xcopy Output\debug\ServerConfigs\* PublicBuild\ServerConfigs\ /S /y
 xcopy Output\debug\Content\* PublicBuild\Content\ /S /y

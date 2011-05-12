@@ -34,11 +34,11 @@ namespace MineWorld
             BlockType[, ,] caveData = GenerateConstant(size, BlockType.Dirt);
 
             // Add ore.
-            AddOre(ref caveData, size);
+            //AddOre(ref caveData, size);
 
             // Add minerals.
-            AddGold(ref caveData, size);
-            AddDiamond(ref caveData, size);
+            //AddGold(ref caveData, size);
+            //AddDiamond(ref caveData, size);
 
             // Level off everything above ground level, replacing it with mountains.
             float[, ,] mountainNoise = GeneratePerlinNoise(32);
@@ -99,10 +99,6 @@ namespace MineWorld
                 AddAdminblocks(ref caveData, size);
             }
 
-            // Add starting positions.
-            AddStartingPosition(ref caveData, size, size - 5, size - 5, Defines.GROUND_LEVEL, BlockType.HomeRed);
-            AddStartingPosition(ref caveData, size, 5, 5, Defines.GROUND_LEVEL, BlockType.HomeBlue);
-
             GC.Collect();
 
             return caveData;
@@ -123,28 +119,8 @@ namespace MineWorld
                 orefactor = Cgsettings.Orefactor;
             }
 
-            for (int i = 0; i < orefactor; i++)
-                PaintWithRandomWalk(ref data, ref oreNoise, size, 1, BlockType.Ore, false);
-        }
-
-        private void AddStartingPosition(ref BlockType[, ,] data, int size, int x, int y, int z, BlockType blockType)
-        {
-            for (int i = 0; i < size; i++)
-                for (int j = 0; j < size; j++)
-                    for (int k = 0; k < size; k++)
-                    {
-                        double dist = Math.Sqrt(Math.Pow(x - i, 2) + Math.Pow(y - j, 2) + Math.Pow(z - k, 2));
-                        if (dist < 4)
-                        {
-                            if (k <= z)
-                                data[i, j, k] = BlockType.None;
-                            else if (k == z+1)
-                                data[i, j, k] = BlockType.Metal;
-                            else
-                                data[i, j, k] = BlockType.Dirt;
-                        }
-                    }
-            data[x, y, z] = blockType;
+            //for (int i = 0; i < orefactor; i++)
+                //PaintWithRandomWalk(ref data, ref oreNoise, size, 1, BlockType.Ore, false);
         }
 
         private void AddRocks(ref BlockType[, ,] data, int size)
@@ -222,7 +198,7 @@ namespace MineWorld
             {
                 int x = randGen.Next(0, size);
                 int y = randGen.Next(0, size);
-                int z = Defines.GROUND_LEVEL;
+                int z = Defines.GROUND_LEVEL - 1;
 
                 if (data[x, y, z] == BlockType.None && z + 1 < size - 1)
                 {
@@ -236,6 +212,7 @@ namespace MineWorld
             }
         }
 
+        /*
         private void AddDiamond(ref BlockType[, ,] data, int size)
         {
             int numDiamonds = 16;
@@ -255,6 +232,7 @@ namespace MineWorld
                 data[x, y, z] = BlockType.Diamond;
             }
         }
+         */
 
         private void AddTrees(ref BlockType[, ,] data, int size)
         {
@@ -374,6 +352,7 @@ namespace MineWorld
             }
         }
 
+        /*
         // Gold appears in fairly numerous streaks, located at medium depths.
         private void AddGold(ref BlockType[, ,] data, int size)
         {
@@ -423,6 +402,7 @@ namespace MineWorld
                 }
             }
         }
+         */
 
         // Generates a cube of noise with sides of length size. Noise falls in a linear
         // distribution ranging from 0 to magnitude.
@@ -648,10 +628,10 @@ namespace MineWorld
                     uint c = 0xFF000000;
                     if (data[x,y,z] == BlockType.Dirt)
                         c = 0xFFFFFFFF;
-                    if (data[x, y, z] == BlockType.Ore)
-                        c = 0xFF888888;
-                    if (data[x, y, z] == BlockType.Gold)
-                        c = 0xFFFF0000;
+                    //if (data[x, y, z] == BlockType.Ore)
+                        //c = 0xFF888888;
+                    //if (data[x, y, z] == BlockType.Gold)
+                        //c = 0xFFFF0000;
                     if (data[x, y, z] == BlockType.Rock)
                         c = 0xFF0000FF;
                     pixelData[y * 256 + x] = c;

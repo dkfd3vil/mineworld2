@@ -4,9 +4,9 @@ namespace MineWorld
 {
     public class Defines
     {
-        public const string MINEWORLDSERVER_VERSION = "Mine World Alpha 4.0";
-        public const string MINEWORLDCLIENT_VERSION = "Mine World Alpha 4.0";
-        public const double MINEWORLD_VER = 4.0;
+        public const string MINEWORLDSERVER_VERSION = "Mine World Alpha 4.2";
+        public const string MINEWORLDCLIENT_VERSION = "Mine World Alpha 4.2";
+        public const double MINEWORLD_VER = 4.2;
 
         public const int MAPSIZE = 64;
         //Mapsize % Packetsize MUST EQUAL 0!!!

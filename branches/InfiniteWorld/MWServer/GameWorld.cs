@@ -111,14 +111,14 @@ namespace MineWorld
         {
             ushort s;
             j++;
-            if ((int)j == Defines.MAPSIZE - 2)
+            if ((int)j == Defines.MAPSIZE - 1)
             {
                 return true;
             }
             for (s = j; s < Defines.MAPSIZE; s++)
             {
                 BlockType blockatloc = blockList[i,s,k];
-                if (blockatloc != BlockType.None && blockatloc != BlockType.Leafs)
+                if (!BlockInformation.IsLightTransparentBlock(blockatloc))
                 {
                     return false;
                 }

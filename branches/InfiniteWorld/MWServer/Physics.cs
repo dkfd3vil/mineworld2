@@ -66,6 +66,7 @@ namespace MineWorld
                 if (timeSpanCalcGrass.TotalMilliseconds > 2500)
                 {
                     CalcGrass();
+                    CalcFlowers();
                     lastCalcGrass = DateTime.Now;
                 }
                 Thread.Sleep(25);
@@ -175,9 +176,37 @@ namespace MineWorld
                                 {
                                     if (randGen.Next(0, 6) == 3)
                                     {
-                                        SetBlock(i,++j, k, BlockType.Grass);
-                                        j--;
+                                        SetBlock(i, j, k, BlockType.Grass);
                                     }
+                                }
+                            }
+                        }
+        }
+
+        public void CalcFlowers()
+        {
+            for (ushort i = 0; i < Defines.MAPSIZE; i++)
+                for (ushort j = 0; j < Defines.MAPSIZE; j++)
+                    for (ushort k = 0; k < Defines.MAPSIZE; k++)
+                        if (blockList[i, j, k] == BlockType.Grass)
+                        {
+                            int rand = randGen.Next(0, 6);
+                            if ((int)j == Defines.MAPSIZE - 1)
+                            {
+                                rand = 0;
+                            }
+                            if (rand == 3)
+                            {
+                                if (blockList[i, j + 1, k] == BlockType.None)
+                                {
+                                    SetBlock(i, ++j, k, BlockType.RedFlower);
+                                }
+                            }
+                            else if (rand == 4)
+                            {
+                                if (blockList[i, j + 1, k] == BlockType.None)
+                                {
+                                    SetBlock(i, ++j, k, BlockType.YellowFlower);
                                 }
                             }
                         }
@@ -232,6 +261,17 @@ namespace MineWorld
                                     SetBlock(i, j, (ushort)(k + 1), BlockType.Rock);
                                 }
                             }
+                        }
+                        else if (blockList[i, j, k] == BlockType.YellowFlower || blockList[i, j, k] == BlockType.RedFlower)
+                        {
+                            //TODO WIP Removal of flowers when there is no grass beneath them
+                            //int y = j;
+                            //BlockType typeBelow = blockList[i, y - 1, k];
+                            //if (typeBelow != BlockType.Grass)
+                            //{
+                                //Omg a floating flower
+                                //SetBlock(i, j, k, BlockType.None);
+                            //}
                         }
         }
 

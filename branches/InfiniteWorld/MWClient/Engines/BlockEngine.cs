@@ -148,60 +148,24 @@ namespace MineWorld
             // Check the textures
             if (!checkTextures())
             {
-                System.Environment.FailFast("Texture hack detected");
+                Environment.FailFast("Terrain.png is missing");
             }
 
             // Load the textures we'll use.
             blockTextures = new IMTexture[(byte)BlockTexture.MAXIMUM];
             blockTextures[(byte)BlockTexture.None] = new IMTexture(null);
-            blockTextures[(byte)BlockTexture.Water] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_trans_water"));
-            //blockTextures[(byte)BlockTexture.Spring] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_spring"));
-            blockTextures[(byte)BlockTexture.GrassSide] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_grass_side"));
-            blockTextures[(byte)BlockTexture.Grass] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_grass"));
-            blockTextures[(byte)BlockTexture.Adminblock] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_adminblock"));
-            blockTextures[(byte)BlockTexture.Dirt] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_dirt"));
-            blockTextures[(byte)BlockTexture.Rock] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_rock"));
-            blockTextures[(byte)BlockTexture.Ore] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_ore"));
-            blockTextures[(byte)BlockTexture.Gold] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_silver"));
-            blockTextures[(byte)BlockTexture.Diamond] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_diamond"));
-            blockTextures[(byte)BlockTexture.HomeRed] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_home_red"));
-            blockTextures[(byte)BlockTexture.HomeBlue] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_home_blue"));
-            blockTextures[(byte)BlockTexture.SolidRed] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_red"));
-            blockTextures[(byte)BlockTexture.SolidBlue] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_blue"));
-            blockTextures[(byte)BlockTexture.Ladder] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_ladder"));
-            blockTextures[(byte)BlockTexture.LadderTop] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_ladder_top"));
-            blockTextures[(byte)BlockTexture.Spikes] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_spikes"));
-            blockTextures[(byte)BlockTexture.Jump] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_jump"));
-            blockTextures[(byte)BlockTexture.JumpTop] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_jump_top"));
-            blockTextures[(byte)BlockTexture.Explosive] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_explosive"));
-            blockTextures[(byte)BlockTexture.Metal] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_metal"));
-            blockTextures[(byte)BlockTexture.DirtSign] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_dirt_sign"));
-            blockTextures[(byte)BlockTexture.BankTopRed] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_bank_top_red"));
-            blockTextures[(byte)BlockTexture.BankLeftRed] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_bank_left_red"));
-            blockTextures[(byte)BlockTexture.BankFrontRed] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_bank_front_red"));
-            blockTextures[(byte)BlockTexture.BankRightRed] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_bank_right_red"));
-            blockTextures[(byte)BlockTexture.BankBackRed] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_bank_back_red"));
-            blockTextures[(byte)BlockTexture.BankTopBlue] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_bank_top_blue"));
-            blockTextures[(byte)BlockTexture.BankLeftBlue] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_bank_left_blue"));
-            blockTextures[(byte)BlockTexture.BankFrontBlue] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_bank_front_blue"));
-            blockTextures[(byte)BlockTexture.BankRightBlue] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_bank_right_blue"));
-            blockTextures[(byte)BlockTexture.BankBackBlue] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_bank_back_blue"));
-            blockTextures[(byte)BlockTexture.TeleSideA] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_teleporter_a"));
-            blockTextures[(byte)BlockTexture.TeleSideB] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_teleporter_b"));
-            blockTextures[(byte)BlockTexture.TeleTop] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_teleporter_top"));
-            blockTextures[(byte)BlockTexture.TeleBottom] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_teleporter_bottom"));
-            blockTextures[(byte)BlockTexture.Lava] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_lava"));
-            blockTextures[(byte)BlockTexture.Road] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_road"));
-            blockTextures[(byte)BlockTexture.RoadTop] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_road_top"));
-            blockTextures[(byte)BlockTexture.RoadBottom] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_road_bottom"));
-            //blockTextures[(byte)BlockTexture.BeaconRed] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_beacon_top_red"));
-            //blockTextures[(byte)BlockTexture.BeaconBlue] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_beacon_top_blue"));
-            blockTextures[(byte)BlockTexture.TransRed] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_trans_red"));
-            blockTextures[(byte)BlockTexture.TransBlue] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_trans_blue"));
-            blockTextures[(byte)BlockTexture.Wood] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_tree_top"));
-            blockTextures[(byte)BlockTexture.WoodSide] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_tree_side"));
-            blockTextures[(byte)BlockTexture.Leafs] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_tree_leaves"));
-            blockTextures[(byte)BlockTexture.Lamp] = new IMTexture(gameInstance.Content.Load<Texture2D>("blocks/tex_block_lamp"));
+            blockTextures[(byte)BlockTexture.Water] = new IMTexture(loadTextureFromMinecraft("terrain.png", 13, 12));
+            blockTextures[(byte)BlockTexture.GrassSide] = new IMTexture(loadTextureFromMinecraft("terrain.png", 3, 0));
+            blockTextures[(byte)BlockTexture.Grass] = new IMTexture(loadTextureFromMinecraft("terrain.png", 0, 0, true));
+            blockTextures[(byte)BlockTexture.Adminblock] = new IMTexture(loadTextureFromMinecraft("terrain.png", 5, 2));
+            blockTextures[(byte)BlockTexture.Dirt] = new IMTexture(loadTextureFromMinecraft("terrain.png", 2, 0));
+            blockTextures[(byte)BlockTexture.Rock] = new IMTexture(loadTextureFromMinecraft("terrain.png", 0, 1));
+            blockTextures[(byte)BlockTexture.Lava] = new IMTexture(loadTextureFromMinecraft("terrain.png", 15, 15));
+            blockTextures[(byte)BlockTexture.Wood] = new IMTexture(loadTextureFromMinecraft("terrain.png", 5, 1));
+            blockTextures[(byte)BlockTexture.WoodSide] = new IMTexture(loadTextureFromMinecraft("terrain.png", 4, 1));
+            blockTextures[(byte)BlockTexture.Leafs] = new IMTexture(loadTextureFromMinecraft("terrain.png", 4, 3));
+            blockTextures[(byte)BlockTexture.RedFlower] = new IMTexture(loadTextureFromMinecraft("terrain.png", 12, 0));
+            blockTextures[(byte)BlockTexture.YellowFlower] = new IMTexture(loadTextureFromMinecraft("terrain.png", 13, 0));
 
             // Load our effects.
             basicEffect = gameInstance.Content.Load<Effect>("effect_basic");
@@ -226,63 +190,67 @@ namespace MineWorld
                 bloomPosteffect = null;
         }
 
+        public Texture2D loadTextureFromMinecraft(String file, int tileX, int tileY)
+        {
+            return loadTextureFromMinecraft(file, tileX, tileY, false);
+        }
+
+        public Texture2D loadTextureFromMinecraft(String file, int tileX, int tileY,bool unBiome)
+        {
+            Texture2D sheet = Texture2D.FromFile(gameInstance.GraphicsDevice, file);
+
+            //calculate rectangle for tile in sheet
+            int totalWidth = sheet.Width;
+            int totalHeight = sheet.Height;
+            int tileLeft = (totalWidth / 16) * tileX;
+            int tileTop = (totalHeight / 16) * tileY;
+            int tileRight = (totalWidth / 16) * (tileX+1);
+            int tileBottom = (totalHeight / 16) * (tileY+1);
+
+            //load sheet in array
+            Color[] sheetPixels = new Color[totalWidth * totalHeight];
+            sheet.GetData<Color>(sheetPixels);
+
+            //Create array for tile
+            Texture2D newtile = new Texture2D(gameInstance.GraphicsDevice, totalWidth / 16, totalHeight / 16);
+            Color[] tilePixels = new Color[(totalWidth / 16) * (totalHeight / 16)];
+            
+            //Fill the tilepixels array
+            int j = 0;
+            for (int i = 0; i < sheetPixels.Length; i++)
+            {
+                int currentX = i % totalWidth;
+                int currentY = i / totalWidth;
+                if (currentX >= tileLeft && currentX < tileRight) //good column
+                {
+                    if (currentY >= tileTop && currentY < tileBottom) //good row
+                    {
+                        if (unBiome)
+                        {
+                            Color biome = new Color(58, 203, 0);
+
+                            tilePixels[j] = Color.Lerp(biome, sheetPixels[i], 0.7f);
+                        }
+                        else
+                        {
+                            tilePixels[j] = sheetPixels[i];
+                        }
+                        j++;
+                    }
+                }
+            }
+
+            //put the array in a texture
+            newtile.SetData<Color>(tilePixels);
+            
+            //and put it in the game :)
+            return newtile;
+        }
+
         // Check if someone removed some block textures (anti-hack)
         public bool checkTextures()
         {
-            if (!TextureExists("blocks/tex_block_grass_side")) { return false; }
-            if (!TextureExists("blocks/tex_block_grass")) { return false; }
-            if (!TextureExists("blocks/tex_block_adminblock")) { return false; }
-            if (!TextureExists("blocks/tex_block_dirt")) { return false; }
-            if (!TextureExists("blocks/tex_block_rock")) { return false; }
-            if (!TextureExists("blocks/tex_block_ore")) { return false; }
-            if (!TextureExists("blocks/tex_block_silver")) { return false; }
-            if (!TextureExists("blocks/tex_block_diamond")) { return false; }
-            if (!TextureExists("blocks/tex_block_home_red")) { return false; }
-            if (!TextureExists("blocks/tex_block_home_blue")) { return false; }
-            if (!TextureExists("blocks/tex_block_red")) { return false; }
-            if (!TextureExists("blocks/tex_block_blue")) { return false; }
-            if (!TextureExists("blocks/tex_block_ladder")) { return false; }
-            if (!TextureExists("blocks/tex_block_ladder_top")) { return false; }
-            if (!TextureExists("blocks/tex_block_spikes")) { return false; }
-            if (!TextureExists("blocks/tex_block_jump")) { return false; }
-            if (!TextureExists("blocks/tex_block_jump_top")) { return false; }
-            if (!TextureExists("blocks/tex_block_explosive")) { return false; }
-            if (!TextureExists("blocks/tex_block_metal")) { return false; }
-            if (!TextureExists("blocks/tex_block_dirt_sign")) { return false; }
-            if (!TextureExists("blocks/tex_block_bank_top_red")) { return false; }
-            if (!TextureExists("blocks/tex_block_bank_left_red")) { return false; }
-            if (!TextureExists("blocks/tex_block_bank_front_red")) { return false; }
-            if (!TextureExists("blocks/tex_block_bank_right_red")) { return false; }
-            if (!TextureExists("blocks/tex_block_bank_back_red")) { return false; }
-            if (!TextureExists("blocks/tex_block_bank_top_blue")) { return false; }
-            if (!TextureExists("blocks/tex_block_bank_left_blue")) { return false; }
-            if (!TextureExists("blocks/tex_block_bank_front_blue")) { return false; }
-            if (!TextureExists("blocks/tex_block_bank_right_blue")) { return false; }
-            if (!TextureExists("blocks/tex_block_bank_back_blue")) { return false; }
-            if (!TextureExists("blocks/tex_block_teleporter_a")) { return false; }
-            if (!TextureExists("blocks/tex_block_teleporter_b")) { return false; }
-            if (!TextureExists("blocks/tex_block_teleporter_top")) { return false; }
-            if (!TextureExists("blocks/tex_block_teleporter_bottom")) { return false; }
-            if (!TextureExists("blocks/tex_block_lava")) { return false; }
-            if (!TextureExists("blocks/tex_block_road")) { return false; }
-            if (!TextureExists("blocks/tex_block_road_top")) { return false; }
-            if (!TextureExists("blocks/tex_block_road_bottom")) { return false; }
-            if (!TextureExists("blocks/tex_block_beacon_top_red")) { return false; }
-            if (!TextureExists("blocks/tex_block_beacon_top_blue")) { return false; }
-            if (!TextureExists("blocks/tex_block_trans_red")) { return false; }
-            if (!TextureExists("blocks/tex_block_trans_blue")) { return false; }
-            if (!TextureExists("blocks/tex_block_trans_water")) { return false; }
-            if (!TextureExists("blocks/tex_block_tree_side")) { return false; }
-            if (!TextureExists("blocks/tex_block_tree_top")) { return false; }
-            if (!TextureExists("blocks/tex_block_lamp")) { return false; }
-            //if (!TextureExists("blocks/tex_block_spring.png")) { return false; }
-            return true;
-        }
-
-        // Check if a texture exists (anti-hack)
-        public bool TextureExists(String texture)
-        {
-            return File.Exists("content/" + texture + ".xnb");
+            return File.Exists("terrain.png");
         }
 
         // Returns true if we are solid at this point.
@@ -383,13 +351,6 @@ namespace MineWorld
                         basicEffect.CurrentTechnique = basicEffect.Techniques["Block"];
                         break;
                     }
-                case BlockTexture.TransBlue:
-                case BlockTexture.TransRed:
-                    {
-                        renderTranslucent = true;
-                        basicEffect.CurrentTechnique = basicEffect.Techniques["Block"];
-                        break;
-                    }
                 default:
                     {
                         basicEffect.CurrentTechnique = basicEffect.Techniques["Block"];
@@ -420,7 +381,7 @@ namespace MineWorld
                 }
 
                 graphicsDevice.RenderState.CullMode = CullMode.CullCounterClockwiseFace;
-                graphicsDevice.SamplerStates[0].MagFilter = TextureFilter.Linear;
+                graphicsDevice.SamplerStates[0].MagFilter = TextureFilter.None;
                 graphicsDevice.VertexDeclaration = vertexDeclaration;
                 graphicsDevice.Vertices[0].SetSource(vertexBuffer, 0, VertexPositionTextureShade.SizeInBytes);
                 graphicsDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, vertexBuffer.SizeInBytes / VertexPositionTextureShade.SizeInBytes / 3);
@@ -472,7 +433,7 @@ namespace MineWorld
             ulong vertexPointer = 0;
             foreach (uint faceInfo in faceList.Keys)
             {
-                BuildFaceVertices(ref vertexList, vertexPointer, faceInfo,texture); /*,texture == (int)BlockTexture.Spikes);*/
+                BuildFaceVertices(ref vertexList, vertexPointer, faceInfo, texture);
                 vertexPointer += 6;            
             }
             DynamicVertexBuffer vertexBuffer = new DynamicVertexBuffer(gameInstance.GraphicsDevice, vertexList.Length * VertexPositionTextureShade.SizeInBytes, BufferUsage.WriteOnly);
@@ -492,7 +453,7 @@ namespace MineWorld
             }
         }
 
-        private void BuildFaceVertices(ref VertexPositionTextureShade[] vertexList, ulong vertexPointer, uint faceInfo, int texture)/*, bool isShockBlock)*/
+        private void BuildFaceVertices(ref VertexPositionTextureShade[] vertexList, ulong vertexPointer, uint faceInfo, int texture)
         {
             // Decode the face information.
             ushort x = 0, y = 0, z = 0;
@@ -504,9 +465,9 @@ namespace MineWorld
 
             switch ((BlockTexture)texture)
             {
-                case BlockTexture.GrassSide:
-                case BlockTexture.Grass:
-                    height = 0.1f;
+                case BlockTexture.RedFlower:
+                case BlockTexture.YellowFlower:
+                    height = 0.5f;
                     break;
                 default:
                     height = 1.0f;
@@ -592,47 +553,46 @@ namespace MineWorld
                 {
                     case BlockFaceDirection.XIncreasing:
                         {
-                            vertexList[vertexPointer + 0] = new VertexPositionTextureShade(new Vector3(x, y, z), new Vector2(0, 0), Math.Min(lightingEngine.GetLight(x + 1, y, z), 0.6));
-                            vertexList[vertexPointer + 1] = new VertexPositionTextureShade(new Vector3(x, y+height, z), new Vector2(1, 0), Math.Min(lightingEngine.GetLight(x + 1, y, z), 0.6));
-                            vertexList[vertexPointer + 2] = new VertexPositionTextureShade(new Vector3(x+1, y, z+1), new Vector2(0, 1), Math.Min(lightingEngine.GetLight(x + 1, y, z), 0.6));
-                            vertexList[vertexPointer + 3] = new VertexPositionTextureShade(new Vector3(x, y+height, z), new Vector2(0, 1), Math.Min(lightingEngine.GetLight(x + 1, y, z), 0.6));
-                            vertexList[vertexPointer + 4] = new VertexPositionTextureShade(new Vector3(x+1, y+height, z+1), new Vector2(1, 0), Math.Min(lightingEngine.GetLight(x + 1, y, z), 0.6));
-                            vertexList[vertexPointer + 5] = new VertexPositionTextureShade(new Vector3(x+1, y, z+1), new Vector2(1, 1), Math.Min(lightingEngine.GetLight(x + 1, y, z), 0.6));
+                            vertexList[vertexPointer + 0] = new VertexPositionTextureShade(new Vector3(x + 0.5f, y + height, z + 1), new Vector2(0, 0), Math.Min(lightingEngine.GetLight(x + 1, y, z), 0.6));
+                            vertexList[vertexPointer + 1] = new VertexPositionTextureShade(new Vector3(x + 0.5f, y + height, z), new Vector2(1, 0), Math.Min(lightingEngine.GetLight(x + 1, y, z), 0.6));
+                            vertexList[vertexPointer + 2] = new VertexPositionTextureShade(new Vector3(x + 0.5f, y, z + 1), new Vector2(0, 1), Math.Min(lightingEngine.GetLight(x + 1, y, z), 0.6));
+                            vertexList[vertexPointer + 3] = new VertexPositionTextureShade(new Vector3(x + 0.5f, y, z + 1), new Vector2(0, 1), Math.Min(lightingEngine.GetLight(x + 1, y, z), 0.6));
+                            vertexList[vertexPointer + 4] = new VertexPositionTextureShade(new Vector3(x + 0.5f, y + height, z), new Vector2(1, 0), Math.Min(lightingEngine.GetLight(x + 1, y, z), 0.6));
+                            vertexList[vertexPointer + 5] = new VertexPositionTextureShade(new Vector3(x + 0.5f, y, z), new Vector2(1, 1), Math.Min(lightingEngine.GetLight(x + 1, y, z), 0.6));
                         }
                         break;
 
 
                     case BlockFaceDirection.XDecreasing:
                         {
-                            vertexList[vertexPointer + 0] = new VertexPositionTextureShade(new Vector3(x + 1, y, z + 1), new Vector2(0, 1), Math.Min(lightingEngine.GetLight(x + 1, y, z), 0.6));
-                            vertexList[vertexPointer + 1] = new VertexPositionTextureShade(new Vector3(x, y + height, z), new Vector2(1, 0), Math.Min(lightingEngine.GetLight(x + 1, y, z), 0.6));
-                            vertexList[vertexPointer + 2] = new VertexPositionTextureShade(new Vector3(x, y, z), new Vector2(0, 0), Math.Min(lightingEngine.GetLight(x + 1, y, z), 0.6));
-                            vertexList[vertexPointer + 3] = new VertexPositionTextureShade(new Vector3(x + 1, y, z + 1), new Vector2(1, 1), Math.Min(lightingEngine.GetLight(x + 1, y, z), 0.6));
-                            vertexList[vertexPointer + 4] = new VertexPositionTextureShade(new Vector3(x + 1, y + height, z + 1), new Vector2(1, 0), Math.Min(lightingEngine.GetLight(x + 1, y, z), 0.6));
-                            vertexList[vertexPointer + 5] = new VertexPositionTextureShade(new Vector3(x, y + height, z), new Vector2(0, 1), Math.Min(lightingEngine.GetLight(x + 1, y, z), 0.6));
+                            vertexList[vertexPointer + 0] = new VertexPositionTextureShade(new Vector3(x + 0.5f, y + height, z), new Vector2(0, 0), Math.Min(lightingEngine.GetLight(x - 1, y, z), 0.6));
+                            vertexList[vertexPointer + 1] = new VertexPositionTextureShade(new Vector3(x + 0.5f, y + height, z + 1), new Vector2(1, 0), Math.Min(lightingEngine.GetLight(x - 1, y, z), 0.6));
+                            vertexList[vertexPointer + 2] = new VertexPositionTextureShade(new Vector3(x + 0.5f, y, z + 1), new Vector2(1, 1), Math.Min(lightingEngine.GetLight(x - 1, y, z), 0.6));
+                            vertexList[vertexPointer + 3] = new VertexPositionTextureShade(new Vector3(x + 0.5f, y + height, z), new Vector2(0, 0), Math.Min(lightingEngine.GetLight(x - 1, y, z), 0.6));
+                            vertexList[vertexPointer + 4] = new VertexPositionTextureShade(new Vector3(x + 0.5f, y, z + 1), new Vector2(1, 1), Math.Min(lightingEngine.GetLight(x - 1, y, z), 0.6));
+                            vertexList[vertexPointer + 5] = new VertexPositionTextureShade(new Vector3(x + 0.5f, y, z), new Vector2(0, 1), Math.Min(lightingEngine.GetLight(x - 1, y, z), 0.6));
                         }
                         break;
 
                     case BlockFaceDirection.ZIncreasing:
                         {
-                            vertexList[vertexPointer + 0] = new VertexPositionTextureShade(new Vector3(x + 1, y, z), new Vector2(0, 0), Math.Min(lightingEngine.GetLight(x + 1, y, z), 0.6));
-                            vertexList[vertexPointer + 1] = new VertexPositionTextureShade(new Vector3(x + 1, y + height, z), new Vector2(1, 0), Math.Min(lightingEngine.GetLight(x + 1, y, z), 0.6));
-                            vertexList[vertexPointer + 2] = new VertexPositionTextureShade(new Vector3(x, y, z + 1), new Vector2(0, 1), Math.Min(lightingEngine.GetLight(x + 1, y, z), 0.6));
-                            vertexList[vertexPointer + 3] = new VertexPositionTextureShade(new Vector3(x + 1, y + height, z), new Vector2(0, 1), Math.Min(lightingEngine.GetLight(x + 1, y, z), 0.6));
-                            vertexList[vertexPointer + 4] = new VertexPositionTextureShade(new Vector3(x, y + height, z + 1), new Vector2(1, 0), Math.Min(lightingEngine.GetLight(x + 1, y, z), 0.6));
-                            vertexList[vertexPointer + 5] = new VertexPositionTextureShade(new Vector3(x, y, z + 1), new Vector2(1, 1), Math.Min(lightingEngine.GetLight(x + 1, y, z), 0.6));
+                            vertexList[vertexPointer + 0] = new VertexPositionTextureShade(new Vector3(x, y + height, z + 0.5f), new Vector2(0, 0), Math.Min(lightingEngine.GetLight(x, y, z + 1), 0.4));
+                            vertexList[vertexPointer + 1] = new VertexPositionTextureShade(new Vector3(x + 1, y + height, z + 0.5f), new Vector2(1, 0), Math.Min(lightingEngine.GetLight(x, y, z + 1), 0.4));
+                            vertexList[vertexPointer + 2] = new VertexPositionTextureShade(new Vector3(x + 1, y, z + 0.5f), new Vector2(1, 1), Math.Min(lightingEngine.GetLight(x, y, z + 1), 0.4));
+                            vertexList[vertexPointer + 3] = new VertexPositionTextureShade(new Vector3(x, y + height, z + 0.5f), new Vector2(0, 0), Math.Min(lightingEngine.GetLight(x, y, z + 1), 0.4));
+                            vertexList[vertexPointer + 4] = new VertexPositionTextureShade(new Vector3(x + 1, y, z + 0.5f), new Vector2(1, 1), Math.Min(lightingEngine.GetLight(x, y, z + 1), 0.4));
+                            vertexList[vertexPointer + 5] = new VertexPositionTextureShade(new Vector3(x, y, z + 0.5f), new Vector2(0, 1), Math.Min(lightingEngine.GetLight(x, y, z + 1), 0.4));
                         }
                         break;
 
-
                     case BlockFaceDirection.ZDecreasing:
                         {
-                            vertexList[vertexPointer + 0] = new VertexPositionTextureShade(new Vector3(x, y, z + 1), new Vector2(0, 1), Math.Min(lightingEngine.GetLight(x + 1, y, z), 0.6));
-                            vertexList[vertexPointer + 1] = new VertexPositionTextureShade(new Vector3(x + 1, y + height, z), new Vector2(1, 0), Math.Min(lightingEngine.GetLight(x + 1, y, z), 0.6));
-                            vertexList[vertexPointer + 2] = new VertexPositionTextureShade(new Vector3(x + 1, y, z), new Vector2(0, 0), Math.Min(lightingEngine.GetLight(x + 1, y, z), 0.6));
-                            vertexList[vertexPointer + 3] = new VertexPositionTextureShade(new Vector3(x, y, z + 1), new Vector2(1, 1), Math.Min(lightingEngine.GetLight(x + 1, y, z), 0.6));
-                            vertexList[vertexPointer + 4] = new VertexPositionTextureShade(new Vector3(x, y + height, z + 1), new Vector2(1, 0), Math.Min(lightingEngine.GetLight(x + 1, y, z), 0.6));
-                            vertexList[vertexPointer + 5] = new VertexPositionTextureShade(new Vector3(x + 1, y + height, z), new Vector2(0, 1), Math.Min(lightingEngine.GetLight(x + 1, y, z), 0.6));
+                            vertexList[vertexPointer + 0] = new VertexPositionTextureShade(new Vector3(x + 1, y + height, z + 0.5f), new Vector2(0, 0), Math.Min(lightingEngine.GetLight(x, y, z - 1), 0.4));
+                            vertexList[vertexPointer + 1] = new VertexPositionTextureShade(new Vector3(x, y + height, z + 0.5f), new Vector2(1, 0), Math.Min(lightingEngine.GetLight(x, y, z - 1), 0.4));
+                            vertexList[vertexPointer + 2] = new VertexPositionTextureShade(new Vector3(x + 1, y, z + 0.5f), new Vector2(0, 1), Math.Min(lightingEngine.GetLight(x, y, z - 1), 0.4));
+                            vertexList[vertexPointer + 3] = new VertexPositionTextureShade(new Vector3(x + 1, y, z + 0.5f), new Vector2(0, 1), Math.Min(lightingEngine.GetLight(x, y, z - 1), 0.4));
+                            vertexList[vertexPointer + 4] = new VertexPositionTextureShade(new Vector3(x, y + height, z + 0.5f), new Vector2(1, 0), Math.Min(lightingEngine.GetLight(x, y, z - 1), 0.4));
+                            vertexList[vertexPointer + 5] = new VertexPositionTextureShade(new Vector3(x, y, z + 0.5f), new Vector2(1, 1), Math.Min(lightingEngine.GetLight(x, y, z - 1), 0.4));
                         }
                         break;
                 }
@@ -645,7 +605,7 @@ namespace MineWorld
             if (!BlockInformation.IsTransparentBlock(type) && !BlockInformation.IsTransparentBlock(type2) && type == type2)
                 HideQuad((ushort)x2, (ushort)y2, (ushort)z2, dir2, type2);
             else
-                if ((type2 == BlockType.Water || type2==BlockType.TransBlue || type2==BlockType.TransRed) && type2 == type)
+                if ((type2 == BlockType.Water) && type2 == type)
                 {
                     HideQuad(x, y, z, dir, type);
                     HideQuad((ushort)x2, (ushort)y2, (ushort)z2, dir2, type);
