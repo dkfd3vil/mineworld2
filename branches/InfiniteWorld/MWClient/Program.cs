@@ -23,7 +23,7 @@ namespace MineWorld
                     }
                     catch (Exception e)
                     {
-                        String logtext = "";
+                        string logtext = "";
                         if (File.Exists("Clientcrashlog.log"))
                         {
                             logtext = File.ReadAllText("Clientcrashlog.log");

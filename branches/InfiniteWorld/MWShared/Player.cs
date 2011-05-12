@@ -27,21 +27,17 @@ namespace MineWorld
         public bool godmode = false;
         public Color Owncolor = new Color();
         public string Name = "";
-        public uint Health = 0;
-        public uint HealthMax = 0;
+        public int Health = 0;
+        public int HealthMax = 100;
         public bool Alive = false;
         public List<Vector3> ExplosiveList = new List<Vector3>();
-        public uint ID;
+        public int ID;
         public Vector3 Heading = Vector3.Zero;
         public NetConnection NetConn;
         public float TimeIdle = 0;
         public float Ping = 0;
         public string IP = "";
         public Vector3 Velocity = Vector3.Zero;
-
-        // This is used to force an update that says the player is not using their tool, thus causing a break
-        // in their tool usage animation.
-        public bool QueueAnimationBreak = false;
 
         // Things that affect animation.
         public SpriteModel SpriteModel;
@@ -139,8 +135,8 @@ namespace MineWorld
             }
         }
 
-        static uint uniqueId = 0;
-        public static uint GetUniqueId()
+        static int uniqueId = 0;
+        public static int GetUniqueId()
         {
             uniqueId += 1;
             return uniqueId;

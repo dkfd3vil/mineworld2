@@ -25,7 +25,7 @@ namespace MineWorld
         public void start()
         {
             NetBuffer msgBuffer = netServer.CreateBuffer();
-            uint duplicateNameCount = 0;
+            int duplicateNameCount = 0;
 
             while (true)
             {
@@ -167,7 +167,7 @@ namespace MineWorld
                                                 if(IServer.GetAdmin(player.IP))
                                                 {
                                                     string commandstring = Defines.Sanitize(msgBuffer.ReadString());
-                                                    String[] splitted = commandstring.Split(new char[] { ' ' });
+                                                    string[] splitted = commandstring.Split(new char[] { ' ' });
                                                     splitted[0] = splitted[0].ToLower();
 
                                                     switch (splitted[0])
@@ -431,7 +431,7 @@ namespace MineWorld
 
                                         case MineWorldMessage.PlayerHurt:
                                             {
-                                                uint damage = msgBuffer.ReadUInt32();
+                                                int damage = msgBuffer.ReadInt32();
                                                 bool flatdamage = msgBuffer.ReadBoolean();
 
                                                 //If the player has godmode then ignore

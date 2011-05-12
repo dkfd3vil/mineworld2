@@ -138,7 +138,7 @@ namespace MineWorld
                     zf += (float)randGen.NextDouble();
                 zf /= 2;
                 zf = 1 - Math.Abs(zf - 1);
-                int z = (int)(zf * size);
+                int z = (int)zf * size;
 
                 int rockSize = (int)((randGen.NextDouble() + randGen.NextDouble() + randGen.NextDouble() + randGen.NextDouble()) / 4 * 8);
 
@@ -619,22 +619,22 @@ namespace MineWorld
         }
 
         // Renders a specific z-level of a 256x256x256 data array to a texture.
-        private uint[] pixelData = new uint[256 * 256];
+        private int[] pixelData = new int[256 * 256];
         private void RenderSlice(ref BlockType[, ,] data, int z, Texture2D renderTexture)
         {
             for (int x = 0; x < 256; x++)
                 for (int y = 0; y < 256; y++)
                 {
-                    uint c = 0xFF000000;
-                    if (data[x,y,z] == BlockType.Dirt)
-                        c = 0xFFFFFFFF;
+                    //int c = 0xFF000000;
+                    //if (data[x,y,z] == BlockType.Dirt)
+                        //c = 0xFFFFFFFF;
                     //if (data[x, y, z] == BlockType.Ore)
                         //c = 0xFF888888;
                     //if (data[x, y, z] == BlockType.Gold)
                         //c = 0xFFFF0000;
-                    if (data[x, y, z] == BlockType.Rock)
-                        c = 0xFF0000FF;
-                    pixelData[y * 256 + x] = c;
+                    //if (data[x, y, z] == BlockType.Rock)
+                        //c = 0xFF0000FF;
+                    //pixelData[y * 256 + x] = c;
                 }
             renderTexture.GraphicsDevice.Textures[0] = null;
             renderTexture.SetData(pixelData);

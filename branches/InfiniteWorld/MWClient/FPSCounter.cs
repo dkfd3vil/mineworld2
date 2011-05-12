@@ -7,25 +7,25 @@ namespace StateMasher
     class FPSCounter
     {
         private const int BUFFER_SIZE = 128;
-        private uint[] m_millisecs = new uint[BUFFER_SIZE];
-        private uint m_numFrames = 0;
-        private uint m_first = 0;
+        private int[] m_millisecs = new int[BUFFER_SIZE];
+        private int m_numFrames = 0;
+        private int m_first = 0;
 
         public FPSCounter()
         {
         }
 
-        static private uint advanceIndex(uint value)
+        static private int advanceIndex(int value)
         {
             return (value + 1) % BUFFER_SIZE;
         }
 
-        static private uint advanceIndex(uint startValue, uint increment)
+        static private int advanceIndex(int startValue, int increment)
         {
             return (startValue + increment) % BUFFER_SIZE;
         }
 
-        public void frame(uint millisecs)
+        public void frame(int millisecs)
         {
             if (m_numFrames == BUFFER_SIZE)
             {
@@ -39,15 +39,15 @@ namespace StateMasher
             }
         }
 
-        public uint fps()
+        public int fps()
         {
             if (m_numFrames <= 1)
             {
                 return 0;
             }
 
-            uint firstFrameTime = m_millisecs[m_first];
-            uint lastFrameTime = m_millisecs[advanceIndex(m_first, m_numFrames - 1)];
+            int firstFrameTime = m_millisecs[m_first];
+            int lastFrameTime = m_millisecs[advanceIndex(m_first, m_numFrames - 1)];
 
             if (lastFrameTime == firstFrameTime)
             {

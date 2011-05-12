@@ -31,7 +31,7 @@ namespace MineWorld
 
         public string GetTime(bool usedots)
         {
-            String DateFormat = "";
+            string DateFormat = "";
             if (usedots)
             {
                 DateFormat = "hh:mm:ss";
@@ -45,7 +45,7 @@ namespace MineWorld
 
         public string GetDate(bool usedots)
         {
-            String DateFormat = "";
+            string DateFormat = "";
             if (usedots)
             {
                 DateFormat = "yyyy:MM:dd";

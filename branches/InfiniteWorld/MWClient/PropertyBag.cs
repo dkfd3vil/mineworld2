@@ -30,7 +30,7 @@ namespace MineWorld
 
         // Network stuff.
         public NetClient netClient = null;
-        public Dictionary<uint, Player> playerList = new Dictionary<uint, Player>();
+        public Dictionary<int, Player> playerList = new Dictionary<int, Player>();
         public bool[,] mapLoadProgress = null;
         public string serverName = "";
 
@@ -43,25 +43,16 @@ namespace MineWorld
         public Vector3 playerVelocity = Vector3.Zero;
         public Vector3 lastPosition = Vector3.Zero;
         public Vector3 lastHeading = Vector3.Zero;
-        //public PlayerTools[] playerTools = new PlayerTools[1] { PlayerTools.Pickaxe };
-        //public int playerToolSelected = 0;
-        //public BlockType[] playerBlocks = new BlockType[1] { BlockType.None };
-        //public int playerBlockSelected = 0;
         public bool playerDead = true;
         public bool allowRespawn = false;
-        public uint playerHealth = 0;
-        public uint playerHealthMax = 0;
+        public int playerHealth = 0;
+        public int playerHealthMax = 0;
         public float playerHoldBreath = 20;
         public DateTime lastBreath = DateTime.Now;
         public bool playerRadarMute = false;
-        //public float playerToolCooldown = 0;
         public string playerHandle = "Player";
         public float volumeLevel = 1.0f;
-        public uint playerMyId = 0;
-        //public float radarCooldown = 0;
-        //public float radarDistance = 0;
-        //public float radarValue = 0;
-        //public float constructionGunAnimation = 0;
+        public int playerMyId = 0;
         public Color Owncolor = new Color();
 
         //Movement flags
@@ -579,7 +570,7 @@ namespace MineWorld
              */
         }
 
-        public void SendPlayerHurt(uint damage,bool flatdamage)
+        public void SendPlayerHurt(int damage,bool flatdamage)
         {
             if (netClient.Status != NetConnectionStatus.Connected)
                 return;

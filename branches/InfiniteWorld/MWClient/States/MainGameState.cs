@@ -426,7 +426,7 @@ namespace MineWorld.States
                         if (_P.blockEngine.SolidAtPointForPlayer(footPosition) && _P.playerVelocity.Y == 0)
                         {
                             _P.playerVelocity.Y = JUMPVELOCITY;
-                            float amountBelowSurface = ((ushort)footPosition.Y) + 1 - footPosition.Y;
+                            float amountBelowSurface = ((int)footPosition.Y) + 1 - footPosition.Y;
                             _P.playerPosition.Y += amountBelowSurface + 0.01f;
                         }
 

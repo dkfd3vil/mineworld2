@@ -16,7 +16,7 @@ namespace MineWorld
         public BlockType[, ,] blockList = null;    // In game coordinates, where Y points up.
         Random randGen = new Random();
 
-        public void RemoveBlock(ushort x, ushort y, ushort z)
+        public void RemoveBlock(int x, int y, int z)
         {
             if (!SaneBlockPosition(x, y, z))
                 return;
@@ -35,7 +35,7 @@ namespace MineWorld
                 player.AddQueMsg(msgBuffer, NetChannel.ReliableUnordered);
         }
 
-        public void SetBlock(ushort x, ushort y, ushort z, BlockType blockType)
+        public void SetBlock(int x, int y, int z, BlockType blockType)
         {
             Debug.Assert(blockType != BlockType.None, "Setblock used for removal", "Block was sent " + blockType.ToString());
 
@@ -64,13 +64,13 @@ namespace MineWorld
             CaveGenerator Cg = new CaveGenerator(Defines.MAPSIZE,Msettings);
             BlockType[, ,] worldData = Cg.GenerateCaveSystem();
             blockList = new BlockType[Defines.MAPSIZE, Defines.MAPSIZE, Defines.MAPSIZE];
-            for (ushort i = 0; i < Defines.MAPSIZE; i++)
+            for (int i = 0; i < Defines.MAPSIZE; i++)
             {
-                for (ushort j = 0; j < Defines.MAPSIZE; j++)
+                for (int j = 0; j < Defines.MAPSIZE; j++)
                 {
-                    for (ushort k = 0; k < Defines.MAPSIZE; k++)
+                    for (int k = 0; k < Defines.MAPSIZE; k++)
                     {
-                        blockList[i, (ushort)(Defines.MAPSIZE - 1 - k), j] = worldData[i, j, k];
+                        blockList[i, (int)(Defines.MAPSIZE - 1 - k), j] = worldData[i, j, k];
                         if (blockList[i, j, k] == BlockType.Lava)
                         {
                             templavablockcount++;
@@ -107,9 +107,9 @@ namespace MineWorld
             return dist;
         }
 
-        public bool InDirectSunLight(ushort i, ushort j , ushort k)
+        public bool InDirectSunLight(int i, int j , int k)
         {
-            ushort s;
+            int s;
             j++;
             if ((int)j == Defines.MAPSIZE - 1)
             {
@@ -154,7 +154,7 @@ namespace MineWorld
             return head;
         }
 
-        public bool SaneBlockPosition(ushort x, ushort y, ushort z)
+        public bool SaneBlockPosition(int x, int y, int z)
         {
             bool goodspot = false;
 
@@ -171,9 +171,9 @@ namespace MineWorld
 
         public BlockType BlockAtPoint(Vector3 point)
         {
-            ushort x = (ushort)point.X;
-            ushort y = (ushort)point.Y;
-            ushort z = (ushort)point.Z;
+            int x = (int)point.X;
+            int y = (int)point.Y;
+            int z = (int)point.Z;
             if (!SaneBlockPosition(x,y,z))
                 return BlockType.None;
             return blockList[x, y, z];
@@ -245,9 +245,9 @@ namespace MineWorld
             if (!RayCollision(playerPosition, playerHeading, 2, 10, ref hitPoint, ref buildPoint, BlockType.Water))
                 return;
 
-            ushort x = (ushort)hitPoint.X;
-            ushort y = (ushort)hitPoint.Y;
-            ushort z = (ushort)hitPoint.Z;
+            int x = (int)hitPoint.X;
+            int y = (int)hitPoint.Y;
+            int z = (int)hitPoint.Z;
 
             // If it's out of bounds, bail.
             if (!SaneBlockPosition(x, y, z))
@@ -271,9 +271,9 @@ namespace MineWorld
             if (!RayCollision(playerPosition, playerHeading, 6, 25, ref hitPoint, ref buildPoint, BlockType.Water))
                 return;
 
-            ushort x = (ushort)buildPoint.X;
-            ushort y = (ushort)buildPoint.Y;
-            ushort z = (ushort)buildPoint.Z;
+            int x = (int)buildPoint.X;
+            int y = (int)buildPoint.Y;
+            int z = (int)buildPoint.Z;
 
             // If there's someone there currently, bail.
             foreach (IClient p in playerList.Values)

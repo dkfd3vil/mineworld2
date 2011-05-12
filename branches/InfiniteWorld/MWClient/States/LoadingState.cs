@@ -84,7 +84,7 @@ namespace MineWorld.States
 
         public override void OnRenderAtUpdate(GraphicsDevice graphicsDevice, GameTime gameTime)
         {
-            uint dataPacketsRecieved = 0;
+            int dataPacketsRecieved = 0;
             for (int x = 0; x < Defines.MAPSIZE; x++)
                 for (int y = 0; y < Defines.MAPSIZE; y+= Defines.PACKETSIZE)
                     if (_P.mapLoadProgress[x, y])
@@ -92,7 +92,7 @@ namespace MineWorld.States
             string progressText = "Connecting...";
             if ((_SM as MineWorldGame).anyPacketsReceived)
             {
-                progressText = String.Format("{0:00}% LOADED", dataPacketsRecieved * 100 / (Defines.MAPSIZE * Defines.MAPSIZE / Defines.PACKETSIZE));
+                progressText = string.Format("{0:00}% LOADED", dataPacketsRecieved * 100 / (Defines.MAPSIZE * Defines.MAPSIZE / Defines.PACKETSIZE));
             }
 
             SpriteBatch spriteBatch = new SpriteBatch(graphicsDevice);

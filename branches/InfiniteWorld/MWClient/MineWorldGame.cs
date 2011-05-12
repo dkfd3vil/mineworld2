@@ -260,15 +260,14 @@ namespace MineWorld
 
                                     case MineWorldMessage.DayUpdate:
                                         {
-                                            float light = msgBuffer.ReadFloat();
-                                            propertyBag.time = light;
+                                            propertyBag.time = msgBuffer.ReadFloat();
                                             break;
                                         }
                                     case MineWorldMessage.HealthUpdate:
                                         {
-                                            // Health, Healthmax both uint
-                                            propertyBag.playerHealth = msgBuffer.ReadUInt32();
-                                            propertyBag.playerHealthMax = msgBuffer.ReadUInt32();
+                                            // Health, Healthmax both int
+                                            propertyBag.playerHealth = msgBuffer.ReadInt32();
+                                            propertyBag.playerHealthMax = msgBuffer.ReadInt32();
                                         }
                                         break;
                                     case MineWorldMessage.PlayerPosition:
@@ -342,7 +341,7 @@ namespace MineWorld
 
                                     case MineWorldMessage.PlayerJoined:
                                         {
-                                            uint playerId = msgBuffer.ReadUInt32();
+                                            int playerId = msgBuffer.ReadInt32();
                                             string playerName = msgBuffer.ReadString();
                                             bool thisIsMe = msgBuffer.ReadBoolean();
                                             bool playerAlive = msgBuffer.ReadBoolean();
@@ -358,7 +357,7 @@ namespace MineWorld
 
                                     case MineWorldMessage.PlayerLeft:
                                         {
-                                            uint playerId = msgBuffer.ReadUInt32();
+                                            int playerId = msgBuffer.ReadInt32();
                                             if (propertyBag.playerList.ContainsKey(playerId))
                                                 propertyBag.playerList.Remove(playerId);
                                         }
@@ -374,7 +373,7 @@ namespace MineWorld
 
                                     case MineWorldMessage.PlayerDead:
                                         {
-                                            uint playerId = msgBuffer.ReadUInt32();
+                                            int playerId = msgBuffer.ReadInt32();
                                             if (propertyBag.playerList.ContainsKey(playerId))
                                             {
                                                 Player player = propertyBag.playerList[playerId];
@@ -388,7 +387,7 @@ namespace MineWorld
 
                                     case MineWorldMessage.PlayerAlive:
                                         {
-                                            uint playerId = msgBuffer.ReadUInt32();
+                                            int playerId = msgBuffer.ReadInt32();
                                             if (propertyBag.playerList.ContainsKey(playerId))
                                             {
                                                 Player player = propertyBag.playerList[playerId];
@@ -399,13 +398,12 @@ namespace MineWorld
 
                                     case MineWorldMessage.PlayerUpdate:
                                         {
-                                            uint playerId = msgBuffer.ReadUInt32();
+                                            int playerId = msgBuffer.ReadInt32();
                                             if (propertyBag.playerList.ContainsKey(playerId))
                                             {
                                                 Player player = propertyBag.playerList[playerId];
                                                 player.UpdatePosition(msgBuffer.ReadVector3(), gameTime.TotalGameTime.TotalSeconds);
                                                 player.Heading = msgBuffer.ReadVector3();
-                                                player.Health = (uint)(msgBuffer.ReadUInt16() * 100);
                                             }
                                         }
                                         break;
