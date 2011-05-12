@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-
 using System.Text;
 using System.Diagnostics;
 using StateMasher;
@@ -92,25 +91,6 @@ namespace InterfaceItems
                     //Draw text
                     spriteBatch.DrawString(uiFont, text, new Vector2(size.X, size.Y - 20), enabled ? Color.White : new Color(.7f, .7f, .7f));//drawColour);
                 }
-
-                /*spriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Deferred, SaveStateMode.SaveState);
-                spriteBatch.Draw(shade, new Rectangle(size.X, size.Y, size.Height, size.Height), drawColour);
-                spriteBatch.Draw(shade, new Rectangle(size.X + size.Width - size.Height, size.Y, size.Height, size.Height), drawColour);
-
-                //Draw line
-                float sliderPercent = getPercent();
-                int sliderPartialWidth = size.Height / 4;
-                int midHeight = (int)(size.Height / 2) - 1;
-                int actualWidth = size.Width - 2 * size.Height;
-                int actualPosition = (int)(sliderPercent * actualWidth);
-                spriteBatch.Draw(shade, new Rectangle(size.X, size.Y + midHeight, size.Width, 1), drawColour);
-
-                //Draw slider
-                spriteBatch.Draw(shade, new Rectangle(size.X + size.Height + actualPosition - sliderPartialWidth, size.Y + midHeight - sliderPartialWidth, size.Height / 2, size.Height / 2), drawColour);
-                
-                //Draw amount
-                spriteBatch.DrawString(uiFont, (((float)(int)(value * 10)) / 10).ToString(), new Vector2(size.X, size.Y - 20), drawColour);
-                */
 
                 spriteBatch.End();
                 shade.Dispose();

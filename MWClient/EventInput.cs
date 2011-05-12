@@ -88,7 +88,7 @@ namespace EventInput
         /// </summary>
         public static event KeyEventHandler KeyUp;
 
-        delegate IntPtr WndProc(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam);
+        delegate IntPtr WndProc(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam);
 
         static bool initialized;
         static IntPtr prevWndProc;
@@ -114,7 +114,7 @@ namespace EventInput
         static extern IntPtr ImmAssociateContext(IntPtr hWnd, IntPtr hIMC);
 
         [DllImport("user32.dll")]
-        static extern IntPtr CallWindowProc(IntPtr lpPrevWndFunc, IntPtr hWnd, uint Msg, IntPtr wParam, IntPtr lParam);
+        static extern IntPtr CallWindowProc(IntPtr lpPrevWndFunc, IntPtr hWnd, int Msg, IntPtr wParam, IntPtr lParam);
 
         [DllImport("user32.dll")]
         static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
@@ -136,7 +136,7 @@ namespace EventInput
             initialized = true;
         }
 
-        static IntPtr HookProc(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam)
+        static IntPtr HookProc(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam)
         {
             IntPtr returnCode = CallWindowProc(prevWndProc, hWnd, msg, wParam, lParam);
 

@@ -126,7 +126,7 @@ namespace InterfaceItems
                 //Draw line
                 float sliderPercent = getPercent();
                 int sliderPartialWidth = size.Height / 4;
-                int midHeight = (int)(size.Height/2)-1;
+                int midHeight = (size.Height/2)-1;
                 int actualWidth = size.Width - 2 * size.Height;
                 int actualPosition = (int)(sliderPercent * actualWidth);
                 spriteBatch.Draw(shade, new Rectangle(size.X, size.Y + midHeight, size.Width, 1), drawColour);

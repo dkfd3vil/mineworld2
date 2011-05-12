@@ -155,12 +155,12 @@ namespace MineWorld
                 Light light = toLight.Dequeue();
                 if (light.Intensity >= Defines.MINLIGHT)
                 {
-                    CheckLight((int)light.X + 1, (int)light.Y, (int)light.Z, light.Intensity);
-                    CheckLight((int)light.X - 1, (int)light.Y, (int)light.Z, light.Intensity);
-                    CheckLight((int)light.X, (int)light.Y + 1, (int)light.Z, light.Intensity);
-                    CheckLight((int)light.X, (int)light.Y - 1, (int)light.Z, light.Intensity);
-                    CheckLight((int)light.X, (int)light.Y, (int)light.Z + 1, light.Intensity);
-                    CheckLight((int)light.X, (int)light.Y, (int)light.Z - 1, light.Intensity);
+                    CheckLight(light.X + 1, light.Y, light.Z, light.Intensity);
+                    CheckLight(light.X - 1, light.Y, light.Z, light.Intensity);
+                    CheckLight(light.X, light.Y + 1, light.Z, light.Intensity);
+                    CheckLight(light.X, light.Y - 1, light.Z, light.Intensity);
+                    CheckLight(light.X, light.Y, light.Z + 1, light.Intensity);
+                    CheckLight(light.X, light.Y, light.Z - 1, light.Intensity);
                 }
             }
         }
@@ -188,12 +188,12 @@ namespace MineWorld
                 Light dark = toDark.Dequeue();
                 if (dark.Intensity > Defines.MINLIGHT)
                 {
-                    CheckDark((int)dark.X + 1, (int)dark.Y, (int)dark.Z, dark.Intensity);
-                    CheckDark((int)dark.X - 1, (int)dark.Y, (int)dark.Z, dark.Intensity);
-                    CheckDark((int)dark.X, (int)dark.Y + 1, (int)dark.Z, dark.Intensity);
-                    CheckDark((int)dark.X, (int)dark.Y - 1, (int)dark.Z, dark.Intensity);
-                    CheckDark((int)dark.X, (int)dark.Y, (int)dark.Z + 1, dark.Intensity);
-                    CheckDark((int)dark.X, (int)dark.Y, (int)dark.Z - 1, dark.Intensity);
+                    CheckDark(dark.X + 1, dark.Y, dark.Z, dark.Intensity);
+                    CheckDark(dark.X - 1, dark.Y, dark.Z, dark.Intensity);
+                    CheckDark(dark.X, dark.Y + 1, dark.Z, dark.Intensity);
+                    CheckDark(dark.X, dark.Y - 1, dark.Z, dark.Intensity);
+                    CheckDark(dark.X, dark.Y, dark.Z + 1, dark.Intensity);
+                    CheckDark(dark.X, dark.Y, dark.Z - 1, dark.Intensity);
                 }
             }
         }

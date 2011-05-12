@@ -70,19 +70,19 @@ namespace MineWorld
         HealthUpdate,         // ore, cash, weight, max ore, max weight, team ore, red cash, blue cash: ReliableInOrder1
         TriggerExplosion,       // position
 
-        PlayerUpdate,           // (uint id for server), position, heading : UnreliableInOrder1
-        PlayerUpdate1,          // (uint id for server), heading : UnreliableInOrder1
-        PlayerJoined,           // uint id, player name :ReliableInOrder2
-        PlayerLeft,             // uint id              :ReliableInOrder2
-        PlayerDead,             // (uint id for server) :ReliableInOrder2
-        PlayerAlive,            // (uint id for server) :ReliableInOrder2
+        PlayerUpdate,           // (int id for server), position, heading : UnreliableInOrder1
+        PlayerUpdate1,          // (int id for server), heading : UnreliableInOrder1
+        PlayerJoined,           // int id, player name :ReliableInOrder2
+        PlayerLeft,             // int id              :ReliableInOrder2
+        PlayerDead,             // (int id for server) :ReliableInOrder2
+        PlayerAlive,            // (int id for server) :ReliableInOrder2
 
         ChatMessage,            // byte type, string message : ReliableInOrder3
         PlaySound,              // byte sound, bool isPositional, ?Vector3 location : ReliableUnordered
 
         //Update by Oeds
         Hearthbeat,
-        PlayerCommand,         // uint id, string command  This is sent by client
+        PlayerCommand,         // int id, string command  This is sent by client
         PlayerHurt,             // allows client to tell server of damage
         PlayerPosition,         // server sends client new position
         PlayerRespawn,          // allows the player to respawn

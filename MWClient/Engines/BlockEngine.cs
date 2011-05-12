@@ -77,7 +77,7 @@ namespace MineWorld
     {
         public BlockType[, ,] blockList = null;
         public BlockType[, ,] downloadList = null;
-        Dictionary<uint,bool>[,] faceMap = null;
+        Dictionary<int,bool>[,] faceMap = null;
         BlockTexture[,] blockTextureMap = null;
         public IMTexture[] blockTextures = null;
         Effect basicEffect;
@@ -108,9 +108,9 @@ namespace MineWorld
         {
             lightingEngine.Initialize(downloadList);
 
-            for (ushort i = 0; i < Defines.MAPSIZE; i++)
-                for (ushort j = 0; j < Defines.MAPSIZE; j++)
-                    for (ushort k = 0; k < Defines.MAPSIZE; k++)
+            for (int i = 0; i < Defines.MAPSIZE; i++)
+                for (int j = 0; j < Defines.MAPSIZE; j++)
+                    for (int k = 0; k < Defines.MAPSIZE; k++)
                         if (downloadList[i, j, k] != BlockType.None)
                             AddBlock(i, j, k, downloadList[i, j, k]);
         }
@@ -125,19 +125,19 @@ namespace MineWorld
             // Initialize the block list.
             downloadList = new BlockType[Defines.MAPSIZE, Defines.MAPSIZE, Defines.MAPSIZE];
             blockList = new BlockType[Defines.MAPSIZE, Defines.MAPSIZE, Defines.MAPSIZE];
-            for (ushort i = 0; i < Defines.MAPSIZE; i++)
-                for (ushort j = 0; j < Defines.MAPSIZE; j++)
-                    for (ushort k = 0; k < Defines.MAPSIZE; k++)
+            for (int i = 0; i < Defines.MAPSIZE; i++)
+                for (int j = 0; j < Defines.MAPSIZE; j++)
+                    for (int k = 0; k < Defines.MAPSIZE; k++)
                     {
                         downloadList[i, j, k] = BlockType.None;
                         blockList[i, j, k] = BlockType.None;
                     }
 
             // Initialize the face lists.
-            faceMap = new Dictionary<uint,bool>[(byte)BlockTexture.MAXIMUM, NUMREGIONS];
+            faceMap = new Dictionary<int,bool>[(byte)BlockTexture.MAXIMUM, NUMREGIONS];
             for (BlockTexture blockTexture = BlockTexture.None; blockTexture < BlockTexture.MAXIMUM; blockTexture++)
                 for (int r=0; r<NUMREGIONS; r++)
-                    faceMap[(byte)blockTexture, r] = new Dictionary<uint, bool>();
+                    faceMap[(byte)blockTexture, r] = new Dictionary<int, bool>();
 
             // Initialize the texture map.
             blockTextureMap = new BlockTexture[(byte)BlockType.MAXIMUM, 6];
@@ -190,12 +190,12 @@ namespace MineWorld
                 bloomPosteffect = null;
         }
 
-        public Texture2D loadTextureFromMinecraft(String file, int tileX, int tileY)
+        public Texture2D loadTextureFromMinecraft(string file, int tileX, int tileY)
         {
             return loadTextureFromMinecraft(file, tileX, tileY, false);
         }
 
-        public Texture2D loadTextureFromMinecraft(String file, int tileX, int tileY,bool unBiome)
+        public Texture2D loadTextureFromMinecraft(string file, int tileX, int tileY,bool unBiome)
         {
             Texture2D sheet = Texture2D.FromFile(gameInstance.GraphicsDevice, file);
 
@@ -266,9 +266,9 @@ namespace MineWorld
 
         public BlockType BlockAtPoint(Vector3 point)
         {
-            ushort x = (ushort)point.X;
-            ushort y = (ushort)point.Y;
-            ushort z = (ushort)point.Z;
+            int x = (int)point.X;
+            int y = (int)point.Y;
+            int z = (int)point.Z;
             if (x < 0 || y < 0 || z < 0 || x >= Defines.MAPSIZE || y >= Defines.MAPSIZE || z >= Defines.MAPSIZE)
                 return BlockType.None;
             return blockList[x, y, z]; 
@@ -303,7 +303,7 @@ namespace MineWorld
             RegenerateDirtyVertexLists();
 
             for (BlockTexture blockTexture = BlockTexture.None+1; blockTexture < BlockTexture.MAXIMUM; blockTexture++)
-                for (uint r = 0; r < NUMREGIONS; r++)
+                for (int r = 0; r < NUMREGIONS; r++)
                 {
                     // If this is empty, don't render it.
                     DynamicVertexBuffer regionBuffer = vertexBuffers[(byte)blockTexture, r];
@@ -406,7 +406,7 @@ namespace MineWorld
                     if (vertexListDirty[(byte)blockTexture, r])
                     {
                         vertexListDirty[(byte)blockTexture, r] = false;
-                        Dictionary<uint, bool> faceList = faceMap[(byte)blockTexture, r];
+                        Dictionary<int, bool> faceList = faceMap[(byte)blockTexture, r];
                         vertexBuffers[(byte)blockTexture, r] = CreateVertexBufferFromFaceList(faceList, (byte)blockTexture, r);
                     }
         }
@@ -424,14 +424,14 @@ namespace MineWorld
         }
 
         // Create a dynamic vertex buffer. The arguments texture and region are used to flag a content reload if the device is lost.
-        private DynamicVertexBuffer CreateVertexBufferFromFaceList(Dictionary<uint, bool> faceList, int texture, int region)
+        private DynamicVertexBuffer CreateVertexBufferFromFaceList(Dictionary<int, bool> faceList, int texture, int region)
         {
             if (faceList.Count == 0)
                 return null;
 
             VertexPositionTextureShade[] vertexList = new VertexPositionTextureShade[faceList.Count * 6];
             ulong vertexPointer = 0;
-            foreach (uint faceInfo in faceList.Keys)
+            foreach (int faceInfo in faceList.Keys)
             {
                 BuildFaceVertices(ref vertexList, vertexPointer, faceInfo, texture);
                 vertexPointer += 6;            
@@ -453,10 +453,10 @@ namespace MineWorld
             }
         }
 
-        private void BuildFaceVertices(ref VertexPositionTextureShade[] vertexList, ulong vertexPointer, uint faceInfo, int texture)
+        private void BuildFaceVertices(ref VertexPositionTextureShade[] vertexList, ulong vertexPointer, int faceInfo, int texture)
         {
             // Decode the face information.
-            ushort x = 0, y = 0, z = 0;
+            int x = 0, y = 0, z = 0;
             BlockFaceDirection faceDir = BlockFaceDirection.MAXIMUM;
             DecodeBlockFace(faceInfo, ref x, ref y, ref z, ref faceDir);
 
@@ -599,16 +599,16 @@ namespace MineWorld
             }
         }
 
-        private void _AddBlock(ushort x, ushort y, ushort z, BlockFaceDirection dir, BlockType type, int x2, int y2, int z2, BlockFaceDirection dir2)
+        private void _AddBlock(int x, int y, int z, BlockFaceDirection dir, BlockType type, int x2, int y2, int z2, BlockFaceDirection dir2)
         {
             BlockType type2 = blockList[x2, y2, z2];
             if (!BlockInformation.IsTransparentBlock(type) && !BlockInformation.IsTransparentBlock(type2) && type == type2)
-                HideQuad((ushort)x2, (ushort)y2, (ushort)z2, dir2, type2);
+                HideQuad(x2, y2, z2, dir2, type2);
             else
                 if ((type2 == BlockType.Water) && type2 == type)
                 {
                     HideQuad(x, y, z, dir, type);
-                    HideQuad((ushort)x2, (ushort)y2, (ushort)z2, dir2, type);
+                    HideQuad(x2, y2, z2, dir2, type);
                 }
                 else
                 {
@@ -616,9 +616,9 @@ namespace MineWorld
                 }
         }
 
-        public void AddBlock(ushort x, ushort y, ushort z, BlockType blockType)
+        public void AddBlock(int x, int y, int z, BlockType blockType)
         {
-            if (x <= 0 || y <= 0 || z <= 0 || (int)x >= Defines.MAPSIZE - 1 || (int)y >= Defines.MAPSIZE - 1 || (int)z >= Defines.MAPSIZE - 1)
+            if (x <= 0 || y <= 0 || z <= 0 || x >= Defines.MAPSIZE - 1 || y >= Defines.MAPSIZE - 1 || z >= Defines.MAPSIZE - 1)
                 return;
 
             blockList[x, y, z] = blockType;
@@ -632,19 +632,19 @@ namespace MineWorld
             lightingEngine.BlockAdded(blockType, x, y, z);
         }
 
-        private void _RemoveBlock(ushort x, ushort y, ushort z, BlockFaceDirection dir, int x2, int y2, int z2, BlockFaceDirection dir2)
+        private void _RemoveBlock(int x, int y, int z, BlockFaceDirection dir, int x2, int y2, int z2, BlockFaceDirection dir2)
         {
             BlockType type = blockList[x, y, z];
             BlockType type2 = blockList[x2, y2, z2];
             if (!BlockInformation.IsTransparentBlock(type) && !BlockInformation.IsTransparentBlock(type2) && type == type2)
-                ShowQuad((ushort)x2, (ushort)y2, (ushort)z2, dir2, type2);
+                ShowQuad(x2, y2, z2, dir2, type2);
             else
                 HideQuad(x, y, z, dir, type);
         }
 
-        public void RemoveBlock(ushort x, ushort y, ushort z)
+        public void RemoveBlock(int x, int y, int z)
         {
-            if (x <= 0 || y <= 0 || z <= 0 || (int)x >= Defines.MAPSIZE - 1 || (int)y >= Defines.MAPSIZE - 1 || (int)z >= Defines.MAPSIZE - 1)
+            if (x <= 0 || y <= 0 || z <= 0 || x >= Defines.MAPSIZE - 1 || y >= Defines.MAPSIZE - 1 || z >= Defines.MAPSIZE - 1)
                 return;
 
             _RemoveBlock(x, y, z, BlockFaceDirection.XIncreasing, x + 1, y, z, BlockFaceDirection.XDecreasing);
@@ -658,32 +658,32 @@ namespace MineWorld
             lightingEngine.BlockRemoved(BlockType.None, x, y, z);
         }
 
-        private uint EncodeBlockFace(ushort x, ushort y, ushort z, BlockFaceDirection faceDir)
+        private int EncodeBlockFace(int x, int y, int z, BlockFaceDirection faceDir)
         {
             //TODO: OPTIMIZE BY HARD CODING VALUES IN
-            return (uint)(x + y * Defines.MAPSIZE + z * Defines.MAPSIZE * Defines.MAPSIZE + (byte)faceDir * Defines.MAPSIZE * Defines.MAPSIZE * Defines.MAPSIZE);
+            return (x + y * Defines.MAPSIZE + z * Defines.MAPSIZE * Defines.MAPSIZE + (byte)faceDir * Defines.MAPSIZE * Defines.MAPSIZE * Defines.MAPSIZE);
         }
 
-        private void DecodeBlockFace(uint faceCode, ref ushort x, ref ushort y, ref ushort z, ref BlockFaceDirection faceDir)
+        private void DecodeBlockFace(int faceCode, ref int x, ref int y, ref int z, ref BlockFaceDirection faceDir)
         {
-            x = (ushort)(faceCode % Defines.MAPSIZE);
+            x = (faceCode % Defines.MAPSIZE);
             faceCode = (faceCode - x) / Defines.MAPSIZE;
-            y = (ushort)(faceCode % Defines.MAPSIZE);
+            y = (faceCode % Defines.MAPSIZE);
             faceCode = (faceCode - y) / Defines.MAPSIZE;
-            z = (ushort)(faceCode % Defines.MAPSIZE);
+            z = (faceCode % Defines.MAPSIZE);
             faceCode = (faceCode - z) / Defines.MAPSIZE;
             faceDir = (BlockFaceDirection)faceCode;
         }
 
         // Returns the region that a block at (x,y,z) should belong in.
-        private uint GetRegion(ushort x, ushort y, ushort z)
+        private int GetRegion(int x, int y, int z)
         {
-            return (uint)(x / REGIONSIZE + (y / REGIONSIZE) * REGIONRATIO + (z / REGIONSIZE) * REGIONRATIO * REGIONRATIO);
+            return (x / REGIONSIZE + (y / REGIONSIZE) * REGIONRATIO + (z / REGIONSIZE) * REGIONRATIO * REGIONRATIO);
         }
 
-        private Vector3 GetRegionCenter(uint regionNumber)
+        private Vector3 GetRegionCenter(int regionNumber)
         {
-            uint x, y, z;
+            int x, y, z;
             x = regionNumber % REGIONRATIO;
             regionNumber = (regionNumber - x) / REGIONRATIO;
             y = regionNumber % REGIONRATIO;
@@ -692,21 +692,21 @@ namespace MineWorld
             return new Vector3(x * REGIONSIZE + REGIONSIZE / 2, y * REGIONSIZE + REGIONSIZE / 2, z * REGIONSIZE + REGIONSIZE / 2);            
         }
 
-        private void ShowQuad(ushort x, ushort y, ushort z, BlockFaceDirection faceDir, BlockType blockType)
+        private void ShowQuad(int x, int y, int z, BlockFaceDirection faceDir, BlockType blockType)
         {
             BlockTexture blockTexture = blockTextureMap[(byte)blockType, (byte)faceDir];
-            uint blockFace = EncodeBlockFace(x, y, z, faceDir);
-            uint region = GetRegion(x, y, z);
+            int blockFace = EncodeBlockFace(x, y, z, faceDir);
+            int region = GetRegion(x, y, z);
             if (!faceMap[(byte)blockTexture, region].ContainsKey(blockFace))
                 faceMap[(byte)blockTexture, region].Add(blockFace, true);
             vertexListDirty[(byte)blockTexture, region] = true;
         }
 
-        private void HideQuad(ushort x, ushort y, ushort z, BlockFaceDirection faceDir, BlockType blockType)
+        private void HideQuad(int x, int y, int z, BlockFaceDirection faceDir, BlockType blockType)
         {
             BlockTexture blockTexture = blockTextureMap[(byte)blockType, (byte)faceDir];
-            uint blockFace = EncodeBlockFace(x, y, z, faceDir);
-            uint region = GetRegion(x, y, z);
+            int blockFace = EncodeBlockFace(x, y, z, faceDir);
+            int region = GetRegion(x, y, z);
             if (faceMap[(byte)blockTexture, region].ContainsKey(blockFace))
                 faceMap[(byte)blockTexture, region].Remove(blockFace);
             vertexListDirty[(byte)blockTexture, region] = true;

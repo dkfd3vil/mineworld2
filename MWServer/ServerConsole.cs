@@ -21,12 +21,12 @@ namespace MineWorld
             Console.WriteLine(text);
         }
 
-        public void ConsoleWriteError(String text)
+        public void ConsoleWriteError(string text)
         {
             ConsoleWrite(text, ConsoleColor.Red);
         }
 
-        public void ConsoleWriteSucces(String text)
+        public void ConsoleWriteSucces(string text)
         {
             ConsoleWrite(text, ConsoleColor.Green);
         }
@@ -53,7 +53,7 @@ namespace MineWorld
             }
         }
 
-        public String consoleInput = "";
+        public string consoleInput = "";
         public void ConsoleProcessInput()
         {
             ConsoleWrite("> " + consoleInput);
@@ -65,7 +65,7 @@ namespace MineWorld
 
         public bool ProcessCommand(string input,bool clientcommand)
         {
-            String[] args = input.Split(new char[] { ' ' });
+            string[] args = input.Split(new char[] { ' ' });
             if (clientcommand == true)
             {
                 args[0] = args[0].Substring(1);

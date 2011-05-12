@@ -34,6 +34,7 @@ namespace MineWorld
             // Load textures.
             texCrosshairs = gameInstance.Content.Load<Texture2D>("ui/tex_ui_crosshair");
             texBlank = new Texture2D(gameInstance.GraphicsDevice, 1, 1);
+            //texBlank.SetData(new int[1] { 2147483647 });
             texBlank.SetData(new uint[1] { 0xFFFFFFFF });
             texHelpRed = gameInstance.Content.Load<Texture2D>("menus/tex_menu_help_red");
             texHelpBlue = gameInstance.Content.Load<Texture2D>("menus/tex_menu_help_blue");
@@ -90,160 +91,7 @@ namespace MineWorld
             foreach (ChatMessage msg in _P.chatBuffer)
                 msg.TimeStamp -= (float)gameTime.ElapsedGameTime.TotalSeconds;
             _P.chatBuffer.RemoveAll(MessageExpired);
-
-            //int bufferSize = 10;
-            //if (_P.chatFullBuffer.Count > bufferSize)
-                //_P.chatFullBuffer.RemoveRange(bufferSize, _P.chatFullBuffer.Count - bufferSize);
-
-            //if (_P.constructionGunAnimation > 0)
-            //{//
-                //if (_P.constructionGunAnimation > gameTime.ElapsedGameTime.TotalSeconds)
-                    //_P.constructionGunAnimation -= (float)gameTime.ElapsedGameTime.TotalSeconds;
-                //else
-                    //_P.constructionGunAnimation = 0;
-            //}
-            //else
-            //{
-                //if (_P.constructionGunAnimation < -gameTime.ElapsedGameTime.TotalSeconds)
-                    //_P.constructionGunAnimation += (float)gameTime.ElapsedGameTime.TotalSeconds;
-                //else
-                    //_P.constructionGunAnimation = 0;
-            //}
         }
-
-        /*
-        public void RenderRadarBlip(SpriteBatch spriteBatch, Vector3 position, Color color, bool ping, string text)
-        {
-            // Figure out the relative position for the radar blip.
-            Vector3 relativePosition = position - _P.playerPosition;
-            float relativeAltitude = relativePosition.Y;
-            relativePosition.Y = 0;
-            Matrix rotationMatrix = Matrix.CreateRotationY(-_P.playerCamera.Yaw);
-            relativePosition = Vector3.Transform(relativePosition, rotationMatrix) * 10;
-            float relativeLength = Math.Min(relativePosition.Length(), 93);
-            if (relativeLength != 0)
-                relativePosition.Normalize();
-            relativePosition *= relativeLength;
-
-            // Draw the radar blip.
-            if (text == "")
-            {
-                relativePosition.X = (int)relativePosition.X;
-                relativePosition.Z = (int)relativePosition.Z;
-                Texture2D texRadarSprite = texRadarPlayerSame;
-                if (relativeAltitude > 2)
-                    texRadarSprite = texRadarPlayerAbove;
-                else if (relativeAltitude < -2)
-                    texRadarSprite = texRadarPlayerBelow;
-                spriteBatch.Draw(texRadarSprite, new Vector2(10 + 99 + relativePosition.X - texRadarSprite.Width / 2, 30 + 99 + relativePosition.Z - texRadarSprite.Height / 2), color);
-                if (ping)
-                    spriteBatch.Draw(texRadarPlayerPing, new Vector2(10 + 99 + relativePosition.X - texRadarPlayerPing.Width / 2, 30 + 99 + relativePosition.Z - texRadarPlayerPing.Height / 2), color);
-            }
-
-            // Render text.
-            if (text != "")
-            {
-                relativePosition *= 0.9f;
-                relativePosition.X = (int)relativePosition.X;
-                relativePosition.Z = (int)relativePosition.Z;
-
-                if (text == "NORTH")
-                {
-                    spriteBatch.Draw(texRadarNorth, new Vector2(10 + 99 + relativePosition.X - texRadarNorth.Width / 2, 30 + 99 + relativePosition.Z - texRadarNorth.Height / 2), color);
-                }
-                else
-                {
-                    if (relativeAltitude > 2)
-                        text += " ^";
-                    else if (relativeAltitude < -2)
-                        text += " v";
-                    Vector2 textSize = radarFont.MeasureString(text);
-                    spriteBatch.DrawString(radarFont, text, new Vector2(10 + 99 + relativePosition.X - textSize.X / 2, 30 + 99 + relativePosition.Z - textSize.Y / 2), color);
-                }
-            }
-        }
-
-        public void RenderDetonator(GraphicsDevice graphicsDevice, SpriteBatch spriteBatch)
-        {
-            int screenWidth = graphicsDevice.Viewport.Width;
-            int screenHeight = graphicsDevice.Viewport.Height;
-            graphicsDevice.SamplerStates[0].MagFilter = TextureFilter.Point;
-
-            Texture2D textureToUse;
-            if (Mouse.GetState().LeftButton == ButtonState.Pressed || Mouse.GetState().MiddleButton == ButtonState.Pressed || Mouse.GetState().RightButton == ButtonState.Pressed)
-            {
-                if (_P.Owncolor == Color.Red)
-                {
-                    textureToUse = texToolDetonatorDownRed;
-                }
-                else
-                {
-                    textureToUse = texToolDetonatorDownBlue;
-                }
-            }
-            else
-            {
-                if (_P.Owncolor == Color.Red)
-                {
-                    textureToUse = texToolDetonatorUpRed;
-                }
-                else
-                {
-                    textureToUse = texToolDetonatorUpBlue;
-                }
-            }
-         */
-
-            //spriteBatch.Draw(textureToUse, new Rectangle(screenWidth / 2 /*- 22 * 3*/, screenHeight - 77 * 3 + 14 * 3, 75 * 3, 77 * 3), Color.White);
-        //}
-
-        /*
-        public void RenderProspectron(GraphicsDevice graphicsDevice, SpriteBatch spriteBatch)
-        {
-            int screenWidth = graphicsDevice.Viewport.Width;
-            int screenHeight = graphicsDevice.Viewport.Height;
-            graphicsDevice.SamplerStates[0].MagFilter = TextureFilter.Point;
-
-            int drawX = screenWidth / 2 - 32 * 3;
-            int drawY = screenHeight - 102 * 3;
-
-            spriteBatch.Draw(_P.Owncolor == Color.Red ? texToolRadarRed : texToolRadarBlue, new Rectangle(drawX, drawY, 70 * 3, 102 * 3), Color.White);
-
-            if (_P.radarValue > 0)
-                spriteBatch.Draw(texToolRadarLED, new Rectangle(drawX, drawY, 70 * 3, 102 * 3), Color.White);
-            if (_P.radarValue == 200)
-                spriteBatch.Draw(texToolRadarGold, new Rectangle(drawX, drawY, 70 * 3, 102 * 3), Color.White);
-            if (_P.radarValue == 1000)
-                spriteBatch.Draw(texToolRadarDiamond, new Rectangle(drawX, drawY, 70 * 3, 102 * 3), Color.White);
-            if (_P.playerToolCooldown > 0.2f)
-                spriteBatch.Draw(texToolRadarFlash, new Rectangle(drawX, drawY, 70 * 3, 102 * 3), Color.White);
-
-            int pointerOffset = (int)(30 - _P.radarDistance) / 2;  // ranges from 0 to 15 inclusive
-            if (_P.radarDistance == 30)
-                pointerOffset = 15;
-            spriteBatch.Draw(texToolRadarPointer, new Rectangle(drawX + 54 * 3, drawY + 20 * 3 + pointerOffset * 3, 4 * 3, 5 * 3), Color.White);
-        }
-
-        public void RenderConstructionGun(GraphicsDevice graphicsDevice, SpriteBatch spriteBatch, BlockType blockType)
-        {
-            int screenWidth = graphicsDevice.Viewport.Width;
-            int screenHeight = graphicsDevice.Viewport.Height;
-            graphicsDevice.SamplerStates[0].MagFilter = TextureFilter.Point;
-
-            int drawX = screenWidth / 2 - 60 * 3;
-            int drawY = screenHeight - 91 * 3;
-
-            Texture2D gunSprite = texToolBuild;
-            if (_P.constructionGunAnimation < -0.001)
-                gunSprite = texToolBuildCharge;
-            else if (_P.constructionGunAnimation > 0.3)
-                gunSprite = texToolBuildBlast;
-            else if (_P.constructionGunAnimation > 0.001)
-                gunSprite = texToolBuildSmoke;
-            spriteBatch.Draw(gunSprite, new Rectangle(drawX, drawY, 120 * 3, 126 * 3), Color.White);
-            spriteBatch.Draw(blockIcons[blockType], new Rectangle(drawX + 37 * 3, drawY + 50 * 3, 117, 63), Color.White);
-        }
-         */
 
         public void drawChat(List<ChatMessage>messages, GraphicsDevice graphicsDevice)
         {
@@ -301,60 +149,17 @@ namespace MineWorld
                                                             texCrosshairs.Width,
                                                             texCrosshairs.Height), Color.White);
 
-            // If equipped, draw the tool.
-            /*
-            switch (_P.playerTools[_P.playerToolSelected])
-            {
-                case PlayerTools.Detonator:
-                    RenderDetonator(graphicsDevice, spriteBatch);
-                    break;
-
-                case PlayerTools.ProspectingRadar:
-                    RenderProspectron(graphicsDevice, spriteBatch);
-                    break;
-
-                case PlayerTools.ConstructionGun:
-                    RenderConstructionGun(graphicsDevice, spriteBatch, _P.playerBlocks[_P.playerBlockSelected]);
-                    break;
-
-                case PlayerTools.DeconstructionGun:
-                    RenderConstructionGun(graphicsDevice, spriteBatch, BlockType.None);
-                    break;
-                case PlayerTools.Pickaxe:
-                    RenderPickAxe(graphicsDevice,spriteBatch);
-                    break;
-
-                default:
-                    {
-                        // Draw info about what we have equipped.
-                        PlayerTools currentTool = _P.playerTools[_P.playerToolSelected];
-                        BlockType currentBlock = _P.playerBlocks[_P.playerBlockSelected];
-                        string equipment = currentTool.ToString();
-                        if (currentTool == PlayerTools.ConstructionGun)
-                            equipment += " - " + currentBlock.ToString() + " (" + ")";
-                        RenderMessageCenter(spriteBatch, "TODO REMOVE?", new Vector2(graphicsDevice.Viewport.Width / 2, graphicsDevice.Viewport.Height - 20), Color.White, Color.Black);
-                    }
-                    break;
-            }
-                          */
-
             if (gameInstance.Csettings.DrawFrameRate)
-                RenderMessageCenter(spriteBatch, String.Format("FPS: {0:000}", gameInstance.FrameRate), new Vector2(60, graphicsDevice.Viewport.Height - 20), Color.Gray, Color.Black);
+                RenderMessageCenter(spriteBatch, string.Format("FPS: {0:000}", gameInstance.FrameRate), new Vector2(60, graphicsDevice.Viewport.Height - 20), Color.Gray, Color.Black);
 
             // Show the altimeter.
             int altitude = (int)(_P.playerPosition.Y - Defines.MAPSIZE + Defines.GROUND_LEVEL);
-            RenderMessageCenter(spriteBatch, String.Format("ALTITUDE: {0:00}", altitude), new Vector2(graphicsDevice.Viewport.Width - 90, graphicsDevice.Viewport.Height - 20), altitude >= 0 ? Color.Gray : Color.White, Color.Black);
+            RenderMessageCenter(spriteBatch, string.Format("ALTITUDE: {0:00}", altitude), new Vector2(graphicsDevice.Viewport.Width - 90, graphicsDevice.Viewport.Height - 20), altitude >= 0 ? Color.Gray : Color.White, Color.Black);
 
             // Draw the text-based information panel.
             int textStart = (graphicsDevice.Viewport.Width - 1024) / 2;
             spriteBatch.Draw(texBlank, new Rectangle(0, 0, graphicsDevice.Viewport.Width, 20), Color.Black);
-            //spriteBatch.DrawString(uiFont, "ORE: " + _P.playerOre + "/" + _P.playerOreMax, new Vector2(textStart + 3, 2), Color.White);
-            //spriteBatch.DrawString(uiFont, "LOOT: $" + _P.playerCash, new Vector2(textStart + 170, 2), Color.White);
-            RenderMessageCenter(spriteBatch, String.Format("Health: {0:000}", _P.playerHealth) + "/" + String.Format("{0:000}", _P.playerHealthMax), new Vector2(graphicsDevice.Viewport.Width - 300, graphicsDevice.Viewport.Height - 20), _P.playerHealth >= _P.playerHealthMax / 4 ? _P.playerHealth >= _P.playerHealthMax * 0.8f ? Color.Green : Color.Gray : Color.Red, Color.Black);
-            //spriteBatch.DrawString(uiFont, "WEIGHT: " + _P.playerWeight + "/" + _P.playerWeightMax, new Vector2(textStart + 360, 2), Color.White);
-            //spriteBatch.DrawString(uiFont, "TEAM ORE: " + _P.teamOre, new Vector2(textStart + 515, 2), Color.White);
-            //spriteBatch.DrawString(uiFont, _P.redName + ": $" + _P.teamRedCash, new Vector2(textStart + 700, 2), _P.red);// Defines.IM_RED);
-            //spriteBatch.DrawString(uiFont, _P.blueName + ": $" + _P.teamBlueCash, new Vector2(textStart + 860, 2), _P.blue);// Defines.IM_BLUE);
+            RenderMessageCenter(spriteBatch, "Health: " + _P.playerHealth.ToString() + "/" + _P.playerHealthMax.ToString(), new Vector2(graphicsDevice.Viewport.Width - 300, graphicsDevice.Viewport.Height - 20),Color.Green, Color.Black);
 
             // Draw player information.
             if ((Keyboard.GetState().IsKeyDown(Keys.Tab) && _P.screenEffect == ScreenEffect.None))
@@ -371,16 +176,6 @@ namespace MineWorld
                     RenderMessageCenter(spriteBatch, p.Name, new Vector2(graphicsDevice.Viewport.Width / 4, drawY), Color.White, new Color(0, 0, 0, 0));
                     drawY += 35;
                 }
-                /*
-                drawY = 200;
-                foreach (Player p in _P.playerList.Values)
-                {
-                    if (p.Team != PlayerTeam.Blue)
-                        continue;
-                    RenderMessageCenter(spriteBatch, p.Handle + " ( $" + p.Score + " )", new Vector2(graphicsDevice.Viewport.Width * 3 / 4, drawY), _P.blue, new Color(0, 0, 0, 0)); //Defines.IM_BLUE
-                    drawY += 35;
-                }
-                 */
             }
 
             // Draw the chat buffer.
@@ -394,30 +189,7 @@ namespace MineWorld
             {
                 drawChat(_P.chatBuffer, graphicsDevice);
             }
-            /*
-            if (_P.chatMode != ChatMessageType.None)
-            {
-                drawChat(_P.chatBuffer,graphicsDevice);
-            }
-            else
-            {
-                drawChat(_P.chatBuffer,graphicsDevice);
-            }
-             */
 
-            // Draw the player radar.
-            /*
-            spriteBatch.Draw(texRadarBackground, new Vector2(10, 30), Color.White);
-            foreach (Player p in _P.playerList.Values)
-                if (p.Alive)
-                    RenderRadarBlip(spriteBatch, p.ID == _P.playerMyId ? _P.playerPosition : p.Position, Color.White, p.Ping > 0, "");
-            foreach (KeyValuePair<Vector3, Beacon> bPair in _P.beaconList)
-                    RenderRadarBlip(spriteBatch, bPair.Key, Color.White, false, bPair.Value.ID);
-            RenderRadarBlip(spriteBatch, new Vector3(100000, 0, 32), Color.White, false, "NORTH");
-
-            spriteBatch.Draw(texRadarForeground, new Vector2(10, 30), Color.White);
-
-             */
             // Draw escape message.
             if (Keyboard.GetState().IsKeyDown(Keys.Escape))
             {
