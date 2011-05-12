@@ -194,12 +194,9 @@ namespace MineWorld.States
                     {
                         // Fall damage of 0.5 maps to a screenEffectCounter value of 2, meaning that the effect doesn't appear.
                         // Fall damage of 1.0 maps to a screenEffectCounter value of 0, making the effect very strong.
-                        if (standingOnBlock != BlockType.Jump)
-                        {
-                            _P.screenEffect = ScreenEffect.Fall;
-                            _P.screenEffectCounter = 2 - (fallDamage - 0.5) * 4;
-                            _P.PlaySoundForEveryone(MineWorldSound.GroundHit, _P.playerPosition);
-                        }
+                        _P.screenEffect = ScreenEffect.Fall;
+                        _P.screenEffectCounter = 2 - (fallDamage - 0.5) * 4;
+                        _P.PlaySoundForEveryone(MineWorldSound.GroundHit, _P.playerPosition);
                     }
                 }
                 else
@@ -233,21 +230,7 @@ namespace MineWorld.States
                 // Logic for standing on a block.
                 switch (standingOnBlock)
                 {
-                    case BlockType.Jump:
-                        _P.playerVelocity.Y = 2.5f * JUMPVELOCITY;
-                        _P.PlaySoundForEveryone(MineWorldSound.Jumpblock, _P.playerPosition);
-                        break;
-
-                    case BlockType.Road:
-                        _P.movingOnRoad = true;
-                        break;
-
                     case BlockType.Lava:
-                        //if (_P.godmode == false)
-                        //{
-                            //_P.KillPlayer(Defines.deathByLava);
-                            //return;
-                        //}
                         _P.SendPlayerHurt(100, false);
                         break;
                 }
@@ -255,7 +238,6 @@ namespace MineWorld.States
                 // Logic for bumping your head on a block.
                 switch (hittingHeadOnBlock)
                 {
-                    case BlockType.Shock:
                     case BlockType.Lava:
                         _P.SendPlayerHurt(100, false);
                         break;
@@ -373,14 +355,14 @@ namespace MineWorld.States
             }
 
             // If it's a ladder, move up.
-            if (upperBlock == BlockType.Ladder || lowerBlock == BlockType.Ladder || midBlock == BlockType.Ladder)
-            {
-                _P.playerVelocity.Y = CLIMBVELOCITY;
-                Vector3 footPosition = _P.playerPosition + new Vector3(0f, -1.5f, 0f);
-                if (_P.blockEngine.SolidAtPointForPlayer(footPosition))
-                    _P.playerPosition.Y += 0.1f;
-                return true;
-            }
+            //if (upperBlock == BlockType.Ladder || lowerBlock == BlockType.Ladder || midBlock == BlockType.Ladder)
+            //{
+                //_P.playerVelocity.Y = CLIMBVELOCITY;
+                //Vector3 footPosition = _P.playerPosition + new Vector3(0f, -1.5f, 0f);
+                //if (_P.blockEngine.SolidAtPointForPlayer(footPosition))
+                    //_P.playerPosition.Y += 0.1f;
+                //return true;
+            //}
 
             return false;
         }

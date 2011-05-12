@@ -23,11 +23,6 @@ namespace MineWorld
         Rectangle drawRect;
 
         Texture2D texCrosshairs, texBlank, texHelpRed,texHelpBlue;
-        //Texture2D texRadarBackground, texRadarForeground, texRadarPlayerSame, texRadarPlayerAbove, texRadarPlayerBelow, texRadarPlayerPing, texRadarNorth;
-        //Texture2D texToolRadarRed, texToolRadarBlue, texToolRadarGold, texToolRadarDiamond, texToolRadarLED, texToolRadarPointer, texToolRadarFlash;
-        //Texture2D texToolDetonatorDownRed, texToolDetonatorUpRed, texToolDetonatorDownBlue, texToolDetonatorUpBlue;
-        //Texture2D texToolBuild, texToolBuildCharge, texToolBuildBlast, texToolBuildSmoke;
-        //Texture2D texToolPickaxeRed, texToolPickaxeBlue;
 
         Dictionary<BlockType, Texture2D> blockIcons = new Dictionary<BlockType, Texture2D>();
 
@@ -40,36 +35,8 @@ namespace MineWorld
             texCrosshairs = gameInstance.Content.Load<Texture2D>("ui/tex_ui_crosshair");
             texBlank = new Texture2D(gameInstance.GraphicsDevice, 1, 1);
             texBlank.SetData(new uint[1] { 0xFFFFFFFF });
-            //texRadarBackground = gameInstance.Content.Load<Texture2D>("ui/tex_radar_background");
-            //texRadarForeground = gameInstance.Content.Load<Texture2D>("ui/tex_radar_foreground");
-            //texRadarPlayerSame = gameInstance.Content.Load<Texture2D>("ui/tex_radar_player_same");
-            //texRadarPlayerAbove = gameInstance.Content.Load<Texture2D>("ui/tex_radar_player_above");
-            //texRadarPlayerBelow = gameInstance.Content.Load<Texture2D>("ui/tex_radar_player_below");
-            //texRadarPlayerPing = gameInstance.Content.Load<Texture2D>("ui/tex_radar_player_ping");
-            //texRadarNorth = gameInstance.Content.Load<Texture2D>("ui/tex_radar_north");
             texHelpRed = gameInstance.Content.Load<Texture2D>("menus/tex_menu_help_red");
             texHelpBlue = gameInstance.Content.Load<Texture2D>("menus/tex_menu_help_blue");
-
-            //texToolRadarRed = gameInstance.Content.Load<Texture2D>("tools/tex_tool_radar_red");
-            //texToolRadarBlue = gameInstance.Content.Load<Texture2D>("tools/tex_tool_radar_blue");
-            //texToolRadarGold = gameInstance.Content.Load<Texture2D>("tools/tex_tool_radar_screen_gold");
-            //texToolRadarDiamond = gameInstance.Content.Load<Texture2D>("tools/tex_tool_radar_screen_diamond");
-            //texToolRadarLED = gameInstance.Content.Load<Texture2D>("tools/tex_tool_radar_led");
-            //texToolRadarPointer = gameInstance.Content.Load<Texture2D>("tools/tex_tool_radar_pointer");
-            //texToolRadarFlash = gameInstance.Content.Load<Texture2D>("tools/tex_tool_radar_flash");
-
-            //texToolBuild = gameInstance.Content.Load<Texture2D>("tools/tex_tool_build");
-            //texToolBuildCharge = gameInstance.Content.Load<Texture2D>("tools/tex_tool_build_charge");
-            //texToolBuildBlast = gameInstance.Content.Load<Texture2D>("tools/tex_tool_build_blast");
-            //texToolBuildSmoke = gameInstance.Content.Load<Texture2D>("tools/tex_tool_build_smoke");
-
-            //texToolDetonatorDownRed = gameInstance.Content.Load<Texture2D>("tools/tex_tool_detonator_down_red");
-            //texToolDetonatorUpRed = gameInstance.Content.Load<Texture2D>("tools/tex_tool_detonator_up_red");
-            //texToolDetonatorDownBlue = gameInstance.Content.Load<Texture2D>("tools/tex_tool_detonator_down_blue");
-            //texToolDetonatorUpBlue = gameInstance.Content.Load<Texture2D>("tools/tex_tool_detonator_up_blue");
-
-            //texToolPickaxeRed = gameInstance.Content.Load<Texture2D>("tools/tex_tool_drill_red");
-            //texToolPickaxeBlue = gameInstance.Content.Load<Texture2D>("tools/tex_tool_drill_blue");
 
             drawRect = new Rectangle(gameInstance.GraphicsDevice.Viewport.Width / 2 - 1024 / 2,
                                      gameInstance.GraphicsDevice.Viewport.Height / 2 - 768 / 2,
@@ -77,22 +44,8 @@ namespace MineWorld
                                      1024);
 
             // Load icons.
-            blockIcons[BlockType.BankBlue] = gameInstance.Content.Load<Texture2D>("icons/tex_icon_bank_blue");
-            blockIcons[BlockType.BankRed] = gameInstance.Content.Load<Texture2D>("icons/tex_icon_bank_red");
-            blockIcons[BlockType.Explosive] = gameInstance.Content.Load<Texture2D>("icons/tex_icon_explosive");
-            blockIcons[BlockType.Jump] = gameInstance.Content.Load<Texture2D>("icons/tex_icon_jump");
-            blockIcons[BlockType.Ladder] = gameInstance.Content.Load<Texture2D>("icons/tex_icon_ladder");
-            blockIcons[BlockType.SolidBlue] = gameInstance.Content.Load<Texture2D>("icons/tex_icon_solid_blue");
-            blockIcons[BlockType.SolidRed] = gameInstance.Content.Load<Texture2D>("icons/tex_icon_solid_red");
-            blockIcons[BlockType.Shock] = gameInstance.Content.Load<Texture2D>("icons/tex_icon_spikes");
-            blockIcons[BlockType.TransBlue] = gameInstance.Content.Load<Texture2D>("icons/tex_icon_translucent_blue");
-            blockIcons[BlockType.TransRed] = gameInstance.Content.Load<Texture2D>("icons/tex_icon_translucent_red");
-            //blockIcons[BlockType.BeaconRed] = gameInstance.Content.Load<Texture2D>("icons/tex_icon_beacon");
-            //blockIcons[BlockType.BeaconBlue] = gameInstance.Content.Load<Texture2D>("icons/tex_icon_beacon");
             blockIcons[BlockType.Lava] = gameInstance.Content.Load<Texture2D>("icons/tex_icon_lava");
-            blockIcons[BlockType.Road] = gameInstance.Content.Load<Texture2D>("icons/tex_icon_road");
             blockIcons[BlockType.None] = gameInstance.Content.Load<Texture2D>("icons/tex_icon_deconstruction");
-            blockIcons[BlockType.Lamp] = gameInstance.Content.Load<Texture2D>("icons/tex_icon_deconstruction"); // TODO Replace this placeholder
 
             // Load fonts.
             uiFont = gameInstance.Content.Load<SpriteFont>("font_04b08");
@@ -115,7 +68,6 @@ namespace MineWorld
             {
                 //toDraw = texToolPickaxeBlue;
             }
-            //spriteBatch.Draw(toDraw, new Rectangle(drawX, drawY, 120 * 3, 126 * 3), Color.White);
         }
 
         public void RenderMessageCenter(SpriteBatch spriteBatch, string text, Vector2 pointCenter, Color colorText, Color colorBackground)
