@@ -55,7 +55,7 @@ namespace MineWorld
                     }
                     if (client.Status == NetConnectionStatus.Connected)
                     {
-                        infsN.SendMessage(msgBuffer, client, NetChannel.ReliableUnordered);
+                        infsN.SendMsg(msgBuffer, client, NetChannel.ReliableUnordered);
                     }
                 }
             conn.Abort();

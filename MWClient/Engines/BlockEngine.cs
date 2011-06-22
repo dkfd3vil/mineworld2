@@ -148,7 +148,8 @@ namespace MineWorld
             // Check the textures
             if (!checkTextures())
             {
-                Environment.FailFast("Terrain.png is missing");
+                //ToDo Show error by errorscreen
+                Environment.Exit(1);
             }
 
             // Load the textures we'll use.

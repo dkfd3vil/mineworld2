@@ -13,7 +13,7 @@ namespace MineWorld
 {
     public partial class MineWorldServer
     {
-        DateTime lastCalcRegen = DateTime.Now;
+        DateTime lastCalcHealthRegen = DateTime.Now;
 
         DateTime lastCalcBlocks = DateTime.Now;
         DateTime lastCalcLava = DateTime.Now;
@@ -24,18 +24,18 @@ namespace MineWorld
         {
             while (true)
             {
-                TimeSpan timeSpanCalcRegen = DateTime.Now - lastCalcRegen;
+                TimeSpan timeSpanCalcHealthRegen = DateTime.Now - lastCalcHealthRegen;
 
                 TimeSpan timeSpanCalcBlocks = DateTime.Now - lastCalcBlocks;
                 TimeSpan timeSpanCalcLava = DateTime.Now - lastCalcLava;
                 TimeSpan timeSpanCalcGrass = DateTime.Now - lastCalcGrass;
                 TimeSpan timeSpanCalcWater = DateTime.Now - lastCalcWater;
 
-                // We calculate health regeneration every 250 milleseconds
-                if (timeSpanCalcRegen.TotalMilliseconds > 2500)
+                // We calculate health regeneration every 1000 milleseconds
+                if (timeSpanCalcHealthRegen.TotalMilliseconds > 1000)
                 {
-                    CalcRegen();
-                    lastCalcRegen = DateTime.Now;
+                    CalcHealthRegen();
+                    lastCalcHealthRegen = DateTime.Now;
                 }
 
                 // We calculate blocks that need action every 250 milleseconds
@@ -73,22 +73,29 @@ namespace MineWorld
             }
         }
 
-        public void CalcRegen()
+        public void CalcHealthRegen()
         {
-            foreach (Player p in playerList.Values)//regeneration
+            foreach (ServerPlayer p in playerList.Values)//regeneration
             {
-                if (p.Alive)
+                if (p.Alive && p.Canhealthregen)
                 {
-                    p.Health += 2;
+                    // TODO Cast health to float otherwise data loss
+                    p.Health = (p.HealthMax / 100) * SAsettings.Playerregenrate;
                     if (p.Health >= p.HealthMax)
                     {
                         p.Health = p.HealthMax;
                     }
-                    IClient player = playerList[p.NetConn];
-                    SendHealthUpdate(player);
                 }
+                else 
+                {
+                    // Player is dead
+                    // Just a extra check to make sure if the player is dead
+                    // That they dont have health values other then 0
+                    p.Health = 0;
+                }
+                ServerPlayer player = playerList[p.NetConn];
+                SendHealthUpdate(player);
             }
-
         }
 
         public void CalcLava()
@@ -183,23 +190,23 @@ namespace MineWorld
         public void CalcFlowers()
         {
             for (int i = 0; i < Defines.MAPSIZE; i++)
-                for (int j = 0; j < Defines.MAPSIZE; j++)
-                    for (int k = 0; k < Defines.MAPSIZE; k++)
+                for (int k = 0; k < Defines.MAPSIZE; k++)
+                    for (int j = 0; j < Defines.MAPSIZE; j++)
                         if (blockList[i, j, k] == BlockType.Grass)
                         {
-                            int rand = randGen.Next(0, 6);
+                            int rand = randGen.Next(0, 1000);
                             if (j == Defines.MAPSIZE - 1)
                             {
-                                rand = 0;
+                                break;
                             }
-                            if (rand == 3)
+                            if (rand == 400)
                             {
                                 if (blockList[i, j + 1, k] == BlockType.None)
                                 {
                                     SetBlock(i, ++j, k, BlockType.RedFlower);
                                 }
                             }
-                            else if (rand == 4)
+                            else if (rand == 500)
                             {
                                 if (blockList[i, j + 1, k] == BlockType.None)
                                 {

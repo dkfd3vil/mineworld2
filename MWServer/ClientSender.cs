@@ -1,4 +1,5 @@
-﻿using System;
+﻿/*
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Lidgren.Network;
@@ -45,7 +46,7 @@ namespace MineWorld
                         for (int i = 0; i < temp.GetLength(0); i++)
                         {
 
-                            Connection.SendMessage(temp[i].Buffer, temp[i].Channel);
+                            Connection.SendMsg(temp[i].Buffer, temp[i].Channel);
 
                         }
                     }
@@ -84,3 +85,4 @@ namespace MineWorld
         }
     } 
 }
+*/

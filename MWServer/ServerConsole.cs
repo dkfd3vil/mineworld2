@@ -113,7 +113,7 @@ namespace MineWorld
                 case "listplayers":
                     {
                         ConsoleWrite("( " + playerList.Count + " / " + Ssettings.Maxplayers + " )");
-                        foreach (IClient p in playerList.Values)
+                        foreach (ServerPlayer p in playerList.Values)
                         {
                             string teamIdent = "";
                             if (GetAdmin(p.IP))
@@ -126,7 +126,7 @@ namespace MineWorld
                 case "listadmins":
                     {
                         ConsoleWrite("Admin list:");
-                        foreach (IClient p in playerList.Values)
+                        foreach (ServerPlayer p in playerList.Values)
                         {
                             if(GetAdmin(p.IP))
                             {

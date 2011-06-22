@@ -28,17 +28,9 @@ namespace MineWorld
             if (_P == null)
                 return;
 
-            foreach (Player p in _P.playerList.Values)
+            foreach (ClientPlayer p in _P.playerList.Values)
             {
                 p.StepInterpolation(gameTime.TotalGameTime.TotalSeconds);
-
-                p.Ping -= (float)gameTime.ElapsedGameTime.TotalSeconds;
-                if (p.Ping < 0)
-                    p.Ping = 0;
-
-                p.TimeIdle += (float)gameTime.ElapsedGameTime.TotalSeconds;
-                if (p.TimeIdle > 0.5f)
-                    p.IdleAnimation = true;
                 p.SpriteModel.Update(gameTime);
             }
         }
@@ -50,7 +42,7 @@ namespace MineWorld
             if (_P == null)
                 _P = gameInstance.propertyBag;
 
-            foreach (Player p in _P.playerList.Values)
+            foreach (ClientPlayer p in _P.playerList.Values)
             {
                 if (p.Alive && p.ID != _P.playerMyId)
                 {
@@ -72,7 +64,7 @@ namespace MineWorld
             if (_P == null)
                 _P = gameInstance.propertyBag;
 
-            foreach (Player p in _P.playerList.Values)
+            foreach (ClientPlayer p in _P.playerList.Values)
             {
                 if (p.Alive && p.ID != _P.playerMyId)
                 {
@@ -94,16 +86,15 @@ namespace MineWorld
                                 continueDraw = true;
                         }
                     }
-                    if (continueDraw)//p.ID != _P.playerMyId && p.Team == _P.playerTeam)
+                    if (continueDraw)
                     {
                         playerText = p.Name;
-                        if (p.Ping > 0)
-                            playerText = "*** " + playerText + " ***";
+                        playerText = "*** " + playerText + " ***";
 
                         p.SpriteModel.DrawText(_P.playerCamera.ViewMatrix,
                                                _P.playerCamera.ProjectionMatrix,
                                                p.Position - Vector3.UnitY * 1.5f,
-                                               playerText, Color.White);//Defines.IM_BLUE : Defines.IM_RED);
+                                               playerText, Color.White);
                     }
                 }
             }

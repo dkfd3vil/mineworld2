@@ -82,9 +82,9 @@ namespace MineWorld
                                             msgSender.Disapprove("noname");
                                         }
 
-                                        IClient newPlayer = new IClient(msgSender, null);
+                                        ServerPlayer newPlayer = new ServerPlayer(msgSender);
 
-                                        foreach (Player oldPlayer in IServer.playerList.Values)
+                                        foreach (ServerPlayer oldPlayer in IServer.playerList.Values)
                                         {
                                             if (temphandle.ToLower() == oldPlayer.Name.ToLower())
                                             {
@@ -96,10 +96,10 @@ namespace MineWorld
 
                                         newPlayer.Name = temphandle;
                                         IServer.playerList[msgSender] = newPlayer;
-                                        Thread SenderThread = new Thread(new ThreadStart(newPlayer.start));
+                                        Thread SenderThread = new Thread(new ThreadStart(newPlayer.Start));
                                         SenderThread.Start();
                                         IServer.toGreet.Add(msgSender);
-                                        this.netServer.SanityCheck(msgSender);
+                                        netServer.SanityCheck(msgSender);
                                         msgSender.Approve();
                                         // Dont bother if the server isnt public
                                         if(IServer.Ssettings.Public == true)
@@ -117,7 +117,9 @@ namespace MineWorld
                                         break;
                                     }
 
-                                    IClient player = IServer.playerList[msgSender];
+                                    ServerPlayer player = IServer.playerList[msgSender];
+
+                                    //IClient player = IServer.playerList[msgSender];
 
                                     if (msgSender.Status == NetConnectionStatus.Connected)
                                     {
@@ -149,7 +151,7 @@ namespace MineWorld
                                         break;
                                     }
 
-                                    IClient player = IServer.playerList[msgSender];
+                                    ServerPlayer player = IServer.playerList[msgSender];
 
                                     // If kicked we dont care anymore what he sends
                                     if (player.Kicked == true)
@@ -174,14 +176,14 @@ namespace MineWorld
                                                     {
                                                         case "/godmode":
                                                             {
-                                                                if (player.godmode == false)
+                                                                if (player.Godmode == false)
                                                                 {
-                                                                    player.godmode = true;
+                                                                    player.Godmode = true;
                                                                     answer = "Godmode enabled";
                                                                 }
                                                                 else
                                                                 {
-                                                                    player.godmode = false;
+                                                                    player.Godmode = false;
                                                                     answer = "Godmode disabled";
                                                                 }
                                                                 break;
@@ -212,7 +214,7 @@ namespace MineWorld
                                                                         answer = "Cant teleport to yourself";
                                                                         break;
                                                                     }
-                                                                    foreach (IClient dummy in IServer.playerList.Values)
+                                                                    foreach (ServerPlayer dummy in IServer.playerList.Values)
                                                                     {
                                                                         if (dummy.Name.ToLower() == splitted[1])
                                                                         {
@@ -252,7 +254,7 @@ namespace MineWorld
                                                                         answer = "Cant kill yourself";
                                                                         break;
                                                                     }
-                                                                    foreach (IClient dummy in IServer.playerList.Values)
+                                                                    foreach (ServerPlayer dummy in IServer.playerList.Values)
                                                                     {
                                                                         if (dummy.Name.ToLower() == splitted[1])
                                                                         {
@@ -280,13 +282,13 @@ namespace MineWorld
                                                             }
                                                         case "/setday":
                                                             {
-                                                                IServer.dayManager.Light = 1.0f;
+                                                                IServer.dayManager.SetDay();
                                                                 answer = "Time changed to day";
                                                                 break;
                                                             }
                                                         case "/setnight":
                                                             {
-                                                                IServer.dayManager.Light = 0.0f;
+                                                                IServer.dayManager.SetNight();
                                                                 answer = "Time changed to night";
                                                                 break;
                                                             }
@@ -335,9 +337,9 @@ namespace MineWorld
                                                 chatPacket.Write(author);
 
                                                 // Send the packet to people who should recieve it.
-                                                foreach (IClient p in IServer.playerList.Values)
+                                                foreach (ServerPlayer p in IServer.playerList.Values)
                                                 {
-                                                    p.AddQueMsg(chatPacket, NetChannel.ReliableInOrder3);
+                                                    netServer.SendMsg(chatPacket, p.NetConn, NetChannel.ReliableInOrder3);
                                                 }
                                             }
                                             break;
@@ -376,9 +378,10 @@ namespace MineWorld
                                                     msgBuffer.Write((byte)MineWorldMessage.ChatMessage);
                                                     msgBuffer.Write((byte)ChatMessageType.Say);
                                                     msgBuffer.Write(player.Name + " " + deathMessage);
-                                                    foreach (IClient iplayer in IServer.playerList.Values)
-                                                        //if (netConn.Status == NetConnectionStatus.Connected)
-                                                        iplayer.AddQueMsg(msgBuffer, NetChannel.ReliableInOrder3);
+                                                    foreach (ServerPlayer iplayer in IServer.playerList.Values)
+                                                    {
+                                                        netServer.SendMsg(msgBuffer, iplayer.NetConn, NetChannel.ReliableInOrder3);
+                                                    }
                                                 }
                                                 IServer.SendPlayerRespawn(player);//allow this player to instantly respawn
                                             }
@@ -396,7 +399,7 @@ namespace MineWorld
                                                         greetBuffer.Write((byte)MineWorldMessage.ChatMessage);
                                                         greetBuffer.Write((byte)ChatMessageType.SayServer);
                                                         greetBuffer.Write(Defines.Sanitize(greeting));
-                                                        netServer.SendMessage(greetBuffer, msgSender, NetChannel.ReliableInOrder3);
+                                                        netServer.SendMsg(greetBuffer, msgSender, NetChannel.ReliableInOrder3);
                                                     }
                                                     IServer.toGreet.Remove(msgSender);
                                                 }
@@ -435,7 +438,7 @@ namespace MineWorld
                                                 bool flatdamage = msgBuffer.ReadBoolean();
 
                                                 //If the player has godmode then ignore
-                                                if (player.godmode)
+                                                if (player.Godmode)
                                                 {
                                                     break;
                                                 }
@@ -453,9 +456,11 @@ namespace MineWorld
                                                     player.Health -= (player.HealthMax / 100) * damage;
                                                 }
 
+                                                /*
                                                 if (player.Health <= 0)
                                                 {
                                                     // Reset it back to zero or else the client sees weird stuff
+                                                    // Player is dead stop health regen
                                                     player.Health = 0;
                                                     IServer.SendHealthUpdate(player);
                                                     IServer.KillPlayerSpecific(player);
@@ -465,6 +470,7 @@ namespace MineWorld
                                                     // Let the client know what his new health is
                                                     IServer.SendHealthUpdate(player);
                                                 }
+                                                 */
                                                 break;
                                             }
 

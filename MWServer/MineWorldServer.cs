@@ -18,7 +18,7 @@ namespace MineWorld
 
         MineWorldNetServer netServer = null;
         public DayManager dayManager = null;
-        public Dictionary<NetConnection, IClient> playerList = new Dictionary<NetConnection, IClient>();
+        public Dictionary<NetConnection, ServerPlayer> playerList = new Dictionary<NetConnection, ServerPlayer>();
         public List<NetConnection> toGreet = new List<NetConnection>();
         public List<string> admins = new List<string>(); //List of strings with all the admins
         public List<string> bannednames = new List<string>(); // List of strings with all names that cannot be chosen
@@ -44,6 +44,7 @@ namespace MineWorld
         bool shutdownTriggerd = false;
 
         public ServerSettings Ssettings = new ServerSettings();
+        public ServerExtraSettings SAsettings = new ServerExtraSettings();
         public MapSettings Msettings = new MapSettings();
 
         //TODO Find a proper place
@@ -92,6 +93,9 @@ namespace MineWorld
 
             // Load the general-settings.
             LoadSettings();
+
+            // Load extra settings.
+            LoadExtraSettings();
 
             // Load the map-settings.
             LoadMapSettings();
@@ -488,12 +492,32 @@ namespace MineWorld
             ConsoleWriteSucces("MAPSETTINGS LOADED");
         }
 
+        public void LoadExtraSettings()
+        {
+            ConsoleWrite("LOADING EXTRASETTINGS");
+
+            //ToDo Load them from the file
+            //File is already inplace
+            SAsettings.Deathbydrowned = "[name] drowned";
+            SAsettings.Deathbyfall = "[name] felt";
+            SAsettings.Deathbylava = "[name] burned";
+            SAsettings.Deathbyoutofbounds = "[name] felt of the map";
+            SAsettings.Playerhealth = 100;
+            SAsettings.Playerregenrate = 1;
+
+            ConsoleWriteSucces("EXTRASETTINGS LOADED");
+        }
+
         public void LoadDirectorys()
         {
+            ConsoleWrite("LOADING DIRECTORYS");
+
             Ssettings.SettingsDir = "ServerConfigs";
             Ssettings.LogsDir = "Logs";
             Ssettings.BackupDir = "Backups";
             Msettings.SettingsDir = "ServerConfigs";
+
+            ConsoleWriteSucces("DIRECTORYS LOADED");
         }
 
         public void Shutdownserver()
@@ -512,13 +536,13 @@ namespace MineWorld
             restartTime = DateTime.Now + TimeSpan.FromSeconds(5);
         }
 
-        public void SendServerMessageToPlayer(string message, Player player)
+        public void SendServerMessageToPlayer(string message, ServerPlayer player)
         {
             NetBuffer msgBuffer = netServer.CreateBuffer();
             msgBuffer.Write((byte)MineWorldMessage.ChatMessage);
             msgBuffer.Write((byte)ChatMessageType.SayServer);
             msgBuffer.Write(Defines.Sanitize(message));
-            netServer.SendMessage(msgBuffer, player.NetConn, NetChannel.ReliableUnordered);
+            netServer.SendMsg(msgBuffer, player.NetConn, NetChannel.ReliableUnordered);
         }
 
         public void SendServerMessage(string message)
@@ -527,24 +551,21 @@ namespace MineWorld
             msgBuffer.Write((byte)MineWorldMessage.ChatMessage);
             msgBuffer.Write((byte)ChatMessageType.SayServer);
             msgBuffer.Write(Defines.Sanitize(message));
-            foreach (IClient player in playerList.Values)
-                //if (netConn.Status == NetConnectionStatus.Connected)
-                player.AddQueMsg(msgBuffer, NetChannel.ReliableInOrder3);
+            foreach (ServerPlayer player in playerList.Values)
+            {
+                netServer.SendMsg(msgBuffer, player.NetConn, NetChannel.UnreliableInOrder1);
+            }
         }
 
         // Lets a player know about their resources.
-        public void SendHealthUpdate(IClient player)
+        public void SendHealthUpdate(ServerPlayer player)
         {
-            //if (player.NetConn.Status != NetConnectionStatus.Connected)
-                //return;
-
             // Health, HealthMax both int
             NetBuffer msgBuffer = netServer.CreateBuffer();
             msgBuffer.Write((byte)MineWorldMessage.HealthUpdate);
             msgBuffer.Write(player.Health);
             msgBuffer.Write(player.HealthMax);
-            //netServer.SendMessage(msgBuffer, player.NetConn, NetChannel.ReliableUnordered);
-            player.AddQueMsg(msgBuffer,NetChannel.ReliableInOrder15);
+            netServer.SendMsg(msgBuffer, player.NetConn, NetChannel.ReliableInOrder15);
         }
 
         List<MapSender> mapSendingProgress = new List<MapSender>();
@@ -572,7 +593,12 @@ namespace MineWorld
             mapSendingProgress.Add(ms);
         }
 
-        public void KillPlayerSpecific(Player player)
+        public void SendInitialStats(NetConnection client)
+        {
+
+        }
+
+        public void KillPlayerSpecific(ServerPlayer player)
         {
             // Put variables to zero
             player.Health = 0;
@@ -583,18 +609,19 @@ namespace MineWorld
             msgBufferb.Write((byte)MineWorldMessage.Killed);
             //TODO IMPLENT DEATH MESSAGES
             msgBufferb.Write("");
-            netServer.SendMessage(msgBufferb, player.NetConn, NetChannel.ReliableUnordered);
+            netServer.SendMsg(msgBufferb, player.NetConn, NetChannel.ReliableUnordered);
 
             // Let all the other players know
             NetBuffer msgBuffer = netServer.CreateBuffer();
             msgBuffer.Write((byte)MineWorldMessage.PlayerDead);
             msgBuffer.Write(player.ID);
-            foreach (IClient iplayer in playerList.Values)
-                //if (netConn.Status == NetConnectionStatus.Connected)
-                iplayer.AddQueMsg(msgBuffer, NetChannel.ReliableInOrder2);
+            foreach (ServerPlayer iplayer in playerList.Values)
+            {
+                netServer.SendMsg(msgBuffer, iplayer.NetConn, NetChannel.ReliableInOrder2);
+            }
         }
 
-        public void SendPlayerPosition(Player player)
+        public void SendPlayerPosition(ServerPlayer player)
         {
             if (player.NetConn.Status != NetConnectionStatus.Connected)
                 return;
@@ -602,10 +629,10 @@ namespace MineWorld
             NetBuffer msgBuffer = netServer.CreateBuffer();
             msgBuffer.Write((byte)MineWorldMessage.PlayerPosition);
             msgBuffer.Write(player.Position);
-            netServer.SendMessage(msgBuffer, player.NetConn, NetChannel.ReliableUnordered);
+            netServer.SendMsg(msgBuffer, player.NetConn, NetChannel.ReliableUnordered);
         }
 
-        public void SendPlayerUpdate(IClient player)
+        public void SendPlayerUpdate(ServerPlayer player)
         {
             NetBuffer msgBuffer = netServer.CreateBuffer();
             msgBuffer.Write((byte)MineWorldMessage.PlayerUpdate);
@@ -613,17 +640,18 @@ namespace MineWorld
             msgBuffer.Write(player.Position);
             msgBuffer.Write(player.Heading);
 
-            foreach (IClient iplayer in playerList.Values)
-                //if (netConn.Status == NetConnectionStatus.Connected)
-                iplayer.AddQueMsg(msgBuffer, NetChannel.UnreliableInOrder1);
+            foreach (ServerPlayer iplayer in playerList.Values)
+            {
+                netServer.SendMsg(msgBuffer, iplayer.NetConn, NetChannel.UnreliableInOrder1);
+            }
         }
 
-        public void SendPlayerJoined(IClient player)
+        public void SendPlayerJoined(ServerPlayer player)
         {
             NetBuffer msgBuffer;
 
             // Let this player know about other players.
-            foreach (IClient p in playerList.Values)
+            foreach (ServerPlayer p in playerList.Values)
             {
                 msgBuffer = netServer.CreateBuffer();
                 msgBuffer.Write((byte)MineWorldMessage.PlayerJoined);
@@ -631,13 +659,7 @@ namespace MineWorld
                 msgBuffer.Write(p.Name);
                 msgBuffer.Write(p == player);
                 msgBuffer.Write(p.Alive);
-                //if (player.NetConn.Status == NetConnectionStatus.Connected)
-                    player.AddQueMsg(msgBuffer, NetChannel.ReliableInOrder2);
-
-                msgBuffer = netServer.CreateBuffer();
-                msgBuffer.Write(p.ID);
-                //if (player.NetConn.Status == NetConnectionStatus.Connected)
-                    player.AddQueMsg(msgBuffer, NetChannel.ReliableInOrder2);
+                netServer.SendMsg(msgBuffer, p.NetConn, NetChannel.ReliableInOrder2);
             }
 
             // Let other players know about this player.
@@ -648,9 +670,10 @@ namespace MineWorld
             msgBuffer.Write(false);
             msgBuffer.Write(player.Alive);
 
-            foreach (IClient iplayer in playerList.Values)
-                //if (netConn.Status == NetConnectionStatus.Connected)
-                iplayer.AddQueMsg(msgBuffer, NetChannel.ReliableInOrder2);
+            foreach (ServerPlayer iplayer in playerList.Values)
+            {
+                netServer.SendMsg(msgBuffer, iplayer.NetConn, NetChannel.ReliableInOrder2);
+            }
 
             SendPlayerRespawn(player);
 
@@ -659,7 +682,7 @@ namespace MineWorld
             msgBuffer.Write((byte)MineWorldMessage.ChatMessage);
             msgBuffer.Write((byte)ChatMessageType.Say);
             msgBuffer.Write(player.Name + " HAS JOINED THE ADVENTURE!");
-            foreach (IClient iplayer in playerList.Values)
+            foreach (ServerPlayer iplayer in playerList.Values)
             {
                 //if (netConn.Status == NetConnectionStatus.Connected)
                 // Dont send the joined message to ourself
@@ -667,50 +690,55 @@ namespace MineWorld
                 {
                     break;
                 }
-                iplayer.AddQueMsg(msgBuffer, NetChannel.ReliableInOrder3);
+                netServer.SendMsg(msgBuffer, iplayer.NetConn, NetChannel.ReliableInOrder3);
             }
         }
 
-        public void SendPlayerLeft(IClient player, string reason)
+        public void SendPlayerLeft(ServerPlayer player, string reason)
         {
             NetBuffer msgBuffer = netServer.CreateBuffer();
             msgBuffer.Write((byte)MineWorldMessage.PlayerLeft);
             msgBuffer.Write(player.ID);
-            foreach (IClient iplayer in playerList.Values)
+            foreach (ServerPlayer iplayer in playerList.Values)
                 if (player.NetConn != iplayer.NetConn)
-                iplayer.AddQueMsg(msgBuffer, NetChannel.ReliableInOrder2);
+                {
+                    netServer.SendMsg(msgBuffer, iplayer.NetConn, NetChannel.ReliableInOrder2);
+                }
 
             // Send out a chat message.
             msgBuffer = netServer.CreateBuffer();
             msgBuffer.Write((byte)MineWorldMessage.ChatMessage);
             msgBuffer.Write((byte)ChatMessageType.Say);
             msgBuffer.Write(player.Name + " " + reason);
-            foreach (IClient iplayer in playerList.Values)
-                //if (netConn.Status == NetConnectionStatus.Connected)
-                iplayer.AddQueMsg(msgBuffer, NetChannel.ReliableInOrder3);
+            foreach (ServerPlayer iplayer in playerList.Values)
+            {
+                netServer.SendMsg(msgBuffer, iplayer.NetConn, NetChannel.ReliableInOrder3);
+            }
         }
 
-        public void SendPlayerDead(IClient player)
+        public void SendPlayerDead(ServerPlayer player)
         {
             NetBuffer msgBuffer = netServer.CreateBuffer();
             msgBuffer.Write((byte)MineWorldMessage.PlayerDead);
             msgBuffer.Write(player.ID);
-            foreach (IClient iplayer in playerList.Values)
-                //if (netConn.Status == NetConnectionStatus.Connected)
-                iplayer.AddQueMsg(msgBuffer, NetChannel.ReliableInOrder2);
+            foreach (ServerPlayer iplayer in playerList.Values)
+            {
+                netServer.SendMsg(msgBuffer, iplayer.NetConn, NetChannel.ReliableInOrder2);
+            }
         }
 
-        public void SendPlayerAlive(IClient player)
+        public void SendPlayerAlive(ServerPlayer player)
         {
             NetBuffer msgBuffer = netServer.CreateBuffer();
             msgBuffer.Write((byte)MineWorldMessage.PlayerAlive);
             msgBuffer.Write(player.ID);
-            foreach (IClient iplayer in playerList.Values)
-                //if (netConn.Status == NetConnectionStatus.Connected)
-                iplayer.AddQueMsg(msgBuffer, NetChannel.ReliableInOrder2);
+            foreach (ServerPlayer iplayer in playerList.Values)
+            {
+                netServer.SendMsg(msgBuffer, iplayer.NetConn, NetChannel.ReliableInOrder2);
+            }
         }
 
-        public void SendPlayerRespawn(Player player)
+        public void SendPlayerRespawn(ServerPlayer player)
         {
             if (!player.Alive)
             {
@@ -749,12 +777,11 @@ namespace MineWorld
 
                 // Drop the player on the middle of the block, not at the corner.
                 player.Position += new Vector3(0.5f, 0, 0.5f);
-                //
 
                 NetBuffer msgBuffer = netServer.CreateBuffer();
                 msgBuffer.Write((byte)MineWorldMessage.PlayerRespawn);
                 msgBuffer.Write(player.Position);
-                netServer.SendMessage(msgBuffer, player.NetConn, NetChannel.ReliableInOrder3);
+                netServer.SendMsg(msgBuffer, player.NetConn, NetChannel.ReliableInOrder3);
             }
         }
 
@@ -765,9 +792,10 @@ namespace MineWorld
             msgBuffer.Write((byte)sound);
             msgBuffer.Write(true);
             msgBuffer.Write(position);
-            foreach (IClient player in playerList.Values)
-                //if (netConn.Status == NetConnectionStatus.Connected)
-                player.AddQueMsg(msgBuffer, NetChannel.ReliableUnordered);
+            foreach (ServerPlayer player in playerList.Values)
+            {
+                netServer.SendMsg(msgBuffer, player.NetConn, NetChannel.ReliableUnordered);
+            }
         }
 
         public void updateMasterServer()
@@ -795,9 +823,10 @@ namespace MineWorld
         {
             NetBuffer msgBuffer = netServer.CreateBuffer();
             msgBuffer.Write((byte)MineWorldMessage.Hearthbeat);
-            foreach (IClient iplayer in playerList.Values)
-                //if (netConn.Status == NetConnectionStatus.Connected)
-                iplayer.AddQueMsg(msgBuffer, NetChannel.UnreliableInOrder15);
+            foreach (ServerPlayer iplayer in playerList.Values)
+            {
+                netServer.SendMsg(msgBuffer, iplayer.NetConn, NetChannel.UnreliableInOrder15);
+            }
         }
 
         public void Senddaytimeupdate(float time)
@@ -805,8 +834,10 @@ namespace MineWorld
             NetBuffer msgBuffer = netServer.CreateBuffer();
             msgBuffer.Write((byte)MineWorldMessage.DayUpdate);
             msgBuffer.Write(time);
-            foreach (IClient iplayer in playerList.Values)
-                iplayer.AddQueMsg(msgBuffer, NetChannel.ReliableInOrder14);
+            foreach (ServerPlayer iplayer in playerList.Values)
+            {
+                netServer.SendMsg(msgBuffer, iplayer.NetConn, NetChannel.UnreliableInOrder14);
+            }
         }
     }
 }
