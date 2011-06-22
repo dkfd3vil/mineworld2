@@ -81,9 +81,11 @@
     <Compile Include="Physics.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ServerExtraSettings.cs" />
     <Compile Include="ServerCommands.cs" />
     <Compile Include="ServerConsole.cs" />
     <Compile Include="ServerListener.cs" />
+    <Compile Include="ServerPlayer.cs" />
     <Compile Include="ServerSettings.cs" />
   </ItemGroup>
   <ItemGroup>

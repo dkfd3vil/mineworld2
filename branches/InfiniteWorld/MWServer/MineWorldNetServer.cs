@@ -11,8 +11,7 @@ namespace MineWorld
 {
     public class MineWorldNetServer : NetServer
     {
-        public MineWorldNetServer(NetConfiguration config)
-            : base(config)
+        public MineWorldNetServer(NetConfiguration config): base(config)
         {
         }
 
@@ -30,6 +29,16 @@ namespace MineWorld
             }
 
             return false;
+        }
+
+        public void SendMsg(NetBuffer data, NetConnection connection, NetChannel channel)
+        {
+            if (connection.Status != NetConnectionStatus.Connected)
+            {
+                return;
+            }
+
+            SendMessage(data, connection, channel);
         }
     }
 }

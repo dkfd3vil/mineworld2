@@ -162,13 +162,13 @@ namespace MineWorld
 
         public void KickPlayer(string ip, bool name)
         {
-            List<Player> playersToKick = new List<Player>();
-            foreach (IClient p in playerList.Values)
+            List<ServerPlayer> playersToKick = new List<ServerPlayer>();
+            foreach (ServerPlayer p in playerList.Values)
             {
                 if ((p.IP == ip && !name) || (p.Name.ToLower().Contains(ip.ToLower()) && name))
                     playersToKick.Add(p);
             }
-            foreach (IClient p in playersToKick)
+            foreach (ServerPlayer p in playersToKick)
             {
                 p.NetConn.Disconnect("", 0);
                 p.Kicked = true;
@@ -265,7 +265,7 @@ namespace MineWorld
 
         public void disconnectAll()
         {
-            foreach (IClient p in playerList.Values)
+            foreach (ServerPlayer p in playerList.Values)
             {
                 p.NetConn.Disconnect("", 0);
             }

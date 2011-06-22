@@ -30,9 +30,10 @@ namespace MineWorld
             msgBuffer.Write((byte)y);
             msgBuffer.Write((byte)z);
             msgBuffer.Write((byte)BlockType.None);
-            foreach (IClient player in playerList.Values)
-                //if (netConn.Status == NetConnectionStatus.Connected)
-                player.AddQueMsg(msgBuffer, NetChannel.ReliableUnordered);
+            foreach (ServerPlayer player in playerList.Values)
+            {
+                netServer.SendMsg(msgBuffer, player.NetConn, NetChannel.ReliableUnordered);
+            }
         }
 
         public void SetBlock(int x, int y, int z, BlockType blockType)
@@ -51,9 +52,10 @@ namespace MineWorld
             msgBuffer.Write((byte)y);
             msgBuffer.Write((byte)z);
             msgBuffer.Write((byte)blockType);
-            foreach (IClient player in playerList.Values)
-                //if (netConn.Status == NetConnectionStatus.Connected)
-                    player.AddQueMsg(msgBuffer, NetChannel.ReliableUnordered);
+            foreach (ServerPlayer player in playerList.Values)
+            {
+                netServer.SendMsg(msgBuffer, player.NetConn, NetChannel.ReliableUnordered);
+            }
         }
 
         public void GenerateNewMap()
@@ -126,7 +128,7 @@ namespace MineWorld
             return true;
         }
 
-        public Vector3 Auth_Position(Vector3 pos, Player pl)//check boundaries and legality of action
+        public Vector3 Auth_Position(Vector3 pos, ServerPlayer pl)//check boundaries and legality of action
         {
             BlockType type = BlockAtPoint(pos);
 
@@ -138,7 +140,8 @@ namespace MineWorld
             {
                 if (pl.Alive)
                 {
-                    ConsoleWrite("Refused " + pl.Name + " " + pos.X + "/" + pos.Y + "/" + pos.Z, ConsoleColor.Yellow);
+                    ConsoleWrite("REFUSED NEW POSITION OF " + pl.Name + " " + pos.X + "/" + pos.Y + "/" + pos.Z, ConsoleColor.Yellow);
+                    ConsoleWrite("RETURNED OLD POSTION", ConsoleColor.Yellow);
                     return pl.Position;
                 }
                 else//player is dead, return position silent
@@ -238,7 +241,7 @@ namespace MineWorld
             return startPosition;
         }
 
-        public void RemoveBlock(IClient player, Vector3 playerPosition, Vector3 playerHeading)
+        public void RemoveBlock(ServerPlayer player, Vector3 playerPosition, Vector3 playerHeading)
         {
             Vector3 hitPoint = Vector3.Zero;
             Vector3 buildPoint = Vector3.Zero;
@@ -263,7 +266,7 @@ namespace MineWorld
             }
         }
 
-        public void PlaceBlock(IClient player, Vector3 playerPosition, Vector3 playerHeading, BlockType blockType)
+        public void PlaceBlock(ServerPlayer player, Vector3 playerPosition, Vector3 playerHeading, BlockType blockType)
         {
             // If there's no surface within range, bail.
             Vector3 hitPoint = Vector3.Zero;
@@ -276,7 +279,7 @@ namespace MineWorld
             int z = (int)buildPoint.Z;
 
             // If there's someone there currently, bail.
-            foreach (IClient p in playerList.Values)
+            foreach (ServerPlayer p in playerList.Values)
             {
                 if ((int)p.Position.X == x && (int)p.Position.Z == z && ((int)p.Position.Y == y || (int)p.Position.Y - 1 == y))
                     return;

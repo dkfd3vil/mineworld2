@@ -154,6 +154,7 @@ namespace MineWorld.States
             else
             {
                 _P.swimming = false;
+                _P.lastBreath = DateTime.Now;
                 _P.playerHoldBreath = 20;
             }
 
@@ -162,8 +163,9 @@ namespace MineWorld.States
                 TimeSpan timeSpan = DateTime.Now - _P.lastBreath;
                 _P.playerVelocity.Y += (GRAVITY / 8) * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-                if (timeSpan.TotalMilliseconds > 1000)
+                if (timeSpan.TotalMilliseconds > 500)
                 {
+                    _P.lastBreath = DateTime.Now;
                     _P.playerHoldBreath -= 1;
                     if (_P.playerHoldBreath <= 0)
                     {

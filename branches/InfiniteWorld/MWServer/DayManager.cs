@@ -75,5 +75,15 @@ namespace MineWorld
                 return true;
             }
         }
+
+        public void SetNight()
+        {
+            light = 0.0f;
+        }
+
+        public void SetDay()
+        {
+            light = 1.0f;
+        }
     }
 }

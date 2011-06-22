@@ -30,7 +30,7 @@ namespace MineWorld
 
         // Network stuff.
         public NetClient netClient = null;
-        public Dictionary<int, Player> playerList = new Dictionary<int, Player>();
+        public Dictionary<int, ClientPlayer> playerList = new Dictionary<int, ClientPlayer>();
         public bool[,] mapLoadProgress = null;
         public string serverName = "";
 
@@ -360,7 +360,7 @@ namespace MineWorld
             msgBuffer.Write(playerCamera.GetLookVector());
             msgBuffer.Write((byte)PlayerTools.ProspectingRadar);
             msgBuffer.Write((byte)BlockType.None);
-            netClient.SendMessage(msgBuffer, NetChannel.ReliableUnordered);
+            netClient.SendMsg(msgBuffer, NetChannel.ReliableUnordered);
         }
         */
         /*
@@ -377,7 +377,7 @@ namespace MineWorld
             msgBuffer.Write(playerCamera.GetLookVector());
             msgBuffer.Write((byte)PlayerTools.Pickaxe);
             msgBuffer.Write((byte)BlockType.None);
-            netClient.SendMessage(msgBuffer, NetChannel.ReliableUnordered);
+            netClient.SendMsg(msgBuffer, NetChannel.ReliableUnordered);
         }
          */
         /*
@@ -396,7 +396,7 @@ namespace MineWorld
             msgBuffer.Write(playerCamera.GetLookVector());
             msgBuffer.Write((byte)PlayerTools.ConstructionGun);
             msgBuffer.Write((byte)blockType);
-            netClient.SendMessage(msgBuffer, NetChannel.ReliableUnordered);
+            netClient.SendMsg(msgBuffer, NetChannel.ReliableUnordered);
         }
          */
 
@@ -416,7 +416,7 @@ namespace MineWorld
             msgBuffer.Write(playerCamera.GetLookVector());
             msgBuffer.Write((byte)PlayerTools.DeconstructionGun);
             msgBuffer.Write((byte)BlockType.None);
-            netClient.SendMessage(msgBuffer, NetChannel.ReliableUnordered);
+            netClient.SendMsg(msgBuffer, NetChannel.ReliableUnordered);
         }
          */
 
@@ -435,7 +435,7 @@ namespace MineWorld
             msgBuffer.Write(playerCamera.GetLookVector());
             msgBuffer.Write((byte)PlayerTools.Detonator);
             msgBuffer.Write((byte)BlockType.None);
-            netClient.SendMessage(msgBuffer, NetChannel.ReliableUnordered);
+            netClient.SendMsg(msgBuffer, NetChannel.ReliableUnordered);
         }
          */
 
@@ -565,7 +565,7 @@ namespace MineWorld
                 msgBuffer.Write((byte)MineWorldMessage.PlayerUpdate2);//just tools
                 //msgBuffer.Write((byte)playerTools[playerToolSelected]);
                 //msgBuffer.Write(playerToolCooldown > 0.001f);
-                netClient.SendMessage(msgBuffer, NetChannel.UnreliableInOrder1);
+                netClient.SendMsg(msgBuffer, NetChannel.UnreliableInOrder1);
             }
              */
         }
