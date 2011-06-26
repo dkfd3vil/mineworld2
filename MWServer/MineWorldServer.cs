@@ -27,6 +27,7 @@ namespace MineWorld
         DateTime lasthearthbeatsend = DateTime.Now;
         DateTime lastServerListUpdate = DateTime.Now;
         DateTime lastMapBackup = DateTime.Now;
+        DateTime lastKeyAvaible = DateTime.Now;
 
         public string serverIP;
         int frameCount = 100;
@@ -248,14 +249,22 @@ namespace MineWorld
                         ConsoleWriteSucces("BACK-UP DONE");
                     }
                 }
+
                 //Time to terminate finished map sending threads?
                 TerminateFinishedThreads();
 
                 // Handle console keypresses.
                 while (Console.KeyAvailable)
                 {
-                    consoleInput = Console.ReadLine();
-                    ConsoleProcessInput();
+                    // What if there is constant keyavaible ?
+                    // This code makes sure the rest of the program can also run
+                    TimeSpan timeSpanLastKeyAvaible = DateTime.Now - lastKeyAvaible;
+                    if (timeSpanLastKeyAvaible.Milliseconds < 2000)
+                    {
+                        consoleInput = Console.ReadLine();
+                        ConsoleProcessInput();
+                        lastKeyAvaible = DateTime.Now;
+                    }
                 }
 
                 // Restart the server?
