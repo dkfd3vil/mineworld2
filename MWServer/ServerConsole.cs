@@ -53,18 +53,20 @@ namespace MineWorld
             }
         }
 
-        public string consoleInput = "";
-        public void ConsoleProcessInput()
+        public void ConsoleProcessInput(string input)
         {
-            ConsoleWrite("> " + consoleInput);
-
-            ProcessCommand(consoleInput,false);
-
-            consoleInput = "";
+            ConsoleWrite("> " + input);
+            ProcessCommand(input,false);
         }
 
-        public bool ProcessCommand(string input,bool clientcommand)
+        public void ProcessCommand(string input,bool clientcommand)
         {
+            // if the input is empty then return silent
+            if (input == "")
+            {
+                return;
+            }
+
             string[] args = input.Split(new char[] { ' ' });
             if (clientcommand == true)
             {
@@ -236,7 +238,6 @@ namespace MineWorld
                     }
                     
             }
-            return true;
         }
     }
  }

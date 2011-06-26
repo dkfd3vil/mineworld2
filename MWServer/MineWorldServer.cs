@@ -261,8 +261,8 @@ namespace MineWorld
                     TimeSpan timeSpanLastKeyAvaible = DateTime.Now - lastKeyAvaible;
                     if (timeSpanLastKeyAvaible.Milliseconds < 2000)
                     {
-                        consoleInput = Console.ReadLine();
-                        ConsoleProcessInput();
+                        string input = Console.ReadLine();
+                        ConsoleProcessInput(input);
                         lastKeyAvaible = DateTime.Now;
                         break;
                     }
