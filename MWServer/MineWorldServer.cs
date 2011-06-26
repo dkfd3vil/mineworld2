@@ -264,6 +264,7 @@ namespace MineWorld
                         consoleInput = Console.ReadLine();
                         ConsoleProcessInput();
                         lastKeyAvaible = DateTime.Now;
+                        break;
                     }
                 }
 
