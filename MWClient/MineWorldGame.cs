@@ -89,22 +89,20 @@ namespace MineWorld
             // Discover remote servers.
             try
             {
-                /*
-                string publicList = HttpRequest.Get("http://www.humorco.nl/mineworld/servers.php", null);
+                string publicList = HttpRequest.Get(Defines.MASTERSERVER_BASE_URL + "servers.php", null);
                 foreach (string s in publicList.Split("\r\n".ToCharArray()))
                 {
                     string[] args = s.Split(";".ToCharArray());
                     if (args.Length == 6)
                     {
                         IPAddress serverIp;
-                        if (IPAddress.TryParse(args[1], out serverIp) && args[2] == "MineWorld")
+                        if (IPAddress.TryParse(args[1], out serverIp))
                         {
-                            ServerInformation serverInfo = new ServerInformation(serverIp, args[0], args[5], args[3], args[4]);
+                            ServerInformation serverInfo = new ServerInformation(serverIp, args[0], args[2], args[3], args[4],args[5]);
                             serverList.Add(serverInfo);
                         }
                     }
                 }
-                */
             }
             catch (Exception)
             {

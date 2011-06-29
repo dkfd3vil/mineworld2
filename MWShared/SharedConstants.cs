@@ -8,6 +8,8 @@ namespace MineWorld
         public const string MINEWORLDCLIENT_VERSION = "Mine World Alpha 4.2";
         public const double MINEWORLD_VER = 4.2;
 
+        public const string MASTERSERVER_BASE_URL = "http://humorco.nl/mineworld/";
+
         public const int MAPSIZE = 64;
         //Mapsize % Packetsize MUST EQUAL 0!!!
         public const int PACKETSIZE = 32;

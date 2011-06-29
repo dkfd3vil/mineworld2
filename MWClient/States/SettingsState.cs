@@ -32,7 +32,6 @@ namespace MineWorld.States
         ClickRegion[] clkMenuSettings = new ClickRegion[2] {
             new ClickRegion(new Rectangle(0,713,255,42),"cancel"),
             new ClickRegion(new Rectangle(524,713,500,42),"accept")
-            //new ClickRegion(new Rectangle(0,0,0,0),"keylayout")
         };
 
         protected string nextState = null;
