@@ -121,6 +121,7 @@
     <Compile Include="StateMasher\StateMachine.cs" />
     <Compile Include="States\ErrorState.cs" />
     <Compile Include="States\LoadingState.cs" />
+    <Compile Include="States\LoginState.cs" />
     <Compile Include="States\MainGameState.cs" />
     <Compile Include="States\ServerBrowserState.cs" />
     <Compile Include="States\SettingsState.cs" />

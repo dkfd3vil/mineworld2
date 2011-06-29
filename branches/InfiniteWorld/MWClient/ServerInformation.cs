@@ -10,6 +10,7 @@ namespace MineWorld
     {
         public IPEndPoint ipEndPoint;
         public string serverName;
+        public string gametag;
         public string serverExtra;
         public string numPlayers;
         public string maxPlayers;
@@ -22,13 +23,14 @@ namespace MineWorld
             lanServer = true;
         }
 
-        public ServerInformation(IPAddress ip, string name, string extra, string numPlayers, string maxPlayers)
+        public ServerInformation(IPAddress ip, string name,string gametag, string numPlayers, string maxPlayers,string extra)
         {
-            ipEndPoint = new IPEndPoint(ip, 5565);
             serverName = name;
-            serverExtra = extra;
+            ipEndPoint = new IPEndPoint(ip, 5565);
+            this.gametag = gametag;
             this.numPlayers = numPlayers;
             this.maxPlayers = maxPlayers;
+            serverExtra = extra;
             lanServer = false;
         }
 

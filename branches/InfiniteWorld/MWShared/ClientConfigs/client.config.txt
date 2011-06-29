@@ -1,5 +1,5 @@
 # This value specifies your name - please change it to something unique!
-handle = Player
+handle = test
 
 # This value specifies your in-game color of your character.
 # For now there are only 2 colors red and blue.

@@ -47,7 +47,7 @@ namespace MineWorld.States
             // After 3 seconds we go to the Serverbrowser state
             if (titlescreenbetween.TotalMilliseconds > 3000)
             {
-                nextState = "MineWorld.States.ServerBrowserState";
+                nextState = "MineWorld.States.LoginState";
             }
 
             return nextState;
@@ -81,7 +81,7 @@ namespace MineWorld.States
 
         public override void OnMouseDown(MouseButtons button, int x, int y)
         {
-            nextState = "MineWorld.States.ServerBrowserState";
+            nextState = "MineWorld.States.LoginState";
             _P.PlaySound(MineWorldSound.ClickHigh);
         }
 

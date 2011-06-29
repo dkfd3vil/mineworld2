@@ -69,9 +69,6 @@ namespace MineWorld
 
         public float mouseSensitivity = 0.005f;
 
-        // Beacon variables.
-        //public Dictionary<Vector3, Beacon> beaconList = new Dictionary<Vector3, Beacon>();
-
         // Screen effect stuff.
         private Random randGen = new Random();
         public ScreenEffect screenEffect = ScreenEffect.None;

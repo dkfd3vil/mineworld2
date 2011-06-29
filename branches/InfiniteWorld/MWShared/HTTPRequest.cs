@@ -71,7 +71,7 @@ namespace MineWorld
             }
             catch (WebException ex)
             {
-                throw new Exception("Response error", ex);
+                throw new Exception("Response error ["+request.ToString()+"]", ex);
             }
 
             return responseText;

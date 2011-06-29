@@ -30,6 +30,7 @@ namespace MineWorld
         DateTime lastKeyAvaible = DateTime.Now;
 
         public string serverIP;
+        public string sessionid;
         int frameCount = 100;
 
         public bool StopFluids;
@@ -59,29 +60,8 @@ namespace MineWorld
 
         public string GetExternalIp()
         {
-            string whatIsMyIp = "http://www.whatismyip.com/automation/n09230945.asp";
-            WebClient wc = new WebClient();
-            if (Ssettings.Proxy != true)
-            {
-                wc.Proxy = null;
-            }
-            UTF8Encoding utf8 = new UTF8Encoding();
-            string requestHtml = "";
-            try
-            {
-                requestHtml = utf8.GetString(wc.DownloadData(whatIsMyIp));
-            }
-            catch (WebException we)
-            {
-                // do something with exception
-                ConsoleWrite(we.ToString());
-            }
-            string externalIp = null;
-            if (requestHtml!="")
-            {
-                externalIp = requestHtml;
-            }
-            return externalIp;
+            string ip = HttpRequest.Get(Defines.MASTERSERVER_BASE_URL + "ip.php", null);
+            return ip;
         }
 
         public bool Start()
@@ -183,7 +163,7 @@ namespace MineWorld
             //If public, announce server to public tracker
             if (Ssettings.Public)
             {
-                updateMasterServer();
+                addtoMasterServer();
             }
 
             // Main server loop!
@@ -274,6 +254,7 @@ namespace MineWorld
                     disconnectAll();
                     netServer.Shutdown("serverrestart");
                     BackupLevel();
+                    removefromMasterServer();
                     return true;
                 }
 
@@ -282,6 +263,7 @@ namespace MineWorld
                     disconnectAll();
                     netServer.Shutdown("servershutdown");
                     BackupLevel();
+                    removefromMasterServer();
                     return false;
                 }
 
@@ -808,25 +790,54 @@ namespace MineWorld
             }
         }
 
+        public void addtoMasterServer()
+        {
+            updateMasterServer(true);
+        }
+
         public void updateMasterServer()
         {
-            //WebClient wc = new WebClient();
-            //if (!Ssettings.Proxy)
-            //{
-                //wc.Proxy = null;
-            //}
-            // JOw martijn dit moet ff anders
-            // Ik zal je een voorbeeldje laten zien ;)
-            /*
-             De variablen leest de client op deze volgorde en dat ging fout bij jou :S
-             * IP
-             * NAME
-             * EXTRA INFO (ons geval null dacht ik weet niet zeker :P
-             * PLAYERCOUNT
-             * MAXPLAYERS
-             */
-            //wc.DownloadString("http://www.humorco.nl/mineworld/updateServer.php?sn=" + servername + "&ip=" + IP + "&u=" + currentUsers + "&mu=" + maxUsers);
-            ConsoleWrite("UPDATING MASTERSERVER");
+            updateMasterServer(false);
+        }
+
+        public void hearthbeatMasterServer()
+        {
+            Dictionary<string, string> session = new Dictionary<string, string>();
+            session.Add("id", sessionid);
+            HttpRequest.Get(Defines.MASTERSERVER_BASE_URL + "updateServer.php", session);
+            ConsoleWrite("SENDING HEARTHBEAT TO MASTERSERVER");
+        }
+
+        public void removefromMasterServer()
+        {
+            Dictionary<string, string> session = new Dictionary<string, string>();
+            session.Add("id", sessionid);
+            HttpRequest.Get(Defines.MASTERSERVER_BASE_URL + "removeServer.php", session);
+            ConsoleWrite("REMOVING SERVER FROM MASTERSERVER");
+        }
+
+        public void updateMasterServer(bool firsttime)
+        {
+            //TODO Serverinformation is hardcoded in the update function
+            string temp;
+            Dictionary<string, string> serverinfo = new Dictionary<string,string>();
+            serverinfo.Add("ip", serverIP);
+            serverinfo.Add("sn", Ssettings.Servername);
+            serverinfo.Add("u" , playerList.Count.ToString());
+            serverinfo.Add("mu", Ssettings.Maxplayers.ToString());
+            serverinfo.Add("e", "InfiniteWorld");
+            serverinfo.Add("t", "MineWorld");
+            temp = HttpRequest.Get(Defines.MASTERSERVER_BASE_URL + "updateServer.php",serverinfo);
+            if (firsttime)
+            {
+                sessionid = temp;
+                ConsoleWrite("ADDING SERVER TO MASTERSERVER");
+                ConsoleWrite("SESSION KEY: " + sessionid);
+            }
+            else
+            {
+                ConsoleWrite("UPDATING MASTERSERVER");
+            }
         }
 
         public void Sendhearthbeat()
