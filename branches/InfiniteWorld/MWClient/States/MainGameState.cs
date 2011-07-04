@@ -386,7 +386,7 @@ namespace MineWorld.States
             _SM.Window.Title = Defines.MINEWORLDCLIENT_VERSION;
         }
 
-        DateTime startChat = DateTime.Now;
+        //DateTime startChat = DateTime.Now;
         public override void OnCharEntered(EventInput.CharacterEventArgs e)
         {
             if ((int)e.Character < 32 || (int)e.Character > 126) //From space to tilde
@@ -394,12 +394,12 @@ namespace MineWorld.States
             if (_P.chatMode != ChatMessageType.None)
             {
                 //Chat delay to avoid entering the "start chat" key, an unfortunate side effect of the new key bind system
-                TimeSpan diff = DateTime.Now - startChat;
-                if (diff.Milliseconds >= 2)
-                    if (!(Keyboard.GetState().IsKeyDown(Keys.LeftControl) || Keyboard.GetState().IsKeyDown(Keys.RightControl)))
-                    {
+                //TimeSpan diff = DateTime.Now - startChat;
+                //if (diff.Milliseconds >= 2)
+                    //if (!(Keyboard.GetState().IsKeyDown(Keys.LeftControl) || Keyboard.GetState().IsKeyDown(Keys.RightControl)))
+                    //{
                         _P.chatEntryBuffer += e.Character;
-                    }
+                    //}
             }
         }
 
@@ -440,7 +440,7 @@ namespace MineWorld.States
                     break;
                 case KeyBoardButtons.Say:
                     _P.chatMode = ChatMessageType.Say;
-                    startChat = DateTime.Now;
+                    //startChat = DateTime.Now;
                     break;
             }
         }

@@ -199,8 +199,8 @@ namespace MineWorld.States
                         nextState = "MineWorld.States.ServerBrowserState";
                     else
                     {
-                        _P.connectionerror = "Error: Problem while saving";
-                        _P.connectionerrornewstate = "MineWorld.States.ServerBrowserState";
+                        ErrorManager.ErrorMsg = "Error: Problem while saving";
+                        ErrorManager.NewState = "MineWorld.States.ServerBrowserState";
                         nextState = "MineWorld.States.ErrorState";
                     }
                     break;

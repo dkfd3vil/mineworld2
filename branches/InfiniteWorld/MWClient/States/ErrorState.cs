@@ -57,7 +57,7 @@ namespace MineWorld.States
             SpriteBatch spriteBatch = new SpriteBatch(graphicsDevice);
             spriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Deferred, SaveStateMode.SaveState);
             spriteBatch.Draw(texMenu, drawRect, Color.White);
-            spriteBatch.DrawString(uiFont, _P.connectionerror, new Vector2(((int)(_SM.GraphicsDevice.Viewport.Width / 2 - uiFont.MeasureString(_P.connectionerror).X / 2)), drawRect.Y + 430), Color.White);
+            spriteBatch.DrawString(uiFont, ErrorManager.ErrorMsg, new Vector2(((int)(_SM.GraphicsDevice.Viewport.Width / 2 - uiFont.MeasureString(ErrorManager.ErrorMsg).X / 2)), drawRect.Y + 430), Color.White);
             spriteBatch.End();
         }
 
@@ -65,7 +65,7 @@ namespace MineWorld.States
         {
             if (key == Keys.Escape)
             {
-                nextState = _P.connectionerrornewstate;
+                nextState = ErrorManager.NewState;
             }
         }
 
@@ -78,7 +78,7 @@ namespace MineWorld.States
         {
             if (button == MouseButtons.LeftButton)
             {
-                nextState = _P.connectionerrornewstate;
+                nextState = ErrorManager.NewState;
             }
         }
 

@@ -90,7 +90,7 @@ namespace MineWorld.States
                     if (_P.mapLoadProgress[x, y])
                         dataPacketsRecieved += 1;
             string progressText = "Connecting...";
-            if ((_SM as MineWorldGame).anyPacketsReceived)
+            if ((_SM as MineWorldGame).ConnectionApproved)
             {
                 progressText = string.Format("{0:00}% LOADED", dataPacketsRecieved * 100 / (Defines.MAPSIZE * Defines.MAPSIZE / Defines.PACKETSIZE));
             }

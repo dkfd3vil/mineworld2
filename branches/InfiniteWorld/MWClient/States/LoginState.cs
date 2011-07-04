@@ -177,7 +177,7 @@ namespace MineWorld.States
                                 case "username":
                                     {
                                         username = (element as InterfaceTextInput).value;
-                                        globalvalues.Add("username", username);
+                                        //globalvalues.Add("username", username);
                                         break;
                                     }
                                 case "password":
@@ -197,6 +197,8 @@ namespace MineWorld.States
                     }
                     else
                     {
+                        ErrorManager.ErrorMsg = "Wrong username or/and password";
+                        ErrorManager.NewState = "MineWorld.States.LoginState";
                         nextState = "MineWorld.States.ErrorState";
                     }
                     break;
