@@ -1,0 +1,34 @@
+# Set the servername
+servername = Unnamed Server
+
+# Max player for on your server dont set this too high
+maxplayers = 16
+
+# Before making your server public, MAKE SURE THAT PORT 5565 (TCP/UDP) IS ACCESSIBLE FROM THE OUTSIDE OF YOUR NETWORK!
+# For most users, this means setting the port to be forwarded by your router through your router control interface.
+public = true
+
+# If you play over a proxy you can set this to true and it automatically detects the proxy from internet explorer
+proxy = false
+
+# If true, the public server list will be notified immediately when your server goes up - otherwise it will take a couple mintes / you can use announce
+autoannounce = true
+
+# If set, the level will be loaded whenever the server is started
+# Else if empty then the server will generate a new level
+levelname =
+
+# If set, this message will be sent to newcomers
+# [name] will be replaced with their name
+motd = Welcome [name] on my server!
+
+# Sets the number of minutes between autosaves (zero disables autosave)
+autosave = 5
+
+# Enables server logging
+logs = true
+
+# This sets the amount of steps times 10 to go from day to night
+# Example 60 * 10 = 600 secs to go from day to night
+# Another example 5 * 10 = 50 secs to go from day to night
+lightsteps = 60
