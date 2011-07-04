@@ -27,7 +27,7 @@ namespace MineWorld
 
         public KeyBindHandler keyBinds = new KeyBindHandler();
 
-        public bool anyPacketsReceived = false;
+        public bool ConnectionApproved = false;
 
         public IPAddress IPargument = null;
 
@@ -41,7 +41,7 @@ namespace MineWorld
 
         public void JoinGame(IPEndPoint serverEndPoint)
         {
-            anyPacketsReceived = false;
+            ConnectionApproved = false;
             // Clear out the map load progress indicator.
             propertyBag.mapLoadProgress = new bool[Defines.MAPSIZE,Defines.MAPSIZE];
             for (int i = 0; i < Defines.MAPSIZE; i++)
@@ -135,11 +135,11 @@ namespace MineWorld
                         }
                         break;
                     case NetMessageType.ConnectionApproval:
-                        anyPacketsReceived = true;
+                        ConnectionApproved = true;
                         break;
                     case NetMessageType.ConnectionRejected:
                         {
-                            anyPacketsReceived = false;
+                            ConnectionApproved = false;
                             try
                             {
                                 string reason = msgBuffer.ReadString();
@@ -149,44 +149,44 @@ namespace MineWorld
                                     {
                                         case "bannedname":
                                             {
-                                                propertyBag.connectionerror = "Error: The name you choosed is banned from the server";
-                                                propertyBag.connectionerrornewstate = "MineWorld.States.SettingsState";
+                                                ErrorManager.ErrorMsg = "Error: The name you choosed is banned from the server";
+                                                ErrorManager.NewState = "MineWorld.States.SettingsState";
                                                 break;
                                             }
                                         case "noname":
                                             {
-                                                propertyBag.connectionerror = "Error: You didnt choose a name";
-                                                propertyBag.connectionerrornewstate = "MineWorld.States.SettingsState";
+                                                ErrorManager.ErrorMsg = "Error: You didnt choose a name";
+                                                ErrorManager.NewState = "MineWorld.States.SettingsState";
                                                 break;
                                             }
                                         case "changename":
                                             {
-                                                propertyBag.connectionerror = "Error: You need to change your name you cannot choose name (player)";
-                                                propertyBag.connectionerrornewstate = "MineWorld.States.SettingsState";
+                                                ErrorManager.ErrorMsg = "Error: You need to change your name you cannot choose name (player)";
+                                                ErrorManager.NewState = "MineWorld.States.SettingsState";
                                                 break;
                                             }
                                         case "versionwrong":
                                             {
-                                                propertyBag.connectionerror = "Error: Your client is out of date consider updating";
-                                                propertyBag.connectionerrornewstate = "MineWorld.States.ServerBrowserState";
+                                                ErrorManager.ErrorMsg = "Error: Your client is out of date consider updating";
+                                                ErrorManager.NewState = "MineWorld.States.ServerBrowserState";
                                                 break;
                                             }
                                         case "banned":
                                             {
-                                                propertyBag.connectionerror = "Error: You are banned from this server";
-                                                propertyBag.connectionerrornewstate = "MineWorld.States.ServerBrowserState";
+                                                ErrorManager.ErrorMsg = "Error: You are banned from this server";
+                                                ErrorManager.NewState = "MineWorld.States.ServerBrowserState";
                                                 break;
                                             }
                                         case "serverisfull":
                                             {
-                                                propertyBag.connectionerror = "Error: The server is full";
-                                                propertyBag.connectionerrornewstate = "MineWorld.States.ServerBrowserState";
+                                                ErrorManager.ErrorMsg = "Error: The server is full";
+                                                ErrorManager.NewState = "MineWorld.States.ServerBrowserState";
                                                 break;
                                             }
                                         default:
                                             {
-                                                propertyBag.connectionerror = "Error: Unknow error";
-                                                propertyBag.connectionerrornewstate = "MineWorld.States.ServerBrowserState";
+                                                ErrorManager.ErrorMsg = "Error: Unknow error";
+                                                ErrorManager.NewState = "MineWorld.States.ServerBrowserState";
                                                 break;
                                             }
                                     }
@@ -194,8 +194,8 @@ namespace MineWorld
                             }
                             catch 
                             {
-                                propertyBag.connectionerror = "Error: Unknow error";
-                                propertyBag.connectionerrornewstate = "MineWorld.States.SettingsState";
+                                ErrorManager.ErrorMsg = "Error: Unknow error";
+                                ErrorManager.NewState = "MineWorld.States.SettingsState";
                             }
                             ChangeState("MineWorld.States.ErrorState");
                         }
@@ -210,7 +210,7 @@ namespace MineWorld
                                 {
                                     case MineWorldMessage.BlockBulkTransfer:
                                         {
-                                            anyPacketsReceived = true;
+                                            ConnectionApproved = true;
 
                                             try
                                             {
@@ -249,8 +249,8 @@ namespace MineWorld
                                             }
                                             catch
                                             {
-                                                propertyBag.connectionerror = "Map Bulk Transfer Failed";
-                                                propertyBag.connectionerrornewstate = "MineWorld.States.ServerBrowserState";
+                                                ErrorManager.ErrorMsg = "Map Bulk Transfer Failed";
+                                                ErrorManager.NewState = "MineWorld.States.ServerBrowserState";
                                                 ChangeState("MineWorld.States.ErrorState");
                                             }
                                         }

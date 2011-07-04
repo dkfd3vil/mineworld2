@@ -63,10 +63,6 @@ namespace MineWorld
 
         public float time = 1.0f;
 
-        // Error handeling variables
-        public string connectionerror = "";
-        public string connectionerrornewstate = "";
-
         public float mouseSensitivity = 0.005f;
 
         // Screen effect stuff.

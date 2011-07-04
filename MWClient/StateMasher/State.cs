@@ -18,7 +18,6 @@ namespace StateMasher
     {
         public StateMachine _SM = null;
         public PropertyBag _P = null;
-        public Dictionary<string,string> globalvalues = new Dictionary<string,string>();
 
         public virtual void OnEnter(string oldState)
         {

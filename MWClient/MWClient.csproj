@@ -102,6 +102,7 @@
     <Compile Include="Engines\LightingEngine.cs" />
     <Compile Include="Engines\ParticleEngine.cs" />
     <Compile Include="Engines\SkyEngine.cs" />
+    <Compile Include="ErrorManager.cs" />
     <Compile Include="EventInput.cs" />
     <Compile Include="FPSCounter.cs" />
     <Compile Include="MineWorldGame.cs" />
