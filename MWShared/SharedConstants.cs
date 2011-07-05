@@ -4,14 +4,14 @@ namespace MineWorld
 {
     public class Defines
     {
-        public const string MINEWORLDSERVER_VERSION = "Mine World Alpha 4.2";
-        public const string MINEWORLDCLIENT_VERSION = "Mine World Alpha 4.2";
-        public const double MINEWORLD_VER = 4.2;
+        public const double MINEWORLD_VER = 5.0;
+        public const string MINEWORLDSERVER_VERSION = "Mine World Beta 5.0";
+        public const string MINEWORLDCLIENT_VERSION = "Mine World Beta 5.0";
 
         public const string MASTERSERVER_BASE_URL = "http://humorco.nl/mineworld/";
 
-        public const int MAPSIZE = 64;
         //Mapsize % Packetsize MUST EQUAL 0!!!
+        public const int MAPSIZE = 64;
         public const int PACKETSIZE = 32;
 
         public const int GROUND_LEVEL = MAPSIZE / 8;
