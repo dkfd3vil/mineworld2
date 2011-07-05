@@ -1,4 +1,6 @@
-﻿using System;
+﻿// With the new lidgren libary this is nog needed anymore
+/*
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -15,8 +17,8 @@ namespace MineWorld
         {
         }
 
-        /* crappy hack to fix duplicate key error crash in Lidgren, hopefully a new
-         * version of Lidgren will fix this issue. */
+        crappy hack to fix duplicate key error crash in Lidgren, hopefully a new
+        version of Lidgren will fix this issue. 
         public bool SanityCheck(NetConnection connection)
         {
             if (this.m_connections.Contains(connection) == false)
@@ -42,3 +44,4 @@ namespace MineWorld
         }
     }
 }
+*/

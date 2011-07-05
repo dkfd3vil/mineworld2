@@ -115,23 +115,26 @@ namespace MineWorld
             effect.Parameters["xView"].SetValue(viewMatrix);
             effect.Parameters["xProjection"].SetValue(projectionMatrix);
             effect.Parameters["xTexture"].SetValue(texSprite);
-            effect.Begin();
-            effect.Techniques[0].Passes[0].Begin();
+            //effect.Begin();
+            //effect.Techniques[0].Passes[0].Begin();
 
-            graphicsDevice.RenderState.CullMode = CullMode.None;
-            graphicsDevice.SamplerStates[0].MagFilter = TextureFilter.Point;
+            graphicsDevice.BlendState = BlendState.Opaque;
+            graphicsDevice.DepthStencilState = DepthStencilState.Default;
+            //gra/phicsDevice.RenderState.CullMode = CullMode.None;
+            //graphicsDevice.SamplerStates[0].MagFilter = TextureFilter.Point;
 
             // Since the per-pixel alpha is either 0 or 1 we can use an alpha test instead of alpha blending.
-            graphicsDevice.RenderState.AlphaTestEnable = true;
-            graphicsDevice.RenderState.AlphaFunction = CompareFunction.Greater;
-            graphicsDevice.RenderState.ReferenceAlpha = 128;
+            //graphicsDevice.RenderState.AlphaTestEnable = true;
+            //graphicsDevice.RenderState.AlphaFunction = CompareFunction.Greater;
+            //graphicsDevice.RenderState.ReferenceAlpha = 128;
 
             graphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleList, vertices, 0, vertices.Length / 3);
 
-            graphicsDevice.RenderState.AlphaTestEnable = false;
+            //graphicsDevice.RenderState.AlphaTestEnable = false;
 
-            effect.Techniques[0].Passes[0].End();
-            effect.End();
+            effect.Techniques[0].Passes[0].Apply();
+            //effect.Techniques[0].Passes[0].End();
+            //effect.End();
         }
 
         public void DrawText(Matrix viewMatrix, Matrix projectionMatrix, Vector3 drawPosition, string hoverText)
@@ -149,7 +152,7 @@ namespace MineWorld
 
             // Draw our text over the player.
             SpriteBatch spriteBatch = new SpriteBatch(graphicsDevice);
-            spriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.SaveState);
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
             Vector3 screenSpace = graphicsDevice.Viewport.Project(Vector3.Zero,
                                                                   projectionMatrix,
                                                                   viewMatrix,
