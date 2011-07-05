@@ -108,11 +108,14 @@ namespace MineWorld.States
             // Update the camera regardless of if we're alive or not.
             _P.UpdateCamera(gameTime);
 
+            // Check for hearthbeat packets
             TimeSpan timespanhearthbeat = DateTime.Now - _P.lasthearthbeatreceived;
             if (timespanhearthbeat.TotalMilliseconds > 5000)
             {
-                // The server crashed lets exit
-                nextState = "MineWorld.States.ServerBrowserState";
+                // The server crashed or connection lost lets exit
+                ErrorManager.ErrorMsg = "Connection lost to server";
+                ErrorManager.NewState = "MineWorld.States.ServerBrowserState";
+                nextState = "MineWorld.States.ErrorState";
             }
 
             return nextState;
