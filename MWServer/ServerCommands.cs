@@ -240,7 +240,7 @@ namespace MineWorld
                     ConsoleWriteError("Unable to load level - " + filename + " does not exist!");
                     return false;
                 }
-                SendServerMessage("Changing map to " + filename + "!");
+                SendServerWideMessage("Changing map to " + filename + "!");
                 disconnectAll();
 
                 FileStream fs = new FileStream(filename, FileMode.Open);

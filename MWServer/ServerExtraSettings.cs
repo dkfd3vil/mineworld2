@@ -5,8 +5,11 @@ namespace MineWorld
     {
         public string Deathbyfall;
         public string Deathbyoutofbounds;
-        public string Deathbydrowned;
+        public string Deathbydrown;
         public string Deathbylava;
+        public string Deathbysuicide;
+        public string Deathbycrush;
+        public string Deathbyexplosion;
         public int Playerhealth;
         public int Playerregenrate;
     }

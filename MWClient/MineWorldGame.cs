@@ -22,7 +22,6 @@ namespace MineWorld
     {
         public ClientSettings Csettings = new ClientSettings();
         double timeSinceLastUpdate = 0;
-        NetBuffer msgBuffer = null;
         Song songTitle = null;
 
         public KeyBindHandler keyBinds = new KeyBindHandler();
@@ -49,12 +48,17 @@ namespace MineWorld
                     propertyBag.mapLoadProgress[i,j] = false;
 
             // Create our connect message.
-            NetBuffer connectBuffer = propertyBag.netClient.CreateBuffer();
-            connectBuffer.Write(propertyBag.playerHandle);
-            connectBuffer.Write(Defines.MINEWORLD_VER);
+            NetOutgoingMessage connect = propertyBag.netClient.CreateMessage();
+            connect.Write(propertyBag.playerHandle);
+            connect.Write(Defines.MINEWORLD_VER);
 
             // Connect to the server.
-            propertyBag.netClient.Connect(serverEndPoint, connectBuffer.ToArray());
+            propertyBag.netClient.Connect(serverEndPoint, connect);
+        }
+
+        public void LeaveGame(string reason)
+        {
+            //TODO Code this leavegame function
         }
 
         public List<ServerInformation> EnumerateServers(float discoveryTime)
@@ -62,7 +66,7 @@ namespace MineWorld
             List<ServerInformation> serverList = new List<ServerInformation>();
 
             // Discover local servers.
-            propertyBag.netClient.DiscoverLocalServers(5565);
+            propertyBag.netClient.DiscoverLocalPeers(Defines.MINEWORLD_PORT);
             NetBuffer msgBuffer = propertyBag.netClient.CreateBuffer();
             NetMessageType msgType;
             float timeTaken = 0;
@@ -408,9 +412,11 @@ namespace MineWorld
 
                                     case MineWorldMessage.ChatMessage:
                                         {
+                                            // Todo check with martijn what he thinks of this ;)
+                                            // Why should we sanitize a message from the server? if the server sanitizes our messages ?
                                             ChatMessageType chatType = (ChatMessageType)msgBuffer.ReadByte();
-                                            string chatString = Defines.Sanitize(msgBuffer.ReadString());
-                                            string author = Defines.Sanitize(msgBuffer.ReadString());
+                                            string chatString = msgBuffer.ReadString();
+                                            string author = msgBuffer.ReadString();
                                             propertyBag.addChatMessage(chatString, chatType, author);
                                         }
                                         break;

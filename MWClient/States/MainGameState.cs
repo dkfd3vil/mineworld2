@@ -54,14 +54,6 @@ namespace MineWorld.States
             _P.particleEngine.Update(gameTime);
             _P.interfaceEngine.Update(gameTime);
 
-            // Count down the tool cooldown.
-                //if (_P.playerToolCooldown > 0)
-                //{
-                    //_P.playerToolCooldown -= (float)gameTime.ElapsedGameTime.TotalSeconds;
-                    //if (_P.playerToolCooldown <= 0)
-                        //_P.playerToolCooldown = 0;
-                //}
-
             // Moving the mouse changes where we look.
             if (_SM.WindowHasFocus())
             {
@@ -84,22 +76,6 @@ namespace MineWorld.States
             }
             else
                 mouseInitialized = false;
-
-            // Prospector radar stuff.
-            /*
-            if (!_P.playerDead && _P.playerToolCooldown == 0 && _P.playerTools[_P.playerToolSelected] == PlayerTools.ProspectingRadar)
-            {
-                float oldValue = _P.radarValue;
-                _P.ReadRadar(ref _P.radarDistance, ref _P.radarValue);
-                if (_P.radarValue != oldValue)
-                {
-                    if (_P.radarValue == 200)
-                        _P.PlaySound(MineWorldSound.RadarLow);
-                    if (_P.radarValue == 1000)
-                        _P.PlaySound(MineWorldSound.RadarHigh);
-                }
-            }
-             */
 
             // Update the player's position.
             if (!_P.playerDead)
@@ -488,9 +464,10 @@ namespace MineWorld.States
                     // If we have an actual message to send, fire it off at the server.
                     if (_P.chatEntryBuffer.Length > 0)
                     {
-                        if (_P.netClient.Status == NetConnectionStatus.Connected)
+                        if(_P.netClient.ConnectionStatus == NetConnectionStatus.Connected)
                         {
-                            //Its a player command :D?
+                            //Todo remove this check and let the server check for client commands
+                            //This is nessarcy cause of how currently the client commands system works :S
                             if(_P.chatEntryBuffer.StartsWith("/"))
                             {
                                 NetBuffer msgBuffer = _P.netClient.CreateBuffer();

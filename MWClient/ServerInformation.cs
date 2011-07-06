@@ -26,7 +26,7 @@ namespace MineWorld
         public ServerInformation(IPAddress ip, string name,string gametag, string numPlayers, string maxPlayers,string extra)
         {
             serverName = name;
-            ipEndPoint = new IPEndPoint(ip, 5565);
+            ipEndPoint = new IPEndPoint(ip, Defines.MINEWORLD_PORT);
             this.gametag = gametag;
             this.numPlayers = numPlayers;
             this.maxPlayers = maxPlayers;

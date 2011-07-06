@@ -94,20 +94,11 @@ namespace MineWorld
             // Initialize the server.
             NetPeerConfiguration config = new NetPeerConfiguration("MineWorld");
             //Todo put this in the config files
-            config.Port = 5565;
+            config.Port = Defines.MINEWORLD_PORT;
             config.MaximumConnections = Ssettings.Maxplayers;
             //Todo check wich messages need to be enabled
             //config.EnableMessageType();
             netServer = new NetServer(config);
-            //NetConfiguration netConfig = new NetConfiguration("MineWorldPlus");
-            //netConfig.MaxConnections = Ssettings.Maxplayers;
-            //netConfig.Port = 5565;
-            //netServer = new MineWorldNetServer(netConfig);
-            //netServer.SetMessageTypeEnabled(NetMessageType.ConnectionApproval, true);
-            //netServer.SimulatedMinimumLatency = 0.1f;
-            //netServer.SimulatedLatencyVariance = 0.05f;
-            //netServer.SimulatedLoss = 0.1f;
-            //netServer.SimulatedDuplicates = 0.05f;
 
             // Initialize the daymanager.
             dayManager = new DayManager(Ssettings);
@@ -497,11 +488,16 @@ namespace MineWorld
             ConsoleWrite("LOADING EXTRASETTINGS");
 
             //ToDo Load them from the file
+            //dont forget to use [name]
             //File is already inplace
-            SAsettings.Deathbydrowned = "[name] drowned";
-            SAsettings.Deathbyfall = "[name] felt";
-            SAsettings.Deathbylava = "[name] burned";
-            SAsettings.Deathbyoutofbounds = "[name] felt of the map";
+            SAsettings.Deathbydrown = "WAS DROWNED!";
+            SAsettings.Deathbyfall = "WAS KILLED BY GRAVITY!";
+            SAsettings.Deathbylava = "WAS INCINERATED BY LAVA!";
+            SAsettings.Deathbyoutofbounds = "WAS KILLED BY MISADVENTURE!";
+            SAsettings.Deathbysuicide = "HAS COMMITED PIXELCIDE!";
+            SAsettings.Deathbycrush = "WAS CRUSHED!";
+            SAsettings.Deathbyexplosion = "WAS KILLED IN AN EXPLOSION!";
+
             SAsettings.Playerhealth = 100;
             SAsettings.Playerregenrate = 1;
 
@@ -523,7 +519,7 @@ namespace MineWorld
         public void Shutdownserver()
         {
             ConsoleWrite("Server is shutting down in 5 seconds.", ConsoleColor.Yellow);
-            SendServerMessage("Server is shutting down in 5 seconds.");
+            SendServerWideMessage("Server is shutting down in 5 seconds.");
             shutdownTriggerd = true;
             shutdownTime = DateTime.Now + TimeSpan.FromSeconds(5);
         }
@@ -531,7 +527,7 @@ namespace MineWorld
         public void Restartserver()
         {
             ConsoleWrite("Server restarting in 5 seconds.", ConsoleColor.Yellow);
-            SendServerMessage("Server restarting in 5 seconds.");
+            SendServerWideMessage("Server restarting in 5 seconds.");
             restartTriggered = true;
             restartTime = DateTime.Now + TimeSpan.FromSeconds(5);
         }
@@ -545,7 +541,7 @@ namespace MineWorld
             netServer.SendMsg(msgBuffer, player.NetConn, NetChannel.ReliableUnordered);
         }
 
-        public void SendServerMessage(string message)
+        public void SendServerWideMessage(string message)
         {
             NetBuffer msgBuffer = netServer.CreateBuffer();
             msgBuffer.Write((byte)MineWorldMessage.ChatMessage);
