@@ -76,7 +76,7 @@ namespace MineWorld.States
                 IPAddress IPtoJoin = (_SM as MineWorldGame).IPargument;
                 (_SM as MineWorldGame).IPargument = null;
                 (_SM as MineWorldGame).propertyBag.serverName = IPtoJoin.ToString();
-                (_SM as MineWorldGame).JoinGame(new IPEndPoint(IPtoJoin, 5565));
+                (_SM as MineWorldGame).JoinGame(new IPEndPoint(IPtoJoin, Defines.MINEWORLD_PORT));
 
                 nextState = "MineWorld.States.LoadingState";
             }
@@ -162,7 +162,7 @@ namespace MineWorld.States
                     if (connectIp != null)                   
                     {
                         (_SM as MineWorldGame).propertyBag.serverName = directConnectIP;
-                        (_SM as MineWorldGame).JoinGame(new IPEndPoint(connectIp, 5565));
+                        (_SM as MineWorldGame).JoinGame(new IPEndPoint(connectIp, Defines.MINEWORLD_PORT));
                         nextState = "MineWorld.States.LoadingState";
                     }
                     directConnectIP = "";
@@ -176,10 +176,6 @@ namespace MineWorld.States
                     }
                     catch { }
                 }
-                /*else if (keyMap.IsKeyMapped(key))
-                {
-                    directConnectIP += keyMap.TranslateKey(key, false);
-                }*/
             }
             else
             {

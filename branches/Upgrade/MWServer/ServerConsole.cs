@@ -108,7 +108,7 @@ namespace MineWorld
                     {
                         if (args.Length >= 2)
                         {
-                            SendServerMessage(args[1]);
+                            SendServerWideMessage(args[1]);
                         }
                         break;
                     }
