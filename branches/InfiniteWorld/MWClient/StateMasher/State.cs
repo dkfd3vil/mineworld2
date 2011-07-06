@@ -64,6 +64,14 @@ namespace StateMasher
         {
         }
 
+        public virtual void KeyBoardEvents(KeyboardState keyboard)
+        {
+        }
+
+        public virtual void MouseEvents(MouseState mouse)
+        {
+        }
+
         //public virtual void OnStatusChange(NetConnectionStatus status)
         //{
         //}

@@ -15,11 +15,11 @@ namespace MineWorld
             Shift
         }
 
-        Dictionary<Keys, KeyBoardButtons> keyBinds = new Dictionary<Keys, KeyBoardButtons>();
-        Dictionary<MouseButtons, KeyBoardButtons> mouseBinds = new Dictionary<MouseButtons, KeyBoardButtons>();
-        Dictionary<SpecialKeys, KeyBoardButtons> specialKeyBinds = new Dictionary<SpecialKeys, KeyBoardButtons>();
+        Dictionary<Keys, CustomKeyBoardButtons> keyBinds = new Dictionary<Keys, CustomKeyBoardButtons>();
+        Dictionary<MouseButtons, CustomMouseButtons> mouseBinds = new Dictionary<MouseButtons, CustomMouseButtons>();
+        Dictionary<SpecialKeys, CustomKeyBoardButtons> specialKeyBinds = new Dictionary<SpecialKeys, CustomKeyBoardButtons>();
 
-        public bool IsBound(KeyBoardButtons button, Keys theKey)
+        public bool IsBound(CustomKeyBoardButtons button, Keys theKey)
         {
             if (keyBinds.ContainsKey(theKey) && keyBinds[theKey] == button)
                 return true;
@@ -32,7 +32,7 @@ namespace MineWorld
             return false;
         }
 
-        public bool IsPressed(KeyBoardButtons button)
+        public bool IsPressedKeyBoardButton(CustomKeyBoardButtons button)
         {
             KeyboardState state = Keyboard.GetState();
             foreach (Keys key in keyBinds.Keys)
@@ -41,28 +41,6 @@ namespace MineWorld
                 {
                     if (state.IsKeyDown(key))
                         return true;
-                }
-            }
-            MouseState ms = Mouse.GetState();
-            foreach (MouseButtons mb in mouseBinds.Keys)
-            {
-                if (mouseBinds[mb] == button)
-                {
-                    switch (mb)
-                    {
-                        case MouseButtons.LeftButton:
-                            if (ms.LeftButton == ButtonState.Pressed)
-                                return true;
-                            break;
-                        case MouseButtons.MiddleButton:
-                            if (ms.MiddleButton == ButtonState.Pressed)
-                                return true;
-                            break;
-                        case MouseButtons.RightButton:
-                            if (ms.RightButton == ButtonState.Pressed)
-                                return true;
-                            break;
-                    }
                 }
             }
             foreach (SpecialKeys key in specialKeyBinds.Keys)
@@ -89,14 +67,48 @@ namespace MineWorld
             return false;
         }
 
-        public bool IsBound(KeyBoardButtons button, MouseButtons mb)
+        public bool IsPressedMouseButton(CustomMouseButtons button)
         {
-            if (mouseBinds.ContainsKey(mb) && mouseBinds[mb] == button)
+            MouseState ms = Mouse.GetState();
+            foreach (MouseButtons mb in mouseBinds.Keys)
+            {
+                if (mouseBinds[mb] == button)
+                {
+                    switch (mb)
+                    {
+                        case MouseButtons.LeftButton:
+                            if (ms.LeftButton == ButtonState.Pressed)
+                                return true;
+                            break;
+                        case MouseButtons.MiddleButton:
+                            if (ms.MiddleButton == ButtonState.Pressed)
+                                return true;
+                            break;
+                        case MouseButtons.RightButton:
+                            if (ms.RightButton == ButtonState.Pressed)
+                                return true;
+                            break;
+                    }
+                }
+            }
+            return false;
+        }
+
+        public bool IsBoundMouse(MouseButtons mb)
+        {
+            if (mouseBinds.ContainsKey(mb))
                 return true;
             return false;
         }
 
-        public KeyBoardButtons GetBound(Keys theKey)
+        public bool IsBoundKeyboard(Keys button)
+        {
+            if (keyBinds.ContainsKey(button))
+                return true;
+            return false;
+        }
+
+        public CustomKeyBoardButtons GetBoundKeyBoard(Keys theKey)
         {
             if (keyBinds.ContainsKey(theKey))
                 return keyBinds[theKey];
@@ -106,18 +118,18 @@ namespace MineWorld
                 return specialKeyBinds[SpecialKeys.Shift];
             else if ((theKey == Keys.LeftControl || theKey == Keys.RightControl) && specialKeyBinds.ContainsKey(SpecialKeys.Control))
                 return specialKeyBinds[SpecialKeys.Control];
-            return KeyBoardButtons.None;
+            return CustomKeyBoardButtons.None;
         }
 
-        public KeyBoardButtons GetBound(MouseButtons theButton)
+        public CustomMouseButtons GetBoundMouse(MouseButtons theButton)
         {
             if (mouseBinds.ContainsKey(theButton))
                 return mouseBinds[theButton];
-            return KeyBoardButtons.None;
+            return CustomMouseButtons.None;
         }
 
         //If overwrite is true then the previous entry for that button will be removed
-        public bool BindKey(KeyBoardButtons button, string key, bool overwrite)
+        public bool BindKey(CustomKeyBoardButtons button, string key, bool overwrite)
         {
             try
             {
@@ -125,7 +137,7 @@ namespace MineWorld
                 Keys actualKey = (Keys)Enum.Parse(typeof(Keys), key, true);
                 if (Enum.IsDefined(typeof(Keys), actualKey))
                 {
-                    keyBinds.Add(actualKey, (KeyBoardButtons)button);
+                    keyBinds.Add(actualKey, (CustomKeyBoardButtons)button);
                     return true;
                 }
             }
@@ -136,7 +148,7 @@ namespace MineWorld
                 MouseButtons actualMB = (MouseButtons)Enum.Parse(typeof(MouseButtons), key, true);
                 if (Enum.IsDefined(typeof(MouseButtons), actualMB))
                 {
-                    mouseBinds.Add(actualMB, (KeyBoardButtons)button);
+                    mouseBinds.Add(actualMB, (CustomMouseButtons)button);
                     return true;
                 }
             }
@@ -144,17 +156,17 @@ namespace MineWorld
             //Special cases
             if (key.Equals("control", StringComparison.OrdinalIgnoreCase) || key.Equals("ctrl", StringComparison.OrdinalIgnoreCase))
             {
-                specialKeyBinds.Add(SpecialKeys.Control, (KeyBoardButtons)button);
+                specialKeyBinds.Add(SpecialKeys.Control, (CustomKeyBoardButtons)button);
                 return true;
             }
             if (key.Equals("shift", StringComparison.OrdinalIgnoreCase))
             {
-                specialKeyBinds.Add(SpecialKeys.Shift, (KeyBoardButtons)button);
+                specialKeyBinds.Add(SpecialKeys.Shift, (CustomKeyBoardButtons)button);
                 return true;
             }
             if (key.Equals("alt", StringComparison.OrdinalIgnoreCase))
             {
-                specialKeyBinds.Add(SpecialKeys.Alt, (KeyBoardButtons)button);
+                specialKeyBinds.Add(SpecialKeys.Alt, (CustomKeyBoardButtons)button);
                 return true;
             }
             return false;
@@ -181,18 +193,18 @@ namespace MineWorld
 
         public void CreateDefaultSet()
         {
-            mouseBinds.Add(MouseButtons.LeftButton, KeyBoardButtons.Fire);
-            mouseBinds.Add(MouseButtons.RightButton, KeyBoardButtons.AltFire);
+            mouseBinds.Add(MouseButtons.LeftButton, CustomMouseButtons.Fire);
+            mouseBinds.Add(MouseButtons.RightButton, CustomMouseButtons.AltFire);
 
-            keyBinds.Add(Keys.W, KeyBoardButtons.Forward);
-            keyBinds.Add(Keys.S, KeyBoardButtons.Backward);
-            keyBinds.Add(Keys.A, KeyBoardButtons.Left);
-            keyBinds.Add(Keys.D, KeyBoardButtons.Right);
-            specialKeyBinds.Add(SpecialKeys.Shift, KeyBoardButtons.Sprint);
-            specialKeyBinds.Add(SpecialKeys.Control, KeyBoardButtons.Crouch);
-            keyBinds.Add(Keys.Space, KeyBoardButtons.Jump);
+            keyBinds.Add(Keys.W, CustomKeyBoardButtons.Forward);
+            keyBinds.Add(Keys.S, CustomKeyBoardButtons.Backward);
+            keyBinds.Add(Keys.A, CustomKeyBoardButtons.Left);
+            keyBinds.Add(Keys.D, CustomKeyBoardButtons.Right);
+            specialKeyBinds.Add(SpecialKeys.Shift, CustomKeyBoardButtons.Sprint);
+            specialKeyBinds.Add(SpecialKeys.Control, CustomKeyBoardButtons.Crouch);
+            keyBinds.Add(Keys.Space, CustomKeyBoardButtons.Jump);
 
-            keyBinds.Add(Keys.Y, KeyBoardButtons.Say);
+            keyBinds.Add(Keys.Y, CustomKeyBoardButtons.Say);
         }
     }
 }

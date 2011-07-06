@@ -39,6 +39,7 @@ namespace MineWorld
 
         // Player variables.
         public Camera playerCamera = null;
+        public Vector3 MoveVector = Vector3.Zero;
         public Vector3 playerPosition = Vector3.Zero;
         public Vector3 playerVelocity = Vector3.Zero;
         public Vector3 lastPosition = Vector3.Zero;
@@ -59,7 +60,8 @@ namespace MineWorld
         public bool movingOnRoad = false;
         public bool sprinting = false;
         public bool swimming = false;
-        public bool crouching = false;
+        //Todo implent crouching
+        //public bool crouching = false;
 
         public float time = 1.0f;
 
@@ -159,6 +161,7 @@ namespace MineWorld
             playerDead = false;
 
             // Zero out velocity and reset camera and screen effects.
+            MoveVector = Vector3.Zero;
             playerVelocity = Vector3.Zero;
             screenEffect = ScreenEffect.None;
             screenEffectCounter = 0;
@@ -326,204 +329,21 @@ namespace MineWorld
             UpdateCamera(null);
         }
 
-        public void UseTool(KeyBoardButtons key)
+        public void UseTool(CustomMouseButtons button)
         {
             if (netClient.Status != NetConnectionStatus.Connected)
                 return;
 
             NetBuffer msgBuffer = netClient.CreateBuffer();
             msgBuffer.Write((byte)MineWorldMessage.UseTool);
-            msgBuffer.Write((byte)key);
+            msgBuffer.Write((byte)button);
             msgBuffer.Write(playerPosition);
             msgBuffer.Write(playerCamera.GetLookVector());
+            //HACK Hardcoded the block that the player places
             msgBuffer.Write((byte)BlockType.Leafs);
             netClient.SendMessage(msgBuffer, NetChannel.ReliableUnordered);
         }
-        /*
-        public void FireRadar()
-        {
-            if (netClient.Status != NetConnectionStatus.Connected)
-                return;
 
-            playerToolCooldown = GetToolCooldown(PlayerTools.ProspectingRadar);
-
-            NetBuffer msgBuffer = netClient.CreateBuffer();
-            msgBuffer.Write((byte)MineWorldMessage.UseTool);
-            msgBuffer.Write(playerPosition);
-            msgBuffer.Write(playerCamera.GetLookVector());
-            msgBuffer.Write((byte)PlayerTools.ProspectingRadar);
-            msgBuffer.Write((byte)BlockType.None);
-            netClient.SendMsg(msgBuffer, NetChannel.ReliableUnordered);
-        }
-        */
-        /*
-        public void FirePickaxe()
-        {
-            if (netClient.Status != NetConnectionStatus.Connected)
-                return;
-
-            playerToolCooldown = GetToolCooldown(PlayerTools.Pickaxe);
-
-            NetBuffer msgBuffer = netClient.CreateBuffer();
-            msgBuffer.Write((byte)MineWorldMessage.UseTool);
-            msgBuffer.Write(playerPosition);
-            msgBuffer.Write(playerCamera.GetLookVector());
-            msgBuffer.Write((byte)PlayerTools.Pickaxe);
-            msgBuffer.Write((byte)BlockType.None);
-            netClient.SendMsg(msgBuffer, NetChannel.ReliableUnordered);
-        }
-         */
-        /*
-        public void FireConstructionGun(BlockType blockType)
-        {
-            if (netClient.Status != NetConnectionStatus.Connected)
-                return;
-
-            playerToolCooldown = GetToolCooldown(PlayerTools.ConstructionGun);
-            constructionGunAnimation = -5;
-
-            // Send the message.
-            NetBuffer msgBuffer = netClient.CreateBuffer();
-            msgBuffer.Write((byte)MineWorldMessage.UseTool);
-            msgBuffer.Write(playerPosition);
-            msgBuffer.Write(playerCamera.GetLookVector());
-            msgBuffer.Write((byte)PlayerTools.ConstructionGun);
-            msgBuffer.Write((byte)blockType);
-            netClient.SendMsg(msgBuffer, NetChannel.ReliableUnordered);
-        }
-         */
-
-        /*
-        public void FireDeconstructionGun()
-        {
-            if (netClient.Status != NetConnectionStatus.Connected)
-                return;
-
-            playerToolCooldown = GetToolCooldown(PlayerTools.DeconstructionGun);
-            constructionGunAnimation = -5;
-
-            // Send the message.
-            NetBuffer msgBuffer = netClient.CreateBuffer();
-            msgBuffer.Write((byte)MineWorldMessage.UseTool);
-            msgBuffer.Write(playerPosition);
-            msgBuffer.Write(playerCamera.GetLookVector());
-            msgBuffer.Write((byte)PlayerTools.DeconstructionGun);
-            msgBuffer.Write((byte)BlockType.None);
-            netClient.SendMsg(msgBuffer, NetChannel.ReliableUnordered);
-        }
-         */
-
-        /*
-        public void FireDetonator()
-        {
-            if (netClient.Status != NetConnectionStatus.Connected)
-                return;
-
-            playerToolCooldown = GetToolCooldown(PlayerTools.Detonator);
-
-            // Send the message.
-            NetBuffer msgBuffer = netClient.CreateBuffer();
-            msgBuffer.Write((byte)MineWorldMessage.UseTool);
-            msgBuffer.Write(playerPosition);
-            msgBuffer.Write(playerCamera.GetLookVector());
-            msgBuffer.Write((byte)PlayerTools.Detonator);
-            msgBuffer.Write((byte)BlockType.None);
-            netClient.SendMsg(msgBuffer, NetChannel.ReliableUnordered);
-        }
-         */
-
-        /*
-        public void ToggleRadar()
-        {
-            playerRadarMute = !playerRadarMute;
-            PlaySound(MineWorldSound.RadarSwitch);
-        }
-        */
-        /*
-        public void ReadRadar(ref float distanceReading, ref float valueReading)
-        {
-            valueReading = 0;
-            distanceReading = 30;
-
-            // Scan out along the camera axis for 30 meters.
-            for (int i = -3; i <= 3; i++)
-                for (int j = -3; j <= 3; j++)
-                {
-                    Matrix rotation = Matrix.CreateRotationX((float)(i * Math.PI / 128)) * Matrix.CreateRotationY((float)(j * Math.PI / 128));
-                    Vector3 scanPoint = playerPosition;
-                    Vector3 lookVector = Vector3.Transform(playerCamera.GetLookVector(), rotation);
-                    for (int k = 0; k < 60; k++)
-                    {
-                        BlockType blockType = blockEngine.BlockAtPoint(scanPoint);
-                        if (blockType == BlockType.Gold)
-                        {
-                            distanceReading = Math.Min(distanceReading, 0.5f * k);
-                            valueReading = Math.Max(valueReading, 200);
-                        }
-                        else if (blockType == BlockType.Diamond)
-                        {
-                            distanceReading = Math.Min(distanceReading, 0.5f * k);
-                            valueReading = Math.Max(valueReading, 1000);
-                        }
-                        scanPoint += 0.5f * lookVector;
-                    }
-                }
-        }
-         */
-
-        // Returns true if the player is able to use a bank right now.
-        /*
-        public bool AtBankTerminal()
-        {
-            // Figure out what we're looking at.
-            Vector3 hitPoint = Vector3.Zero;
-            Vector3 buildPoint = Vector3.Zero;
-            if (!blockEngine.RayCollision(playerPosition, playerCamera.GetLookVector(), 2.5f, 25, ref hitPoint, ref buildPoint))
-                return false;
-
-            // If it's a valid bank object, we're good!
-            BlockType blockType = blockEngine.BlockAtPoint(hitPoint);
-            if (blockType == BlockType.BankRed && playerTeam == PlayerTeam.Red)
-                return true;
-            if (blockType == BlockType.BankBlue && playerTeam == PlayerTeam.Blue)
-                return true;
-            return false;
-        }
-         */
-
-        // Returns true if the player is looking at it's own homebase
-        /*
-        public bool AtHomeBase()
-        {
-            // Figure out what we're looking at.
-            Vector3 hitPoint = Vector3.Zero;
-            Vector3 buildPoint = Vector3.Zero;
-            if (!blockEngine.RayCollision(playerPosition, playerCamera.GetLookVector(), 2.5f, 25, ref hitPoint, ref buildPoint))
-                return false;
-
-            // If it's a valid bank object, we're good!
-            BlockType blockType = blockEngine.BlockAtPoint(hitPoint);
-            if (blockType == BlockType.HomeRed && playerTeam == PlayerTeam.Red)
-                return true;
-            if (blockType == BlockType.HomeBlue && playerTeam == PlayerTeam.Blue)
-                return true;
-            return false;
-        }
-         */
-        /*
-        public float GetToolCooldown(PlayerTools tool)
-        {
-            switch (tool)
-            {
-                case PlayerTools.Pickaxe: return 0.55f;
-                case PlayerTools.Detonator: return 0.01f;
-                case PlayerTools.ConstructionGun: return 0.5f;
-                case PlayerTools.DeconstructionGun: return 0.5f;
-                case PlayerTools.ProspectingRadar: return 0.5f;
-                default: return 0;
-            }
-        }
-        */
         public void SendPlayerUpdate()
         {
             if (netClient.Status != NetConnectionStatus.Connected)
@@ -537,8 +357,6 @@ namespace MineWorld
                 msgBuffer.Write((byte)MineWorldMessage.PlayerUpdate);//full
                 msgBuffer.Write(playerPosition);
                 msgBuffer.Write(playerCamera.GetLookVector());
-                //msgBuffer.Write((byte)playerTools[playerToolSelected]);
-                //msgBuffer.Write(playerToolCooldown > 0.001f);
                 netClient.SendMessage(msgBuffer, NetChannel.UnreliableInOrder1);
             }
             else if (lastHeading != playerCamera.GetLookVector())
@@ -551,16 +369,6 @@ namespace MineWorld
                 //msgBuffer.Write(playerToolCooldown > 0.001f);
                 netClient.SendMessage(msgBuffer, NetChannel.UnreliableInOrder1);
             }
-            /*
-            else
-            {
-                NetBuffer msgBuffer = netClient.CreateBuffer();
-                msgBuffer.Write((byte)MineWorldMessage.PlayerUpdate2);//just tools
-                //msgBuffer.Write((byte)playerTools[playerToolSelected]);
-                //msgBuffer.Write(playerToolCooldown > 0.001f);
-                netClient.SendMsg(msgBuffer, NetChannel.UnreliableInOrder1);
-            }
-             */
         }
 
         public void SendPlayerHurt(int damage,bool flatdamage)
