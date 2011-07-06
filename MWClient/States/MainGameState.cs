@@ -54,14 +54,6 @@ namespace MineWorld.States
             _P.particleEngine.Update(gameTime);
             _P.interfaceEngine.Update(gameTime);
 
-            // Count down the tool cooldown.
-                //if (_P.playerToolCooldown > 0)
-                //{
-                    //_P.playerToolCooldown -= (float)gameTime.ElapsedGameTime.TotalSeconds;
-                    //if (_P.playerToolCooldown <= 0)
-                        //_P.playerToolCooldown = 0;
-                //}
-
             // Moving the mouse changes where we look.
             if (_SM.WindowHasFocus())
             {
@@ -84,22 +76,6 @@ namespace MineWorld.States
             }
             else
                 mouseInitialized = false;
-
-            // Prospector radar stuff.
-            /*
-            if (!_P.playerDead && _P.playerToolCooldown == 0 && _P.playerTools[_P.playerToolSelected] == PlayerTools.ProspectingRadar)
-            {
-                float oldValue = _P.radarValue;
-                _P.ReadRadar(ref _P.radarDistance, ref _P.radarValue);
-                if (_P.radarValue != oldValue)
-                {
-                    if (_P.radarValue == 200)
-                        _P.PlaySound(MineWorldSound.RadarLow);
-                    if (_P.radarValue == 1000)
-                        _P.PlaySound(MineWorldSound.RadarHigh);
-                }
-            }
-             */
 
             // Update the player's position.
             if (!_P.playerDead)
@@ -183,6 +159,7 @@ namespace MineWorld.States
             }
 
             // Let the server know and then move on
+            // Todo Dont really know if this is needed the playerupdate here
             _P.SendPlayerUpdate();
 
             if (_P.blockEngine.SolidAtPointForPlayer(footPosition) || _P.blockEngine.SolidAtPointForPlayer(headPosition))
@@ -191,7 +168,6 @@ namespace MineWorld.States
                 BlockType hittingHeadOnBlock = _P.blockEngine.BlockAtPoint(headPosition);
 
                 // If we"re hitting the ground with a high velocity, die!
-                // Except if we have godmode ;)
                 if (standingOnBlock != BlockType.None && _P.playerVelocity.Y < 0)
                 {
                     float fallDamage = Math.Abs(_P.playerVelocity.Y) / DIEVELOCITY;
@@ -261,61 +237,43 @@ namespace MineWorld.States
                 return;
             }
 
-            // Pressing forward moves us in the direction we"re looking.
-            Vector3 moveVector = Vector3.Zero;
-
-            if (_P.chatMode == ChatMessageType.None)
-            {
-                if ((_SM as MineWorldGame).keyBinds.IsPressed(KeyBoardButtons.Forward))//keyState.IsKeyDown(Keys.W))
-                    moveVector += _P.playerCamera.GetLookVector();
-                if ((_SM as MineWorldGame).keyBinds.IsPressed(KeyBoardButtons.Backward))//keyState.IsKeyDown(Keys.S))
-                    moveVector -= _P.playerCamera.GetLookVector();
-                if ((_SM as MineWorldGame).keyBinds.IsPressed(KeyBoardButtons.Right))//keyState.IsKeyDown(Keys.D))
-                    moveVector += _P.playerCamera.GetRightVector();
-                if ((_SM as MineWorldGame).keyBinds.IsPressed(KeyBoardButtons.Left))//keyState.IsKeyDown(Keys.A))
-                    moveVector -= _P.playerCamera.GetRightVector();
-                //Sprinting
-                if ((_SM as MineWorldGame).keyBinds.IsPressed(KeyBoardButtons.Sprint))//keyState.IsKeyDown(Keys.LeftShift) || keyState.IsKeyDown(Keys.RightShift))
-                    _P.sprinting = true;
-                if ((_SM as MineWorldGame).keyBinds.IsPressed(KeyBoardButtons.Crouch))
-                    _P.crouching = false;
-            }
-
-            if (moveVector.X != 0 || moveVector.Z != 0)
+            if (_P.MoveVector.X != 0 || _P.MoveVector.Z != 0)
             {
                 // "Flatten" the movement vector so that we don"t move up/down.
-                moveVector.Y = 0;
-                moveVector.Normalize();
-                moveVector *= MOVESPEED * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                _P.MoveVector.Y = 0;
+                _P.MoveVector.Normalize();
+                _P.MoveVector *= MOVESPEED * (float)gameTime.ElapsedGameTime.TotalSeconds;
                 if (_P.movingOnRoad)
-                    moveVector *= 2;
+                    _P.MoveVector *= 2;
                 // Sprinting doubles speed, even if already on road
                 if (_P.sprinting)
-                    moveVector *= 1.5f;
+                    _P.MoveVector *= 1.5f;
                 if (_P.swimming)
-                    moveVector *= 0.5f;
-                if (_P.crouching)
-                    moveVector.Y = -1;
+                    _P.MoveVector *= 0.5f;
+                //if (_P.crouching)
+                    //_P.MoveVector.Y = -1;
 
                 // Attempt to move, doing collision stuff.
-                if (TryToMoveTo(moveVector, gameTime))
+                if (TryToMoveTo(_P.MoveVector, gameTime))
                 {
                 }
                 else
                 {
-                    if (!TryToMoveTo(new Vector3(0, 0, moveVector.Z), gameTime)) 
+                    if (!TryToMoveTo(new Vector3(0, 0, _P.MoveVector.Z), gameTime)) 
                     {
                     }
-                    if (!TryToMoveTo(new Vector3(moveVector.X, 0, 0), gameTime)) 
+                    if (!TryToMoveTo(new Vector3(_P.MoveVector.X, 0, 0), gameTime)) 
                     { 
                     }
                 }
             }
-            //Reset movement flags
+
+            //Reset movement and flags
+            _P.MoveVector = Vector3.Zero;
             _P.movingOnRoad = false;
             _P.sprinting = false;
             _P.swimming = false;
-            _P.crouching = false;
+            //_P.crouching = false;
         }
 
         private bool TryToMoveTo(Vector3 moveVector, GameTime gameTime)
@@ -389,7 +347,7 @@ namespace MineWorld.States
             _SM.Window.Title = Defines.MINEWORLDCLIENT_VERSION;
         }
 
-        //DateTime startChat = DateTime.Now;
+        DateTime startChat = DateTime.Now;
         public override void OnCharEntered(EventInput.CharacterEventArgs e)
         {
             if ((int)e.Character < 32 || (int)e.Character > 126) //From space to tilde
@@ -397,167 +355,224 @@ namespace MineWorld.States
             if (_P.chatMode != ChatMessageType.None)
             {
                 //Chat delay to avoid entering the "start chat" key, an unfortunate side effect of the new key bind system
-                //TimeSpan diff = DateTime.Now - startChat;
-                //if (diff.Milliseconds >= 2)
-                    //if (!(Keyboard.GetState().IsKeyDown(Keys.LeftControl) || Keyboard.GetState().IsKeyDown(Keys.RightControl)))
-                    //{
+                TimeSpan diff = DateTime.Now - startChat;
+                if (diff.Milliseconds >= 2)
+                    if (!(Keyboard.GetState().IsKeyDown(Keys.LeftControl) || Keyboard.GetState().IsKeyDown(Keys.RightControl)))
+                    {
                         _P.chatEntryBuffer += e.Character;
-                    //}
-            }
-        }
-
-        private void HandleInput(KeyBoardButtons input)
-        {
-            switch (input)
-            {
-                case KeyBoardButtons.AltFire:
-                case KeyBoardButtons.Fire:
-                    {
-                        // If we're dead, come back to life.
-                        if (_P.playerDead && _P.screenEffectCounter > 2)
-                        {
-                            _P.RespawnPlayer();
-                        }
-                        else if (!_P.playerDead)
-                        {
-                            _P.UseTool(input);
-                        }
-                        break;
                     }
-                case KeyBoardButtons.Jump:
-                    {
-                        Vector3 footPosition = _P.playerPosition + new Vector3(0f, -1.5f, 0f);
-                        Vector3 midPosition = _P.playerPosition + new Vector3(0f, -0.7f, 0f);
-                        if (_P.blockEngine.SolidAtPointForPlayer(footPosition) && _P.playerVelocity.Y == 0)
-                        {
-                            _P.playerVelocity.Y = JUMPVELOCITY;
-                            float amountBelowSurface = ((int)footPosition.Y) + 1 - footPosition.Y;
-                            _P.playerPosition.Y += amountBelowSurface + 0.01f;
-                        }
-
-                        if (_P.blockEngine.BlockAtPoint(midPosition) == BlockType.Water)
-                        {
-                            _P.playerVelocity.Y = JUMPVELOCITY * 0.4f;
-                        }
-                    }
-                    break;
-                case KeyBoardButtons.Say:
-                    _P.chatMode = ChatMessageType.Say;
-                    //startChat = DateTime.Now;
-                    break;
             }
         }
 
         public override void OnKeyDown(Keys key)
         {
-            // Exit!
-            if (key == Keys.Y && Keyboard.GetState().IsKeyDown(Keys.Escape))
+            if (_P.playerDead)
             {
-                _P.netClient.Disconnect("Client disconnected.");
-                nextState = "MineWorld.States.ServerBrowserState";
-            }
-
-            // Pixelcide!
-            if (key == Keys.K && Keyboard.GetState().IsKeyDown(Keys.Escape) && !_P.playerDead)
-            {
-                _P.SendPlayerHurt(100, false);
                 return;
             }
-
-            if (_P.chatMode != ChatMessageType.None)
+            else
             {
-                if (Keyboard.GetState().IsKeyDown(Keys.LeftControl) || Keyboard.GetState().IsKeyDown(Keys.RightControl))
+                // Exit!
+                if (key == Keys.Y && Keyboard.GetState().IsKeyDown(Keys.Escape))
                 {
-                    if (key == Keys.V)
-                    {
-                        _P.chatEntryBuffer += System.Windows.Forms.Clipboard.GetText();
-                        return;
-                    }
-                    else if (key == Keys.C)
-                    {
-                        System.Windows.Forms.Clipboard.SetText(_P.chatEntryBuffer);
-                        return;
-                    }
-                    else if (key == Keys.X)
-                    {
-                        System.Windows.Forms.Clipboard.SetText(_P.chatEntryBuffer);
-                        _P.chatEntryBuffer = "";
-                        return;
-                    }
+                    _P.netClient.Disconnect("Client disconnected.");
+                    nextState = "MineWorld.States.ServerBrowserState";
                 }
-                // Put the characters in the chat buffer.
-                if (key == Keys.Enter)
+                // Pixelcide!
+                if (key == Keys.K && Keyboard.GetState().IsKeyDown(Keys.Escape) && !_P.playerDead)
                 {
-                    // If we have an actual message to send, fire it off at the server.
-                    if (_P.chatEntryBuffer.Length > 0)
+                    _P.SendPlayerHurt(100, false);
+                    return;
+                }
+                if (_P.chatMode != ChatMessageType.None)
+                {
+                    if (Keyboard.GetState().IsKeyDown(Keys.LeftControl) || Keyboard.GetState().IsKeyDown(Keys.RightControl))
                     {
-                        if (_P.netClient.Status == NetConnectionStatus.Connected)
+                        if (key == Keys.V)
                         {
-                            //Its a player command :D?
-                            if(_P.chatEntryBuffer.StartsWith("/"))
-                            {
-                                NetBuffer msgBuffer = _P.netClient.CreateBuffer();
-                                msgBuffer.Write((byte)MineWorldMessage.PlayerCommand);
-                                msgBuffer.Write(_P.chatEntryBuffer);
-                                _P.netClient.SendMessage(msgBuffer, NetChannel.ReliableInOrder6);
-                            }
-                            else
-                            {
-                                NetBuffer msgBuffer = _P.netClient.CreateBuffer();
-                                msgBuffer.Write((byte)MineWorldMessage.ChatMessage);
-                                msgBuffer.Write((byte)_P.chatMode);
-                                msgBuffer.Write(_P.chatEntryBuffer);
-                                msgBuffer.Write(_P.playerHandle);
-                                _P.netClient.SendMessage(msgBuffer, NetChannel.ReliableInOrder3);
-                            }
+                            _P.chatEntryBuffer += System.Windows.Forms.Clipboard.GetText();
+                            return;
+                        }
+                        else if (key == Keys.C)
+                        {
+                            System.Windows.Forms.Clipboard.SetText(_P.chatEntryBuffer);
+                            return;
+                        }
+                        else if (key == Keys.X)
+                        {
+                            System.Windows.Forms.Clipboard.SetText(_P.chatEntryBuffer);
+                            _P.chatEntryBuffer = "";
+                            return;
                         }
                     }
+                    // Put the characters in the chat buffer.
+                    if (key == Keys.Enter)
+                    {
+                        // If we have an actual message to send, fire it off at the server.
+                        if (_P.chatEntryBuffer.Length > 0)
+                        {
+                            SendChatOrCommandMessage();
+                        }
 
-                    _P.chatEntryBuffer = "";
-                    _P.chatMode = ChatMessageType.None;
+                        _P.chatEntryBuffer = "";
+                        _P.chatMode = ChatMessageType.None;
+                    }
+                    else if (key == Keys.Back)
+                    {
+                        if (_P.chatEntryBuffer.Length > 0)
+                            _P.chatEntryBuffer = _P.chatEntryBuffer.Substring(0, _P.chatEntryBuffer.Length - 1);
+                    }
+                    else if (key == Keys.Escape)
+                    {
+                        _P.chatEntryBuffer = "";
+                        _P.chatMode = ChatMessageType.None;
+                    }
+                    return;
                 }
-                else if (key == Keys.Back)
+                else
                 {
-                    if (_P.chatEntryBuffer.Length > 0)
-                        _P.chatEntryBuffer = _P.chatEntryBuffer.Substring(0, _P.chatEntryBuffer.Length - 1);
+                    //If we arent typing lets move :P Everyday iam shuffling
+                    switch ((_SM as MineWorldGame).keyBinds.GetBoundKeyBoard(key))
+                    {
+                        case CustomKeyBoardButtons.Forward:
+                            {
+                                _P.MoveVector += _P.playerCamera.GetLookVector();
+                                break;
+                            }
+                        case CustomKeyBoardButtons.Backward:
+                            {
+                                _P.MoveVector -= _P.playerCamera.GetLookVector();
+                                break;
+                            }
+                        case CustomKeyBoardButtons.Right:
+                            {
+                                _P.MoveVector += _P.playerCamera.GetRightVector();
+                                break;
+                            }
+                        case CustomKeyBoardButtons.Left:
+                            {
+                                _P.MoveVector -= _P.playerCamera.GetRightVector();
+                                break;
+                            }
+                        case CustomKeyBoardButtons.Sprint:
+                            {
+                                _P.sprinting = true;
+                                break;
+                            }
+                        case CustomKeyBoardButtons.Jump:
+                            {
+                                Vector3 footPosition = _P.playerPosition + new Vector3(0f, -1.5f, 0f);
+                                Vector3 midPosition = _P.playerPosition + new Vector3(0f, -0.7f, 0f);
+                                if (_P.blockEngine.SolidAtPointForPlayer(footPosition) && _P.playerVelocity.Y == 0)
+                                {
+                                    _P.playerVelocity.Y = JUMPVELOCITY;
+                                    float amountBelowSurface = ((int)footPosition.Y) + 1 - footPosition.Y;
+                                    _P.playerPosition.Y += amountBelowSurface + 0.01f;
+                                }
+
+                                if (_P.blockEngine.BlockAtPoint(midPosition) == BlockType.Water)
+                                {
+                                    _P.playerVelocity.Y = JUMPVELOCITY * 0.4f;
+                                }
+                                break;
+                            }
+                        case CustomKeyBoardButtons.Say:
+                            {
+                                _P.chatMode = ChatMessageType.Say;
+                                startChat = DateTime.Now;
+                                break;
+                            }
+                    }
                 }
-                else if (key == Keys.Escape)
-                {
-                    _P.chatEntryBuffer = "";
-                    _P.chatMode = ChatMessageType.None;
-                }
-                return;
-            }else if (!_P.playerDead)
-                HandleInput((_SM as MineWorldGame).keyBinds.GetBound(key));
             
+            }
         }
 
         public override void OnKeyUp(Keys key)
         {
+            if (_P.playerDead)
+            {
+                return;
+            }
+            else
+            {
+                return;
+            }
         }
 
         public override void OnMouseDown(MouseButtons button, int x, int y)
         {
-                HandleInput((_SM as MineWorldGame).keyBinds.GetBound(button));
+            if (_P.playerDead)
+            {
+                _P.RespawnPlayer();
+            }
+            else
+            {
+                switch ((_SM as MineWorldGame).keyBinds.GetBoundMouse(button))
+                {
+                    case CustomMouseButtons.Fire:
+                    case CustomMouseButtons.AltFire:
+                        {
+                            _P.UseTool((_SM as MineWorldGame).keyBinds.GetBoundMouse(button));
+                            break;
+                        }
+                }
+            }
         }
 
         public override void OnMouseUp(MouseButtons button, int x, int y)
         {
+            if (_P.playerDead)
+            {
+                return;
+            }
+            else
+            {
+                return;
+            }
         }
 
         public override void OnMouseScroll(int scrollDelta)
         {
             if (_P.playerDead)
+            {
                 return;
+            }
             else
             {
                 if (scrollDelta >= 120)
                 {
-                    HandleInput((_SM as MineWorldGame).keyBinds.GetBound(MouseButtons.WheelUp));
+                    // Unused at the moment
+                    return;
                 }
                 else if (scrollDelta <= -120)
                 {
-                    HandleInput((_SM as MineWorldGame).keyBinds.GetBound(MouseButtons.WheelDown));
+                    // Unused at the moment
+                    return;
+                }
+            }
+        }
+
+        private void SendChatOrCommandMessage()
+        {
+            if (_P.netClient.Status == NetConnectionStatus.Connected)
+            {
+                //Its a player command :D?
+                if (_P.chatEntryBuffer.StartsWith("/"))
+                {
+                    NetBuffer msgBuffer = _P.netClient.CreateBuffer();
+                    msgBuffer.Write((byte)MineWorldMessage.PlayerCommand);
+                    msgBuffer.Write(_P.chatEntryBuffer);
+                    _P.netClient.SendMessage(msgBuffer, NetChannel.ReliableInOrder6);
+                }
+                else
+                {
+                    NetBuffer msgBuffer = _P.netClient.CreateBuffer();
+                    msgBuffer.Write((byte)MineWorldMessage.ChatMessage);
+                    msgBuffer.Write((byte)_P.chatMode);
+                    msgBuffer.Write(_P.chatEntryBuffer);
+                    msgBuffer.Write(_P.playerHandle);
+                    _P.netClient.SendMessage(msgBuffer, NetChannel.ReliableInOrder3);
                 }
             }
         }

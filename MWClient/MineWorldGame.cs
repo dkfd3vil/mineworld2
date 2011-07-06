@@ -505,12 +505,14 @@ namespace MineWorld
             }
             dataFile = new Datafile(Csettings.Directory + "/keymap.txt");
             bool anyChanged = false;
+            // Todo repair this to use keyboard and mousebinds ;)
+            /*
             foreach (string key in dataFile.Data.Keys)
             {
                 try
                 {
-                    KeyBoardButtons button = (KeyBoardButtons)Enum.Parse(typeof(KeyBoardButtons),dataFile.Data[key],true);
-                    if (Enum.IsDefined(typeof(KeyBoardButtons), button))
+                    CustomKeyBoardButtons button = (CustomKeyBoardButtons)Enum.Parse(typeof(CustomKeyBoardButtons),dataFile.Data[key],true);
+                    if (Enum.IsDefined(typeof(CustomKeyBoardButtons), button))
                     {
                         if (keyBinds.BindKey(button, key, true))
                         {
@@ -521,9 +523,13 @@ namespace MineWorld
                     {
                         //Console.WriteLine("Enum not defined for " + dataFile.Data[key] + ".");
                     }
-                } catch { }
+                } 
+                catch { }
             }
+             */
 
+            //HACK Create defaultset the whole time :P
+            anyChanged = false;
             //If no keys are bound in this manner then create the default set
             if (!anyChanged)
             {

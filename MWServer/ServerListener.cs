@@ -346,17 +346,18 @@ namespace MineWorld
 
                                         case MineWorldMessage.UseTool:
                                             {
-                                                KeyBoardButtons key = (KeyBoardButtons)msgBuffer.ReadByte();
+                                                IServer.ConsoleWrite("DEBUG: USETOOL HAS BEEN USED");
+                                                CustomMouseButtons key = (CustomMouseButtons)msgBuffer.ReadByte();
                                                 Vector3 playerPosition = msgBuffer.ReadVector3();
                                                 Vector3 playerHeading = msgBuffer.ReadVector3();
                                                 BlockType blockType = (BlockType)msgBuffer.ReadByte();
-
+                                                IServer.ConsoleWrite("DEBUG: USETOOL RECEIVED ' " + key.ToString() + " '");
                                                 switch (key)
                                                 {
-                                                    case KeyBoardButtons.AltFire:
+                                                    case CustomMouseButtons.AltFire:
                                                         IServer.RemoveBlock(player, playerPosition, playerHeading);
                                                         break;
-                                                    case KeyBoardButtons.Fire:
+                                                    case CustomMouseButtons.Fire:
                                                         IServer.PlaceBlock(player, playerPosition, playerHeading, blockType);
                                                         break;
                                                 }

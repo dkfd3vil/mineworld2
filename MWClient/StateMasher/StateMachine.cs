@@ -106,7 +106,6 @@ namespace StateMasher
 
         protected override void LoadContent()
         {
-            
         }
 
         protected override void UnloadContent()

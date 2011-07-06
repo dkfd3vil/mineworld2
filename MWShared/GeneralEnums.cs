@@ -3,12 +3,9 @@ using Microsoft.Xna.Framework.Input;
 
 namespace MineWorld
 {
-    public enum KeyBoardButtons : byte
+    public enum CustomKeyBoardButtons : byte
     {
-        None=0,
-
-        Fire,
-        AltFire,
+        None = 0,
         
         Forward,
         Backward,
@@ -21,6 +18,14 @@ namespace MineWorld
         
         //All buttons past this point will never be sent to the server
         Say,
+    }
+
+    public enum CustomMouseButtons : byte
+    {
+        None = 0,
+
+        Fire,
+        AltFire,
     }
 
     public enum MouseButtons
