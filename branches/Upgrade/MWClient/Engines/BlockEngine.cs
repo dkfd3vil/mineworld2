@@ -23,9 +23,9 @@ namespace MineWorld
 
         public static readonly VertexElement[] VertexElements = new VertexElement[]
         { 
-            new VertexElement(0,0,VertexElementFormat.Vector3, VertexElementMethod.Default, VertexElementUsage.Position, 0),
-            new VertexElement(0,sizeof(float)*3,VertexElementFormat.Vector2, VertexElementMethod.Default, VertexElementUsage.TextureCoordinate, 0),
-            new VertexElement(0,sizeof(float)*5,VertexElementFormat.Single, VertexElementMethod.Default, VertexElementUsage.TextureCoordinate, 1)               
+            new VertexElement(0,VertexElementFormat.Vector3, VertexElementUsage.Position, 0),
+            new VertexElement(sizeof(float)*3,VertexElementFormat.Vector2, VertexElementUsage.TextureCoordinate, 0),
+            new VertexElement(sizeof(float)*5,VertexElementFormat.Single, VertexElementUsage.TextureCoordinate, 1)               
         };
 
         public VertexPositionTextureShade(Vector3 position, Vector2 uv, double shade)
@@ -179,7 +179,8 @@ namespace MineWorld
                     vertexListDirty[i, j] = true;
 
             // Initialize any graphics stuff.
-            vertexDeclaration = new VertexDeclaration(gameInstance.GraphicsDevice, VertexPositionTextureShade.VertexElements);
+            vertexDeclaration = new VertexDeclaration(new VertexElement[0]);
+            //vertexDeclaration = new VertexDeclaration(gameInstance.GraphicsDevice, VertexPositionTextureShade.VertexElements);
 
             // Initialize the bloom engine.
             if (gameInstance.Csettings.RenderPretty)
@@ -196,10 +197,17 @@ namespace MineWorld
             return loadTextureFromMinecraft(file, tileX, tileY, false);
         }
 
+        private Texture2D TextureFromFile(string path)
+        {
+            FileStream fs = new FileStream(path, FileMode.Open);
+            Texture2D texture = Texture2D.FromStream(gameInstance.GraphicsDevice, fs);
+            fs.Close();
+            return texture;
+        } 
+
         public Texture2D loadTextureFromMinecraft(string file, int tileX, int tileY,bool unBiome)
         {
-            Texture2D sheet = Texture2D.FromFile(gameInstance.GraphicsDevice, file);
-
+            Texture2D sheet = TextureFromFile(file);
             //calculate rectangle for tile in sheet
             int totalWidth = sheet.Width;
             int totalHeight = sheet.Height;
@@ -322,7 +330,7 @@ namespace MineWorld
                         continue;
 
                     // Actually render.
-                    RenderVertexList(graphicsDevice, regionBuffer, blockTextures[(byte)blockTexture].Texture, blockTextures[(byte)blockTexture].LODColor, blockTexture, (float)gameTime.TotalRealTime.TotalSeconds);
+                    RenderVertexList(graphicsDevice, regionBuffer, blockTextures[(byte)blockTexture].Texture, blockTextures[(byte)blockTexture].LODColor, blockTexture, (float)gameTime.ElapsedGameTime.TotalSeconds);
                 }
 
             // Apply posteffects.
@@ -365,39 +373,38 @@ namespace MineWorld
             basicEffect.Parameters["xProjection"].SetValue(gameInstance.propertyBag.playerCamera.ProjectionMatrix);
             basicEffect.Parameters["xTexture"].SetValue(blockTexture);
             basicEffect.Parameters["xLODColor"].SetValue(lodColor.ToVector3());
-            basicEffect.Begin();
-            
+
+            DepthStencilState DepthBufferEnabled = new DepthStencilState();
+            DepthBufferEnabled.DepthBufferWriteEnable = true;
+
+            DepthStencilState DepthBufferDisabled = new DepthStencilState();
+            DepthBufferDisabled.DepthBufferWriteEnable = false;
+
             foreach (EffectPass pass in basicEffect.CurrentTechnique.Passes)
             {
-                pass.Begin();
-                graphicsDevice.RenderState.DepthBufferEnable = true;
+                pass.Apply();
+                graphicsDevice.DepthStencilState = DepthBufferEnabled;
                 if (renderTranslucent)
                 {
                     // TODO: Make translucent blocks look like we actually want them to look!
                     // We probably also want to pull this out to be rendered AFTER EVERYTHING ELSE IN THE GAME.
-                    graphicsDevice.RenderState.DepthBufferWriteEnable = false;
-                    graphicsDevice.RenderState.AlphaBlendEnable = true;
-                    graphicsDevice.RenderState.SourceBlend = Blend.SourceAlpha;
-                    graphicsDevice.RenderState.DestinationBlend = Blend.InverseSourceAlpha;
+                    graphicsDevice.DepthStencilState = DepthBufferDisabled;
+                    graphicsDevice.BlendState = BlendState.AlphaBlend;
                 }
+                graphicsDevice.SamplerStates[0].MaxMipLevel = 3;
+                graphicsDevice.SamplerStates[0].Filter = TextureFilter.PointMipLinear;
 
-                graphicsDevice.RenderState.CullMode = CullMode.CullCounterClockwiseFace;
-                graphicsDevice.SamplerStates[0].MagFilter = TextureFilter.None;
-                graphicsDevice.VertexDeclaration = vertexDeclaration;
-                graphicsDevice.Vertices[0].SetSource(vertexBuffer, 0, VertexPositionTextureShade.SizeInBytes);
-                graphicsDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, vertexBuffer.SizeInBytes / VertexPositionTextureShade.SizeInBytes / 3);
-                graphicsDevice.RenderState.CullMode = CullMode.None;
+                graphicsDevice.SetVertexBuffer(vertexBuffer);
+                graphicsDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, vertexBuffer.VertexCount / VertexPositionTextureShade.SizeInBytes / 3);
 
                 if (renderTranslucent)
                 {
-                    graphicsDevice.RenderState.DepthBufferWriteEnable = true;
-                    graphicsDevice.RenderState.AlphaBlendEnable = false;
+                    graphicsDevice.DepthStencilState = DepthBufferEnabled;
+                    graphicsDevice.BlendState = BlendState.Opaque;
                 }
 
-                pass.End();
             }
             
-            basicEffect.End();
         }
 
         private void RegenerateDirtyVertexLists()
@@ -437,8 +444,9 @@ namespace MineWorld
                 BuildFaceVertices(ref vertexList, vertexPointer, faceInfo, texture);
                 vertexPointer += 6;            
             }
-            DynamicVertexBuffer vertexBuffer = new DynamicVertexBuffer(gameInstance.GraphicsDevice, vertexList.Length * VertexPositionTextureShade.SizeInBytes, BufferUsage.WriteOnly);
-            vertexBuffer.ContentLost += new EventHandler(vertexBuffer_ContentLost);
+            DynamicVertexBuffer vertexBuffer = new DynamicVertexBuffer(gameInstance.GraphicsDevice, typeof(VertexPositionTextureShade), vertexList.Length, BufferUsage.WriteOnly);
+            //DynamicVertexBuffer vertexBuffer = new DynamicVertexBuffer(gameInstance.GraphicsDevice, vertexList.Length * VertexPositionTextureShade.SizeInBytes,vertexList.Length, BufferUsage.WriteOnly);
+            vertexBuffer.ContentLost+=new EventHandler<EventArgs>(vertexBuffer_ContentLost);
             vertexBuffer.Tag = new DynamicVertexBufferTag(this, texture, region);
             vertexBuffer.SetData(vertexList);
             return vertexBuffer;
