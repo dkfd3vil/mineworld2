@@ -94,7 +94,7 @@ namespace MineWorld
             activeAnimation = new List<AnimationFrame>();
             activeAnimation.Add(dummyFrame);
 
-            vertexDeclaration = new VertexDeclaration(graphicsDevice, VertexPositionTexture.VertexElements);
+            vertexDeclaration = new VertexDeclaration(VertexPositionTexture.VertexDeclaration.GetVertexElements());
         }
 
         public void SetSpriteTexture(Texture2D spriteTexture)
