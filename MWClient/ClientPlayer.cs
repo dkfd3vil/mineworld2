@@ -17,6 +17,19 @@ namespace MineWorld
 {
     public class ClientPlayer : Player
     {
+        public bool Kicked = false;
+        public bool Godmode = false;
+        public string Name = "";
+        // DJ NOT NICE
+        // TODO This needs to be done proper
+        public int Health = 0;
+        public int HealthMax = 100;
+        public bool Alive = false;
+        public int ID;
+        public Vector3 Heading = Vector3.Zero;
+        public Vector3 Position = Vector3.Zero;
+        public NetConnection NetConn;
+        public string IP = "";
         private List<InterpolationPacket> interpList = new List<InterpolationPacket>();
         public Color Owncolor = new Color();
         public SpriteModel SpriteModel;

@@ -6,6 +6,7 @@ using System.Threading;
 using Lidgren.Network;
 using Lidgren.Network.Xna;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -16,7 +17,7 @@ namespace MineWorld
     {
         Random randomizer = new Random();
 
-        //MineWorldNetServer netServer = null;
+        //NetServer netServer = null;
         NetServer netServer = null;
         public DayManager dayManager = null;
         public Dictionary<NetConnection, ServerPlayer> playerList = new Dictionary<NetConnection, ServerPlayer>();
@@ -534,22 +535,22 @@ namespace MineWorld
 
         public void SendServerMessageToPlayer(string message, ServerPlayer player)
         {
-            NetBuffer msgBuffer = netServer.CreateBuffer();
+            NetOutgoingMessage msgBuffer = netServer.CreateMessage();
             msgBuffer.Write((byte)MineWorldMessage.ChatMessage);
             msgBuffer.Write((byte)ChatMessageType.SayServer);
             msgBuffer.Write(Defines.Sanitize(message));
-            netServer.SendMsg(msgBuffer, player.NetConn, NetChannel.ReliableUnordered);
+            netServer.SendMessage(msgBuffer, player.NetConn, NetDeliveryMethod.ReliableUnordered);
         }
 
         public void SendServerWideMessage(string message)
         {
-            NetBuffer msgBuffer = netServer.CreateBuffer();
+            NetOutgoingMessage msgBuffer = netServer.CreateMessage();
             msgBuffer.Write((byte)MineWorldMessage.ChatMessage);
             msgBuffer.Write((byte)ChatMessageType.SayServer);
             msgBuffer.Write(Defines.Sanitize(message));
             foreach (ServerPlayer player in playerList.Values)
             {
-                netServer.SendMsg(msgBuffer, player.NetConn, NetChannel.UnreliableInOrder1);
+                netServer.SendMessage(msgBuffer, player.NetConn, NetDeliveryMethod.ReliableUnordered);
             }
         }
 
@@ -557,11 +558,11 @@ namespace MineWorld
         public void SendHealthUpdate(ServerPlayer player)
         {
             // Health, HealthMax both int
-            NetBuffer msgBuffer = netServer.CreateBuffer();
+            NetOutgoingMessage msgBuffer = netServer.CreateMessage();
             msgBuffer.Write((byte)MineWorldMessage.HealthUpdate);
             msgBuffer.Write(player.Health);
             msgBuffer.Write(player.HealthMax);
-            netServer.SendMsg(msgBuffer, player.NetConn, NetChannel.ReliableInOrder15);
+            netServer.SendMessage(msgBuffer, player.NetConn, NetDeliveryMethod.ReliableOrdered);
         }
 
         List<MapSender> mapSendingProgress = new List<MapSender>();
@@ -601,19 +602,19 @@ namespace MineWorld
             player.Alive = false;
 
             // Kill the player specific
-            NetBuffer msgBufferb = netServer.CreateBuffer();
+            NetOutgoingMessage msgBufferb = netServer.CreateMessage();
             msgBufferb.Write((byte)MineWorldMessage.Killed);
             //TODO IMPLENT DEATH MESSAGES
             msgBufferb.Write("");
-            netServer.SendMsg(msgBufferb, player.NetConn, NetChannel.ReliableUnordered);
+            netServer.SendMessage(msgBufferb, player.NetConn, NetDeliveryMethod.ReliableOrdered);
 
             // Let all the other players know
-            NetBuffer msgBuffer = netServer.CreateBuffer();
+            NetOutgoingMessage msgBuffer = netServer.CreateMessage();
             msgBuffer.Write((byte)MineWorldMessage.PlayerDead);
             msgBuffer.Write(player.ID);
             foreach (ServerPlayer iplayer in playerList.Values)
             {
-                netServer.SendMsg(msgBuffer, iplayer.NetConn, NetChannel.ReliableInOrder2);
+                netServer.SendMessage(msgBuffer, player.NetConn, NetDeliveryMethod.ReliableOrdered);
             }
         }
 
@@ -622,15 +623,15 @@ namespace MineWorld
             if (player.NetConn.Status != NetConnectionStatus.Connected)
                 return;
 
-            NetBuffer msgBuffer = netServer.CreateBuffer();
+            NetOutgoingMessage msgBuffer = netServer.CreateMessage();
             msgBuffer.Write((byte)MineWorldMessage.PlayerPosition);
             msgBuffer.Write(player.Position);
-            netServer.SendMsg(msgBuffer, player.NetConn, NetChannel.ReliableUnordered);
+            netServer.SendMessage(msgBuffer, player.NetConn, NetDeliveryMethod.ReliableOrdered);
         }
 
         public void SendPlayerUpdate(ServerPlayer player)
         {
-            NetBuffer msgBuffer = netServer.CreateBuffer();
+            NetOutgoingMessage msgBuffer = netServer.CreateMessage();
             msgBuffer.Write((byte)MineWorldMessage.PlayerUpdate);
             msgBuffer.Write(player.ID);
             msgBuffer.Write(player.Position);
@@ -638,28 +639,28 @@ namespace MineWorld
 
             foreach (ServerPlayer iplayer in playerList.Values)
             {
-                netServer.SendMsg(msgBuffer, iplayer.NetConn, NetChannel.UnreliableInOrder1);
+                netServer.SendMessage(msgBuffer, iplayer.NetConn, NetDeliveryMethod.ReliableOrdered);
             }
         }
 
         public void SendPlayerJoined(ServerPlayer player)
         {
-            NetBuffer msgBuffer;
+            NetOutgoingMessage msgBuffer;
 
             // Let this player know about other players.
             foreach (ServerPlayer p in playerList.Values)
             {
-                msgBuffer = netServer.CreateBuffer();
+                msgBuffer = netServer.CreateMessage();
                 msgBuffer.Write((byte)MineWorldMessage.PlayerJoined);
                 msgBuffer.Write(p.ID);
                 msgBuffer.Write(p.Name);
                 msgBuffer.Write(p == player);
                 msgBuffer.Write(p.Alive);
-                netServer.SendMsg(msgBuffer, p.NetConn, NetChannel.ReliableInOrder2);
+                netServer.SendMessage(msgBuffer, p.NetConn, NetDeliveryMethod.ReliableOrdered);
             }
 
             // Let other players know about this player.
-            msgBuffer = netServer.CreateBuffer();
+            msgBuffer = netServer.CreateMessage();
             msgBuffer.Write((byte)MineWorldMessage.PlayerJoined);
             msgBuffer.Write(player.ID);
             msgBuffer.Write(player.Name);
@@ -668,13 +669,13 @@ namespace MineWorld
 
             foreach (ServerPlayer iplayer in playerList.Values)
             {
-                netServer.SendMsg(msgBuffer, iplayer.NetConn, NetChannel.ReliableInOrder2);
+                netServer.SendMessage(msgBuffer, iplayer.NetConn, NetDeliveryMethod.ReliableOrdered);
             }
 
             SendPlayerRespawn(player);
 
             // Send out a chat message.
-            msgBuffer = netServer.CreateBuffer();
+            msgBuffer = netServer.CreateMessage();
             msgBuffer.Write((byte)MineWorldMessage.ChatMessage);
             msgBuffer.Write((byte)ChatMessageType.Say);
             msgBuffer.Write(player.Name + " HAS JOINED THE ADVENTURE!");
@@ -686,40 +687,42 @@ namespace MineWorld
                 {
                     break;
                 }
-                netServer.SendMsg(msgBuffer, iplayer.NetConn, NetChannel.ReliableInOrder3);
+                netServer.SendMessage(msgBuffer, iplayer.NetConn, NetDeliveryMethod.ReliableOrdered);
             }
         }
 
         public void SendPlayerLeft(ServerPlayer player, string reason)
         {
-            NetBuffer msgBuffer = netServer.CreateBuffer();
+            NetOutgoingMessage msgBuffer = netServer.CreateMessage();
             msgBuffer.Write((byte)MineWorldMessage.PlayerLeft);
             msgBuffer.Write(player.ID);
             foreach (ServerPlayer iplayer in playerList.Values)
+            {
                 if (player.NetConn != iplayer.NetConn)
                 {
-                    netServer.SendMsg(msgBuffer, iplayer.NetConn, NetChannel.ReliableInOrder2);
+                    netServer.SendMessage(msgBuffer, iplayer.NetConn, NetDeliveryMethod.ReliableOrdered);
                 }
+            }
 
             // Send out a chat message.
-            msgBuffer = netServer.CreateBuffer();
+            msgBuffer = netServer.CreateMessage();
             msgBuffer.Write((byte)MineWorldMessage.ChatMessage);
             msgBuffer.Write((byte)ChatMessageType.Say);
             msgBuffer.Write(player.Name + " " + reason);
             foreach (ServerPlayer iplayer in playerList.Values)
             {
-                netServer.SendMsg(msgBuffer, iplayer.NetConn, NetChannel.ReliableInOrder3);
+                netServer.SendMessage(msgBuffer, iplayer.NetConn, NetDeliveryMethod.ReliableOrdered);
             }
         }
 
         public void SendPlayerDead(ServerPlayer player)
         {
-            NetBuffer msgBuffer = netServer.CreateBuffer();
+            NetOutgoingMessage msgBuffer = netServer.CreateMessage();
             msgBuffer.Write((byte)MineWorldMessage.PlayerDead);
             msgBuffer.Write(player.ID);
             foreach (ServerPlayer iplayer in playerList.Values)
             {
-                netServer.SendMsg(msgBuffer, iplayer.NetConn, NetChannel.ReliableInOrder2);
+                netServer.SendMessage(msgBuffer, iplayer.NetConn, NetDeliveryMethod.ReliableOrdered);
             }
         }
 
@@ -774,7 +777,7 @@ namespace MineWorld
                 // Drop the player on the middle of the block, not at the corner.
                 player.Position += new Vector3(0.5f, 0, 0.5f);
 
-                //NetBuffer msgBuffer = netServer.CreateBuffer();
+                //NetOutgoingMessage msgBuffer = netServer.CreateMessage();
                 NetOutgoingMessage msg = netServer.CreateMessage();
                 msg.Write((byte)MineWorldMessage.PlayerRespawn);
                 msg.Write(player.Position);

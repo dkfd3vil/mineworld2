@@ -9,8 +9,6 @@ using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
-using Microsoft.Xna.Framework.Net;
-using Microsoft.Xna.Framework.Storage;
 
 namespace MineWorld
 {
@@ -618,6 +616,7 @@ namespace MineWorld
             return dataOut;
         }
 
+        /*
         // Renders a specific z-level of a 256x256x256 data array to a texture.
         private int[] pixelData = new int[256 * 256];
         private void RenderSlice(ref BlockType[, ,] data, int z, Texture2D renderTexture)
@@ -639,5 +638,6 @@ namespace MineWorld
             renderTexture.GraphicsDevice.Textures[0] = null;
             renderTexture.SetData(pixelData);
         }
+         */
     }
 }

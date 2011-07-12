@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Net;
 using Lidgren.Network;
+using Lidgren.Network.Xna;
 
 namespace MineWorld
 {

@@ -170,7 +170,7 @@ namespace MineWorld
             }
             foreach (ServerPlayer p in playersToKick)
             {
-                p.NetConn.Disconnect("", 0);
+                p.NetConn.Disconnect("");
                 p.Kicked = true;
             }
         }
@@ -267,7 +267,7 @@ namespace MineWorld
         {
             foreach (ServerPlayer p in playerList.Values)
             {
-                p.NetConn.Disconnect("", 0);
+                p.NetConn.Disconnect("");
             }
         }
 
