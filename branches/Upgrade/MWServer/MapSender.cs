@@ -12,7 +12,10 @@ namespace MineWorld
         Mapsize mapsize;
         Thread conn;
         MineWorldServer infs;
-        MineWorldNetServer infsN;
+        NetServer infsN;
+
+
+        //Todo rewrite this and use bytes ;)
         public bool finished
         {
             get
@@ -21,7 +24,7 @@ namespace MineWorld
             }
         }
 
-        public MapSender(NetConnection nClient, MineWorldServer nInfs, MineWorldNetServer nInfsN,Mapsize mpsize)
+        public MapSender(NetConnection nClient, MineWorldServer nInfs, NetServer nInfsN,Mapsize mpsize)
         {
             client = nClient;
             infs = nInfs;
@@ -42,7 +45,7 @@ namespace MineWorld
             for (byte x = 0; x < Defines.MAPSIZE; x++)
                 for (byte y = 0; y < Defines.MAPSIZE; y += Defines.PACKETSIZE)
                 {
-                    NetBuffer msgBuffer = infsN.CreateBuffer();
+                    NetOutgoingMessage msgBuffer = infsN.CreateMessage();
                     msgBuffer.Write((byte)MineWorldMessage.BlockBulkTransfer);
                     msgBuffer.Write(x);
                     msgBuffer.Write(y);
@@ -55,7 +58,7 @@ namespace MineWorld
                     }
                     if (client.Status == NetConnectionStatus.Connected)
                     {
-                        infsN.SendMsg(msgBuffer, client, NetChannel.ReliableUnordered);
+                        infsN.SendMessage(msgBuffer, client, NetDeliveryMethod.ReliableUnordered);
                     }
                 }
             conn.Abort();

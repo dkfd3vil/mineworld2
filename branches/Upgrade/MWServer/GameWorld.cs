@@ -24,7 +24,7 @@ namespace MineWorld
             blockList[x, y, z] = BlockType.None;
 
             // x, y, z, type, all bytes
-            NetBuffer msgBuffer = netServer.CreateBuffer();
+            NetOutgoingMessage msgBuffer = netServer.CreateMessage();
             msgBuffer.Write((byte)MineWorldMessage.BlockSet);
             msgBuffer.Write((byte)x);
             msgBuffer.Write((byte)y);
@@ -32,7 +32,7 @@ namespace MineWorld
             msgBuffer.Write((byte)BlockType.None);
             foreach (ServerPlayer player in playerList.Values)
             {
-                netServer.SendMsg(msgBuffer, player.NetConn, NetChannel.ReliableUnordered);
+                netServer.SendMessage(msgBuffer, player.NetConn, NetDeliveryMethod.ReliableUnordered);
             }
         }
 
@@ -46,7 +46,7 @@ namespace MineWorld
             blockList[x, y, z] = blockType;
 
             // x, y, z, type, all bytes
-            NetBuffer msgBuffer = netServer.CreateBuffer();
+            NetOutgoingMessage msgBuffer = netServer.CreateMessage();
             msgBuffer.Write((byte)MineWorldMessage.BlockSet);
             msgBuffer.Write((byte)x);
             msgBuffer.Write((byte)y);
@@ -54,7 +54,7 @@ namespace MineWorld
             msgBuffer.Write((byte)blockType);
             foreach (ServerPlayer player in playerList.Values)
             {
-                netServer.SendMsg(msgBuffer, player.NetConn, NetChannel.ReliableUnordered);
+                netServer.SendMessage(msgBuffer, player.NetConn, NetDeliveryMethod.ReliableUnordered);
             }
         }
 
