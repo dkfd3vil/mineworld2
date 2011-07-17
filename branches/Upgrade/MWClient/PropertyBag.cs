@@ -83,10 +83,9 @@ namespace MineWorld
         public PropertyBag(MineWorldGame gameInstance)
         {
             // Initialize our network device.
-            NetConfiguration netConfig = new NetConfiguration("MineWorldPlus");
+            NetPeerConfiguration netConfig = new NetPeerConfiguration("MINEWORLD");
 
             netClient = new NetClient(netConfig);
-            netClient.SetMessageTypeEnabled(NetMessageType.ConnectionRejected, true);
             //netClient.SimulatedMinimumLatency = 0.1f;
             //netClient.SimulatedLatencyVariance = 0.05f;
             //netClient.SimulatedLoss = 0.1f;
@@ -127,8 +126,8 @@ namespace MineWorld
 
         public void KillPlayer(string deathMessage)
         {
-            if (netClient.Status != NetConnectionStatus.Connected)
-                return;
+            //if (netClient.Status != NetConnectionStatus.Connected)
+                //return;
 
             PlaySound(MineWorldSound.Death);
             playerVelocity = Vector3.Zero;
@@ -137,22 +136,22 @@ namespace MineWorld
             screenEffect = ScreenEffect.Death;
             screenEffectCounter = 0;
 
-            NetBuffer msgBuffer = netClient.CreateBuffer();
+            NetOutgoingMessage msgBuffer = netClient.CreateMessage();
             msgBuffer.Write((byte)MineWorldMessage.PlayerDead);
             msgBuffer.Write(deathMessage);
-            netClient.SendMessage(msgBuffer, NetChannel.ReliableUnordered);
+            netClient.SendMessage(msgBuffer, NetDeliveryMethod.ReliableUnordered);
         }
 
         public void RespawnPlayer()
         {
-            if (netClient.Status != NetConnectionStatus.Connected)
+            if (netClient.ConnectionStatus != NetConnectionStatus.Connected)
                 return;
 
             if(allowRespawn == false)
             {
-                NetBuffer msgBuffer = netClient.CreateBuffer();
+                NetOutgoingMessage msgBuffer = netClient.CreateMessage();
                 msgBuffer.Write((byte)MineWorldMessage.PlayerRespawn);
-                netClient.SendMessage(msgBuffer, NetChannel.ReliableUnordered);
+                netClient.SendMessage(msgBuffer, NetDeliveryMethod.ReliableUnordered);
                 return;
             }
 
@@ -165,9 +164,9 @@ namespace MineWorld
             UpdateCamera();
 
             // Tell the server we have respawned.
-            NetBuffer msgBufferb = netClient.CreateBuffer();
+            NetOutgoingMessage msgBufferb = netClient.CreateMessage();
             msgBufferb.Write((byte)MineWorldMessage.PlayerAlive);
-            netClient.SendMessage(msgBufferb, NetChannel.ReliableUnordered);
+            netClient.SendMessage(msgBufferb, NetDeliveryMethod.ReliableUnordered);
         }
 
         public void PlaySound(MineWorldSound sound)
@@ -175,7 +174,7 @@ namespace MineWorld
             if (soundList.Count == 0)
                 return;
 
-            soundList[sound].Play(volumeLevel);
+            soundList[sound].Play();
         }
 
         public void PlaySound(MineWorldSound sound, Vector3 position)
@@ -186,100 +185,32 @@ namespace MineWorld
             float distance = (position - playerPosition).Length();
             float volume = Math.Max(0, 10 - distance) / 10.0f * volumeLevel;
             volume = volume > 1.0f ? 1.0f : volume < 0.0f ? 0.0f : volume;
-            soundList[sound].Play(volume);
-        }
 
+            MediaPlayer.Volume = volume;
 
-        public void PlaySound(MineWorldSound sound, Vector3 position, int magnification)
-        {
-            if (soundList.Count == 0)
-                return;
-            float distance = (position - playerPosition).Length() - magnification;
-
-            float volume = Math.Max(0, 64 - distance) / 10.0f * volumeLevel;
-
-            volume = volume > 1.0f ? 1.0f : volume < 0.0f ? 0.0f : volume;
-
-            soundList[sound].Play(volume);
+            soundList[sound].Play();
         }
 
         public void PlaySoundForEveryone(MineWorldSound sound, Vector3 position)
         {
-            if (netClient.Status != NetConnectionStatus.Connected)
+            if (netClient.ConnectionStatus != NetConnectionStatus.Connected)
                 return;
 
             // The PlaySound message can be used to instruct the server to have all clients play a directional sound.
-            NetBuffer msgBuffer = netClient.CreateBuffer();
+            NetOutgoingMessage msgBuffer = netClient.CreateMessage();
             msgBuffer.Write((byte)MineWorldMessage.PlaySound);
             msgBuffer.Write((byte)sound);
             msgBuffer.Write(position);
-            netClient.SendMessage(msgBuffer, NetChannel.ReliableUnordered);
+            netClient.SendMessage(msgBuffer, NetDeliveryMethod.ReliableUnordered);
         }
 
         public void addChatMessage(string ChatString, ChatMessageType ChatType,string Author)
         {
-            /*
-            string[] text = chatString.Split(' ');
-            string textFull = "";
-            string textLine = "";
-            int newlines = 0;
-
-            float curWidth = 0;
-            for (int i = 0; i < text.Length; i++)
-            {//each(string part in text){
-                string part = text[i];
-                if (i != text.Length - 1)
-                    part += ' '; //Correct for lost spaces
-                float incr = interfaceEngine.uiFont.MeasureString(part).X;
-                curWidth += incr;
-                if (curWidth > 1024 - 64) //Assume default resolution, unfortunately
-                {
-                    if (textLine.IndexOf(' ') < 0)
-                    {
-                        curWidth = 0;
-                        textFull = textFull + "\n" + textLine;
-                        textLine = "";
-                    }
-                    else
-                    {
-                        curWidth = incr;
-                        textFull = textFull + "\n" + textLine;
-                        textLine = part;
-                    }
-                    newlines++;
-                }
-                else
-                {
-                    textLine = textLine + part;
-                }
-            }
-            if (textLine != "")
-            {
-                textFull += "\n" + textLine;
-                newlines++;
-            }
-
-            if (textFull == "")
-                textFull = chatString;
-             */
-
             ChatMessage chatMsg = new ChatMessage(ChatString, ChatType, Author);
-            
             chatBuffer.Insert(0, chatMsg);
             //chatFullBuffer.Insert(0, chatMsg);
             PlaySound(MineWorldSound.ClickLow);
         }
-
-        //public void Teleport()
-        //{
-        //    float x = (float)randGen.NextDouble() * 74 - 5;
-        //    float z = (float)randGen.NextDouble() * 74 - 5;
-        //    //playerPosition = playerHomeBlock + new Vector3(0.5f, 3, 0.5f);
-        //    playerPosition = new Vector3(x, 74, z);
-        //    screenEffect = ScreenEffect.Teleport;
-        //    screenEffectCounter = 0;
-        //    UpdateCamera();
-        //}
 
         // Version used during updates.
         public void UpdateCamera(GameTime gameTime)
@@ -328,251 +259,57 @@ namespace MineWorld
 
         public void UseTool(KeyBoardButtons key)
         {
-            if (netClient.Status != NetConnectionStatus.Connected)
+            if (netClient.ConnectionStatus != NetConnectionStatus.Connected)
                 return;
 
-            NetBuffer msgBuffer = netClient.CreateBuffer();
+            NetOutgoingMessage msgBuffer = netClient.CreateMessage();
             msgBuffer.Write((byte)MineWorldMessage.UseTool);
             msgBuffer.Write((byte)key);
             msgBuffer.Write(playerPosition);
             msgBuffer.Write(playerCamera.GetLookVector());
             msgBuffer.Write((byte)BlockType.Leafs);
-            netClient.SendMessage(msgBuffer, NetChannel.ReliableUnordered);
+            netClient.SendMessage(msgBuffer, NetDeliveryMethod.ReliableUnordered);
         }
-        /*
-        public void FireRadar()
-        {
-            if (netClient.Status != NetConnectionStatus.Connected)
-                return;
 
-            playerToolCooldown = GetToolCooldown(PlayerTools.ProspectingRadar);
-
-            NetBuffer msgBuffer = netClient.CreateBuffer();
-            msgBuffer.Write((byte)MineWorldMessage.UseTool);
-            msgBuffer.Write(playerPosition);
-            msgBuffer.Write(playerCamera.GetLookVector());
-            msgBuffer.Write((byte)PlayerTools.ProspectingRadar);
-            msgBuffer.Write((byte)BlockType.None);
-            netClient.SendMsg(msgBuffer, NetChannel.ReliableUnordered);
-        }
-        */
-        /*
-        public void FirePickaxe()
-        {
-            if (netClient.Status != NetConnectionStatus.Connected)
-                return;
-
-            playerToolCooldown = GetToolCooldown(PlayerTools.Pickaxe);
-
-            NetBuffer msgBuffer = netClient.CreateBuffer();
-            msgBuffer.Write((byte)MineWorldMessage.UseTool);
-            msgBuffer.Write(playerPosition);
-            msgBuffer.Write(playerCamera.GetLookVector());
-            msgBuffer.Write((byte)PlayerTools.Pickaxe);
-            msgBuffer.Write((byte)BlockType.None);
-            netClient.SendMsg(msgBuffer, NetChannel.ReliableUnordered);
-        }
-         */
-        /*
-        public void FireConstructionGun(BlockType blockType)
-        {
-            if (netClient.Status != NetConnectionStatus.Connected)
-                return;
-
-            playerToolCooldown = GetToolCooldown(PlayerTools.ConstructionGun);
-            constructionGunAnimation = -5;
-
-            // Send the message.
-            NetBuffer msgBuffer = netClient.CreateBuffer();
-            msgBuffer.Write((byte)MineWorldMessage.UseTool);
-            msgBuffer.Write(playerPosition);
-            msgBuffer.Write(playerCamera.GetLookVector());
-            msgBuffer.Write((byte)PlayerTools.ConstructionGun);
-            msgBuffer.Write((byte)blockType);
-            netClient.SendMsg(msgBuffer, NetChannel.ReliableUnordered);
-        }
-         */
-
-        /*
-        public void FireDeconstructionGun()
-        {
-            if (netClient.Status != NetConnectionStatus.Connected)
-                return;
-
-            playerToolCooldown = GetToolCooldown(PlayerTools.DeconstructionGun);
-            constructionGunAnimation = -5;
-
-            // Send the message.
-            NetBuffer msgBuffer = netClient.CreateBuffer();
-            msgBuffer.Write((byte)MineWorldMessage.UseTool);
-            msgBuffer.Write(playerPosition);
-            msgBuffer.Write(playerCamera.GetLookVector());
-            msgBuffer.Write((byte)PlayerTools.DeconstructionGun);
-            msgBuffer.Write((byte)BlockType.None);
-            netClient.SendMsg(msgBuffer, NetChannel.ReliableUnordered);
-        }
-         */
-
-        /*
-        public void FireDetonator()
-        {
-            if (netClient.Status != NetConnectionStatus.Connected)
-                return;
-
-            playerToolCooldown = GetToolCooldown(PlayerTools.Detonator);
-
-            // Send the message.
-            NetBuffer msgBuffer = netClient.CreateBuffer();
-            msgBuffer.Write((byte)MineWorldMessage.UseTool);
-            msgBuffer.Write(playerPosition);
-            msgBuffer.Write(playerCamera.GetLookVector());
-            msgBuffer.Write((byte)PlayerTools.Detonator);
-            msgBuffer.Write((byte)BlockType.None);
-            netClient.SendMsg(msgBuffer, NetChannel.ReliableUnordered);
-        }
-         */
-
-        /*
-        public void ToggleRadar()
-        {
-            playerRadarMute = !playerRadarMute;
-            PlaySound(MineWorldSound.RadarSwitch);
-        }
-        */
-        /*
-        public void ReadRadar(ref float distanceReading, ref float valueReading)
-        {
-            valueReading = 0;
-            distanceReading = 30;
-
-            // Scan out along the camera axis for 30 meters.
-            for (int i = -3; i <= 3; i++)
-                for (int j = -3; j <= 3; j++)
-                {
-                    Matrix rotation = Matrix.CreateRotationX((float)(i * Math.PI / 128)) * Matrix.CreateRotationY((float)(j * Math.PI / 128));
-                    Vector3 scanPoint = playerPosition;
-                    Vector3 lookVector = Vector3.Transform(playerCamera.GetLookVector(), rotation);
-                    for (int k = 0; k < 60; k++)
-                    {
-                        BlockType blockType = blockEngine.BlockAtPoint(scanPoint);
-                        if (blockType == BlockType.Gold)
-                        {
-                            distanceReading = Math.Min(distanceReading, 0.5f * k);
-                            valueReading = Math.Max(valueReading, 200);
-                        }
-                        else if (blockType == BlockType.Diamond)
-                        {
-                            distanceReading = Math.Min(distanceReading, 0.5f * k);
-                            valueReading = Math.Max(valueReading, 1000);
-                        }
-                        scanPoint += 0.5f * lookVector;
-                    }
-                }
-        }
-         */
-
-        // Returns true if the player is able to use a bank right now.
-        /*
-        public bool AtBankTerminal()
-        {
-            // Figure out what we're looking at.
-            Vector3 hitPoint = Vector3.Zero;
-            Vector3 buildPoint = Vector3.Zero;
-            if (!blockEngine.RayCollision(playerPosition, playerCamera.GetLookVector(), 2.5f, 25, ref hitPoint, ref buildPoint))
-                return false;
-
-            // If it's a valid bank object, we're good!
-            BlockType blockType = blockEngine.BlockAtPoint(hitPoint);
-            if (blockType == BlockType.BankRed && playerTeam == PlayerTeam.Red)
-                return true;
-            if (blockType == BlockType.BankBlue && playerTeam == PlayerTeam.Blue)
-                return true;
-            return false;
-        }
-         */
-
-        // Returns true if the player is looking at it's own homebase
-        /*
-        public bool AtHomeBase()
-        {
-            // Figure out what we're looking at.
-            Vector3 hitPoint = Vector3.Zero;
-            Vector3 buildPoint = Vector3.Zero;
-            if (!blockEngine.RayCollision(playerPosition, playerCamera.GetLookVector(), 2.5f, 25, ref hitPoint, ref buildPoint))
-                return false;
-
-            // If it's a valid bank object, we're good!
-            BlockType blockType = blockEngine.BlockAtPoint(hitPoint);
-            if (blockType == BlockType.HomeRed && playerTeam == PlayerTeam.Red)
-                return true;
-            if (blockType == BlockType.HomeBlue && playerTeam == PlayerTeam.Blue)
-                return true;
-            return false;
-        }
-         */
-        /*
-        public float GetToolCooldown(PlayerTools tool)
-        {
-            switch (tool)
-            {
-                case PlayerTools.Pickaxe: return 0.55f;
-                case PlayerTools.Detonator: return 0.01f;
-                case PlayerTools.ConstructionGun: return 0.5f;
-                case PlayerTools.DeconstructionGun: return 0.5f;
-                case PlayerTools.ProspectingRadar: return 0.5f;
-                default: return 0;
-            }
-        }
-        */
         public void SendPlayerUpdate()
         {
-            if (netClient.Status != NetConnectionStatus.Connected)
+            if (netClient.ConnectionStatus != NetConnectionStatus.Connected)
                 return;
 
             if (lastPosition != playerPosition)//do full network update
             {
                 lastPosition = playerPosition;
 
-                NetBuffer msgBuffer = netClient.CreateBuffer();
+                NetOutgoingMessage msgBuffer = netClient.CreateMessage();
                 msgBuffer.Write((byte)MineWorldMessage.PlayerUpdate);//full
                 msgBuffer.Write(playerPosition);
                 msgBuffer.Write(playerCamera.GetLookVector());
                 //msgBuffer.Write((byte)playerTools[playerToolSelected]);
                 //msgBuffer.Write(playerToolCooldown > 0.001f);
-                netClient.SendMessage(msgBuffer, NetChannel.UnreliableInOrder1);
+                netClient.SendMessage(msgBuffer, NetDeliveryMethod.UnreliableSequenced);
             }
             else if (lastHeading != playerCamera.GetLookVector())
             {
                 lastHeading = playerCamera.GetLookVector();
-                NetBuffer msgBuffer = netClient.CreateBuffer();
+                NetOutgoingMessage msgBuffer = netClient.CreateMessage();
                 msgBuffer.Write((byte)MineWorldMessage.PlayerUpdate1);//just heading
                 msgBuffer.Write(lastHeading);
                 //msgBuffer.Write((byte)playerTools[playerToolSelected]);
                 //msgBuffer.Write(playerToolCooldown > 0.001f);
-                netClient.SendMessage(msgBuffer, NetChannel.UnreliableInOrder1);
+                netClient.SendMessage(msgBuffer, NetDeliveryMethod.UnreliableSequenced);
             }
-            /*
-            else
-            {
-                NetBuffer msgBuffer = netClient.CreateBuffer();
-                msgBuffer.Write((byte)MineWorldMessage.PlayerUpdate2);//just tools
-                //msgBuffer.Write((byte)playerTools[playerToolSelected]);
-                //msgBuffer.Write(playerToolCooldown > 0.001f);
-                netClient.SendMsg(msgBuffer, NetChannel.UnreliableInOrder1);
-            }
-             */
         }
 
         public void SendPlayerHurt(int damage,bool flatdamage)
         {
-            if (netClient.Status != NetConnectionStatus.Connected)
+            if (netClient.ConnectionStatus != NetConnectionStatus.Connected)
                 return;
 
-            NetBuffer msgBuffer = netClient.CreateBuffer();
+            NetOutgoingMessage msgBuffer = netClient.CreateMessage();
             msgBuffer.Write((byte)MineWorldMessage.PlayerHurt);
             msgBuffer.Write(damage);
             msgBuffer.Write(flatdamage);
-            netClient.SendMessage(msgBuffer, NetChannel.ReliableInOrder1);
+            netClient.SendMessage(msgBuffer, NetDeliveryMethod.ReliableOrdered);
         }
     }
 }
