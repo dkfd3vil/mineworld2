@@ -17,9 +17,9 @@ namespace MineWorld
         public string maxPlayers;
         public bool lanServer;
 
-        public ServerInformation(NetBuffer netBuffer)
+        public ServerInformation(NetIncomingMessage netBuffer)
         {
-            ipEndPoint = netBuffer.ReadIPEndPoint();
+            ipEndPoint = netBuffer.SenderConnection.RemoteEndpoint;
             serverName = ipEndPoint.Address.ToString();
             lanServer = true;
         }

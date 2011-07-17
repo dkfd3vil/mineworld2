@@ -15,7 +15,7 @@ using Microsoft.Xna.Framework.Storage;
 
 namespace MineWorld
 {
-    public class ClientPlayer : Player
+    public class ClientPlayer
     {
         public bool Kicked = false;
         public bool Godmode = false;
