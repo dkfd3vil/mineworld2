@@ -126,8 +126,8 @@ namespace MineWorld
 
         public void KillPlayer(string deathMessage)
         {
-            //if (netClient.Status != NetConnectionStatus.Connected)
-                //return;
+            if (netClient.ConnectionStatus != NetConnectionStatus.Connected)
+                return;
 
             PlaySound(MineWorldSound.Death);
             playerVelocity = Vector3.Zero;
