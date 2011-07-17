@@ -69,9 +69,11 @@ namespace MineWorld
                 StreamReader sr = new StreamReader(response.GetResponseStream());
                 responseText = sr.ReadToEnd().Trim();
             }
-            catch (WebException ex)
+            catch
             {
-                throw new Exception("Response error ["+request.ToString()+"]", ex);
+                //throw new Exception("Response error ["+request.ToString()+"]", ex);
+                //Server didnt respond so lets set it to "" so that we dont send a null string back
+                responseText = "";
             }
 
             return responseText;
