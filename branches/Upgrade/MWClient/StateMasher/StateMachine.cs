@@ -165,7 +165,7 @@ namespace StateMasher
             StateMachine _SM = currentState._SM;
             if ((_SM as MineWorldGame).Csettings.DrawFrameRate)
             {
-                fpsCounter.frame((int)gameTime.TotalRealTime.Milliseconds + (int)gameTime.TotalRealTime.Seconds * 1000 + (int)gameTime.TotalRealTime.Minutes * 60000 + (int)gameTime.TotalRealTime.Hours * 3600000);
+                fpsCounter.frame((int)gameTime.TotalGameTime.Milliseconds + (int)gameTime.TotalGameTime.Seconds * 1000 + (int)gameTime.TotalGameTime.Minutes * 60000 + (int)gameTime.TotalGameTime.Hours * 3600000);
             }
             
             // Call OnRenderAtUpdate.

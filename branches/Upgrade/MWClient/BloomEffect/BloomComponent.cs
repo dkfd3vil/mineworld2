@@ -26,7 +26,7 @@ namespace MineWorld
         Effect bloomCombineEffect;
         Effect gaussianBlurEffect;
 
-        ResolveTexture2D resolveTarget;
+        RenderTarget2D resolveTarget;
         RenderTarget2D renderTarget1;
         RenderTarget2D renderTarget2;
 
@@ -85,10 +85,8 @@ namespace MineWorld
             int width = pp.BackBufferWidth;
             int height = pp.BackBufferHeight;
 
-            SurfaceFormat format = pp.BackBufferFormat;
-
             // Create a texture for reading back the backbuffer contents.
-            resolveTarget = new ResolveTexture2D(GraphicsDevice, width, height, 1, format);
+            resolveTarget = new RenderTarget2D(GraphicsDevice, width, height, false, pp.BackBufferFormat, pp.DepthStencilFormat);
 
             // Create two rendertargets for the bloom processing. These are half the
             // size of the backbuffer, in order to minimize fillrate costs. Reducing
@@ -97,8 +95,8 @@ namespace MineWorld
             width /= 4;
             height /= 4;
 
-            renderTarget1 = new RenderTarget2D(GraphicsDevice, width, height, 1, format);
-            renderTarget2 = new RenderTarget2D(GraphicsDevice, width, height, 1, format);
+            renderTarget1 = new RenderTarget2D(GraphicsDevice, width, height,false,pp.BackBufferFormat,pp.DepthStencilFormat);
+            renderTarget2 = new RenderTarget2D(GraphicsDevice, width, height,false, pp.BackBufferFormat, pp.DepthStencilFormat);
         }
 
 
@@ -125,7 +123,7 @@ namespace MineWorld
         {
             // Resolve the scene into a texture, so we can
             // use it as input data for the bloom processing.
-            GraphicsDevice.ResolveBackBuffer(resolveTarget);
+            GraphicsDevice.SetRenderTarget(resolveTarget);
 
             // Pass 1: draw the scene into rendertarget 1, using a
             // shader that extracts only the brightest parts of the image.
@@ -139,7 +137,7 @@ namespace MineWorld
             // using a shader to apply a horizontal gaussian blur filter.
             SetBlurEffectParameters(1.0f / (float)renderTarget1.Width, 0);
 
-            DrawFullscreenQuad(renderTarget1.GetTexture(), renderTarget2,
+            DrawFullscreenQuad(renderTarget1, renderTarget2,
                                gaussianBlurEffect,
                                IntermediateBuffer.BlurredHorizontally);
 
@@ -147,14 +145,14 @@ namespace MineWorld
             // using a shader to apply a vertical gaussian blur filter.
             SetBlurEffectParameters(0, 1.0f / (float)renderTarget1.Height);
 
-            DrawFullscreenQuad(renderTarget2.GetTexture(), renderTarget1,
+            DrawFullscreenQuad(renderTarget2, renderTarget1,
                                gaussianBlurEffect,
                                IntermediateBuffer.BlurredBothWays);
 
             // Pass 4: draw both rendertarget 1 and the original scene
             // image back into the main backbuffer, using a shader that
             // combines them to produce the final bloomed result.
-            GraphicsDevice.SetRenderTarget(0, null);
+            GraphicsDevice.SetRenderTarget(null);
 
             EffectParameterCollection parameters = bloomCombineEffect.Parameters;
 
@@ -167,7 +165,7 @@ namespace MineWorld
 
             Viewport viewport = GraphicsDevice.Viewport;
 
-            DrawFullscreenQuad(renderTarget1.GetTexture(),
+            DrawFullscreenQuad(renderTarget1,
                                viewport.Width, viewport.Height,
                                bloomCombineEffect,
                                IntermediateBuffer.FinalResult);
@@ -181,13 +179,13 @@ namespace MineWorld
         void DrawFullscreenQuad(Texture2D texture, RenderTarget2D renderTarget,
                                 Effect effect, IntermediateBuffer currentBuffer)
         {
-            GraphicsDevice.SetRenderTarget(0, renderTarget);
+            GraphicsDevice.SetRenderTarget(renderTarget);
 
             DrawFullscreenQuad(texture,
                                renderTarget.Width, renderTarget.Height,
                                effect, currentBuffer);
 
-            GraphicsDevice.SetRenderTarget(0, null);
+            GraphicsDevice.SetRenderTarget(null);
         }
 
 
@@ -195,33 +193,30 @@ namespace MineWorld
         /// Helper for drawing a texture into the current rendertarget,
         /// using a custom shader to apply postprocessing effects.
         /// </summary>
-        void DrawFullscreenQuad(Texture2D texture, int width, int height,
-                                Effect effect, IntermediateBuffer currentBuffer)
+        void DrawFullscreenQuad(Texture2D texture, int width, int height,Effect effect, IntermediateBuffer currentBuffer)
         {
-            spriteBatch.Begin(SpriteBlendMode.None,
-                              SpriteSortMode.Immediate,
-                              SaveStateMode.SaveState);
+            spriteBatch.Begin(SpriteSortMode.Immediate,BlendState.AlphaBlend);
 
             // Begin the custom effect, if it is currently enabled. If the user
             // has selected one of the show intermediate buffer options, we still
             // draw the quad to make sure the image will end up on the screen,
             // but might need to skip applying the custom pixel shader.
-            if (showBuffer >= currentBuffer)
-            {
-                effect.Begin();
-                effect.CurrentTechnique.Passes[0].Begin();
-            }
+            //if (showBuffer >= currentBuffer)
+            //{
+                //effect.Begin();
+                //effect.CurrentTechnique.Passes[0].Begin();
+            //}
 
             // Draw the quad.
             spriteBatch.Draw(texture, new Rectangle(0, 0, width, height), Color.White);
             spriteBatch.End();
 
             // End the custom effect.
-            if (showBuffer >= currentBuffer)
-            {
-                effect.CurrentTechnique.Passes[0].End();
-                effect.End();
-            }
+            //if (showBuffer >= currentBuffer)
+            //{
+                //effect.CurrentTechnique.Passes[0].End();
+                //effect.End();
+            //}
         }
 
 
