@@ -93,7 +93,7 @@ namespace MineWorld
             bannednames = LoadBannedNames();
 
             // Initialize the server.
-            NetPeerConfiguration config = new NetPeerConfiguration("MineWorld");
+            NetPeerConfiguration config = new NetPeerConfiguration("MINEWORLD");
             //Todo put this in the config files
             config.Port = Defines.MINEWORLD_PORT;
             config.MaximumConnections = Ssettings.Maxplayers;
