@@ -470,19 +470,19 @@ namespace MineWorld.States
                             //This is nessarcy cause of how currently the client commands system works :S
                             if(_P.chatEntryBuffer.StartsWith("/"))
                             {
-                                NetBuffer msgBuffer = _P.netClient.CreateBuffer();
+                                NetOutgoingMessage msgBuffer = _P.netClient.CreateMessage();
                                 msgBuffer.Write((byte)MineWorldMessage.PlayerCommand);
                                 msgBuffer.Write(_P.chatEntryBuffer);
-                                _P.netClient.SendMessage(msgBuffer, NetChannel.ReliableInOrder6);
+                                _P.netClient.SendMessage(msgBuffer, NetDeliveryMethod.ReliableOrdered);
                             }
                             else
                             {
-                                NetBuffer msgBuffer = _P.netClient.CreateBuffer();
+                                NetOutgoingMessage msgBuffer = _P.netClient.CreateMessage();
                                 msgBuffer.Write((byte)MineWorldMessage.ChatMessage);
                                 msgBuffer.Write((byte)_P.chatMode);
                                 msgBuffer.Write(_P.chatEntryBuffer);
                                 msgBuffer.Write(_P.playerHandle);
-                                _P.netClient.SendMessage(msgBuffer, NetChannel.ReliableInOrder3);
+                                _P.netClient.SendMessage(msgBuffer, NetDeliveryMethod.ReliableOrdered);
                             }
                         }
                     }

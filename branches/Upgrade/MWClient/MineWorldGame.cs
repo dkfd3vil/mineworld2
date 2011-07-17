@@ -67,14 +67,14 @@ namespace MineWorld
 
             // Discover local servers.
             propertyBag.netClient.DiscoverLocalPeers(Defines.MINEWORLD_PORT);
-            NetBuffer msgBuffer = propertyBag.netClient.CreateBuffer();
-            NetMessageType msgType;
+            NetIncomingMessage msgBuffer;// = propertyBag.netClient.CreateMessage();
+            //NetIncomingMessageType msgType;
             float timeTaken = 0;
             while (timeTaken < discoveryTime)
             {
-                while (propertyBag.netClient.ReadMessage(msgBuffer, out msgType))
+                while ((msgBuffer = propertyBag.netClient.ReadMessage()) != null)
                 {
-                    if (msgType == NetMessageType.ServerDiscovered)
+                    if (msgBuffer.MessageType == NetIncomingMessageType.DiscoveryResponse)
                     {
                         bool serverFound = false;
                         ServerInformation serverInfo = new ServerInformation(msgBuffer);
@@ -127,21 +127,23 @@ namespace MineWorld
             }
 
             // Recieve messages from the server.
-            NetMessageType msgType;
-            while (propertyBag.netClient.ReadMessage(msgBuffer, out msgType))
+            NetIncomingMessage msgBuffer;
+            //NetMessageType msgType;
+            while ((msgBuffer = propertyBag.netClient.ReadMessage()) != null)
             {
-                switch (msgType)
+                switch (msgBuffer.MessageType)
                 {
-                    case NetMessageType.StatusChanged:
+                    case NetIncomingMessageType.StatusChanged:
                         {
-                            if (propertyBag.netClient.Status == NetConnectionStatus.Disconnected)
+                            if (propertyBag.netClient.ConnectionStatus == NetConnectionStatus.Disconnected)
                                 ChangeState("MineWorld.States.ServerBrowserState");
                         }
                         break;
-                    case NetMessageType.ConnectionApproval:
+                    case NetIncomingMessageType.ConnectionApproval:
                         ConnectionApproved = true;
                         break;
-                    case NetMessageType.ConnectionRejected:
+                        //TODO HIGH PRIORITY change this to deny
+                    case NetIncomingMessageType.UnconnectedData:
                         {
                             ConnectionApproved = false;
                             try
@@ -205,7 +207,7 @@ namespace MineWorld
                         }
                         break;
 
-                    case NetMessageType.Data:
+                    case NetIncomingMessageType.Data:
                         {
                             try
                             {
@@ -571,7 +573,7 @@ namespace MineWorld
             propertyBag.mouseSensitivity = Csettings.mouseSensitivity;
             propertyBag.keyBinds = keyBinds;
             propertyBag.Owncolor = Csettings.color;
-            msgBuffer = propertyBag.netClient.CreateBuffer();
+            //msgBuffer = propertyBag.netClient.CreateMessage();
         }
 
         protected override void LoadContent()
