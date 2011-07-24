@@ -191,7 +191,7 @@ namespace MineWorld.States
                     LoginInfo.Add("u", username);
                     LoginInfo.Add("p", password);
                     bool correct =HttpRequest.Get(Defines.MASTERSERVER_BASE_URL + "login.php",LoginInfo) == "OK";
-                    if (correct)
+                    if (!correct)
                     {
                         nextState = "MineWorld.States.ServerBrowserState";
                     }

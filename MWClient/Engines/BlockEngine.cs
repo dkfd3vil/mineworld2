@@ -144,7 +144,7 @@ namespace MineWorld
             for (BlockType blockType = BlockType.None; blockType < BlockType.MAXIMUM; blockType++)
                 for (BlockFaceDirection faceDir = BlockFaceDirection.XIncreasing; faceDir < BlockFaceDirection.MAXIMUM; faceDir++)
                     blockTextureMap[(byte)blockType,(byte)faceDir] = BlockInformation.GetTexture(blockType, faceDir);
-
+            
             // Check the textures
             if (!checkTextures())
             {
@@ -180,7 +180,6 @@ namespace MineWorld
 
             // Initialize any graphics stuff.
             vertexDeclaration = new VertexDeclaration(new VertexElement[0]);
-            //vertexDeclaration = new VertexDeclaration(gameInstance.GraphicsDevice, VertexPositionTextureShade.VertexElements);
 
             // Initialize the bloom engine.
             if (gameInstance.Csettings.RenderPretty)
