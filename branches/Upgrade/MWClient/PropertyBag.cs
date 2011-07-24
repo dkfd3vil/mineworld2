@@ -97,7 +97,7 @@ namespace MineWorld
             blockEngine = new BlockEngine(gameInstance);
             interfaceEngine = new InterfaceEngine(gameInstance);
             playerEngine = new PlayerEngine(gameInstance);
-            particleEngine = new ParticleEngine(gameInstance);
+            //particleEngine = new ParticleEngine(gameInstance);
 
             // Create a camera.
             playerCamera = new Camera(gameInstance.GraphicsDevice);
