@@ -12,5 +12,8 @@ namespace MineWorld
         public string Deathbyexplosion;
         public int Playerhealth;
         public int Playerregenrate;
+        public int Lightsteps;
+        public string MOTD;
+        public bool Stopfluids;
     }
 }

@@ -12,6 +12,11 @@ namespace MineWorld
 {
     public partial class MineWorldServer
     {
+        public void ConsoleWriteEmptyLine()
+        {
+            Console.Write("\n\r");
+        }
+
         public void ConsoleWrite(string text)
         {
             if (Ssettings.Logs == true)
@@ -56,10 +61,10 @@ namespace MineWorld
         public void ConsoleProcessInput(string input)
         {
             ConsoleWrite("> " + input);
-            ProcessCommand(input,false);
+            ProcessCommand(input);
         }
 
-        public void ProcessCommand(string input,bool clientcommand)
+        public void ProcessCommand(string input)
         {
             // if the input is empty then return silent
             if (input == "")
@@ -68,18 +73,6 @@ namespace MineWorld
             }
 
             string[] args = input.Split(new char[] { ' ' });
-            if (clientcommand == true)
-            {
-                args[0] = args[0].Substring(1);
-            }
-            else if (args[0].StartsWith("\\") && args[0].Length > 1)
-            {
-                args[0] = args[0].Substring(1);
-            }
-            else if(args[0].StartsWith("/") && args[0].Length > 1)
-            {
-                args[0] = args[0].Substring(1);
-            }
 
             switch (args[0].ToLower())
             {
@@ -87,21 +80,32 @@ namespace MineWorld
                     {
                         ConsoleWrite("SERVER CONSOLE COMMANDS:");
                         ConsoleWrite(" announce");
-                        ConsoleWrite(" listadmins");
-                        ConsoleWrite(" addadmin <ip>");
-                        ConsoleWrite(" removeadmin <ip>");
-                        ConsoleWrite(" listplayers");
-                        ConsoleWrite(" kick <ip>");
-                        ConsoleWrite(" kickn <name>");
-                        ConsoleWrite(" ban <ip>");
-                        ConsoleWrite(" bann <name>");
-                        ConsoleWrite(" save <mapfile>");
-                        ConsoleWrite(" load <mapfile>");
                         ConsoleWrite(" status");
                         ConsoleWrite(" fps");
                         ConsoleWrite(" cls");
-                        ConsoleWrite(" restart");
-                        ConsoleWrite(" quit");
+                        ConsoleWrite(" stop");
+                        ConsoleWrite(" restart <seconds optional>");
+                        ConsoleWrite(" shutdown <seconds optional>  ");
+                        ConsoleWriteEmptyLine();
+                        ConsoleWrite(" listplayers");
+                        ConsoleWrite(" listadmins");
+                        ConsoleWrite(" listbannedips");
+                        ConsoleWrite(" listbannednames");
+                        ConsoleWriteEmptyLine();
+                        ConsoleWrite(" addadmin <ip>");
+                        ConsoleWrite(" removeadmin <ip>");
+                        ConsoleWriteEmptyLine();
+                        ConsoleWrite(" kickip <ip>");
+                        ConsoleWrite(" kickname <name>");
+                        ConsoleWriteEmptyLine();
+                        ConsoleWrite(" banip <ip>");
+                        ConsoleWrite(" banname <name>");
+                        ConsoleWriteEmptyLine();
+                        ConsoleWrite(" addbannedname <name>");
+                        ConsoleWrite(" removebannedname <name>");
+                        ConsoleWriteEmptyLine();
+                        ConsoleWrite(" save <mapfile>");
+                        ConsoleWrite(" load <mapfile>");
                         break;
                     }
                 case "announce":
@@ -117,11 +121,7 @@ namespace MineWorld
                         ConsoleWrite("( " + playerList.Count + " / " + Ssettings.Maxplayers + " )");
                         foreach (ServerPlayer p in playerList.Values)
                         {
-                            string teamIdent = "";
-                            if (GetAdmin(p.IP))
-                                teamIdent += " (Admin)";
-                            ConsoleWrite(p.Name + teamIdent);
-                            ConsoleWrite(" - " + p.IP);
+                            ConsoleWrite(p.Name + " - " + p.IP);
                         }
                         break;
                     }
@@ -134,6 +134,24 @@ namespace MineWorld
                             {
                                 ConsoleWrite(p.Name + " - " + p.IP);
                             }
+                        }
+                        break;
+                    }
+                case "listbannedips":
+                    {
+                        ConsoleWrite("Banned ip list:");
+                        foreach (string ip in bannedips)
+                        {
+                            ConsoleWrite(ip);
+                        }
+                        break;
+                    }
+                case "listbannednames":
+                    {
+                        ConsoleWrite("Banned names list:");
+                        foreach (string name in bannednames)
+                        {
+                            ConsoleWrite(name);
                         }
                         break;
                     }
@@ -158,7 +176,7 @@ namespace MineWorld
                         status();
                         break;
                     }
-                case "kick":
+                case "kickip":
                     {
                         if (args.Length == 2)
                         {
@@ -166,7 +184,7 @@ namespace MineWorld
                         }
                         break;
                     }
-                case "kickn":
+                case "kickname":
                     {
                         if (args.Length == 2)
                         {
@@ -174,7 +192,7 @@ namespace MineWorld
                         }
                         break;
                     }
-                case "ban":
+                case "banip":
                     {
                         if (args.Length == 2)
                         {
@@ -182,7 +200,7 @@ namespace MineWorld
                         }
                         break;
                     }
-                case "bann":
+                case "banname":
                     {
                         if (args.Length == 2)
                         {
@@ -190,19 +208,63 @@ namespace MineWorld
                         }
                         break;
                     }
-                case "quit":
+                case "addbannedname":
                     {
-                        Shutdownserver();
+                        if (args.Length == 2)
+                        {
+                            AddBannedName(args[1]);
+                        }
+                        break;
+                    }
+                case "removebannedname":
+                    {
+                        if (args.Length == 2)
+                        {
+                            RemoveBannedName(args[1]);
+                        }
+                        break;
+                    }
+                case "shutdown":
+                    {
+                        if (args.Length == 2)
+                        {
+                            Shutdownserver(int.Parse(args[1]));
+                        }
+                        else
+                        {
+                            Shutdownserver(0);
+                        }
                         break;
                     }
                 case "restart":
                     {
-                        Restartserver();
+                        if (args.Length == 2)
+                        {
+                            Restartserver(int.Parse(args[1]));
+                        }
+                        else
+                        {
+                            Restartserver(0);
+                        }
+                        break;
+                    }
+                case "stop":
+                    {
+                        if (restartTriggered || shutdownTriggerd)
+                        {
+                            ConsoleWrite("Shutdown or restart stopped",ConsoleColor.Yellow);
+                            restartTriggered = false;
+                            shutdownTriggerd = false;
+                        }
+                        else
+                        {
+                            ConsoleWrite("Shutdown or restart wasnt started");
+                        }
                         break;
                     }
                 case "save":
                     {
-                        if (args.Length >= 2)
+                        if (args.Length == 2)
                         {
                             SaveLevel(args[1]);
                         }
@@ -222,7 +284,7 @@ namespace MineWorld
                     }
                 case "fps":
                     {
-                        ConsoleWrite("Server FPS:" + frameCount);
+                        //ConsoleWrite(fpsCounter.GetFps());
                         break;
                     }
                 case "cls":

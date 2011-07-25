@@ -70,9 +70,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CaveGenerator.cs" />
-    <Compile Include="ClientSender.cs" />
     <Compile Include="DayManager.cs" />
-    <Compile Include="GameWorld.cs" />
+    <Compile Include="FPSCounter.cs" />
     <Compile Include="MineWorldServer.cs" />
     <Compile Include="LogSystem.cs" />
     <Compile Include="MapSender.cs" />
@@ -85,6 +84,7 @@
     <Compile Include="ServerConsole.cs" />
     <Compile Include="ServerListener.cs" />
     <Compile Include="ServerPlayer.cs" />
+    <Compile Include="ServerSender.cs" />
     <Compile Include="ServerSettings.cs" />
   </ItemGroup>
   <ItemGroup>

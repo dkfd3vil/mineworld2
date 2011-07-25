@@ -16,7 +16,6 @@ namespace MineWorld.Server
             {
                 MineWorldServer MineWorldServer = new MineWorldServer();
                 restartServer = MineWorldServer.Start();
-                GC.Collect();
             }
             
         }

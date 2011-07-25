@@ -46,7 +46,7 @@ namespace MineWorld
                 }
 
                 // Dont need to calc if its disabled
-                if (StopFluids == false)
+                if (SEsettings.Stopfluids == false)
                 {
                     // We calculate lava every 1000 milliseconds
                     if (timeSpanCalcLava.TotalMilliseconds > 1000)
@@ -80,7 +80,7 @@ namespace MineWorld
                 if (p.Alive && p.Canhealthregen)
                 {
                     // TODO Cast health to float otherwise data loss
-                    p.Health = (p.HealthMax / 100) * SAsettings.Playerregenrate;
+                    p.Health = (p.HealthMax / 100) * SEsettings.Playerregenrate;
                     if (p.Health >= p.HealthMax)
                     {
                         p.Health = p.HealthMax;
