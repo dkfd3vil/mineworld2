@@ -9,10 +9,8 @@ namespace MineWorld
         public bool Proxy;
         public string LevelName;
         public bool AutoAnnouce;
-        public string MOTD;
         public int Autosavetimer;
         public bool Logs;
-        public int Lightsteps;
 
         //Not used by configs
         public string SettingsDir;

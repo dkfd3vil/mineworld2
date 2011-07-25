@@ -38,7 +38,13 @@ namespace MineWorld
             this.NetConn = netcon;
 
             if (netcon != null)
+            {
                 this.IP = netcon.RemoteEndpoint.Address.ToString();
+            }
+            else
+            {
+                throw new Exception("SERVERPLAYER NETCONNECTION IS NULL");
+            }
 
             WH = new AutoResetEvent(false);
         }

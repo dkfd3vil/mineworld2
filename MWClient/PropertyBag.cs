@@ -85,6 +85,8 @@ namespace MineWorld
             // Initialize our network device.
             NetPeerConfiguration netConfig = new NetPeerConfiguration("MINEWORLD");
 
+            netConfig.EnableMessageType(NetIncomingMessageType.DiscoveryResponse);
+
             netClient = new NetClient(netConfig);
             //netClient.SimulatedMinimumLatency = 0.1f;
             //netClient.SimulatedLatencyVariance = 0.05f;
@@ -93,12 +95,12 @@ namespace MineWorld
             netClient.Start();
 
             // Initialize engines.
-            skyEngine = new SkyEngine(gameInstance);
+			skyEngine = new SkyEngine(gameInstance);
             blockEngine = new BlockEngine(gameInstance);
             interfaceEngine = new InterfaceEngine(gameInstance);
             playerEngine = new PlayerEngine(gameInstance);
             //particleEngine = new ParticleEngine(gameInstance);
-
+			
             // Create a camera.
             playerCamera = new Camera(gameInstance.GraphicsDevice);
             UpdateCamera();

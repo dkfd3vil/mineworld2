@@ -17,14 +17,15 @@ namespace MineWorld
     {
         Random randomizer = new Random();
 
-        //NetServer netServer = null;
         NetServer netServer = null;
         public DayManager dayManager = null;
+        public FPSCounter fpsCounter = null;
         public Dictionary<NetConnection, ServerPlayer> playerList = new Dictionary<NetConnection, ServerPlayer>();
         public List<NetConnection> toGreet = new List<NetConnection>();
+
         public List<string> admins = new List<string>(); //List of strings with all the admins
         public List<string> bannednames = new List<string>(); // List of strings with all names that cannot be chosen
-        public List<string> banList = new List<string>(); // List of string with all thhe banned ip's
+        public List<string> bannedips = new List<string>(); // List of string with all the banned ip's
 
         DateTime lasthearthbeatsend = DateTime.Now;
         DateTime lastServerListUpdate = DateTime.Now;
@@ -33,9 +34,6 @@ namespace MineWorld
 
         public string serverIP;
         public string sessionid;
-        int frameCount = 100;
-
-        public bool StopFluids;
 
         bool keepRunning = true;
 
@@ -48,7 +46,7 @@ namespace MineWorld
         bool shutdownTriggerd = false;
 
         public ServerSettings Ssettings = new ServerSettings();
-        public ServerExtraSettings SAsettings = new ServerExtraSettings();
+        public ServerExtraSettings SEsettings = new ServerExtraSettings();
         public MapSettings Msettings = new MapSettings();
 
         //TODO Find a proper place
@@ -84,7 +82,7 @@ namespace MineWorld
             LoadMapSettings();
 
             // Load the ban-list.
-            banList = LoadBanList();
+            bannedips = LoadBannedIps();
 
             // Load the admin-list.
             admins = LoadAdminList();
@@ -94,6 +92,10 @@ namespace MineWorld
 
             // Initialize the server.
             NetPeerConfiguration config = new NetPeerConfiguration("MINEWORLD");
+
+            config.EnableMessageType(NetIncomingMessageType.ConnectionApproval);
+            config.EnableMessageType(NetIncomingMessageType.DiscoveryRequest);
+
             //Todo put this in the config files
             config.Port = Defines.MINEWORLD_PORT;
             config.MaximumConnections = Ssettings.Maxplayers;
@@ -102,7 +104,10 @@ namespace MineWorld
             netServer = new NetServer(config);
 
             // Initialize the daymanager.
-            dayManager = new DayManager(Ssettings);
+            dayManager = new DayManager(SEsettings.Lightsteps);
+
+            // Initialize the FpsCounter
+            fpsCounter = new FPSCounter();
 
             // Store the last time that we did a physics calculation.
             DateTime lastCalc = DateTime.Now;
@@ -148,8 +153,6 @@ namespace MineWorld
             Thread listenerthread = new Thread(new ThreadStart(listener.start));
             Thread physicsthread = new Thread(new ThreadStart(DoPhysics));
 
-            DateTime lastFPScheck = DateTime.Now;
-            double frameRate = 0;
 
             //Start netserver
             netServer.Start();
@@ -185,18 +188,8 @@ namespace MineWorld
                     return false;
                 }
 
-                // Fps for the server
-                frameCount = frameCount + 1;
-                if (lastFPScheck <= DateTime.Now - TimeSpan.FromMilliseconds(1000))
-                {
-                    lastFPScheck = DateTime.Now;
-                    frameRate = frameCount;
-                    if (frameCount <= 20)
-                    {
-                        ConsoleWrite("Heavy load: " + frameCount + " FPS", ConsoleColor.Yellow);
-                    }
-                    frameCount = 0;
-                }
+                fpsCounter.Update();
+                //ConsoleWrite(fpsCounter.GetFps(), ConsoleColor.Yellow);
 
                 // Dont send hearthbeats too fast
                 TimeSpan updatehearthbeat = DateTime.Now - lasthearthbeatsend;
@@ -249,22 +242,28 @@ namespace MineWorld
                 }
 
                 // Restart the server?
-                if (restartTriggered && DateTime.Now > restartTime)
+                if (restartTriggered)
                 {
-                    disconnectAll();
-                    netServer.Shutdown("serverrestart");
-                    BackupLevel();
-                    removefromMasterServer();
-                    return true;
+                    if (DateTime.Now > restartTime)
+                    {
+                        Disconnectall();
+                        netServer.Shutdown("serverrestart");
+                        BackupLevel();
+                        removefromMasterServer();
+                        return true;
+                    }
                 }
 
-                if (shutdownTriggerd && DateTime.Now > shutdownTime)
+                if (shutdownTriggerd)
                 {
-                    disconnectAll();
-                    netServer.Shutdown("servershutdown");
-                    BackupLevel();
-                    removefromMasterServer();
-                    return false;
+                    if (DateTime.Now > shutdownTime)
+                    {
+                        Disconnectall();
+                        netServer.Shutdown("servershutdown");
+                        BackupLevel();
+                        removefromMasterServer();
+                        return false;
+                    }
                 }
 
                 // Pass control over to waiting threads.
@@ -326,14 +325,6 @@ namespace MineWorld
                 ConsoleWriteError("Couldnt find levelname setting so we use the default ()");
             }
 
-            if (dataFile.Data.ContainsKey("motd"))
-                Ssettings.MOTD = dataFile.Data["motd"];
-            else
-            {
-                Ssettings.MOTD = "Welcome";
-                ConsoleWriteError("Couldnt find MOTD setting so we use the default (Welcome)");
-            }
-
             if (dataFile.Data.ContainsKey("autoannounce"))
                 Ssettings.AutoAnnouce = bool.Parse(dataFile.Data["autoannounce"]);
             else
@@ -348,14 +339,6 @@ namespace MineWorld
             {
                 Ssettings.Autosavetimer = 5;
                 ConsoleWriteError("Couldnt find autosave setting so we use the default (5)");
-            }
-
-            if (dataFile.Data.ContainsKey("lightsteps"))
-                Ssettings.Lightsteps = int.Parse(dataFile.Data["lightsteps"]);
-            else
-            {
-                Ssettings.Lightsteps = 60;
-                ConsoleWriteError("Couldnt find lightsteps setting so we use the default (60)");
             }
 
             if (!(Ssettings.Maxplayers >= 1 && Ssettings.Maxplayers <= 16))
@@ -491,16 +474,20 @@ namespace MineWorld
             //ToDo Load them from the file
             //dont forget to use [name]
             //File is already inplace
-            SAsettings.Deathbydrown = "WAS DROWNED!";
-            SAsettings.Deathbyfall = "WAS KILLED BY GRAVITY!";
-            SAsettings.Deathbylava = "WAS INCINERATED BY LAVA!";
-            SAsettings.Deathbyoutofbounds = "WAS KILLED BY MISADVENTURE!";
-            SAsettings.Deathbysuicide = "HAS COMMITED PIXELCIDE!";
-            SAsettings.Deathbycrush = "WAS CRUSHED!";
-            SAsettings.Deathbyexplosion = "WAS KILLED IN AN EXPLOSION!";
+            SEsettings.Deathbydrown = "WAS DROWNED!";
+            SEsettings.Deathbyfall = "WAS KILLED BY GRAVITY!";
+            SEsettings.Deathbylava = "WAS INCINERATED BY LAVA!";
+            SEsettings.Deathbyoutofbounds = "WAS KILLED BY MISADVENTURE!";
+            SEsettings.Deathbysuicide = "HAS COMMITED PIXELCIDE!";
+            SEsettings.Deathbycrush = "WAS CRUSHED!";
+            SEsettings.Deathbyexplosion = "WAS KILLED IN AN EXPLOSION!";
 
-            SAsettings.Playerhealth = 100;
-            SAsettings.Playerregenrate = 1;
+            SEsettings.Playerhealth = 100;
+            SEsettings.Playerregenrate = 1;
+
+            SEsettings.Lightsteps = 60;
+
+            SEsettings.MOTD = "Welcome [name]";
 
             ConsoleWriteSucces("EXTRASETTINGS LOADED");
         }
@@ -517,20 +504,22 @@ namespace MineWorld
             ConsoleWriteSucces("DIRECTORYS LOADED");
         }
 
-        public void Shutdownserver()
+        public void Shutdownserver(int seconds)
         {
-            ConsoleWrite("Server is shutting down in 5 seconds.", ConsoleColor.Yellow);
-            SendServerWideMessage("Server is shutting down in 5 seconds.");
+            ConsoleWrite("Server is shutting down in " + seconds + " seconds.", ConsoleColor.Yellow);
+            SendServerWideMessage("Server is shutting down in " + seconds + " seconds.");
             shutdownTriggerd = true;
-            shutdownTime = DateTime.Now + TimeSpan.FromSeconds(5);
+            restartTriggered = false;
+            shutdownTime = DateTime.Now + TimeSpan.FromSeconds(seconds);
         }
 
-        public void Restartserver()
+        public void Restartserver(int seconds)
         {
-            ConsoleWrite("Server restarting in 5 seconds.", ConsoleColor.Yellow);
-            SendServerWideMessage("Server restarting in 5 seconds.");
+            ConsoleWrite("Server restarting in " + seconds + " seconds.", ConsoleColor.Yellow);
+            SendServerWideMessage("Server restarting in " + seconds + " seconds.");
             restartTriggered = true;
-            restartTime = DateTime.Now + TimeSpan.FromSeconds(5);
+            shutdownTriggerd = false;
+            restartTime = DateTime.Now + TimeSpan.FromSeconds(seconds);
         }
 
         public void SendServerMessageToPlayer(string message, ServerPlayer player)
@@ -867,6 +856,25 @@ namespace MineWorld
             foreach (ServerPlayer iplayer in playerList.Values)
             {
                 netServer.SendMessage(msg, iplayer.NetConn, NetDeliveryMethod.UnreliableSequenced);
+            }
+        }
+
+        public void Disconnectall()
+        {
+            foreach (ServerPlayer p in playerList.Values)
+            {
+                p.NetConn.Disconnect("");
+            }
+        }
+
+        public void Disconnectspecific(ServerPlayer player)
+        {
+            foreach (ServerPlayer p in playerList.Values)
+            {
+                if (p == player)
+                {
+                    p.NetConn.Disconnect("");
+                }
             }
         }
     }

@@ -63,11 +63,18 @@ namespace MineWorld
 
             try
             {
-                WebResponse response = request.GetResponse();
-                if (response == null) throw new Exception("No response");
-
-                StreamReader sr = new StreamReader(response.GetResponseStream());
-                responseText = sr.ReadToEnd().Trim();
+                WebResponse response = null; //= request.GetResponse();
+                if (response == null)
+                {
+                    //throw new Exception("No response");
+                    //We couldt get a response from the server so lets set it to ""
+                    responseText = "";
+                }
+                else
+                {
+                    StreamReader sr = new StreamReader(response.GetResponseStream());
+                    responseText = sr.ReadToEnd().Trim();
+                }
             }
             catch
             {

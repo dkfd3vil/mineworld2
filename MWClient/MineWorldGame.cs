@@ -446,6 +446,11 @@ namespace MineWorld
                         }
                         break;
                 }
+                //Dont recycle a null message
+                if (msgBuffer != null)
+                {
+                    propertyBag.netClient.Recycle(msgBuffer);
+                }
             }
             // Make sure our network thread actually gets to run.
             Thread.Sleep(1);
@@ -587,9 +592,12 @@ namespace MineWorld
             // Play the title music.
             if (!Csettings.NoSound)
             {
+
                 songTitle = Content.Load<Song>("song_title");
-                MediaPlayer.Play(songTitle);
-                MediaPlayer.Volume = propertyBag.volumeLevel;
+                //TODO Why does visual studio says its DRM protected?
+                //MediaPlayer.Stop();
+                //MediaPlayer.Play(songTitle);
+                //MediaPlayer.Volume = propertyBag.volumeLevel;
             }
         }
     }

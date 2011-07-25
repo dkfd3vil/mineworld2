@@ -161,7 +161,7 @@
     <Content Include="ServerConfigs\admins.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="ServerConfigs\banlist.txt">
+    <Content Include="ServerConfigs\bannedips.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="ClientConfigs\client.config.txt">

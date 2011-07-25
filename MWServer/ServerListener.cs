@@ -42,7 +42,7 @@ namespace MineWorld
                                         IServer.ConsoleWriteError("CONNECTION REJECTED: " + temphandle + " (VERSION WRONG)");
                                         msg.SenderConnection.Deny("versionwrong");
                                     }
-                                    else if (IServer.banList.Contains(msg.SenderEndpoint.ToString()))
+                                    else if (IServer.bannedips.Contains(msg.SenderEndpoint.ToString()))
                                     {
                                         IServer.ConsoleWriteError("CONNECTION REJECTED: " + temphandle + " (IP BANNED)");
                                         msg.SenderConnection.Deny("banned");
@@ -104,6 +104,8 @@ namespace MineWorld
                                         }
                                     }
                                 }
+                                break;
+                            case NetIncomingMessageType.DiscoveryRequest:
                                 break;
                             case NetIncomingMessageType.StatusChanged:
                                 {
@@ -184,13 +186,13 @@ namespace MineWorld
                                                             }
                                                         case "/stopfluids":
                                                             {
-                                                                IServer.StopFluids = true;
+                                                                IServer.SEsettings.Stopfluids = true;
                                                                 answer = "Stopfluids enabled";
                                                                 break;
                                                             }
                                                         case "/startfluids":
                                                             {
-                                                                IServer.StopFluids = false;
+                                                                IServer.SEsettings.Stopfluids = false;
                                                                 answer = "Stopfluids disabled";
                                                                 break;
                                                             }
@@ -293,12 +295,28 @@ namespace MineWorld
                                                             }
                                                         case "/restart":
                                                             {
-                                                                IServer.Restartserver();
+                                                                if (splitted.Length > 1)
+                                                                {
+                                                                    splitted[1] = splitted[1].ToLower();
+                                                                    IServer.Restartserver(int.Parse(splitted[1]));
+                                                                }
+                                                                else
+                                                                {
+                                                                    IServer.Restartserver(0);
+                                                                }
                                                                 break;
                                                             }
                                                         case "/shutdown":
                                                             {
-                                                                IServer.Shutdownserver();
+                                                                if (splitted.Length > 1)
+                                                                {
+                                                                    splitted[1] = splitted[1].ToLower();
+                                                                    IServer.Shutdownserver(int.Parse(splitted[1]));
+                                                                }
+                                                                else
+                                                                {
+                                                                    IServer.Shutdownserver(0);
+                                                                }
                                                                 break;
                                                             }
                                                         default:
@@ -385,9 +403,9 @@ namespace MineWorld
                                             {
                                                 if (IServer.toGreet.Contains(msg.SenderConnection))
                                                 {
-                                                    if (IServer.Ssettings.MOTD != "")
+                                                    if (IServer.SEsettings.MOTD != "")
                                                     {
-                                                        string greeting = IServer.Ssettings.MOTD;
+                                                        string greeting = IServer.SEsettings.MOTD;
                                                         greeting = greeting.Replace("[name]", IServer.playerList[msg.SenderConnection].Name);
                                                         NetOutgoingMessage greet = netServer.CreateMessage();
                                                         greet.Write((byte)MineWorldMessage.ChatMessage);
@@ -465,6 +483,11 @@ namespace MineWorld
                         }
                     }
                     catch { }
+                }
+                //Dont recycle a null message
+                if (msg != null)
+                {
+                    netServer.Recycle(msg);
                 }
                 Thread.Sleep(25);
             }

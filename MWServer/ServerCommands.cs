@@ -58,7 +58,7 @@ namespace MineWorld
                 FileStream file = new FileStream(Ssettings.SettingsDir + "/admins.txt", FileMode.Create, FileAccess.Write);
                 StreamWriter sw = new StreamWriter(file);
                 sw.WriteLine("#A list of all admins - just add one ip per line\n");
-                foreach (string ip in banList)
+                foreach (string ip in admins)
                     sw.WriteLine(ip);
                 sw.Close();
                 file.Close();
@@ -68,24 +68,24 @@ namespace MineWorld
             return false;
         }
 
-        public List<string> LoadBanList()
+        public List<string> LoadBannedIps()
         {
-            ConsoleWrite("LOADING BANLIST");
+            ConsoleWrite("LOADING BANNEDIPS");
             List<string> retList = new List<string>();
 
             try
             {
-                if (!File.Exists(Ssettings.SettingsDir + "/banlist.txt"))
+                if (!File.Exists(Ssettings.SettingsDir + "/bannedips.txt"))
                 {
-                    FileStream fs = File.Create(Ssettings.SettingsDir + "/banlist.txt");
+                    FileStream fs = File.Create(Ssettings.SettingsDir + "/bannedips.txt");
                     StreamWriter sr = new StreamWriter(fs);
-                    sr.WriteLine("#A list of all banned people - just add one ip per line");
+                    sr.WriteLine("#A list of all banned ips - just add one ip per line");
                     sr.Close();
                     fs.Close();
                 }
                 else
                 {
-                    FileStream file = new FileStream(Ssettings.SettingsDir + "/banlist.txt", FileMode.Open, FileAccess.Read);
+                    FileStream file = new FileStream(Ssettings.SettingsDir + "/bannedips.txt", FileMode.Open, FileAccess.Read);
                     StreamReader sr = new StreamReader(file);
                     string line = sr.ReadLine();
                     while (line != null)
@@ -101,19 +101,19 @@ namespace MineWorld
             }
             catch
             {
-                ConsoleWriteError("Unable to load banlist");
+                ConsoleWriteError("Unable to load bannedips");
             }
             ConsoleWriteSucces(retList.Count + " BANNED IP's LOADED");
             return retList;
         }
 
-        public void SaveBanList()
+        public void SaveBannedIps()
         {
             try
             {
-                FileStream file = new FileStream(Ssettings.SettingsDir + "/banlist.txt", FileMode.Create, FileAccess.Write);
+                FileStream file = new FileStream(Ssettings.SettingsDir + "/bannedips.txt", FileMode.Create, FileAccess.Write);
                 StreamWriter sw = new StreamWriter(file);
-                foreach (string ip in banList)
+                foreach (string ip in bannedips)
                     sw.WriteLine(ip);
                 sw.Close();
                 file.Close();
@@ -160,6 +160,20 @@ namespace MineWorld
             return retList;
         }
 
+        public void SaveBannedNames()
+        {
+            try
+            {
+                FileStream file = new FileStream(Ssettings.SettingsDir + "/bannednames.txt", FileMode.Create, FileAccess.Write);
+                StreamWriter sw = new StreamWriter(file);
+                foreach (string name in bannednames)
+                    sw.WriteLine(name);
+                sw.Close();
+                file.Close();
+            }
+            catch { }
+        }
+
         public void KickPlayer(string ip, bool name)
         {
             List<ServerPlayer> playersToKick = new List<ServerPlayer>();
@@ -177,11 +191,30 @@ namespace MineWorld
 
         public void BanPlayer(string ip, bool name)
         {
-            if (!banList.Contains(ip))
+            if (!bannedips.Contains(ip))
             {
-                banList.Add(ip);
+                bannedips.Add(ip);
                 KickPlayer(ip,name);
-                SaveBanList();
+                SaveBannedIps();
+            }
+        }
+
+        public void AddBannedName(string name)
+        {
+            if (!bannednames.Contains(name))
+            {
+                bannednames.Add(name);
+                KickPlayer(name, true);
+                SaveBannedNames();
+            }
+        }
+
+        public void RemoveBannedName(string name)
+        {
+            if (bannednames.Contains(name))
+            {
+                bannednames.Remove(name);
+                SaveBannedNames();
             }
         }
 
@@ -241,7 +274,7 @@ namespace MineWorld
                     return false;
                 }
                 SendServerWideMessage("Changing map to " + filename + "!");
-                disconnectAll();
+                Disconnectall();
 
                 FileStream fs = new FileStream(filename, FileMode.Open);
                 StreamReader sr = new StreamReader(fs);
@@ -263,23 +296,17 @@ namespace MineWorld
             return false;
         }
 
-        public void disconnectAll()
-        {
-            foreach (ServerPlayer p in playerList.Values)
-            {
-                p.NetConn.Disconnect("");
-            }
-        }
-
         public void status()
         {
+            ConsoleWrite("Serversettings + extra");
             ConsoleWrite("ServerName: " + Ssettings.Servername);
             ConsoleWrite(playerList.Count + " / " + Ssettings.Maxplayers + " players");
             ConsoleWrite("Public: " + Ssettings.Public.ToString());
             ConsoleWrite("Proxy: " + Ssettings.Proxy.ToString());
             ConsoleWrite("Logging: " + Ssettings.Logs.ToString());
-            ConsoleWrite("MOTD: " + Ssettings.MOTD);
+            ConsoleWrite("MOTD: " + SEsettings.MOTD);
             ConsoleWrite("Logging: " + Ssettings.Logs.ToString());
+            ConsoleWrite("Stop Fluids " + SEsettings.Stopfluids.ToString());
         }
     }
 }

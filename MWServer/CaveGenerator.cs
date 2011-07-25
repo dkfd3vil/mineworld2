@@ -97,8 +97,6 @@ namespace MineWorld
                 AddAdminblocks(ref caveData, size);
             }
 
-            GC.Collect();
-
             return caveData;
         }
 
