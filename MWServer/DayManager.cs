@@ -12,14 +12,14 @@ namespace MineWorld
     public class DayManager
     {
         bool goingup = false;
+        int lightsteps = 0;
         float light = 1f;
         float prevlight = 1f;
         DateTime lastcalclight = DateTime.Now;
-        ServerSettings serversettings;
 
-        public DayManager(ServerSettings ss)
+        public DayManager(int amount)
         {
-            serversettings = ss;
+            lightsteps = amount;
         }
 
         public float Light
@@ -38,7 +38,7 @@ namespace MineWorld
         {
             TimeSpan timespanlastcalclight = DateTime.Now - lastcalclight;
 
-            if (timespanlastcalclight.Seconds > serversettings.Lightsteps)
+            if (timespanlastcalclight.Seconds > lightsteps)
             {
                 if (goingup)
                 {

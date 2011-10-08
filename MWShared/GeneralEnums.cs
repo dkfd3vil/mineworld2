@@ -28,6 +28,7 @@ namespace MineWorld
         AltFire,
     }
 
+    /*
     public enum MouseButtons
     {
         LeftButton,
@@ -36,6 +37,7 @@ namespace MineWorld
         WheelUp,
         WheelDown
     }
+     */
 
     public enum ScreenEffect
     {
@@ -44,7 +46,7 @@ namespace MineWorld
         Teleport,
         Fall,
         Explosion,
-        Drown,
+        Drowning,
         Water,
     }
 
@@ -90,9 +92,14 @@ namespace MineWorld
         PlayerCommand,         // int id, string command  This is sent by client
         PlayerHurt,             // allows client to tell server of damage
         PlayerPosition,         // server sends client new position
-        PlayerRespawn,          // allows the player to respawn
-        Killed,                 // Send by the server to notify the player has been killed
         DayUpdate,              // float , Send by the server to notify the player how dark or light the game is
+        //PlayerRespawn,
+        PlayerRequest,          // Client requests something from the server
+    }
+
+    public enum PlayerRequests : byte
+    {
+        Respawn,
     }
 
     public enum ChatMessageType

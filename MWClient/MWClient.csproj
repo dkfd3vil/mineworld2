@@ -99,12 +99,14 @@
     <Compile Include="Engines\BlockEngine.cs" />
     <Compile Include="Camera.cs" />
     <Compile Include="ClickRegion.cs" />
+    <Compile Include="Engines\DebugEngine.cs" />
     <Compile Include="Engines\LightingEngine.cs" />
     <Compile Include="Engines\ParticleEngine.cs" />
     <Compile Include="Engines\SkyEngine.cs" />
     <Compile Include="ErrorManager.cs" />
     <Compile Include="EventInput.cs" />
     <Compile Include="FPSCounter.cs" />
+    <Compile Include="InputManager.cs" />
     <Compile Include="MineWorldGame.cs" />
     <Compile Include="Engines\InterfaceEngine.cs" />
     <Compile Include="InterfaceItems\InterfaceButtonToggle.cs" />
@@ -122,7 +124,6 @@
     <Compile Include="StateMasher\StateMachine.cs" />
     <Compile Include="States\ErrorState.cs" />
     <Compile Include="States\LoadingState.cs" />
-    <Compile Include="States\LoginState.cs" />
     <Compile Include="States\MainGameState.cs" />
     <Compile Include="States\ServerBrowserState.cs" />
     <Compile Include="States\SettingsState.cs" />

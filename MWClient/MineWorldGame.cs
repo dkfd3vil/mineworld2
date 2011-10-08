@@ -50,8 +50,8 @@ namespace MineWorld
 
             // Create our connect message.
             NetBuffer connectBuffer = propertyBag.netClient.CreateBuffer();
+            connectBuffer.Write(Defines.MINEWORLD_BUILD);
             connectBuffer.Write(propertyBag.playerHandle);
-            connectBuffer.Write(Defines.MINEWORLD_VER);
 
             // Connect to the server.
             propertyBag.netClient.Connect(serverEndPoint, connectBuffer.ToArray());
@@ -87,6 +87,7 @@ namespace MineWorld
             }
 
             // Discover remote servers.
+            /*
             try
             {
                 string publicList = HttpRequest.Get(Defines.MASTERSERVER_BASE_URL + "servers.php", null);
@@ -107,7 +108,7 @@ namespace MineWorld
             catch (Exception)
             {
             }
-
+            */
             return serverList;
         }
 
@@ -135,8 +136,10 @@ namespace MineWorld
                         }
                         break;
                     case NetMessageType.ConnectionApproval:
-                        ConnectionApproved = true;
-                        break;
+                        {
+                            ConnectionApproved = true;
+                            break;
+                        }
                     case NetMessageType.ConnectionRejected:
                         {
                             ConnectionApproved = false;
@@ -273,12 +276,6 @@ namespace MineWorld
                                             propertyBag.playerPosition = msgBuffer.ReadVector3();
                                             break;
                                         }
-                                    case MineWorldMessage.PlayerRespawn:
-                                        {
-                                            propertyBag.playerPosition = msgBuffer.ReadVector3();
-                                            propertyBag.allowRespawn = true;
-                                            break;
-                                        }
                                     case MineWorldMessage.BlockSet:
                                         {
                                             // x, y, z, type, all bytes
@@ -357,28 +354,26 @@ namespace MineWorld
                                         {
                                             int playerId = msgBuffer.ReadInt32();
                                             if (propertyBag.playerList.ContainsKey(playerId))
+                                            {
                                                 propertyBag.playerList.Remove(playerId);
+                                            }
                                         }
                                         break;
-
-                                    case MineWorldMessage.Killed:
-                                        {
-                                            //We received the death command :(
-                                            string reason = msgBuffer.ReadString();
-                                            propertyBag.KillPlayer(reason);
-                                            break;
-                                        }
 
                                     case MineWorldMessage.PlayerDead:
                                         {
                                             int playerId = msgBuffer.ReadInt32();
-                                            if (propertyBag.playerList.ContainsKey(playerId))
+                                            if (playerId == propertyBag.playerMyId)
+                                            {
+                                                //TODO Implent death message
+                                                propertyBag.KillMySelf();
+                                            }
+                                            else if (propertyBag.playerList.ContainsKey(playerId))
                                             {
                                                 ClientPlayer player = propertyBag.playerList[playerId];
                                                 player.Alive = false;
                                                 propertyBag.particleEngine.CreateBloodSplatter(player.Position, player.Owncolor);
-                                                if (playerId != propertyBag.playerMyId)
-                                                    propertyBag.PlaySound(MineWorldSound.Death, player.Position);
+                                                propertyBag.PlaySound(MineWorldSound.Death, player.Position);
                                             }
                                         }
                                         break;
@@ -386,6 +381,10 @@ namespace MineWorld
                                     case MineWorldMessage.PlayerAlive:
                                         {
                                             int playerId = msgBuffer.ReadInt32();
+                                            if (playerId == propertyBag.playerMyId)
+                                            {
+                                                propertyBag.MakeMySelfAlive();
+                                            }
                                             if (propertyBag.playerList.ContainsKey(playerId))
                                             {
                                                 ClientPlayer player = propertyBag.playerList[playerId];

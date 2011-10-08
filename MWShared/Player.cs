@@ -1,4 +1,5 @@
-﻿using System;
+﻿/*
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Lidgren.Network;
@@ -32,3 +33,4 @@ namespace MineWorld
         public string IP = "";
     }
 }
+ */

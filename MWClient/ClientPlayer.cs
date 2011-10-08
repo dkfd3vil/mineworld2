@@ -15,18 +15,30 @@ using Microsoft.Xna.Framework.Storage;
 
 namespace MineWorld
 {
-    public class ClientPlayer : Player
+    public class ClientPlayer
     {
         private List<InterpolationPacket> interpList = new List<InterpolationPacket>();
         public Color Owncolor = new Color();
         public SpriteModel SpriteModel;
         public Game gameInstance;
+        public bool Kicked = false;
+        public bool Godmode = false;
+        public string Name = "";
+        // DJ NOT NICE
+        // TODO This needs to be done proper
+        public int Health = 0;
+        public int HealthMax = 100;
+        public bool Alive = false;
+        public int ID;
+        public Vector3 Heading = Vector3.Zero;
+        public Vector3 Position = Vector3.Zero;
+        public NetConnection NetConn;
+        public string IP = "";
 
         public ClientPlayer(NetConnection netConn, Game gameInstance)
         {
             this.gameInstance = gameInstance;
             this.NetConn = netConn;
-            this.ID = GetUniqueId();
 
             if (netConn != null)
                 this.IP = netConn.RemoteEndpoint.Address.ToString();
@@ -35,13 +47,6 @@ namespace MineWorld
             {
                 this.SpriteModel = new SpriteModel(gameInstance, 4);
             }
-        }
-
-        static int uniqueId = 0;
-        public static int GetUniqueId()
-        {
-            uniqueId += 1;
-            return uniqueId;
         }
 
         private struct InterpolationPacket
