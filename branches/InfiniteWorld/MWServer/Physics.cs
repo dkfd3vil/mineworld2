@@ -77,10 +77,10 @@ namespace MineWorld
         {
             foreach (ServerPlayer p in playerList.Values)//regeneration
             {
-                if (p.Alive && p.Canhealthregen)
+                if (p.Alive)
                 {
                     // TODO Cast health to float otherwise data loss
-                    p.Health = (p.HealthMax / 100) * SAsettings.Playerregenrate;
+                    p.Health += (p.HealthMax / 100) * SAsettings.Playerregenrate;
                     if (p.Health >= p.HealthMax)
                     {
                         p.Health = p.HealthMax;

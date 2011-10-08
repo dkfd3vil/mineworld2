@@ -23,6 +23,7 @@ namespace MineWorld
         public List<string> admins = new List<string>(); //List of strings with all the admins
         public List<string> bannednames = new List<string>(); // List of strings with all names that cannot be chosen
         public List<string> banList = new List<string>(); // List of string with all thhe banned ip's
+        List<MapSender> mapSendingProgress = new List<MapSender>();
 
         DateTime lasthearthbeatsend = DateTime.Now;
         DateTime lastServerListUpdate = DateTime.Now;
@@ -60,7 +61,9 @@ namespace MineWorld
 
         public string GetExternalIp()
         {
-            string ip = HttpRequest.Get(Defines.MASTERSERVER_BASE_URL + "ip.php", null);
+            //TODO Remove hardcoded external ip
+            string ip = "0.0.0.0";
+            //string ip = HttpRequest.Get(Defines.MASTERSERVER_BASE_URL + "ip.php", null);
             return ip;
         }
 
@@ -102,7 +105,7 @@ namespace MineWorld
             //netServer.SimulatedDuplicates = 0.05f;
 
             // Initialize the daymanager.
-            dayManager = new DayManager(Ssettings);
+            dayManager = new DayManager(Ssettings.Lightsteps);
 
             // Store the last time that we did a physics calculation.
             DateTime lastCalc = DateTime.Now;
@@ -159,12 +162,6 @@ namespace MineWorld
 
             //Start physicsthread
             physicsthread.Start();
-
-            //If public, announce server to public tracker
-            if (Ssettings.Public)
-            {
-                addtoMasterServer();
-            }
 
             // Main server loop!
             ConsoleWriteSucces("SERVER READY");
@@ -254,7 +251,6 @@ namespace MineWorld
                     disconnectAll();
                     netServer.Shutdown("serverrestart");
                     BackupLevel();
-                    removefromMasterServer();
                     return true;
                 }
 
@@ -263,7 +259,6 @@ namespace MineWorld
                     disconnectAll();
                     netServer.Shutdown("servershutdown");
                     BackupLevel();
-                    removefromMasterServer();
                     return false;
                 }
 
@@ -560,9 +555,7 @@ namespace MineWorld
             netServer.SendMsg(msgBuffer, player.NetConn, NetChannel.ReliableInOrder15);
         }
 
-        List<MapSender> mapSendingProgress = new List<MapSender>();
-
-        public void  TerminateFinishedThreads()
+        public void TerminateFinishedThreads()
         {
             List<MapSender> mapSendersToRemove = new List<MapSender>();
             foreach (MapSender ms in mapSendingProgress)
@@ -585,31 +578,27 @@ namespace MineWorld
             mapSendingProgress.Add(ms);
         }
 
-        public void SendInitialStats(NetConnection client)
-        {
-
-        }
-
         public void KillPlayerSpecific(ServerPlayer player)
         {
             // Put variables to zero
             player.Health = 0;
             player.Alive = false;
+            ConsoleWrite("PLAYER_DEAD: " + player.Name);
 
-            // Kill the player specific
-            NetBuffer msgBufferb = netServer.CreateBuffer();
-            msgBufferb.Write((byte)MineWorldMessage.Killed);
-            //TODO IMPLENT DEATH MESSAGES
-            msgBufferb.Write("");
-            netServer.SendMsg(msgBufferb, player.NetConn, NetChannel.ReliableUnordered);
+            SendHealthUpdate(player);
+            SendPlayerDead(player);
+        }
 
-            // Let all the other players know
-            NetBuffer msgBuffer = netServer.CreateBuffer();
-            msgBuffer.Write((byte)MineWorldMessage.PlayerDead);
-            msgBuffer.Write(player.ID);
-            foreach (ServerPlayer iplayer in playerList.Values)
+        public void KillAllPlayers()
+        {
+            foreach (ServerPlayer dummy in playerList.Values)
             {
-                netServer.SendMsg(msgBuffer, iplayer.NetConn, NetChannel.ReliableInOrder2);
+                dummy.Health = 0;
+                dummy.Alive = false;
+                ConsoleWrite("PLAYER_DEAD: " + dummy.Name);
+
+                SendHealthUpdate(dummy);
+                SendPlayerDead(dummy);
             }
         }
 
@@ -640,34 +629,28 @@ namespace MineWorld
 
         public void SendPlayerJoined(ServerPlayer player)
         {
-            NetBuffer msgBuffer;
-
-            // Let this player know about other players.
-            foreach (ServerPlayer p in playerList.Values)
-            {
-                msgBuffer = netServer.CreateBuffer();
-                msgBuffer.Write((byte)MineWorldMessage.PlayerJoined);
-                msgBuffer.Write(p.ID);
-                msgBuffer.Write(p.Name);
-                msgBuffer.Write(p == player);
-                msgBuffer.Write(p.Alive);
-                netServer.SendMsg(msgBuffer, p.NetConn, NetChannel.ReliableInOrder2);
-            }
+            NetBuffer msgBuffer = netServer.CreateBuffer();
+            bool thisisme = false;
 
             // Let other players know about this player.
-            msgBuffer = netServer.CreateBuffer();
-            msgBuffer.Write((byte)MineWorldMessage.PlayerJoined);
-            msgBuffer.Write(player.ID);
-            msgBuffer.Write(player.Name);
-            msgBuffer.Write(false);
-            msgBuffer.Write(player.Alive);
 
             foreach (ServerPlayer iplayer in playerList.Values)
             {
+                if (player.ID == iplayer.ID)
+                {
+                    thisisme = true;
+                }
+                else
+                {
+                    thisisme = false;
+                }
+                msgBuffer.Write((byte)MineWorldMessage.PlayerJoined);
+                msgBuffer.Write(player.ID);
+                msgBuffer.Write(player.Name);
+                msgBuffer.Write(thisisme);
+                msgBuffer.Write(player.Alive);
                 netServer.SendMsg(msgBuffer, iplayer.NetConn, NetChannel.ReliableInOrder2);
             }
-
-            SendPlayerRespawn(player);
 
             // Send out a chat message.
             msgBuffer = netServer.CreateBuffer();
@@ -684,6 +667,8 @@ namespace MineWorld
                 }
                 netServer.SendMsg(msgBuffer, iplayer.NetConn, NetChannel.ReliableInOrder3);
             }
+            SendPlayerAlive(player);
+            SendPlayerRespawn(player);
         }
 
         public void SendPlayerLeft(ServerPlayer player, string reason)
@@ -732,7 +717,7 @@ namespace MineWorld
 
         public void SendPlayerRespawn(ServerPlayer player)
         {
-            if (!player.Alive)
+            if (/*!player.Alive*/ true)
             {
                 // Respawn a few blocks above a safe position above altitude 0.
                 bool positionFound = false;
@@ -770,8 +755,10 @@ namespace MineWorld
                 // Drop the player on the middle of the block, not at the corner.
                 player.Position += new Vector3(0.5f, 0, 0.5f);
 
+                SendPlayerAlive(player);
+
                 NetBuffer msgBuffer = netServer.CreateBuffer();
-                msgBuffer.Write((byte)MineWorldMessage.PlayerRespawn);
+                msgBuffer.Write((byte)MineWorldMessage.PlayerPosition);
                 msgBuffer.Write(player.Position);
                 netServer.SendMsg(msgBuffer, player.NetConn, NetChannel.ReliableInOrder3);
             }
@@ -787,56 +774,6 @@ namespace MineWorld
             foreach (ServerPlayer player in playerList.Values)
             {
                 netServer.SendMsg(msgBuffer, player.NetConn, NetChannel.ReliableUnordered);
-            }
-        }
-
-        public void addtoMasterServer()
-        {
-            updateMasterServer(true);
-        }
-
-        public void updateMasterServer()
-        {
-            updateMasterServer(false);
-        }
-
-        public void hearthbeatMasterServer()
-        {
-            Dictionary<string, string> session = new Dictionary<string, string>();
-            session.Add("id", sessionid);
-            HttpRequest.Get(Defines.MASTERSERVER_BASE_URL + "updateServer.php", session);
-            ConsoleWrite("SENDING HEARTHBEAT TO MASTERSERVER");
-        }
-
-        public void removefromMasterServer()
-        {
-            Dictionary<string, string> session = new Dictionary<string, string>();
-            session.Add("id", sessionid);
-            HttpRequest.Get(Defines.MASTERSERVER_BASE_URL + "removeServer.php", session);
-            ConsoleWrite("REMOVING SERVER FROM MASTERSERVER");
-        }
-
-        public void updateMasterServer(bool firsttime)
-        {
-            //TODO Serverinformation is hardcoded in the update function
-            string temp;
-            Dictionary<string, string> serverinfo = new Dictionary<string,string>();
-            serverinfo.Add("ip", serverIP);
-            serverinfo.Add("sn", Ssettings.Servername);
-            serverinfo.Add("u" , playerList.Count.ToString());
-            serverinfo.Add("mu", Ssettings.Maxplayers.ToString());
-            serverinfo.Add("e", "InfiniteWorld");
-            serverinfo.Add("t", "MineWorld");
-            temp = HttpRequest.Get(Defines.MASTERSERVER_BASE_URL + "updateServer.php",serverinfo);
-            if (firsttime)
-            {
-                sessionid = temp;
-                ConsoleWrite("ADDING SERVER TO MASTERSERVER");
-                ConsoleWrite("SESSION KEY: " + sessionid);
-            }
-            else
-            {
-                ConsoleWrite("UPDATING MASTERSERVER");
             }
         }
 

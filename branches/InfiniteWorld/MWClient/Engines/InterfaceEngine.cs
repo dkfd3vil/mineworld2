@@ -109,6 +109,10 @@ namespace MineWorld
                 {
                     case ChatMessageType.Say:
                         {
+                            if (messages[i].Author == "" || messages[i].Author == null)
+                            {
+                                chat = "MESSAGE SAY WAS SENT WITHOUT OWNER";
+                            }
                             chat = messages[i].Author + ": " + messages[i].Message;
                             break;
                         }
@@ -129,7 +133,7 @@ namespace MineWorld
                 //y -= 16 * i;
 
                 spriteBatch.DrawString(uiFont, chat, new Vector2(22, y), Color.Black);
-                spriteBatch.DrawString(uiFont, chat, new Vector2(20, y-2), chatColor);
+                spriteBatch.DrawString(uiFont, chat, new Vector2(20, y - 2), chatColor);
             }
         }
 
@@ -226,7 +230,7 @@ namespace MineWorld
                 if (_P.screenEffectCounter > 2)
                     _P.screenEffect = ScreenEffect.None;
             }
-            if (_P.screenEffect == ScreenEffect.Drown)
+            if (_P.screenEffect == ScreenEffect.Drowning)
             {
                 Color drawColor = new Color(0.5f, 0, 0.8f, 0.25f + (float)_P.screenEffectCounter * 0.2f);
                 spriteBatch.Draw(texBlank, new Rectangle(0, 0, graphicsDevice.Viewport.Width, graphicsDevice.Viewport.Height), drawColor);

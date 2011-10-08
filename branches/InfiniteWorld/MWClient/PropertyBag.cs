@@ -27,6 +27,7 @@ namespace MineWorld
         public InterfaceEngine interfaceEngine = null;
         public PlayerEngine playerEngine = null;
         public ParticleEngine particleEngine = null;
+        public DebugEngine debugEngine = null;
 
         // Network stuff.
         public NetClient netClient = null;
@@ -45,7 +46,6 @@ namespace MineWorld
         public Vector3 lastPosition = Vector3.Zero;
         public Vector3 lastHeading = Vector3.Zero;
         public bool playerDead = true;
-        public bool allowRespawn = false;
         public int playerHealth = 0;
         public int playerHealthMax = 0;
         public float playerHoldBreath = 20;
@@ -60,11 +60,13 @@ namespace MineWorld
         public bool movingOnRoad = false;
         public bool sprinting = false;
         public bool swimming = false;
+        public bool underwater = false;
+
         //Todo implent crouching
         //public bool crouching = false;
 
         public float time = 1.0f;
-
+        public bool debugmode = false;
         public float mouseSensitivity = 0.005f;
 
         // Screen effect stuff.
@@ -101,6 +103,7 @@ namespace MineWorld
             interfaceEngine = new InterfaceEngine(gameInstance);
             playerEngine = new PlayerEngine(gameInstance);
             particleEngine = new ParticleEngine(gameInstance);
+            debugEngine = new DebugEngine(gameInstance);
 
             // Create a camera.
             playerCamera = new Camera(gameInstance.GraphicsDevice);
@@ -127,50 +130,31 @@ namespace MineWorld
             }
         }
 
-        public void KillPlayer(string deathMessage)
+        public void KillMySelf()
         {
-            if (netClient.Status != NetConnectionStatus.Connected)
-                return;
-
             PlaySound(MineWorldSound.Death);
             playerVelocity = Vector3.Zero;
             playerDead = true;
-            allowRespawn = false;
             screenEffect = ScreenEffect.Death;
             screenEffectCounter = 0;
-
-            NetBuffer msgBuffer = netClient.CreateBuffer();
-            msgBuffer.Write((byte)MineWorldMessage.PlayerDead);
-            msgBuffer.Write(deathMessage);
-            netClient.SendMessage(msgBuffer, NetChannel.ReliableUnordered);
         }
 
-        public void RespawnPlayer()
+        public void MakeMySelfAlive()
+        {
+            playerDead = false;
+            screenEffect = ScreenEffect.None;
+        }
+
+        public void SendRespawnRequest()
         {
             if (netClient.Status != NetConnectionStatus.Connected)
                 return;
 
-            if(allowRespawn == false)
-            {
-                NetBuffer msgBuffer = netClient.CreateBuffer();
-                msgBuffer.Write((byte)MineWorldMessage.PlayerRespawn);
-                netClient.SendMessage(msgBuffer, NetChannel.ReliableUnordered);
-                return;
-            }
-
-            playerDead = false;
-
-            // Zero out velocity and reset camera and screen effects.
-            MoveVector = Vector3.Zero;
-            playerVelocity = Vector3.Zero;
-            screenEffect = ScreenEffect.None;
-            screenEffectCounter = 0;
-            UpdateCamera();
-
-            // Tell the server we have respawned.
-            NetBuffer msgBufferb = netClient.CreateBuffer();
-            msgBufferb.Write((byte)MineWorldMessage.PlayerAlive);
-            netClient.SendMessage(msgBufferb, NetChannel.ReliableUnordered);
+            NetBuffer msgBuffer = netClient.CreateBuffer();
+            msgBuffer.Write((byte)MineWorldMessage.PlayerRequest);
+            msgBuffer.Write((byte)PlayerRequests.Respawn);
+            netClient.SendMessage(msgBuffer, NetChannel.ReliableUnordered);
+            return;
         }
 
         public void PlaySound(MineWorldSound sound)
@@ -268,6 +252,7 @@ namespace MineWorld
 
             ChatMessage chatMsg = new ChatMessage(ChatString, ChatType, Author);
             
+
             chatBuffer.Insert(0, chatMsg);
             //chatFullBuffer.Insert(0, chatMsg);
             PlaySound(MineWorldSound.ClickLow);
@@ -287,40 +272,48 @@ namespace MineWorld
         // Version used during updates.
         public void UpdateCamera(GameTime gameTime)
         {
-            // If we have a gameTime object, apply screen jitter.
-            if (screenEffect == ScreenEffect.Explosion)
+            if (gameTime == null)
             {
-                if (gameTime != null)
-                {
-                    screenEffectCounter += gameTime.ElapsedGameTime.TotalSeconds;
-                    // For 0 to 2, shake the camera.
-                    if (screenEffectCounter < 2)
+                return;
+            }
+
+            screenEffectCounter += gameTime.ElapsedGameTime.TotalSeconds;
+
+            switch (screenEffect)
+            {
+                case ScreenEffect.Explosion:
                     {
-                        Vector3 newPosition = playerPosition;
-                        newPosition.X += (float)(2 - screenEffectCounter) * (float)(randGen.NextDouble() - 0.5) * 0.5f;
-                        newPosition.Y += (float)(2 - screenEffectCounter) * (float)(randGen.NextDouble() - 0.5) * 0.5f;
-                        newPosition.Z += (float)(2 - screenEffectCounter) * (float)(randGen.NextDouble() - 0.5) * 0.5f;
-                        if (!blockEngine.SolidAtPointForPlayer(newPosition) && (newPosition - playerPosition).Length() < 0.7f)
-                            playerCamera.Position = newPosition;
+                        // For 0 to 2, shake the camera.
+                        if (screenEffectCounter < 2)
+                        {
+                            Vector3 newPosition = playerPosition;
+                            newPosition.X += (float)(2 - screenEffectCounter) * (float)(randGen.NextDouble() - 0.5) * 0.5f;
+                            newPosition.Y += (float)(2 - screenEffectCounter) * (float)(randGen.NextDouble() - 0.5) * 0.5f;
+                            newPosition.Z += (float)(2 - screenEffectCounter) * (float)(randGen.NextDouble() - 0.5) * 0.5f;
+                            if (!blockEngine.SolidAtPointForPlayer(newPosition) && (newPosition - playerPosition).Length() < 0.7f)
+                                playerCamera.Position = newPosition;
+                        }
+                        // For 2 to 3, move the camera back.
+                        else if (screenEffectCounter < 3)
+                        {
+                            Vector3 lerpVector = playerPosition - playerCamera.Position;
+                            playerCamera.Position += 0.5f * lerpVector;
+                        }
+                        else
+                        {
+                            screenEffect = ScreenEffect.None;
+                            screenEffectCounter = 0;
+                            playerCamera.Position = playerPosition;
+                        }
+                        break;
                     }
-                    // For 2 to 3, move the camera back.
-                    else if (screenEffectCounter < 3)
+                default:
                     {
-                        Vector3 lerpVector = playerPosition - playerCamera.Position;
-                        playerCamera.Position += 0.5f * lerpVector;
-                    }
-                    else
-                    {
-                        screenEffect = ScreenEffect.None;
-                        screenEffectCounter = 0;
                         playerCamera.Position = playerPosition;
+                        break;
                     }
-                }
             }
-            else
-            {
-                playerCamera.Position = playerPosition;
-            }
+
             playerCamera.Update();
         }
 

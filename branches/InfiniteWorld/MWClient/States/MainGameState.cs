@@ -24,6 +24,7 @@ namespace MineWorld.States
         const float JUMPVELOCITY = 6.0f;
         const float CLIMBVELOCITY = 2.5f;
         const float DIEVELOCITY = 20.0f;
+        InputHelper INPUT = new InputHelper();
 
         string nextState = null;
         bool mouseInitialized = false;
@@ -44,6 +45,15 @@ namespace MineWorld.States
             // Update network stuff.
             (_SM as MineWorldGame).UpdateNetwork(gameTime);
 
+            // Update input stuff.
+            INPUT.Update();
+
+            // Handle input.
+            HandleInput();
+
+            // Update network stuff.
+            (_SM as MineWorldGame).UpdateNetwork(gameTime);
+
             // Update the current screen effect.
             _P.screenEffectCounter += gameTime.ElapsedGameTime.TotalSeconds;
 
@@ -53,6 +63,7 @@ namespace MineWorld.States
             _P.blockEngine.Update(gameTime);
             _P.particleEngine.Update(gameTime);
             _P.interfaceEngine.Update(gameTime);
+            _P.debugEngine.Update(gameTime);
 
             // Moving the mouse changes where we look.
             if (_SM.WindowHasFocus())
@@ -97,6 +108,30 @@ namespace MineWorld.States
             return nextState;
         }
 
+        private void HandleInput()
+        {
+            if(INPUT.IsCurPress(Keys.W))
+            {
+                _P.MoveVector += _P.playerCamera.GetLookVector();
+            }
+            if (INPUT.IsCurPress(Keys.A))
+            {
+                _P.MoveVector -= _P.playerCamera.GetRightVector();
+            }
+            if (INPUT.IsCurPress(Keys.S))
+            {
+                _P.MoveVector -= _P.playerCamera.GetLookVector();
+            }
+            if (INPUT.IsCurPress(Keys.D))
+            {
+                _P.MoveVector += _P.playerCamera.GetRightVector();
+            }
+            if (INPUT.IsNewPress(Keys.F5))
+            {
+                _P.debugmode = !_P.debugmode;
+            }
+        }
+
         private void UpdatePlayerPosition(GameTime gameTime, KeyboardState keyState)
         {
             // Apply "gravity".
@@ -104,45 +139,48 @@ namespace MineWorld.States
             Vector3 headPosition = _P.playerPosition + new Vector3(0f, 0.1f, 0f);
             Vector3 midPosition = _P.playerPosition + new Vector3(0f, -0.7f, 0f);
 
-            if (_P.blockEngine.BlockAtPoint(footPosition) == BlockType.Water || _P.blockEngine.BlockAtPoint(headPosition) == BlockType.Water || _P.blockEngine.BlockAtPoint(midPosition) == BlockType.Water)
+            if (false)//_P.blockEngine.BlockAtPoint(footPosition) == BlockType.Water || _P.blockEngine.BlockAtPoint(midPosition) == BlockType.Water)
             {
                 _P.swimming = true;
 
                 if (_P.blockEngine.BlockAtPoint(headPosition) == BlockType.Water)
                 {
-                    if (_P.playerHoldBreath == 20)
-                    {
-                        _P.playerVelocity.Y *= 0.2f;
-                    }
-                    if (_P.playerHoldBreath > 9)
+                    _P.underwater = true;
+                    //if (_P.playerHoldBreath == 20)
+                    //{
+                        //_P.playerVelocity.Y *= 0.2f;
+                    //}
+                    if (_P.playerHoldBreath > 8)
                     {
                         _P.screenEffect = ScreenEffect.Water;
                         _P.screenEffectCounter = 0.5;
                     }
                     else
                     {
-                        _P.screenEffect = ScreenEffect.Drown;
+                        _P.screenEffect = ScreenEffect.Drowning;
                         _P.screenEffectCounter = 0.5;
                     }
                 }
                 else
                 {
+                    _P.lastBreath = DateTime.Now;
+                    _P.underwater = false;
                     _P.playerHoldBreath = 20;
                 }
             }
             else
             {
                 _P.swimming = false;
+                _P.underwater = false;
                 _P.lastBreath = DateTime.Now;
-                _P.playerHoldBreath = 20;
             }
 
-            if (_P.swimming)
+            if (_P.swimming || _P.underwater)
             {
                 TimeSpan timeSpan = DateTime.Now - _P.lastBreath;
                 _P.playerVelocity.Y += (GRAVITY / 8) * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-                if (timeSpan.TotalMilliseconds > 500)
+                if (timeSpan.TotalMilliseconds > 1000)
                 {
                     _P.lastBreath = DateTime.Now;
                     _P.playerHoldBreath -= 1;
@@ -230,7 +268,7 @@ namespace MineWorld.States
             }
 
             // Death by falling off the map.
-            if (_P.playerPosition.Y < - Defines.MAPSIZE/2)
+            if (_P.playerPosition.Y < 0)
             {
                 _P.SendPlayerHurt(100,false);
                 //_P.KillPlayer(Defines.deathByMiss);
@@ -253,6 +291,8 @@ namespace MineWorld.States
                 //if (_P.crouching)
                     //_P.MoveVector.Y = -1;
 
+
+                TryToMoveTo(_P.MoveVector, gameTime);
                 // Attempt to move, doing collision stuff.
                 if (TryToMoveTo(_P.MoveVector, gameTime))
                 {
@@ -273,7 +313,7 @@ namespace MineWorld.States
             _P.movingOnRoad = false;
             _P.sprinting = false;
             _P.swimming = false;
-            //_P.crouching = false;
+            _P.underwater = false;
         }
 
         private bool TryToMoveTo(Vector3 moveVector, GameTime gameTime)
@@ -330,11 +370,6 @@ namespace MineWorld.States
             return false;
         }
 
-        public override void OnRenderAtEnter(GraphicsDevice graphicsDevice)
-        {
-
-        }
-
         public override void OnRenderAtUpdate(GraphicsDevice graphicsDevice, GameTime gameTime)
         {
             _P.skyEngine.Render(graphicsDevice);
@@ -343,6 +378,10 @@ namespace MineWorld.States
             _P.blockEngine.Render(graphicsDevice, gameTime);
             _P.particleEngine.Render(graphicsDevice);
             _P.interfaceEngine.Render(graphicsDevice);
+            if (_P.debugmode)
+            {
+                _P.debugEngine.Render(graphicsDevice);
+            }
 
             _SM.Window.Title = Defines.MINEWORLDCLIENT_VERSION;
         }
@@ -434,6 +473,7 @@ namespace MineWorld.States
                     //If we arent typing lets move :P Everyday iam shuffling
                     switch ((_SM as MineWorldGame).keyBinds.GetBoundKeyBoard(key))
                     {
+                            /*
                         case CustomKeyBoardButtons.Forward:
                             {
                                 _P.MoveVector += _P.playerCamera.GetLookVector();
@@ -454,6 +494,7 @@ namespace MineWorld.States
                                 _P.MoveVector -= _P.playerCamera.GetRightVector();
                                 break;
                             }
+                             */
                         case CustomKeyBoardButtons.Sprint:
                             {
                                 _P.sprinting = true;
@@ -504,7 +545,7 @@ namespace MineWorld.States
         {
             if (_P.playerDead)
             {
-                _P.RespawnPlayer();
+                _P.SendRespawnRequest();
             }
             else
             {

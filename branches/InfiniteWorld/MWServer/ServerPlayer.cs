@@ -16,15 +16,28 @@ using Microsoft.Xna.Framework.Storage;
 
 namespace MineWorld
 {
-    public class ServerPlayer : Player
+    public class ServerPlayer
     {
         public EventWaitHandle WH;
-
-        public bool Canhealthregen;
+        public bool Kicked = false;
+        public bool Godmode = false;
+        public bool Approved = false;
+        public string Name = "";
+        // DJ NOT NICE
+        // TODO This needs to be done proper
+        public int Health = 0;
+        public int HealthMax = 100;
+        public bool Alive = false;
+        public int ID;
+        public Vector3 Heading = Vector3.Zero;
+        public Vector3 Position = Vector3.Zero;
+        public NetConnection NetConn;
+        public string IP = "";
 
         public ServerPlayer(NetConnection netcon)
         {
             this.NetConn = netcon;
+            this.ID = GetUniqueId();
 
             if (netcon != null)
                 this.IP = netcon.RemoteEndpoint.Address.ToString();
@@ -38,6 +51,13 @@ namespace MineWorld
             {
                 WH.WaitOne();
             }
+        }
+
+        static int uniqueId = 0;
+        public static int GetUniqueId()
+        {
+            uniqueId += 1;
+            return uniqueId;
         }
     }
 }
