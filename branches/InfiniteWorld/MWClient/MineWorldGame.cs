@@ -132,7 +132,48 @@ namespace MineWorld
                     case NetMessageType.StatusChanged:
                         {
                             if (propertyBag.netClient.Status == NetConnectionStatus.Disconnected)
-                                ChangeState("MineWorld.States.ServerBrowserState");
+                            {
+                                try
+                                {
+                                    string reason = msgBuffer.ReadString();
+                                    if (reason.Length != 0)
+                                    {
+                                        switch (reason)
+                                        {
+                                            case "kicked":
+                                                {
+                                                    ErrorManager.ErrorMsg = "You have been kicked from the server";
+                                                    ErrorManager.NewState = "MineWorld.States.ServerBrowserState";
+                                                    break;
+                                                }
+                                            case "banned":
+                                                {
+                                                    ErrorManager.ErrorMsg = "You have been banned from the server";
+                                                    ErrorManager.NewState = "MineWorld.States.ServerBrowserState";
+                                                    break;
+                                                }
+                                            case "disconnected":
+                                                {
+                                                    ErrorManager.ErrorMsg = "You have been disconnected from the server";
+                                                    ErrorManager.NewState = "MineWorld.States.ServerBrowserState";
+                                                    break;
+                                                }
+                                            default:
+                                                {
+                                                    ErrorManager.ErrorMsg = "Error: Unknow error";
+                                                    ErrorManager.NewState = "MineWorld.States.ServerBrowserState";
+                                                    break;
+                                                }
+                                        }
+                                    }
+                                }
+                                catch
+                                {
+                                    ErrorManager.ErrorMsg = "Error: Unknow error";
+                                    ErrorManager.NewState = "MineWorld.States.ServerBrowserState";
+                                }
+                                ChangeState("MineWorld.States.ErrorState");
+                            }
                         }
                         break;
                     case NetMessageType.ConnectionApproval:
@@ -198,7 +239,7 @@ namespace MineWorld
                             catch 
                             {
                                 ErrorManager.ErrorMsg = "Error: Unknow error";
-                                ErrorManager.NewState = "MineWorld.States.SettingsState";
+                                ErrorManager.NewState = "MineWorld.States.ServerBrowserState";
                             }
                             ChangeState("MineWorld.States.ErrorState");
                         }

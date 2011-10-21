@@ -30,12 +30,6 @@ namespace MineWorld
             uiFont = gameInstance.Content.Load<SpriteFont>("font_04b08");
         }
 
-        public void Update(GameTime gameTime)
-        {
-            if (_P == null)
-                return;
-        }
-
         public void Render(GraphicsDevice graphicsDevice)
         {
             // If we don't have _P, grab it from the current gameInstance.

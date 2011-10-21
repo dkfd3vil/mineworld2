@@ -108,7 +108,7 @@ namespace MineWorld
                     {
                         if (args.Length >= 2)
                         {
-                            SendServerMessage(args[1]);
+                            SendServerWideMessage(args[1]);
                         }
                         break;
                     }
@@ -192,12 +192,12 @@ namespace MineWorld
                     }
                 case "quit":
                     {
-                        Shutdownserver();
+                        ShutdownServer();
                         break;
                     }
                 case "restart":
                     {
-                        Restartserver();
+                        RestartServer();
                         break;
                     }
                 case "save":

@@ -18,6 +18,7 @@ namespace MineWorld
 
         MineWorldNetServer netServer = null;
         public DayManager dayManager = null;
+        public LuaManager luaManager = null;
         public Dictionary<NetConnection, ServerPlayer> playerList = new Dictionary<NetConnection, ServerPlayer>();
         public List<NetConnection> toGreet = new List<NetConnection>();
         public List<string> admins = new List<string>(); //List of strings with all the admins
@@ -55,10 +56,6 @@ namespace MineWorld
         int Totallavablockcount;
         int Totalwaterblockcount;
 
-        public MineWorldServer()
-        {
-        }
-
         public string GetExternalIp()
         {
             //TODO Remove hardcoded external ip
@@ -69,6 +66,9 @@ namespace MineWorld
 
         public bool Start()
         {
+            //Find a better place for this
+            luaManager = new LuaManager(this);
+
             //Display server version in console
             ConsoleWrite(Defines.MINEWORLDSERVER_VERSION, ConsoleColor.Cyan);
 
@@ -92,6 +92,9 @@ namespace MineWorld
 
             // Load the bannednames-list.
             bannednames = LoadBannedNames();
+
+            // Load scripts
+            LoadScriptFiles();
 
             // Initialize the server.
             NetConfiguration netConfig = new NetConfiguration("MineWorldPlus");
@@ -133,7 +136,7 @@ namespace MineWorld
                     ConsoleWriteSucces("AUTLOAD SUCCESFULL");
                 }
             }
-            if(loaded == false)
+            if (loaded == false)
             {
                 ConsoleWrite("GENERATING NEW MAP");
                 GenerateNewMap();
@@ -147,7 +150,7 @@ namespace MineWorld
             ConsoleWrite("TOTAL WATER BLOCKS = " + Totalwaterblockcount);
 
             lastMapBackup = DateTime.Now;
-            ServerListener listener = new ServerListener(netServer,this);
+            ServerListener listener = new ServerListener(netServer, this);
             Thread listenerthread = new Thread(new ThreadStart(listener.start));
             Thread physicsthread = new Thread(new ThreadStart(DoPhysics));
 
@@ -199,17 +202,17 @@ namespace MineWorld
                 TimeSpan updatehearthbeat = DateTime.Now - lasthearthbeatsend;
                 if (updatehearthbeat.TotalMilliseconds > 1000)
                 {
-                    Sendhearthbeat();
+                    SendHearthBeat();
                     lasthearthbeatsend = DateTime.Now;
                 }
 
                 //Check the time
                 dayManager.Update();
 
-                // Look if the time is changed so that wel tell the clients
+                // Look if the time is changed so that we tell the clients
                 if (dayManager.Timechanged())
                 {
-                    Senddaytimeupdate(dayManager.Light);
+                    SendDayTimeUpdate(dayManager.Light);
                 }
 
                 //Time to backup map?
@@ -230,6 +233,9 @@ namespace MineWorld
                 //Time to terminate finished map sending threads?
                 TerminateFinishedThreads();
 
+                //Update our lua files
+                luaManager.Update();
+
                 // Handle console keypresses.
                 while (Console.KeyAvailable)
                 {
@@ -248,7 +254,7 @@ namespace MineWorld
                 // Restart the server?
                 if (restartTriggered && DateTime.Now > restartTime)
                 {
-                    disconnectAll();
+                    DisconnectAllPlayers();
                     netServer.Shutdown("serverrestart");
                     BackupLevel();
                     return true;
@@ -256,7 +262,7 @@ namespace MineWorld
 
                 if (shutdownTriggerd && DateTime.Now > shutdownTime)
                 {
-                    disconnectAll();
+                    DisconnectAllPlayers();
                     netServer.Shutdown("servershutdown");
                     BackupLevel();
                     return false;
@@ -502,300 +508,19 @@ namespace MineWorld
             Ssettings.SettingsDir = "ServerConfigs";
             Ssettings.LogsDir = "Logs";
             Ssettings.BackupDir = "Backups";
+            Ssettings.ScriptsDir = "Scripts";
             Msettings.SettingsDir = "ServerConfigs";
 
             ConsoleWriteSucces("DIRECTORYS LOADED");
         }
 
-        public void Shutdownserver()
+        public void LoadScriptFiles()
         {
-            ConsoleWrite("Server is shutting down in 5 seconds.", ConsoleColor.Yellow);
-            SendServerMessage("Server is shutting down in 5 seconds.");
-            shutdownTriggerd = true;
-            shutdownTime = DateTime.Now + TimeSpan.FromSeconds(5);
-        }
+            ConsoleWrite("LOADING SCRIPTS");
 
-        public void Restartserver()
-        {
-            ConsoleWrite("Server restarting in 5 seconds.", ConsoleColor.Yellow);
-            SendServerMessage("Server restarting in 5 seconds.");
-            restartTriggered = true;
-            restartTime = DateTime.Now + TimeSpan.FromSeconds(5);
-        }
+            luaManager.LoadScriptFiles(Ssettings.ScriptsDir);
 
-        public void SendServerMessageToPlayer(string message, ServerPlayer player)
-        {
-            NetBuffer msgBuffer = netServer.CreateBuffer();
-            msgBuffer.Write((byte)MineWorldMessage.ChatMessage);
-            msgBuffer.Write((byte)ChatMessageType.SayServer);
-            msgBuffer.Write(Defines.Sanitize(message));
-            netServer.SendMsg(msgBuffer, player.NetConn, NetChannel.ReliableUnordered);
-        }
-
-        public void SendServerMessage(string message)
-        {
-            NetBuffer msgBuffer = netServer.CreateBuffer();
-            msgBuffer.Write((byte)MineWorldMessage.ChatMessage);
-            msgBuffer.Write((byte)ChatMessageType.SayServer);
-            msgBuffer.Write(Defines.Sanitize(message));
-            foreach (ServerPlayer player in playerList.Values)
-            {
-                netServer.SendMsg(msgBuffer, player.NetConn, NetChannel.UnreliableInOrder1);
-            }
-        }
-
-        // Lets a player know about their resources.
-        public void SendHealthUpdate(ServerPlayer player)
-        {
-            // Health, HealthMax both int
-            NetBuffer msgBuffer = netServer.CreateBuffer();
-            msgBuffer.Write((byte)MineWorldMessage.HealthUpdate);
-            msgBuffer.Write(player.Health);
-            msgBuffer.Write(player.HealthMax);
-            netServer.SendMsg(msgBuffer, player.NetConn, NetChannel.ReliableInOrder15);
-        }
-
-        public void TerminateFinishedThreads()
-        {
-            List<MapSender> mapSendersToRemove = new List<MapSender>();
-            foreach (MapSender ms in mapSendingProgress)
-            {
-                if (ms.finished)
-                {
-                    ms.stop();
-                    mapSendersToRemove.Add(ms);
-                }
-            }
-            foreach (MapSender ms in mapSendersToRemove)
-            {
-                mapSendingProgress.Remove(ms);
-            }
-        }
-
-        public void SendCurrentMap(NetConnection client)
-        {
-            MapSender ms = new MapSender(client, this, netServer,Msettings.Mapsize);
-            mapSendingProgress.Add(ms);
-        }
-
-        public void KillPlayerSpecific(ServerPlayer player)
-        {
-            // Put variables to zero
-            player.Health = 0;
-            player.Alive = false;
-            ConsoleWrite("PLAYER_DEAD: " + player.Name);
-
-            SendHealthUpdate(player);
-            SendPlayerDead(player);
-        }
-
-        public void KillAllPlayers()
-        {
-            foreach (ServerPlayer dummy in playerList.Values)
-            {
-                dummy.Health = 0;
-                dummy.Alive = false;
-                ConsoleWrite("PLAYER_DEAD: " + dummy.Name);
-
-                SendHealthUpdate(dummy);
-                SendPlayerDead(dummy);
-            }
-        }
-
-        public void SendPlayerPosition(ServerPlayer player)
-        {
-            if (player.NetConn.Status != NetConnectionStatus.Connected)
-                return;
-
-            NetBuffer msgBuffer = netServer.CreateBuffer();
-            msgBuffer.Write((byte)MineWorldMessage.PlayerPosition);
-            msgBuffer.Write(player.Position);
-            netServer.SendMsg(msgBuffer, player.NetConn, NetChannel.ReliableUnordered);
-        }
-
-        public void SendPlayerUpdate(ServerPlayer player)
-        {
-            NetBuffer msgBuffer = netServer.CreateBuffer();
-            msgBuffer.Write((byte)MineWorldMessage.PlayerUpdate);
-            msgBuffer.Write(player.ID);
-            msgBuffer.Write(player.Position);
-            msgBuffer.Write(player.Heading);
-
-            foreach (ServerPlayer iplayer in playerList.Values)
-            {
-                netServer.SendMsg(msgBuffer, iplayer.NetConn, NetChannel.UnreliableInOrder1);
-            }
-        }
-
-        public void SendPlayerJoined(ServerPlayer player)
-        {
-            NetBuffer msgBuffer = netServer.CreateBuffer();
-            bool thisisme = false;
-
-            // Let other players know about this player.
-
-            foreach (ServerPlayer iplayer in playerList.Values)
-            {
-                if (player.ID == iplayer.ID)
-                {
-                    thisisme = true;
-                }
-                else
-                {
-                    thisisme = false;
-                }
-                msgBuffer.Write((byte)MineWorldMessage.PlayerJoined);
-                msgBuffer.Write(player.ID);
-                msgBuffer.Write(player.Name);
-                msgBuffer.Write(thisisme);
-                msgBuffer.Write(player.Alive);
-                netServer.SendMsg(msgBuffer, iplayer.NetConn, NetChannel.ReliableInOrder2);
-            }
-
-            // Send out a chat message.
-            msgBuffer = netServer.CreateBuffer();
-            msgBuffer.Write((byte)MineWorldMessage.ChatMessage);
-            msgBuffer.Write((byte)ChatMessageType.Say);
-            msgBuffer.Write(player.Name + " HAS JOINED THE ADVENTURE!");
-            foreach (ServerPlayer iplayer in playerList.Values)
-            {
-                //if (netConn.Status == NetConnectionStatus.Connected)
-                // Dont send the joined message to ourself
-                if (player.ID == iplayer.ID)
-                {
-                    break;
-                }
-                netServer.SendMsg(msgBuffer, iplayer.NetConn, NetChannel.ReliableInOrder3);
-            }
-            SendPlayerAlive(player);
-            SendPlayerRespawn(player);
-        }
-
-        public void SendPlayerLeft(ServerPlayer player, string reason)
-        {
-            NetBuffer msgBuffer = netServer.CreateBuffer();
-            msgBuffer.Write((byte)MineWorldMessage.PlayerLeft);
-            msgBuffer.Write(player.ID);
-            foreach (ServerPlayer iplayer in playerList.Values)
-                if (player.NetConn != iplayer.NetConn)
-                {
-                    netServer.SendMsg(msgBuffer, iplayer.NetConn, NetChannel.ReliableInOrder2);
-                }
-
-            // Send out a chat message.
-            msgBuffer = netServer.CreateBuffer();
-            msgBuffer.Write((byte)MineWorldMessage.ChatMessage);
-            msgBuffer.Write((byte)ChatMessageType.Say);
-            msgBuffer.Write(player.Name + " " + reason);
-            foreach (ServerPlayer iplayer in playerList.Values)
-            {
-                netServer.SendMsg(msgBuffer, iplayer.NetConn, NetChannel.ReliableInOrder3);
-            }
-        }
-
-        public void SendPlayerDead(ServerPlayer player)
-        {
-            NetBuffer msgBuffer = netServer.CreateBuffer();
-            msgBuffer.Write((byte)MineWorldMessage.PlayerDead);
-            msgBuffer.Write(player.ID);
-            foreach (ServerPlayer iplayer in playerList.Values)
-            {
-                netServer.SendMsg(msgBuffer, iplayer.NetConn, NetChannel.ReliableInOrder2);
-            }
-        }
-
-        public void SendPlayerAlive(ServerPlayer player)
-        {
-            NetBuffer msgBuffer = netServer.CreateBuffer();
-            msgBuffer.Write((byte)MineWorldMessage.PlayerAlive);
-            msgBuffer.Write(player.ID);
-            foreach (ServerPlayer iplayer in playerList.Values)
-            {
-                netServer.SendMsg(msgBuffer, iplayer.NetConn, NetChannel.ReliableInOrder2);
-            }
-        }
-
-        public void SendPlayerRespawn(ServerPlayer player)
-        {
-            if (/*!player.Alive*/ true)
-            {
-                // Respawn a few blocks above a safe position above altitude 0.
-                bool positionFound = false;
-
-                // Try 20 times; use a potentially invalid position if we fail.
-                for (int i = 0; i < 20; i++)
-                {
-                    // Pick a random starting point.
-                    Vector3 startPos = new Vector3(randGen.Next(2, 62), 63, randGen.Next(2, 62));
-
-                    // See if this is a safe place to drop.
-                    for (startPos.Y = 63; startPos.Y >= 54; startPos.Y--)
-                    {
-                        BlockType blockType = BlockAtPoint(startPos);
-                        if (blockType == BlockType.Lava)
-                            break;
-                        else if (blockType != BlockType.None)
-                        {
-                            // We have found a valid place to spawn, so spawn a few above it.
-                            player.Position = startPos + Vector3.UnitY * 5;
-                            positionFound = true;
-                            break;
-                        }
-                    }
-
-                    // If we found a position, no need to try anymore!
-                    if (positionFound)
-                        break;
-                }
-
-                // If we failed to find a spawn point, drop randomly.
-                if (!positionFound)
-                    player.Position = new Vector3(randGen.Next(2, 62), 66, randGen.Next(2, 62));
-
-                // Drop the player on the middle of the block, not at the corner.
-                player.Position += new Vector3(0.5f, 0, 0.5f);
-
-                SendPlayerAlive(player);
-
-                NetBuffer msgBuffer = netServer.CreateBuffer();
-                msgBuffer.Write((byte)MineWorldMessage.PlayerPosition);
-                msgBuffer.Write(player.Position);
-                netServer.SendMsg(msgBuffer, player.NetConn, NetChannel.ReliableInOrder3);
-            }
-        }
-
-        public void PlaySound(MineWorldSound sound, Vector3 position)
-        {
-            NetBuffer msgBuffer = netServer.CreateBuffer();
-            msgBuffer.Write((byte)MineWorldMessage.PlaySound);
-            msgBuffer.Write((byte)sound);
-            msgBuffer.Write(true);
-            msgBuffer.Write(position);
-            foreach (ServerPlayer player in playerList.Values)
-            {
-                netServer.SendMsg(msgBuffer, player.NetConn, NetChannel.ReliableUnordered);
-            }
-        }
-
-        public void Sendhearthbeat()
-        {
-            NetBuffer msgBuffer = netServer.CreateBuffer();
-            msgBuffer.Write((byte)MineWorldMessage.Hearthbeat);
-            foreach (ServerPlayer iplayer in playerList.Values)
-            {
-                netServer.SendMsg(msgBuffer, iplayer.NetConn, NetChannel.UnreliableInOrder15);
-            }
-        }
-
-        public void Senddaytimeupdate(float time)
-        {
-            NetBuffer msgBuffer = netServer.CreateBuffer();
-            msgBuffer.Write((byte)MineWorldMessage.DayUpdate);
-            msgBuffer.Write(time);
-            foreach (ServerPlayer iplayer in playerList.Values)
-            {
-                netServer.SendMsg(msgBuffer, iplayer.NetConn, NetChannel.UnreliableInOrder14);
-            }
+            ConsoleWriteSucces("SCRIPTS LOADED");
         }
     }
 }

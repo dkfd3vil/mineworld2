@@ -170,7 +170,7 @@ namespace MineWorld
             }
             foreach (ServerPlayer p in playersToKick)
             {
-                p.NetConn.Disconnect("", 0);
+                p.NetConn.Disconnect("kicked", 0);
                 p.Kicked = true;
             }
         }
@@ -240,8 +240,8 @@ namespace MineWorld
                     ConsoleWriteError("Unable to load level - " + filename + " does not exist!");
                     return false;
                 }
-                SendServerMessage("Changing map to " + filename + "!");
-                disconnectAll();
+                SendServerWideMessage("Changing map to " + filename + "!");
+                DisconnectAllPlayers();
 
                 FileStream fs = new FileStream(filename, FileMode.Open);
                 StreamReader sr = new StreamReader(fs);
@@ -263,12 +263,28 @@ namespace MineWorld
             return false;
         }
 
-        public void disconnectAll()
+        public void DisconnectAllPlayers()
         {
             foreach (ServerPlayer p in playerList.Values)
             {
-                p.NetConn.Disconnect("", 0);
+                p.NetConn.Disconnect("disconnected", 0);
             }
+        }
+
+        public void ShutdownServer()
+        {
+            ConsoleWrite("Server is shutting down in 5 seconds.", ConsoleColor.Yellow);
+            SendServerWideMessage("Server is shutting down in 5 seconds.");
+            shutdownTriggerd = true;
+            shutdownTime = DateTime.Now + TimeSpan.FromSeconds(5);
+        }
+
+        public void RestartServer()
+        {
+            ConsoleWrite("Server restarting in 5 seconds.", ConsoleColor.Yellow);
+            SendServerWideMessage("Server restarting in 5 seconds.");
+            restartTriggered = true;
+            restartTime = DateTime.Now + TimeSpan.FromSeconds(5);
         }
 
         public void status()

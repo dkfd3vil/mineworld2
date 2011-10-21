@@ -143,6 +143,9 @@
     <Content Include="Logs\Readme.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Scripts\Readme.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="ServerConfigs\admins.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

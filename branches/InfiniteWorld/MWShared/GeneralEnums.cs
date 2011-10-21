@@ -28,17 +28,6 @@ namespace MineWorld
         AltFire,
     }
 
-    /*
-    public enum MouseButtons
-    {
-        LeftButton,
-        MiddleButton,
-        RightButton,
-        WheelUp,
-        WheelDown
-    }
-     */
-
     public enum ScreenEffect
     {
         None,
@@ -93,7 +82,6 @@ namespace MineWorld
         PlayerHurt,             // allows client to tell server of damage
         PlayerPosition,         // server sends client new position
         DayUpdate,              // float , Send by the server to notify the player how dark or light the game is
-        //PlayerRespawn,
         PlayerRequest,          // Client requests something from the server
     }
 
@@ -105,8 +93,9 @@ namespace MineWorld
     public enum ChatMessageType
     {
         None,
-        SayServer,
-        Say,
+        Server,
+        PlayerSay,
+        PlayerWhisper,
     }
 
     public enum Mapsize : byte

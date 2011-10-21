@@ -19,7 +19,7 @@ namespace MineWorld
         MineWorldGame gameInstance;
         PropertyBag _P;
         SpriteBatch spriteBatch;
-        public SpriteFont uiFont, radarFont;
+        public SpriteFont uiFont;
         Rectangle drawRect;
 
         Texture2D texCrosshairs, texBlank, texHelpRed,texHelpBlue;
@@ -50,7 +50,6 @@ namespace MineWorld
 
             // Load fonts.
             uiFont = gameInstance.Content.Load<SpriteFont>("font_04b08");
-            radarFont = gameInstance.Content.Load<SpriteFont>("font_04b03b");
         }
 
         public void RenderPickAxe(GraphicsDevice graphicsDevice, SpriteBatch spriteBatch)
@@ -102,12 +101,12 @@ namespace MineWorld
                 Color chatColor = Color.White;
                 string chat = "";
 
-                if (messages[i].Type == ChatMessageType.SayServer)
+                if (messages[i].Type == ChatMessageType.Server)
                     chatColor = Color.Blue;
 
                 switch(messages[i].Type)
                 {
-                    case ChatMessageType.Say:
+                    case ChatMessageType.PlayerSay:
                         {
                             if (messages[i].Author == "" || messages[i].Author == null)
                             {
@@ -116,7 +115,7 @@ namespace MineWorld
                             chat = messages[i].Author + ": " + messages[i].Message;
                             break;
                         }
-                    case ChatMessageType.SayServer:
+                    case ChatMessageType.Server:
                         {
                             chat = "Server: " + messages[i].Message;
                             break;
@@ -183,7 +182,7 @@ namespace MineWorld
             }
 
             // Draw the chat buffer.
-            if (_P.chatMode == ChatMessageType.Say)
+            if (_P.chatMode == ChatMessageType.PlayerSay)
             {
                 drawChat(_P.chatBuffer, graphicsDevice);
                 spriteBatch.DrawString(uiFont, "Say> " + _P.chatEntryBuffer, new Vector2(22, graphicsDevice.Viewport.Height - 98), Color.Black);
