@@ -143,6 +143,7 @@ namespace MineWorld
         {
             playerDead = false;
             screenEffect = ScreenEffect.None;
+            screenEffectCounter = 0;
         }
 
         public void SendRespawnRequest()
@@ -155,7 +156,7 @@ namespace MineWorld
             msgBuffer.Write((byte)PlayerRequests.Respawn);
             netClient.SendMessage(msgBuffer, NetChannel.ReliableUnordered);
             return;
-        }
+}
 
         public void PlaySound(MineWorldSound sound)
         {
@@ -205,69 +206,11 @@ namespace MineWorld
 
         public void addChatMessage(string ChatString, ChatMessageType ChatType,string Author)
         {
-            /*
-            string[] text = chatString.Split(' ');
-            string textFull = "";
-            string textLine = "";
-            int newlines = 0;
-
-            float curWidth = 0;
-            for (int i = 0; i < text.Length; i++)
-            {//each(string part in text){
-                string part = text[i];
-                if (i != text.Length - 1)
-                    part += ' '; //Correct for lost spaces
-                float incr = interfaceEngine.uiFont.MeasureString(part).X;
-                curWidth += incr;
-                if (curWidth > 1024 - 64) //Assume default resolution, unfortunately
-                {
-                    if (textLine.IndexOf(' ') < 0)
-                    {
-                        curWidth = 0;
-                        textFull = textFull + "\n" + textLine;
-                        textLine = "";
-                    }
-                    else
-                    {
-                        curWidth = incr;
-                        textFull = textFull + "\n" + textLine;
-                        textLine = part;
-                    }
-                    newlines++;
-                }
-                else
-                {
-                    textLine = textLine + part;
-                }
-            }
-            if (textLine != "")
-            {
-                textFull += "\n" + textLine;
-                newlines++;
-            }
-
-            if (textFull == "")
-                textFull = chatString;
-             */
-
             ChatMessage chatMsg = new ChatMessage(ChatString, ChatType, Author);
             
-
             chatBuffer.Insert(0, chatMsg);
-            //chatFullBuffer.Insert(0, chatMsg);
             PlaySound(MineWorldSound.ClickLow);
         }
-
-        //public void Teleport()
-        //{
-        //    float x = (float)randGen.NextDouble() * 74 - 5;
-        //    float z = (float)randGen.NextDouble() * 74 - 5;
-        //    //playerPosition = playerHomeBlock + new Vector3(0.5f, 3, 0.5f);
-        //    playerPosition = new Vector3(x, 74, z);
-        //    screenEffect = ScreenEffect.Teleport;
-        //    screenEffectCounter = 0;
-        //    UpdateCamera();
-        //}
 
         // Version used during updates.
         public void UpdateCamera(GameTime gameTime)

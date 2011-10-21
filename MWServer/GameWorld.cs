@@ -16,48 +16,6 @@ namespace MineWorld
         public BlockType[, ,] blockList = null;    // In game coordinates, where Y points up.
         Random randGen = new Random();
 
-        public void RemoveBlock(int x, int y, int z)
-        {
-            if (!SaneBlockPosition(x, y, z))
-                return;
-
-            blockList[x, y, z] = BlockType.None;
-
-            // x, y, z, type, all bytes
-            NetBuffer msgBuffer = netServer.CreateBuffer();
-            msgBuffer.Write((byte)MineWorldMessage.BlockSet);
-            msgBuffer.Write((byte)x);
-            msgBuffer.Write((byte)y);
-            msgBuffer.Write((byte)z);
-            msgBuffer.Write((byte)BlockType.None);
-            foreach (ServerPlayer player in playerList.Values)
-            {
-                netServer.SendMsg(msgBuffer, player.NetConn, NetChannel.ReliableUnordered);
-            }
-        }
-
-        public void SetBlock(int x, int y, int z, BlockType blockType)
-        {
-            Debug.Assert(blockType != BlockType.None, "Setblock used for removal", "Block was sent " + blockType.ToString());
-
-            if(!SaneBlockPosition(x,y,z))
-                return;
-
-            blockList[x, y, z] = blockType;
-
-            // x, y, z, type, all bytes
-            NetBuffer msgBuffer = netServer.CreateBuffer();
-            msgBuffer.Write((byte)MineWorldMessage.BlockSet);
-            msgBuffer.Write((byte)x);
-            msgBuffer.Write((byte)y);
-            msgBuffer.Write((byte)z);
-            msgBuffer.Write((byte)blockType);
-            foreach (ServerPlayer player in playerList.Values)
-            {
-                netServer.SendMsg(msgBuffer, player.NetConn, NetChannel.ReliableUnordered);
-            }
-        }
-
         public void GenerateNewMap()
         {
             // Create our block world, translating the coordinates out of the cave generator (where Z points down)
@@ -72,6 +30,7 @@ namespace MineWorld
                 {
                     for (int k = 0; k < Defines.MAPSIZE; k++)
                     {
+                        //blockList[i, k, j] = worldData[i, j, k];
                         blockList[i, (int)(Defines.MAPSIZE - 1 - k), j] = worldData[i, j, k];
                         if (blockList[i, j, k] == BlockType.Lava)
                         {
@@ -86,6 +45,44 @@ namespace MineWorld
             }
             Totallavablockcount = templavablockcount;
             Totalwaterblockcount = tempwaterblockcount;
+        }
+
+        public void TerminateFinishedThreads()
+        {
+            List<MapSender> mapSendersToRemove = new List<MapSender>();
+            foreach (MapSender ms in mapSendingProgress)
+            {
+                if (ms.finished)
+                {
+                    ms.stop();
+                    mapSendersToRemove.Add(ms);
+                }
+            }
+            foreach (MapSender ms in mapSendersToRemove)
+            {
+                mapSendingProgress.Remove(ms);
+            }
+        }
+
+        public void KillPlayerSpecific(ServerPlayer player)
+        {
+            // Put variables to zero
+            player.Health = 0;
+            player.Alive = false;
+            ConsoleWrite("PLAYER_DEAD: " + player.Name);
+
+            SendPlayerHealthUpdate(player);
+            SendPlayerDead(player);
+
+            luaManager.RaiseEvent("playerondied",player.ID.ToString());
+        }
+
+        public void KillAllPlayers()
+        {
+            foreach (ServerPlayer dummy in playerList.Values)
+            {
+                KillPlayerSpecific(dummy);
+            }
         }
 
         public double Get3DDistance(int x1, int y1, int z1, int x2, int y2, int z2)
@@ -128,7 +125,7 @@ namespace MineWorld
             return true;
         }
 
-        public Vector3 Auth_Position(Vector3 pos, ServerPlayer pl)//check boundaries and legality of action
+        public Vector3 Auth_Position(Vector3 pos, ServerPlayer player)//check boundaries and legality of action
         {
             BlockType type = BlockAtPoint(pos);
 
@@ -138,20 +135,20 @@ namespace MineWorld
             }
             else
             {
-                if (pl.Alive)
+                if (player.Alive)
                 {
-                    ConsoleWrite("REFUSED NEW POSITION OF " + pl.Name + " " + pos.X + "/" + pos.Y + "/" + pos.Z, ConsoleColor.Yellow);
+                    ConsoleWrite("REFUSED NEW POSITION OF " + player.Name + " " + pos.X + "/" + pos.Y + "/" + pos.Z, ConsoleColor.Yellow);
                     ConsoleWrite("RETURNED OLD POSTION", ConsoleColor.Yellow);
-                    return pl.Position;
+                    return player.Position;
                 }
                 else//player is dead, return position silent
                 {
-                    return pl.Position;
+                    return player.Position;
                 }
             }
         }
 
-        public Vector3 Auth_Heading(Vector3 head)//check boundaries and legality of action
+        public Vector3 Auth_Heading(Vector3 head, ServerPlayer player)//check boundaries and legality of action
         {
             //TODO Code Auth_Heading
             return head;
@@ -261,8 +258,8 @@ namespace MineWorld
 
             if (BlockInformation.IsDiggable(type))
             {
-                RemoveBlock(x, y, z);
-                PlaySound(BlockInformation.GetBlockSound(type), player.Position);
+                SendRemoveBlock(x, y, z);
+                SendPlaySound(BlockInformation.GetBlockSound(type), player.Position);
             }
         }
 
@@ -290,10 +287,10 @@ namespace MineWorld
                 return;
 
             // Build the block.
-            SetBlock(x, y, z, blockType);
+            SendSetBlock(x, y, z, blockType);
 
             // Play the sound.
-            PlaySound(MineWorldSound.ConstructionGun, player.Position);
+            SendPlaySound(MineWorldSound.ConstructionGun, player.Position);
         }
 
         public Vector3 intifyVector(Vector3 vector)
@@ -303,6 +300,50 @@ namespace MineWorld
             cleanvector.Y = (int)vector.Y;
             cleanvector.Z = (int)vector.Z;
             return cleanvector;
+        }
+
+        public Vector3 GenerateSpawnLocation()
+        {
+            Vector3 position = new Vector3();
+            // Respawn a few blocks above a safe position above altitude 0.
+            bool positionFound = false;
+
+            // Try 20 times; use a potentially invalid position if we fail.
+            for (int i = 0; i < 20; i++)
+            {
+                // Pick a random starting point.
+                Vector3 startPos = new Vector3(randGen.Next(2, 62), 63, randGen.Next(2, 62));
+
+                // See if this is a safe place to drop.
+                for (startPos.Y = 63; startPos.Y >= 54; startPos.Y--)
+                {
+                    BlockType blockType = BlockAtPoint(startPos);
+                    if (blockType == BlockType.Lava)
+                        break;
+                    else if (blockType != BlockType.None)
+                    {
+                        // We have found a valid place to spawn, so spawn a few above it.
+                        position = startPos + Vector3.UnitY * 5;
+                        positionFound = true;
+                        break;
+                    }
+                }
+
+                // If we found a position, no need to try anymore!
+                if (positionFound)
+                    break;
+            }
+
+            // If we failed to find a spawn point, drop randomly.
+            if (!positionFound)
+            {
+                position = new Vector3(randGen.Next(2, 62), 66, randGen.Next(2, 62));
+            }
+
+            // Drop the player on the middle of the block, not at the corner.
+            position += new Vector3(0.5f, 0, 0.5f);
+
+            return position;
         }
     }
 }

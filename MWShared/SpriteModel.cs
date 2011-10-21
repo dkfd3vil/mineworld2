@@ -84,6 +84,7 @@ namespace MineWorld
             this.effect = gameInstance.Content.Load<Effect>("effect_spritemodel");
             this.nameFont = gameInstance.Content.Load<SpriteFont>("font_04b08");
             this.texSprite = gameInstance.Content.Load<Texture2D>("sprites/tex_sprite_blue_construction");
+            this.texSprite = gameInstance.Content.Load<Texture2D>("sprites/tex_sprite_blue_construction");
 
             this.numColumns = numFrames;
 

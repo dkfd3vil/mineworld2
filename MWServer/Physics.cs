@@ -94,7 +94,7 @@ namespace MineWorld
                     p.Health = 0;
                 }
                 ServerPlayer player = playerList[p.NetConn];
-                SendHealthUpdate(player);
+                SendPlayerHealthUpdate(player);
             }
         }
 
@@ -120,8 +120,8 @@ namespace MineWorld
                             {
                                 if (j > 0)
                                 {
-                                    SetBlock(i, (int)(j - 1), k, BlockType.Lava);
-                                    RemoveBlock(i, j, k);
+                                    SendSetBlock(i, (int)(j - 1), k, BlockType.Lava);
+                                    SendRemoveBlock(i, j, k);
                                     doHorisontal = false;
                                 }
                             }
@@ -139,28 +139,28 @@ namespace MineWorld
                                 {
                                     if (i > 0)
                                     {
-                                        SetBlock((int)(i - 1), j, k, BlockType.Lava);
+                                        SendSetBlock((int)(i - 1), j, k, BlockType.Lava);
                                     }
                                 }
                                 if (typeIincr == BlockType.None)
                                 {
                                     if (i < Defines.MAPSIZE)
                                     {
-                                        SetBlock((int)(i + 1), j, k, BlockType.Lava);
+                                        SendSetBlock((int)(i + 1), j, k, BlockType.Lava);
                                     }
                                 }
                                 if (typeKdesc == BlockType.None)
                                 {
                                     if (k > 0)
                                     {
-                                        SetBlock(i, j, (int)(k - 1), BlockType.Lava);
+                                        SendSetBlock(i, j, (int)(k - 1), BlockType.Lava);
                                     }
                                 }
                                 if (typeKincr == BlockType.None)
                                 {
                                     if (k < Defines.MAPSIZE)
                                     {
-                                        SetBlock(i, j, (int)(k + 1), BlockType.Lava);
+                                        SendSetBlock(i, j, (int)(k + 1), BlockType.Lava);
                                     }
                                 }
                             }
@@ -180,7 +180,7 @@ namespace MineWorld
                                 {
                                     if (randGen.Next(0, 6) == 3)
                                     {
-                                        SetBlock(i, j, k, BlockType.Grass);
+                                        SendSetBlock(i, j, k, BlockType.Grass);
                                     }
                                 }
                             }
@@ -203,14 +203,14 @@ namespace MineWorld
                             {
                                 if (blockList[i, j + 1, k] == BlockType.None)
                                 {
-                                    SetBlock(i, ++j, k, BlockType.RedFlower);
+                                    SendSetBlock(i, ++j, k, BlockType.RedFlower);
                                 }
                             }
                             else if (rand == 500)
                             {
                                 if (blockList[i, j + 1, k] == BlockType.None)
                                 {
-                                    SetBlock(i, ++j, k, BlockType.YellowFlower);
+                                    SendSetBlock(i, ++j, k, BlockType.YellowFlower);
                                 }
                             }
                         }
@@ -234,35 +234,35 @@ namespace MineWorld
                             {
                                 if (j > 0)
                                 {
-                                    SetBlock(i, (j - 1), k, BlockType.Rock);
+                                    SendSetBlock(i, (j - 1), k, BlockType.Rock);
                                 }
                             }
                             if (typeIdesc == BlockType.Lava)
                             {
                                 if (i > 0)
                                 {
-                                    SetBlock((i - 1), j, k, BlockType.Rock);
+                                    SendSetBlock((i - 1), j, k, BlockType.Rock);
                                 }
                             }
                             if (typeIincr == BlockType.Lava)
                             {
                                 if (i < Defines.MAPSIZE)
                                 {
-                                    SetBlock((i + 1), j, k, BlockType.Rock);
+                                    SendSetBlock((i + 1), j, k, BlockType.Rock);
                                 }
                             }
                             if (typeKdesc == BlockType.Lava)
                             {
                                 if (k > 0)
                                 {
-                                    SetBlock(i, j, (k - 1), BlockType.Rock);
+                                    SendSetBlock(i, j, (k - 1), BlockType.Rock);
                                 }
                             }
                             if (typeKincr == BlockType.Lava)
                             {
                                 if (k < Defines.MAPSIZE)
                                 {
-                                    SetBlock(i, j, (k + 1), BlockType.Rock);
+                                    SendSetBlock(i, j, (k + 1), BlockType.Rock);
                                 }
                             }
                         }
@@ -301,8 +301,8 @@ namespace MineWorld
                             {
                                 if (j > 0)
                                 {
-                                    SetBlock(i,(j - 1), k, BlockType.Water);
-                                    RemoveBlock(i, j, k);
+                                    SendSetBlock(i,(j - 1), k, BlockType.Water);
+                                    SendRemoveBlock(i, j, k);
                                     doHorisontal = false;
                                 }
                             }
@@ -320,28 +320,28 @@ namespace MineWorld
                                 {
                                     if (i > 0)
                                     {
-                                        SetBlock((i - 1), j, k, BlockType.Water);
+                                        SendSetBlock((i - 1), j, k, BlockType.Water);
                                     }
                                 }
                                 if (typeIincr == BlockType.None)
                                 {
                                     if (i < Defines.MAPSIZE)
                                     {
-                                        SetBlock((i + 1), j, k, BlockType.Water);
+                                        SendSetBlock((i + 1), j, k, BlockType.Water);
                                     }
                                 }
                                 if (typeKdesc == BlockType.None)
                                 {
                                     if (k > 0)
                                     {
-                                        SetBlock(i, j,(k - 1), BlockType.Water);
+                                        SendSetBlock(i, j,(k - 1), BlockType.Water);
                                     }
                                 }
                                 if (typeKincr == BlockType.None)
                                 {
                                     if (k < Defines.MAPSIZE)
                                     {
-                                        SetBlock(i, j,(k + 1), BlockType.Water);
+                                        SendSetBlock(i, j,(k + 1), BlockType.Water);
                                     }
                                 }
                             }

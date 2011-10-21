@@ -18,5 +18,6 @@ namespace MineWorld
         public string SettingsDir;
         public string LogsDir;
         public string BackupDir;
+        public string ScriptsDir;
     }
 }

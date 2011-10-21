@@ -63,7 +63,6 @@ namespace MineWorld.States
             _P.blockEngine.Update(gameTime);
             _P.particleEngine.Update(gameTime);
             _P.interfaceEngine.Update(gameTime);
-            _P.debugEngine.Update(gameTime);
 
             // Moving the mouse changes where we look.
             if (_SM.WindowHasFocus())
@@ -519,7 +518,7 @@ namespace MineWorld.States
                             }
                         case CustomKeyBoardButtons.Say:
                             {
-                                _P.chatMode = ChatMessageType.Say;
+                                _P.chatMode = ChatMessageType.PlayerSay;
                                 startChat = DateTime.Now;
                                 break;
                             }

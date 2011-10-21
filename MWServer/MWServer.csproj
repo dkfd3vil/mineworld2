@@ -58,6 +58,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Lidgren.Network.Xna.dll</HintPath>
     </Reference>
+    <Reference Include="LuaInterface, Version=2.0.0.16708, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\LUA\LuaInterface.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Xna.Framework, Version=3.0.0.0, Culture=neutral, PublicKeyToken=6d5c3888ef60e27d, processorArchitecture=x86">
       <Private>True</Private>
     </Reference>
@@ -69,10 +73,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AttrLuaFunc.cs" />
     <Compile Include="CaveGenerator.cs" />
-    <Compile Include="ClientSender.cs" />
     <Compile Include="DayManager.cs" />
     <Compile Include="GameWorld.cs" />
+    <Compile Include="LuaFunctions.cs" />
+    <Compile Include="LuaManager.cs" />
     <Compile Include="MineWorldNetServer.cs" />
     <Compile Include="MineWorldServer.cs" />
     <Compile Include="LogSystem.cs" />
@@ -86,6 +92,7 @@
     <Compile Include="ServerConsole.cs" />
     <Compile Include="ServerListener.cs" />
     <Compile Include="ServerPlayer.cs" />
+    <Compile Include="ServerSender.cs" />
     <Compile Include="ServerSettings.cs" />
   </ItemGroup>
   <ItemGroup>
