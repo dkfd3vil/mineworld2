@@ -46,7 +46,7 @@ namespace MineWorld
         }
 
         [AttrLuaFunc("KILL_PLAYER")]
-        public void setGodmode(int id)
+        public void killPlayer(int id)
         {
             ServerPlayer p = getPlayerById(id);
             if (p == null)
@@ -60,7 +60,7 @@ namespace MineWorld
         }
 
         [AttrLuaFunc("KICK_PLAYER")]
-        public void setGodmode(int id)
+        public void kickPlayer(int id)
         {
             ServerPlayer p = getPlayerById(id);
             if (p == null)
@@ -69,12 +69,12 @@ namespace MineWorld
             }
             else
             {
-                IServer.KickPlayer(
+                //IServer.KickPlayer(
             }
         }
 
         [AttrLuaFunc("SET_NAME")]
-        public void setGodmode(int id, string name)
+        public void setName(int id, string name)
         {
             ServerPlayer p = getPlayerById(id);
             if (p == null)
@@ -88,7 +88,7 @@ namespace MineWorld
         }
 
         [AttrLuaFunc("GET_NAME")]
-        public string getGodmode(int id)
+        public string getName(int id)
         {
             ServerPlayer p = getPlayerById(id);
             if (p == null)
