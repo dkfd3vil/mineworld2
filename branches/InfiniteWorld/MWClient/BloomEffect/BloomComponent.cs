@@ -1,50 +1,12 @@
-#region File Description
-//-----------------------------------------------------------------------------
-// BloomComponent.cs
-//
-// Microsoft XNA Community Game Platform
-// Copyright (C) Microsoft Corporation. All rights reserved.
-//-----------------------------------------------------------------------------
-#endregion
-
-#region Using Statements
 using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-#endregion
 
-namespace MineWorld
+namespace MineWorld.BloomEffect
 {
     public class BloomComponent
     {
-        #region Fields
-
-        SpriteBatch spriteBatch;
-
-        Effect bloomExtractEffect;
-        Effect bloomCombineEffect;
-        Effect gaussianBlurEffect;
-
-        ResolveTexture2D resolveTarget;
-        RenderTarget2D renderTarget1;
-        RenderTarget2D renderTarget2;
-
-        GraphicsDevice GraphicsDevice = null;
-
-        // Choose what display settings the bloom should use.
-        public BloomSettings Settings
-        {
-            get { return settings; }
-            set { settings = value; }
-        }
-
-        BloomSettings settings = BloomSettings.PresetSettings[0];
-
-
-        // Optionally displays one of the intermediate buffers used
-        // by the bloom postprocess, so you can see exactly what is
-        // being drawn into each rendertarget.
         public enum IntermediateBuffer
         {
             PreBloom,
@@ -53,34 +15,54 @@ namespace MineWorld
             FinalResult,
         }
 
-        public IntermediateBuffer ShowBuffer
+        private GraphicsDevice _graphicsDevice;
+        private RenderTarget2D _renderTarget2;
+
+        private Effect _bloomCombineEffect;
+        private Effect _bloomExtractEffect;
+        private Effect _gaussianBlurEffect;
+
+        private RenderTarget2D _renderTarget1;
+        private ResolveTexture2D _resolveTarget;
+
+        private BloomSettings _settings = BloomSettings.PresetSettings[0];
+
+
+        // Optionally displays one of the intermediate buffers used
+        // by the bloom postprocess, so you can see exactly what is
+        // being drawn into each rendertarget.
+
+        private IntermediateBuffer _showBuffer = IntermediateBuffer.FinalResult;
+        private SpriteBatch _spriteBatch;
+
+        public BloomSettings Settings
         {
-            get { return showBuffer; }
-            set { showBuffer = value; }
+            get { return _settings; }
+            set { _settings = value; }
         }
 
-        IntermediateBuffer showBuffer = IntermediateBuffer.FinalResult;
-
-        #endregion
-
-        #region Initialization
+        public IntermediateBuffer ShowBuffer
+        {
+            get { return _showBuffer; }
+            set { _showBuffer = value; }
+        }
 
         /// <summary>
-        /// Load your graphics content.
+        ///   Load your graphics content.
         /// </summary>
         public void Load(GraphicsDevice device, ContentManager content)
         {
-            GraphicsDevice = device;
+            _graphicsDevice = device;
 
-            spriteBatch = new SpriteBatch(GraphicsDevice);
+            _spriteBatch = new SpriteBatch(_graphicsDevice);
 
-            bloomExtractEffect = content.Load<Effect>("BloomExtract");
-            bloomCombineEffect = content.Load<Effect>("BloomCombine");
-            gaussianBlurEffect = content.Load<Effect>("GaussianBlur");
+            _bloomExtractEffect = content.Load<Effect>("BloomExtract");
+            _bloomCombineEffect = content.Load<Effect>("BloomCombine");
+            _gaussianBlurEffect = content.Load<Effect>("GaussianBlur");
 
 
             // Look up the resolution and format of our main backbuffer.
-            PresentationParameters pp = GraphicsDevice.PresentationParameters;
+            PresentationParameters pp = _graphicsDevice.PresentationParameters;
 
             int width = pp.BackBufferWidth;
             int height = pp.BackBufferHeight;
@@ -88,7 +70,7 @@ namespace MineWorld
             SurfaceFormat format = pp.BackBufferFormat;
 
             // Create a texture for reading back the backbuffer contents.
-            resolveTarget = new ResolveTexture2D(GraphicsDevice, width, height, 1, format);
+            _resolveTarget = new ResolveTexture2D(_graphicsDevice, width, height, 1, format);
 
             // Create two rendertargets for the bloom processing. These are half the
             // size of the backbuffer, in order to minimize fillrate costs. Reducing
@@ -97,108 +79,103 @@ namespace MineWorld
             width /= 4;
             height /= 4;
 
-            renderTarget1 = new RenderTarget2D(GraphicsDevice, width, height, 1, format);
-            renderTarget2 = new RenderTarget2D(GraphicsDevice, width, height, 1, format);
+            _renderTarget1 = new RenderTarget2D(_graphicsDevice, width, height, 1, format);
+            _renderTarget2 = new RenderTarget2D(_graphicsDevice, width, height, 1, format);
         }
 
 
         /// <summary>
-        /// Unload your graphics content.
+        ///   Unload your graphics content.
         /// </summary>
         protected void Dispose()
         {
-            resolveTarget.Dispose();
-            renderTarget1.Dispose();
-            renderTarget2.Dispose();
+            _resolveTarget.Dispose();
+            _renderTarget1.Dispose();
+            _renderTarget2.Dispose();
         }
 
-        #endregion
-
-        #region Draw
-
-
         /// <summary>
-        /// This is where it all happens. Grabs a scene that has already been rendered,
-        /// and uses postprocess magic to add a glowing bloom effect over the top of it.
+        ///   This is where it all happens. Grabs a scene that has already been rendered,
+        ///   and uses postprocess magic to add a glowing bloom effect over the top of it.
         /// </summary>
         public void Draw(GraphicsDevice device)
         {
             // Resolve the scene into a texture, so we can
             // use it as input data for the bloom processing.
-            GraphicsDevice.ResolveBackBuffer(resolveTarget);
+            _graphicsDevice.ResolveBackBuffer(_resolveTarget);
 
             // Pass 1: draw the scene into rendertarget 1, using a
             // shader that extracts only the brightest parts of the image.
-            bloomExtractEffect.Parameters["BloomThreshold"].SetValue(Settings.BloomThreshold);
+            _bloomExtractEffect.Parameters["BloomThreshold"].SetValue(Settings.BloomThreshold);
 
-            DrawFullscreenQuad(resolveTarget, renderTarget1,
-                               bloomExtractEffect,
+            DrawFullscreenQuad(_resolveTarget, _renderTarget1,
+                               _bloomExtractEffect,
                                IntermediateBuffer.PreBloom);
 
             // Pass 2: draw from rendertarget 1 into rendertarget 2,
             // using a shader to apply a horizontal gaussian blur filter.
-            SetBlurEffectParameters(1.0f / (float)renderTarget1.Width, 0);
+            SetBlurEffectParameters(1.0f/_renderTarget1.Width, 0);
 
-            DrawFullscreenQuad(renderTarget1.GetTexture(), renderTarget2,
-                               gaussianBlurEffect,
+            DrawFullscreenQuad(_renderTarget1.GetTexture(), _renderTarget2,
+                               _gaussianBlurEffect,
                                IntermediateBuffer.BlurredHorizontally);
 
             // Pass 3: draw from rendertarget 2 back into rendertarget 1,
             // using a shader to apply a vertical gaussian blur filter.
-            SetBlurEffectParameters(0, 1.0f / (float)renderTarget1.Height);
+            SetBlurEffectParameters(0, 1.0f/_renderTarget1.Height);
 
-            DrawFullscreenQuad(renderTarget2.GetTexture(), renderTarget1,
-                               gaussianBlurEffect,
+            DrawFullscreenQuad(_renderTarget2.GetTexture(), _renderTarget1,
+                               _gaussianBlurEffect,
                                IntermediateBuffer.BlurredBothWays);
 
             // Pass 4: draw both rendertarget 1 and the original scene
             // image back into the main backbuffer, using a shader that
             // combines them to produce the final bloomed result.
-            GraphicsDevice.SetRenderTarget(0, null);
+            _graphicsDevice.SetRenderTarget(0, null);
 
-            EffectParameterCollection parameters = bloomCombineEffect.Parameters;
+            EffectParameterCollection parameters = _bloomCombineEffect.Parameters;
 
             parameters["BloomIntensity"].SetValue(Settings.BloomIntensity);
             parameters["BaseIntensity"].SetValue(Settings.BaseIntensity);
             parameters["BloomSaturation"].SetValue(Settings.BloomSaturation);
             parameters["BaseSaturation"].SetValue(Settings.BaseSaturation);
 
-            GraphicsDevice.Textures[1] = resolveTarget;
+            _graphicsDevice.Textures[1] = _resolveTarget;
 
-            Viewport viewport = GraphicsDevice.Viewport;
+            Viewport viewport = _graphicsDevice.Viewport;
 
-            DrawFullscreenQuad(renderTarget1.GetTexture(),
+            DrawFullscreenQuad(_renderTarget1.GetTexture(),
                                viewport.Width, viewport.Height,
-                               bloomCombineEffect,
+                               _bloomCombineEffect,
                                IntermediateBuffer.FinalResult);
         }
 
 
         /// <summary>
-        /// Helper for drawing a texture into a rendertarget, using
-        /// a custom shader to apply postprocessing effects.
+        ///   Helper for drawing a texture into a rendertarget, using
+        ///   a custom shader to apply postprocessing effects.
         /// </summary>
-        void DrawFullscreenQuad(Texture2D texture, RenderTarget2D renderTarget,
-                                Effect effect, IntermediateBuffer currentBuffer)
+        private void DrawFullscreenQuad(Texture2D texture, RenderTarget2D renderTarget,
+                                        Effect effect, IntermediateBuffer currentBuffer)
         {
-            GraphicsDevice.SetRenderTarget(0, renderTarget);
+            _graphicsDevice.SetRenderTarget(0, renderTarget);
 
             DrawFullscreenQuad(texture,
                                renderTarget.Width, renderTarget.Height,
                                effect, currentBuffer);
 
-            GraphicsDevice.SetRenderTarget(0, null);
+            _graphicsDevice.SetRenderTarget(0, null);
         }
 
 
         /// <summary>
-        /// Helper for drawing a texture into the current rendertarget,
-        /// using a custom shader to apply postprocessing effects.
+        ///   Helper for drawing a texture into the current rendertarget,
+        ///   using a custom shader to apply postprocessing effects.
         /// </summary>
-        void DrawFullscreenQuad(Texture2D texture, int width, int height,
-                                Effect effect, IntermediateBuffer currentBuffer)
+        private void DrawFullscreenQuad(Texture2D texture, int width, int height,
+                                        Effect effect, IntermediateBuffer currentBuffer)
         {
-            spriteBatch.Begin(SpriteBlendMode.None,
+            _spriteBatch.Begin(SpriteBlendMode.None,
                               SpriteSortMode.Immediate,
                               SaveStateMode.SaveState);
 
@@ -206,18 +183,18 @@ namespace MineWorld
             // has selected one of the show intermediate buffer options, we still
             // draw the quad to make sure the image will end up on the screen,
             // but might need to skip applying the custom pixel shader.
-            if (showBuffer >= currentBuffer)
+            if (_showBuffer >= currentBuffer)
             {
                 effect.Begin();
                 effect.CurrentTechnique.Passes[0].Begin();
             }
 
             // Draw the quad.
-            spriteBatch.Draw(texture, new Rectangle(0, 0, width, height), Color.White);
-            spriteBatch.End();
+            _spriteBatch.Draw(texture, new Rectangle(0, 0, width, height), Color.White);
+            _spriteBatch.End();
 
             // End the custom effect.
-            if (showBuffer >= currentBuffer)
+            if (_showBuffer >= currentBuffer)
             {
                 effect.CurrentTechnique.Passes[0].End();
                 effect.End();
@@ -226,16 +203,15 @@ namespace MineWorld
 
 
         /// <summary>
-        /// Computes sample weightings and texture coordinate offsets
-        /// for one pass of a separable gaussian blur filter.
+        ///   Computes sample weightings and texture coordinate offsets
+        ///   for one pass of a separable gaussian blur filter.
         /// </summary>
-        void SetBlurEffectParameters(float dx, float dy)
+        private void SetBlurEffectParameters(float dx, float dy)
         {
             // Look up the sample weight and offset effect parameters.
-            EffectParameter weightsParameter, offsetsParameter;
 
-            weightsParameter = gaussianBlurEffect.Parameters["SampleWeights"];
-            offsetsParameter = gaussianBlurEffect.Parameters["SampleOffsets"];
+            EffectParameter weightsParameter = _gaussianBlurEffect.Parameters["SampleWeights"];
+            EffectParameter offsetsParameter = _gaussianBlurEffect.Parameters["SampleOffsets"];
 
             // Look up how many samples our gaussian blur effect supports.
             int sampleCount = weightsParameter.Elements.Count;
@@ -253,15 +229,15 @@ namespace MineWorld
 
             // Add pairs of additional sample taps, positioned
             // along a line in both directions from the center.
-            for (int i = 0; i < sampleCount / 2; i++)
+            for (int i = 0; i < sampleCount/2; i++)
             {
                 // Store weights for the positive and negative taps.
                 float weight = ComputeGaussian(i + 1);
 
-                sampleWeights[i * 2 + 1] = weight;
-                sampleWeights[i * 2 + 2] = weight;
+                sampleWeights[i*2 + 1] = weight;
+                sampleWeights[i*2 + 2] = weight;
 
-                totalWeights += weight * 2;
+                totalWeights += weight*2;
 
                 // To get the maximum amount of blurring from a limited number of
                 // pixel shader samples, we take advantage of the bilinear filtering
@@ -271,13 +247,13 @@ namespace MineWorld
                 // This allows us to step in units of two texels per sample, rather
                 // than just one at a time. The 1.5 offset kicks things off by
                 // positioning us nicely in between two texels.
-                float sampleOffset = i * 2 + 1.5f;
+                float sampleOffset = i*2 + 1.5f;
 
-                Vector2 delta = new Vector2(dx, dy) * sampleOffset;
+                Vector2 delta = new Vector2(dx, dy)*sampleOffset;
 
                 // Store texture coordinate offsets for the positive and negative taps.
-                sampleOffsets[i * 2 + 1] = delta;
-                sampleOffsets[i * 2 + 2] = -delta;
+                sampleOffsets[i*2 + 1] = delta;
+                sampleOffsets[i*2 + 2] = -delta;
             }
 
             // Normalize the list of sample weightings, so they will always sum to one.
@@ -293,18 +269,15 @@ namespace MineWorld
 
 
         /// <summary>
-        /// Evaluates a single point on the gaussian falloff curve.
-        /// Used for setting up the blur filter weightings.
+        ///   Evaluates a single point on the gaussian falloff curve.
+        ///   Used for setting up the blur filter weightings.
         /// </summary>
-        float ComputeGaussian(float n)
+        private float ComputeGaussian(float n)
         {
             float theta = Settings.BlurAmount;
 
-            return (float)((1.0 / Math.Sqrt(2 * Math.PI * theta)) *
-                           Math.Exp(-(n * n) / (2 * theta * theta)));
+            return (float) ((1.0/Math.Sqrt(2*Math.PI*theta))*
+                            Math.Exp(-(n*n)/(2*theta*theta)));
         }
-
-
-        #endregion
     }
 }

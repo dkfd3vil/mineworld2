@@ -1,21 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using MineWorld;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.GamerServices;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Media;
-using Microsoft.Xna.Framework.Net;
-using Microsoft.Xna.Framework.Storage;
-using Microsoft.Xna.Framework.Design;
 
-namespace InterfaceItems
+namespace MineWorld.InterfaceItems
 {
-    class InterfaceLabel : InterfaceElement
+    internal class InterfaceLabel : InterfaceElement
     {
         public InterfaceLabel()
         {
@@ -23,23 +11,23 @@ namespace InterfaceItems
 
         public InterfaceLabel(MineWorldGame gameInstance)
         {
-            uiFont = gameInstance.Content.Load<SpriteFont>("font_04b08");
+            UiFont = gameInstance.Content.Load<SpriteFont>("font_04b08");
         }
 
         public InterfaceLabel(MineWorldGame gameInstance, PropertyBag pb)
         {
-            uiFont = gameInstance.Content.Load<SpriteFont>("font_04b08");
-            _P = pb;
+            UiFont = gameInstance.Content.Load<SpriteFont>("font_04b08");
+            P = pb;
         }
 
         public override void Render(GraphicsDevice graphicsDevice)
         {
-            if (visible&&text!="")
+            if (Visible && Text != "")
             {
                 SpriteBatch spriteBatch = new SpriteBatch(graphicsDevice);
                 spriteBatch.Begin();
 
-                spriteBatch.DrawString(uiFont, text, new Vector2(size.X, size.Y), Color.White);
+                spriteBatch.DrawString(UiFont, Text, new Vector2(Size.X, Size.Y), Color.White);
                 spriteBatch.End();
             }
         }

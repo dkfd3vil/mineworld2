@@ -1,60 +1,52 @@
-﻿﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace StateMasher
+﻿namespace MineWorld
 {
-    class FPSCounter
+    internal class FpsCounter
     {
-        private const int BUFFER_SIZE = 128;
-        private int[] m_millisecs = new int[BUFFER_SIZE];
-        private int m_numFrames = 0;
-        private int m_first = 0;
+        private const int BufferSize = 128;
+        private readonly int[] _mMillisecs = new int[BufferSize];
+        private int _mFirst;
+        private int _mNumFrames;
 
-        public FPSCounter()
+        private static int AdvanceIndex(int value)
         {
+            return (value + 1)%BufferSize;
         }
 
-        static private int advanceIndex(int value)
+        private static int AdvanceIndex(int startValue, int increment)
         {
-            return (value + 1) % BUFFER_SIZE;
+            return (startValue + increment)%BufferSize;
         }
 
-        static private int advanceIndex(int startValue, int increment)
+        public void Frame(int millisecs)
         {
-            return (startValue + increment) % BUFFER_SIZE;
-        }
-
-        public void frame(int millisecs)
-        {
-            if (m_numFrames == BUFFER_SIZE)
+            if (_mNumFrames == BufferSize)
             {
-                m_millisecs[m_first] = millisecs;
-                m_first = advanceIndex(m_first);
+                _mMillisecs[_mFirst] = millisecs;
+                _mFirst = AdvanceIndex(_mFirst);
             }
             else
             {
-                m_millisecs[advanceIndex(m_first, m_numFrames)] = millisecs;
-                ++m_numFrames;
+                _mMillisecs[AdvanceIndex(_mFirst, _mNumFrames)] = millisecs;
+                ++_mNumFrames;
             }
         }
 
-        public int fps()
+        public int Fps()
         {
-            if (m_numFrames <= 1)
+            if (_mNumFrames <= 1)
             {
                 return 0;
             }
 
-            int firstFrameTime = m_millisecs[m_first];
-            int lastFrameTime = m_millisecs[advanceIndex(m_first, m_numFrames - 1)];
+            int firstFrameTime = _mMillisecs[_mFirst];
+            int lastFrameTime = _mMillisecs[AdvanceIndex(_mFirst, _mNumFrames - 1)];
 
             if (lastFrameTime == firstFrameTime)
             {
                 return 0;
             }
 
-            return m_numFrames * 1000 / (lastFrameTime - firstFrameTime);
+            return _mNumFrames*1000/(lastFrameTime - firstFrameTime);
         }
     }
 }

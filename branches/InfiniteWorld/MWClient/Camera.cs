@@ -1,19 +1,17 @@
-﻿using System;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Content;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace MineWorld
 {
     public class Camera
     {
-        public float Pitch, Yaw;
+        private const float NearPlane = 0.01f;
+        private const float FarPlane = 140f;
+        public float Pitch;
         public Vector3 Position;
-        public Matrix ViewMatrix = Matrix.Identity;
         public Matrix ProjectionMatrix = Matrix.Identity;
-
-        private float _nearPlane = Defines.NEARPLANE;
-        private float _farPlane = Defines.FARPLANE;
+        public Matrix ViewMatrix = Matrix.Identity;
+        public float Yaw;
 
         public Camera(GraphicsDevice device)
         {
@@ -22,26 +20,27 @@ namespace MineWorld
             Position = Vector3.Zero;
 
             float aspectRatio = device.Viewport.AspectRatio;
-            this.ProjectionMatrix = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(70), aspectRatio, _nearPlane, _farPlane);
+            ProjectionMatrix = Matrix.CreatePerspectiveFieldOfView(MathHelper.ToRadians(70), aspectRatio, NearPlane,
+                                                                   FarPlane);
         }
 
         // Returns a unit vector pointing in the direction that we're looking.
         public Vector3 GetLookVector()
         {
-            Matrix rotation = Matrix.CreateRotationX(Pitch) * Matrix.CreateRotationY(Yaw);
+            Matrix rotation = Matrix.CreateRotationX(Pitch)*Matrix.CreateRotationY(Yaw);
             return Vector3.Transform(Vector3.Forward, rotation);
         }
 
         public Vector3 GetRightVector()
         {
-            Matrix rotation = Matrix.CreateRotationX(Pitch) * Matrix.CreateRotationY(Yaw);
+            Matrix rotation = Matrix.CreateRotationX(Pitch)*Matrix.CreateRotationY(Yaw);
             return Vector3.Transform(Vector3.Right, rotation);
         }
 
         public void Update()
         {
             Vector3 target = Position + GetLookVector();
-            this.ViewMatrix = Matrix.CreateLookAt(Position, target, Vector3.Up);
+            ViewMatrix = Matrix.CreateLookAt(Position, target, Vector3.Up);
         }
     }
 }

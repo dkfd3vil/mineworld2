@@ -1,207 +1,208 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Diagnostics;
-using StateMasher;
-using InterfaceItems;
+using System.Globalization;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Media;
-using Microsoft.Xna.Framework.Net;
-using Microsoft.Xna.Framework.Storage;
+using MineWorld.InterfaceItems;
+using MineWorld.StateMasher;
 
 namespace MineWorld.States
 {
     public class SettingsState : State
     {
-        Texture2D texSettings;
-        List<InterfaceElement> elements = new List<InterfaceElement>();
-        Rectangle drawRect;
-        int baseHeight = 14;
-        //int sliderFullHeight = 52;
-        int sliderFullWidth = 200;
-        /*int buttonFullHeight = 36;
-        int textFullHeight = 36;*/
-        Vector2 currentPos = new Vector2(0, 0);
-        int originalY = 0;
+        private const int BaseHeight = 14;
+        private const int SliderFullWidth = 200;
 
-        ClickRegion[] clkMenuSettings = new ClickRegion[2] {
-            new ClickRegion(new Rectangle(0,713,255,42),"cancel"),
-            new ClickRegion(new Rectangle(524,713,500,42),"accept")
-        };
+        private readonly ClickRegion[] _clkMenuSettings = new[]
+                                                              {
+                                                                  new ClickRegion(new Rectangle(0, 713, 255, 42),
+                                                                                  "cancel"),
+                                                                  new ClickRegion(new Rectangle(524, 713, 500, 42),
+                                                                                  "accept")
+                                                              };
 
-        protected string nextState = null;
+        private readonly List<InterfaceElement> _elements = new List<InterfaceElement>();
 
-        public void addSpace(int amount)
+        protected string NextState;
+        private Vector2 _currentPos = new Vector2(0, 0);
+        private Rectangle _drawRect;
+        private int _originalY;
+        private Texture2D _texSettings;
+
+        public void AddSpace(int amount)
         {
-            currentPos.Y += amount;
+            _currentPos.Y += amount;
         }
 
-        public void shiftColumn()
+        public void ShiftColumn()
         {
-            shiftColumn(350);
+            ShiftColumn(350);
         }
 
-        public void shiftColumn(int amount)
+        public void ShiftColumn(int amount)
         {
-            currentPos.X += amount;
-            currentPos.Y = originalY;
+            _currentPos.X += amount;
+            _currentPos.Y = _originalY;
         }
 
-        public void addSliderAutomatic(string text, float minVal, float maxVal, float initVal, bool integerOnly)
+        public void AddSliderAutomatic(string text, float minVal, float maxVal, float initVal, bool integerOnly)
         {
             int height = 38; //basic
             if (text != "")
                 height += 20;
-            currentPos.Y += height;
-            addSlider(new Rectangle((int)currentPos.X, (int)currentPos.Y, sliderFullWidth, baseHeight), true, true, text, minVal, maxVal, initVal, integerOnly);
+            _currentPos.Y += height;
+            AddSlider(new Rectangle((int) _currentPos.X, (int) _currentPos.Y, SliderFullWidth, BaseHeight), true, true,
+                      text, minVal, maxVal, initVal, integerOnly);
         }
 
-        public void addSlider(Rectangle size, bool enabled, bool visible, string text, float minVal, float maxVal, float initVal, bool integerOnly)
+        public void AddSlider(Rectangle size, bool enabled, bool visible, string text, float minVal, float maxVal,
+                              float initVal, bool integerOnly)
         {
-            InterfaceSlider temp = new InterfaceSlider((_SM as MineWorldGame), _P);
-            temp.size=size;
-            temp.enabled=enabled;
-            temp.visible=visible;
-            temp.text=text;
-            temp.minVal=minVal;
-            temp.maxVal=maxVal;
-            temp.setValue(initVal);
-            temp.integers=integerOnly;
-            elements.Add(temp);
+            InterfaceSlider temp = new InterfaceSlider((Sm as MineWorldGame), P);
+            temp.Size = size;
+            temp.Enabled = enabled;
+            temp.Visible = visible;
+            temp.Text = text;
+            temp.MinVal = minVal;
+            temp.MaxVal = maxVal;
+            temp.SetValue(initVal);
+            temp.Integers = integerOnly;
+            _elements.Add(temp);
         }
 
-        public void addButtonAutomatic(string text, string onText, string offText, bool clicked)
-        {
-            int height = 22; //basic
-            if (text != "")
-                height += 20;
-            currentPos.Y += height;
-            addButton(new Rectangle((int)currentPos.X, (int)currentPos.Y, sliderFullWidth, baseHeight), true, true, text, onText, offText, clicked);
-        }
-
-        public void addButton(Rectangle size, bool enabled, bool visible, string text, string onText, string offText, bool clicked)
-        {
-            InterfaceButtonToggle temp = new InterfaceButtonToggle((_SM as MineWorldGame), _P);
-            temp.size = size;
-            temp.enabled = enabled;
-            temp.visible = visible;
-            temp.text = text;
-            temp.onText = onText;
-            temp.offText = offText;
-            temp.clicked = clicked;
-            elements.Add(temp);
-        }
-
-        public void addTextInputAutomatic(string text, string initVal)
+        public void AddButtonAutomatic(string text, string onText, string offText, bool clicked)
         {
             int height = 22; //basic
             if (text != "")
                 height += 20;
-            currentPos.Y += height;
-            addTextInput(new Rectangle((int)currentPos.X, (int)currentPos.Y, sliderFullWidth, baseHeight), true, true, text, initVal);
+            _currentPos.Y += height;
+            AddButton(new Rectangle((int) _currentPos.X, (int) _currentPos.Y, SliderFullWidth, BaseHeight), true, true,
+                      text, onText, offText, clicked);
         }
 
-        public void addTextInput(Rectangle size, bool enabled, bool visible, string text, string initVal)
+        public void AddButton(Rectangle size, bool enabled, bool visible, string text, string onText, string offText,
+                              bool clicked)
         {
-            InterfaceTextInput temp = new InterfaceTextInput((_SM as MineWorldGame), _P);
-            temp.size = size;
-            temp.enabled = enabled;
-            temp.visible = visible;
-            temp.text = text;
-            temp.value = initVal;
-            elements.Add(temp);
+            InterfaceButtonToggle temp = new InterfaceButtonToggle((Sm as MineWorldGame), P);
+            temp.Size = size;
+            temp.Enabled = enabled;
+            temp.Visible = visible;
+            temp.Text = text;
+            temp.OnText = onText;
+            temp.OffText = offText;
+            temp.Clicked = clicked;
+            _elements.Add(temp);
         }
 
-        public void addLabelAutomatic(string text)
+        public void AddTextInputAutomatic(string text, string initVal)
         {
-            currentPos.Y += 20;
-            addLabel(new Rectangle((int)currentPos.X-100, (int)currentPos.Y, 0, 0), true, text);
+            int height = 22; //basic
+            if (text != "")
+                height += 20;
+            _currentPos.Y += height;
+            AddTextInput(new Rectangle((int) _currentPos.X, (int) _currentPos.Y, SliderFullWidth, BaseHeight), true,
+                         true, text, initVal);
         }
 
-        public void addLabel(Rectangle size, bool visible, string text)
+        public void AddTextInput(Rectangle size, bool enabled, bool visible, string text, string initVal)
         {
-            InterfaceLabel temp = new InterfaceLabel((_SM as MineWorldGame), _P);
-            temp.size = size;
-            temp.visible = visible;
-            temp.text = text;
-            elements.Add(temp);
+            InterfaceTextInput temp = new InterfaceTextInput((Sm as MineWorldGame), P);
+            temp.Size = size;
+            temp.Enabled = enabled;
+            temp.Visible = visible;
+            temp.Text = text;
+            temp.Value = initVal;
+            _elements.Add(temp);
+        }
+
+        public void AddLabelAutomatic(string text)
+        {
+            _currentPos.Y += 20;
+            AddLabel(new Rectangle((int) _currentPos.X - 100, (int) _currentPos.Y, 0, 0), true, text);
+        }
+
+        public void AddLabel(Rectangle size, bool visible, string text)
+        {
+            InterfaceLabel temp = new InterfaceLabel((Sm as MineWorldGame), P);
+            temp.Size = size;
+            temp.Visible = visible;
+            temp.Text = text;
+            _elements.Add(temp);
         }
 
         public override void OnEnter(string oldState)
         {
-            _SM.IsMouseVisible = true;
+            Sm.IsMouseVisible = true;
 
             //Load the background
-            texSettings = _SM.Content.Load<Texture2D>("menus/tex_menu_settings");
-            drawRect = new Rectangle(_SM.GraphicsDevice.Viewport.Width / 2 - 1024 / 2,
-                                                 _SM.GraphicsDevice.Viewport.Height / 2 - 768 / 2,
-                                                 1024,
-                                                 1024);
+            _texSettings = Sm.Content.Load<Texture2D>("menus/tex_menu_settings");
+            _drawRect = new Rectangle(Sm.GraphicsDevice.Viewport.Width/2 - 1024/2,
+                                      Sm.GraphicsDevice.Viewport.Height/2 - 768/2,
+                                      1024,
+                                      1024);
 
             //Read the data from file
-            Datafile dw = new Datafile((_SM as MineWorldGame).Csettings.Directory + "/client.config.txt");
+            Datafile dw = new Datafile((Sm as MineWorldGame).Csettings.Directory + "/client.config.txt");
 
-            currentPos = new Vector2(200, 100);
-            originalY = (int)currentPos.Y;
+            _currentPos = new Vector2(200, 100);
+            _originalY = (int) _currentPos.Y;
 
-            addLabelAutomatic("User Settings");
-                addTextInputAutomatic("Username", dw.Data.ContainsKey("handle") ? dw.Data["handle"] : "Player");
-            addSpace(16);
+            AddLabelAutomatic("User Settings");
+            AddTextInputAutomatic("Username", dw.Data.ContainsKey("handle") ? dw.Data["handle"] : "Player");
+            AddSpace(16);
 
-            addLabelAutomatic("Screen Settings");
-                addTextInputAutomatic("Scrn  Width", dw.Data.ContainsKey("width") ? dw.Data["width"] : "1024");
-                addTextInputAutomatic("Scrn Height", dw.Data.ContainsKey("height") ? dw.Data["height"] : "780");
-                addButtonAutomatic("Screen Mode", "Fullscreen", "Windowed", dw.Data.ContainsKey("fullscreen") ? bool.Parse(dw.Data["fullscreen"]) : false);
-            addSpace(16);
+            AddLabelAutomatic("Screen Settings");
+            AddTextInputAutomatic("Scrn  Width", dw.Data.ContainsKey("width") ? dw.Data["width"] : "1024");
+            AddTextInputAutomatic("Scrn Height", dw.Data.ContainsKey("height") ? dw.Data["height"] : "780");
+            AddButtonAutomatic("Screen Mode", "Fullscreen", "Windowed",
+                               dw.Data.ContainsKey("fullscreen") ? bool.Parse(dw.Data["fullscreen"]) : false);
+            AddSpace(16);
 
-            addLabelAutomatic("Sound Settings");
-                addSliderAutomatic("Volume", 1f, 100f, dw.Data.ContainsKey("volume") ? float.Parse(dw.Data["volume"])*100 : 100f, true);
-                addButtonAutomatic("Enable Sound", "On", "NoSound", dw.Data.ContainsKey("nosound") ? !bool.Parse(dw.Data["nosound"]) : true);
-            addSpace(16);
+            AddLabelAutomatic("Sound Settings");
+            AddSliderAutomatic("Volume", 1f, 100f,
+                               dw.Data.ContainsKey("volume") ? float.Parse(dw.Data["volume"])*100 : 100f, true);
+            AddButtonAutomatic("Enable Sound", "On", "NoSound",
+                               dw.Data.ContainsKey("nosound") ? !bool.Parse(dw.Data["nosound"]) : true);
+            AddSpace(16);
 
-            shiftColumn();
+            ShiftColumn();
 
-            addLabelAutomatic("Mouse Settings");
-                addButtonAutomatic("Invert Mouse", "Yes", "No", dw.Data.ContainsKey("yinvert") ? bool.Parse(dw.Data["yinvert"]) : false);
-                addSliderAutomatic("Mouse Sensitivity", 1f, 10f, dw.Data.ContainsKey("sensitivity") ? float.Parse(dw.Data["sensitivity"]) : 5f, true);
-            addSpace(16);
+            AddLabelAutomatic("Mouse Settings");
+            AddButtonAutomatic("Invert Mouse", "Yes", "No",
+                               dw.Data.ContainsKey("yinvert") ? bool.Parse(dw.Data["yinvert"]) : false);
+            AddSliderAutomatic("Mouse Sensitivity", 1f, 10f,
+                               dw.Data.ContainsKey("sensitivity") ? float.Parse(dw.Data["sensitivity"]) : 5f, true);
+            AddSpace(16);
 
-            addLabelAutomatic("Misc Settings");
-                addButtonAutomatic("Bloom", "Pretty", "Boring", dw.Data.ContainsKey("pretty") ? bool.Parse(dw.Data["pretty"]) : true);
-                addButtonAutomatic("Show FPS", "Yes", "No", dw.Data.ContainsKey("showfps") ? bool.Parse(dw.Data["showfps"]) : true);
-            addSpace(16);
-        }
-
-        public override void OnLeave(string newState)
-        {
-            base.OnLeave(newState);
+            AddLabelAutomatic("Misc Settings");
+            AddButtonAutomatic("Bloom", "Pretty", "Boring",
+                               dw.Data.ContainsKey("pretty") ? bool.Parse(dw.Data["pretty"]) : true);
+            AddButtonAutomatic("Show FPS", "Yes", "No",
+                               dw.Data.ContainsKey("showfps") ? bool.Parse(dw.Data["showfps"]) : true);
+            AddSpace(16);
         }
 
         public override void OnMouseDown(MouseButtons button, int x, int y)
         {
             base.OnMouseDown(button, x, y);
-            foreach (InterfaceElement element in elements)
+            foreach (InterfaceElement element in _elements)
             {
                 element.OnMouseDown(button, x, y);
             }
-            switch(ClickRegion.HitTest(clkMenuSettings,new Point(x,y)))
+            switch (ClickRegion.HitTest(_clkMenuSettings, new Point(x, y)))
             {
                 case "cancel":
-                    nextState = "MineWorld.States.ServerBrowserState";
+                    NextState = "MineWorld.States.ServerBrowserState";
                     break;
                 case "accept":
-                    if (saveSettings() == true)
-                        nextState = "MineWorld.States.ServerBrowserState";
+                    if (SaveSettings())
+                        NextState = "MineWorld.States.ServerBrowserState";
                     else
                     {
                         ErrorManager.ErrorMsg = "Error: Problem while saving";
                         ErrorManager.NewState = "MineWorld.States.ServerBrowserState";
-                        nextState = "MineWorld.States.ErrorState";
+                        NextState = "MineWorld.States.ErrorState";
                     }
                     break;
             }
@@ -210,71 +211,92 @@ namespace MineWorld.States
         public override void OnMouseUp(MouseButtons button, int x, int y)
         {
             base.OnMouseUp(button, x, y);
-            foreach (InterfaceElement element in elements)
+            foreach (InterfaceElement element in _elements)
             {
                 element.OnMouseUp(button, x, y);
             }
         }
 
-        public bool saveSettings()
+        public bool SaveSettings()
         {
-            Datafile dw = new Datafile((_SM as MineWorldGame).Csettings.Directory + "/client.config.txt");
-            foreach (InterfaceElement element in elements)
+            Datafile dw = new Datafile((Sm as MineWorldGame).Csettings.Directory + "/client.config.txt");
+            foreach (InterfaceElement element in _elements)
             {
-                switch (element.text)
+                switch (element.Text)
                 {
-                    case "Username": dw.Data["handle"] = (element as InterfaceTextInput).value;
-                        (_SM as MineWorldGame).Csettings.playerHandle = (element as InterfaceTextInput).value;
+                    case "Username":
+                        dw.Data["handle"] = (element as InterfaceTextInput).Value;
+                        (Sm as MineWorldGame).Csettings.PlayerHandle = (element as InterfaceTextInput).Value;
                         break;
-                    case "Scrn  Width": dw.Data["width"] = (element as InterfaceTextInput).value;
-                        (_SM as MineWorldGame).Csettings.Width = int.Parse((element as InterfaceTextInput).value);
+                    case "Scrn  Width":
+                        dw.Data["width"] = (element as InterfaceTextInput).Value;
+                        (Sm as MineWorldGame).Csettings.Width = int.Parse((element as InterfaceTextInput).Value);
                         break;
-                    case "Scrn Height": dw.Data["height"] = (element as InterfaceTextInput).value;
-                        (_SM as MineWorldGame).Csettings.Height = int.Parse((element as InterfaceTextInput).value);
+                    case "Scrn Height":
+                        dw.Data["height"] = (element as InterfaceTextInput).Value;
+                        (Sm as MineWorldGame).Csettings.Height = int.Parse((element as InterfaceTextInput).Value);
                         break;
-                    case "Screen Mode": dw.Data["fullscreen"] = (element as InterfaceButtonToggle).clicked.ToString().ToLower();
-                        (_SM as MineWorldGame).Csettings.Fullscreen = bool.Parse((element as InterfaceButtonToggle).clicked.ToString().ToLower());
+                    case "Screen Mode":
+                        dw.Data["fullscreen"] = (element as InterfaceButtonToggle).Clicked.ToString().ToLower();
+                        (Sm as MineWorldGame).Csettings.Fullscreen =
+                            bool.Parse((element as InterfaceButtonToggle).Clicked.ToString().ToLower());
                         break;
-                    case "Volume": dw.Data["volume"] = ((element as InterfaceSlider).value / 100).ToString();
-                        (_SM as MineWorldGame).Csettings.volumeLevel = float.Parse(((element as InterfaceSlider).value / 100).ToString());
+                    case "Volume":
+                        dw.Data["volume"] = ((element as InterfaceSlider).Value/100).ToString();
+                        (Sm as MineWorldGame).Csettings.VolumeLevel =
+                            float.Parse(((element as InterfaceSlider).Value/100).ToString());
                         break;
-                    case "Enable Sound": dw.Data["nosound"] = (!(element as InterfaceButtonToggle).clicked).ToString().ToLower();
-                        (_SM as MineWorldGame).Csettings.NoSound = bool.Parse((!(element as InterfaceButtonToggle).clicked).ToString().ToLower());
+                    case "Enable Sound":
+                        dw.Data["nosound"] = (!(element as InterfaceButtonToggle).Clicked).ToString().ToLower();
+                        (Sm as MineWorldGame).Csettings.NoSound =
+                            bool.Parse((!(element as InterfaceButtonToggle).Clicked).ToString().ToLower());
                         break;
-                    case "Invert Mouse": dw.Data["yinvert"] = (element as InterfaceButtonToggle).clicked.ToString().ToLower();
-                        (_SM as MineWorldGame).Csettings.InvertMouseYAxis = bool.Parse((element as InterfaceButtonToggle).clicked.ToString().ToLower());
+                    case "Invert Mouse":
+                        dw.Data["yinvert"] = (element as InterfaceButtonToggle).Clicked.ToString().ToLower();
+                        (Sm as MineWorldGame).Csettings.InvertMouseYAxis =
+                            bool.Parse((element as InterfaceButtonToggle).Clicked.ToString().ToLower());
                         break;
-                    case "Mouse Sensitivity": dw.Data["sensitivity"] = (element as InterfaceSlider).value.ToString();
-                        (_SM as MineWorldGame).Csettings.mouseSensitivity = Math.Max(0.001f, Math.Min(0.05f, float.Parse((element as InterfaceSlider).value.ToString(), System.Globalization.CultureInfo.InvariantCulture) / 1000f));
+                    case "Mouse Sensitivity":
+                        dw.Data["sensitivity"] = (element as InterfaceSlider).Value.ToString();
+                        (Sm as MineWorldGame).Csettings.MouseSensitivity = Math.Max(0.001f,
+                                                                                     Math.Min(0.05f,
+                                                                                              float.Parse(
+                                                                                                  (element as
+                                                                                                   InterfaceSlider).
+                                                                                                      Value.ToString(),
+                                                                                                  CultureInfo.
+                                                                                                      InvariantCulture)/
+                                                                                              1000f));
                         break;
-                    case "Bloom": dw.Data["pretty"] = (element as InterfaceButtonToggle).clicked.ToString().ToLower();
-                        (_SM as MineWorldGame).Csettings.RenderPretty = bool.Parse((element as InterfaceButtonToggle).clicked.ToString().ToLower());
+                    case "Bloom":
+                        dw.Data["pretty"] = (element as InterfaceButtonToggle).Clicked.ToString().ToLower();
+                        (Sm as MineWorldGame).Csettings.RenderPretty =
+                            bool.Parse((element as InterfaceButtonToggle).Clicked.ToString().ToLower());
                         break;
-                    case "Show FPS": dw.Data["showfps"] = (element as InterfaceButtonToggle).clicked.ToString().ToLower();
-                        (_SM as MineWorldGame).Csettings.DrawFrameRate = bool.Parse((element as InterfaceButtonToggle).clicked.ToString().ToLower());
+                    case "Show FPS":
+                        dw.Data["showfps"] = (element as InterfaceButtonToggle).Clicked.ToString().ToLower();
+                        (Sm as MineWorldGame).Csettings.DrawFrameRate =
+                            bool.Parse((element as InterfaceButtonToggle).Clicked.ToString().ToLower());
                         break;
-                    default: break;
                 }
             }
-            if((_SM as MineWorldGame).Csettings.NoSound == true)
-            {
-                MediaPlayer.Stop();
-            }
-            (_SM as MineWorldGame).graphicsDeviceManager.IsFullScreen = (_SM as MineWorldGame).Csettings.Fullscreen;
-            (_SM as MineWorldGame).graphicsDeviceManager.PreferredBackBufferWidth = (_SM as MineWorldGame).Csettings.Width;
-            (_SM as MineWorldGame).graphicsDeviceManager.PreferredBackBufferHeight = (_SM as MineWorldGame).Csettings.Height;
-            (_SM as MineWorldGame).graphicsDeviceManager.ApplyChanges();
-            if (dw.WriteChanges((_SM as MineWorldGame).Csettings.Directory + "/client.config.txt") >= 1)
+            (Sm as MineWorldGame).GraphicsDeviceManager.IsFullScreen = (Sm as MineWorldGame).Csettings.Fullscreen;
+            (Sm as MineWorldGame).GraphicsDeviceManager.PreferredBackBufferWidth =
+                (Sm as MineWorldGame).Csettings.Width;
+            (Sm as MineWorldGame).GraphicsDeviceManager.PreferredBackBufferHeight =
+                (Sm as MineWorldGame).Csettings.Height;
+            (Sm as MineWorldGame).GraphicsDeviceManager.ApplyChanges();
+            if (dw.WriteChanges((Sm as MineWorldGame).Csettings.Directory + "/client.config.txt") >= 1)
             {
                 return true;
             }
             return false;
         }
 
-        public override void OnCharEntered(EventInput.CharacterEventArgs e)
+        public override void OnCharEntered(CharacterEventArgs e)
         {
             base.OnCharEntered(e);
-            foreach (InterfaceElement element in elements)
+            foreach (InterfaceElement element in _elements)
             {
                 element.OnCharEntered(e);
             }
@@ -284,10 +306,10 @@ namespace MineWorld.States
         {
             base.OnKeyDown(key);
             if (key == Keys.Escape)
-                nextState = "MineWorld.States.ServerBrowserState";
+                NextState = "MineWorld.States.ServerBrowserState";
             else
             {
-                foreach (InterfaceElement element in elements)
+                foreach (InterfaceElement element in _elements)
                 {
                     element.OnKeyDown(key);
                 }
@@ -297,7 +319,7 @@ namespace MineWorld.States
         public override void OnKeyUp(Keys key)
         {
             base.OnKeyUp(key);
-            foreach (InterfaceElement element in elements)
+            foreach (InterfaceElement element in _elements)
             {
                 element.OnKeyUp(key);
             }
@@ -305,16 +327,16 @@ namespace MineWorld.States
 
         public override string OnUpdate(GameTime gameTime, KeyboardState keyState, MouseState mouseState)
         {
-            return nextState;
+            return NextState;
         }
 
         public override void OnRenderAtUpdate(GraphicsDevice graphicsDevice, GameTime gameTime)
         {
             SpriteBatch spriteBatch = new SpriteBatch(graphicsDevice);
             spriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Deferred, SaveStateMode.SaveState);
-            spriteBatch.Draw(texSettings, drawRect, Color.White);
+            spriteBatch.Draw(_texSettings, _drawRect, Color.White);
             spriteBatch.End();
-            foreach (InterfaceElement element in elements)
+            foreach (InterfaceElement element in _elements)
             {
                 element.Render(graphicsDevice);
             }

@@ -1,28 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Diagnostics;
-using StateMasher;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.GamerServices;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Media;
-using Microsoft.Xna.Framework.Net;
-using Microsoft.Xna.Framework.Storage;
-using Microsoft.Xna.Framework.Design;
-using MineWorld;
 
-namespace InterfaceItems
+namespace MineWorld.InterfaceItems
 {
-    class InterfaceButtonToggle : InterfaceElement
+    internal class InterfaceButtonToggle : InterfaceElement
     {
-        private bool midClick = false;
-        public bool clicked = false;
-        public string offText = "Off";
-        public string onText = "On";
+        public bool Clicked;
+        private bool _midClick;
+        public string OffText = "Off";
+        public string OnText = "On";
 
         public InterfaceButtonToggle()
         {
@@ -30,66 +16,69 @@ namespace InterfaceItems
 
         public InterfaceButtonToggle(MineWorldGame gameInstance)
         {
-            uiFont = gameInstance.Content.Load<SpriteFont>("font_04b08");
+            UiFont = gameInstance.Content.Load<SpriteFont>("font_04b08");
         }
 
         public InterfaceButtonToggle(MineWorldGame gameInstance, PropertyBag pb)
         {
-            uiFont = gameInstance.Content.Load<SpriteFont>("font_04b08");
-            _P = pb;
+            UiFont = gameInstance.Content.Load<SpriteFont>("font_04b08");
+            P = pb;
         }
 
         public override void OnMouseDown(MouseButtons button, int x, int y)
         {
-            if (enabled && size.Contains(x, y))
+            if (Enabled && Size.Contains(x, y))
             {
-                midClick = true;
+                _midClick = true;
             }
             else
-                midClick = false;
+                _midClick = false;
         }
 
         public override void OnMouseUp(MouseButtons button, int x, int y)
         {
-            if (enabled && midClick && size.Contains(x, y))
+            if (Enabled && _midClick && Size.Contains(x, y))
             {
-                clicked = !clicked;
-                _P.PlaySound(MineWorldSound.ClickLow);
+                Clicked = !Clicked;
+                P.PlaySound(MineWorldSound.ClickLow);
             }
-            midClick = false;
+            _midClick = false;
         }
 
         public override void Render(GraphicsDevice graphicsDevice)
         {
-            if (visible && size.Width > 0 && size.Height > 0)
+            if (Visible && Size.Width > 0 && Size.Height > 0)
             {
                 Color drawColour = new Color(1f, 1f, 1f);
 
-                if (!enabled)
+                if (!Enabled)
                     drawColour = new Color(.7f, .7f, .7f);
-                else if (midClick)
+                else if (_midClick)
                     drawColour = new Color(.85f, .85f, .85f);
 
                 //Generate 1px white texture
                 Texture2D shade = new Texture2D(graphicsDevice, 1, 1, 1, TextureUsage.None, SurfaceFormat.Color);
-                shade.SetData(new Color[] { Color.White });
-                
+                shade.SetData(new[] {Color.White});
+
                 //Draw base button
                 SpriteBatch spriteBatch = new SpriteBatch(graphicsDevice);
                 spriteBatch.Begin();
-                spriteBatch.Draw(shade, size, drawColour);
+                spriteBatch.Draw(shade, Size, drawColour);
 
                 //Draw button text
-                string dispText = offText;
-                if (clicked)
-                    dispText = onText;
+                string dispText = OffText;
+                if (Clicked)
+                    dispText = OnText;
 
-                spriteBatch.DrawString(uiFont, dispText, new Vector2(size.X + size.Width / 2 - uiFont.MeasureString(dispText).X / 2, size.Y + size.Height / 2 - 8), Color.Black);
+                spriteBatch.DrawString(UiFont, dispText,
+                                       new Vector2(Size.X + Size.Width/2 - UiFont.MeasureString(dispText).X/2,
+                                                   Size.Y + Size.Height/2 - 8), Color.Black);
 
-                if (text != "")
+                if (Text != "")
                 {
                     //Draw text
-                    spriteBatch.DrawString(uiFont, text, new Vector2(size.X, size.Y - 20), enabled ? Color.White : new Color(.7f, .7f, .7f));//drawColour);
+                    spriteBatch.DrawString(UiFont, Text, new Vector2(Size.X, Size.Y - 20),
+                                           Enabled ? Color.White : new Color(.7f, .7f, .7f)); //drawColour);
                 }
 
                 spriteBatch.End();

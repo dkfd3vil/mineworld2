@@ -1,23 +1,22 @@
-﻿//Contains assorted server settings
-namespace MineWorld
+﻿namespace MineWorld
 {
     public struct ServerSettings
     {
-        public string Servername;
-        public int Maxplayers;
-        public bool Public;
-        public bool Proxy;
-        public string LevelName;
         public bool AutoAnnouce;
-        public string MOTD;
         public int Autosavetimer;
-        public bool Logs;
+        public string BackupDir;
+        public string LevelName;
         public int Lightsteps;
+        public bool Logs;
 
         //Not used by configs
-        public string SettingsDir;
         public string LogsDir;
-        public string BackupDir;
+        public string MOTD;
+        public int Maxplayers;
+        public bool Proxy;
+        public bool Public;
         public string ScriptsDir;
+        public string Servername;
+        public string SettingsDir;
     }
 }

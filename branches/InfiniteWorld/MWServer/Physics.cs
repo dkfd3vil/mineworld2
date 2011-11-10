@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 using System.Threading;
-using Lidgren.Network;
-using Lidgren.Network.Xna;
-using Microsoft.Xna.Framework;
 
 //Contains functions related to the state of the gameworld
 
@@ -13,36 +7,35 @@ namespace MineWorld
 {
     public partial class MineWorldServer
     {
-        DateTime lastCalcHealthRegen = DateTime.Now;
-
-        DateTime lastCalcBlocks = DateTime.Now;
-        DateTime lastCalcLava = DateTime.Now;
-        DateTime lastCalcGrass = DateTime.Now;
-        DateTime lastCalcWater = DateTime.Now;
+        private DateTime _lastCalcBlocks = DateTime.Now;
+        private DateTime _lastCalcGrass = DateTime.Now;
+        private DateTime _lastCalcHealthRegen = DateTime.Now;
+        private DateTime _lastCalcLava = DateTime.Now;
+        private DateTime _lastCalcWater = DateTime.Now;
 
         public void DoPhysics()
         {
             while (true)
             {
-                TimeSpan timeSpanCalcHealthRegen = DateTime.Now - lastCalcHealthRegen;
+                TimeSpan timeSpanCalcHealthRegen = DateTime.Now - _lastCalcHealthRegen;
 
-                TimeSpan timeSpanCalcBlocks = DateTime.Now - lastCalcBlocks;
-                TimeSpan timeSpanCalcLava = DateTime.Now - lastCalcLava;
-                TimeSpan timeSpanCalcGrass = DateTime.Now - lastCalcGrass;
-                TimeSpan timeSpanCalcWater = DateTime.Now - lastCalcWater;
+                TimeSpan timeSpanCalcBlocks = DateTime.Now - _lastCalcBlocks;
+                TimeSpan timeSpanCalcLava = DateTime.Now - _lastCalcLava;
+                TimeSpan timeSpanCalcGrass = DateTime.Now - _lastCalcGrass;
+                TimeSpan timeSpanCalcWater = DateTime.Now - _lastCalcWater;
 
                 // We calculate health regeneration every 1000 milleseconds
                 if (timeSpanCalcHealthRegen.TotalMilliseconds > 1000)
                 {
                     CalcHealthRegen();
-                    lastCalcHealthRegen = DateTime.Now;
+                    _lastCalcHealthRegen = DateTime.Now;
                 }
 
                 // We calculate blocks that need action every 250 milleseconds
                 if (timeSpanCalcBlocks.TotalMilliseconds > 250)
                 {
                     CalcBlocks();
-                    lastCalcBlocks = DateTime.Now;
+                    _lastCalcBlocks = DateTime.Now;
                 }
 
                 // Dont need to calc if its disabled
@@ -52,13 +45,13 @@ namespace MineWorld
                     if (timeSpanCalcLava.TotalMilliseconds > 1000)
                     {
                         CalcLava();
-                        lastCalcLava = DateTime.Now;
+                        _lastCalcLava = DateTime.Now;
                     }
                     //We calculate water every 1000 milliseconds
                     if (timeSpanCalcWater.TotalMilliseconds > 1000)
                     {
                         CalcWater();
-                        lastCalcWater = DateTime.Now;
+                        _lastCalcWater = DateTime.Now;
                     }
                 }
                 // We calculate grass every 2500 milliseconds
@@ -67,7 +60,7 @@ namespace MineWorld
                 {
                     CalcGrass();
                     CalcFlowers();
-                    lastCalcGrass = DateTime.Now;
+                    _lastCalcGrass = DateTime.Now;
                 }
                 Thread.Sleep(25);
             }
@@ -75,52 +68,56 @@ namespace MineWorld
 
         public void CalcHealthRegen()
         {
-            foreach (ServerPlayer p in playerList.Values)//regeneration
+            foreach (ServerPlayer p in PlayerList.Values) //regeneration
             {
                 if (p.Alive)
                 {
                     // TODO Cast health to float otherwise data loss
-                    p.Health += (p.HealthMax / 100) * SAsettings.Playerregenrate;
+                    p.Health += (p.HealthMax/100)*SAsettings.Playerregenrate;
                     if (p.Health >= p.HealthMax)
                     {
                         p.Health = p.HealthMax;
                     }
                 }
-                else 
+                else
                 {
                     // Player is dead
                     // Just a extra check to make sure if the player is dead
                     // That they dont have health values other then 0
                     p.Health = 0;
                 }
-                ServerPlayer player = playerList[p.NetConn];
+                ServerPlayer player = PlayerList[p.NetConn];
                 SendPlayerHealthUpdate(player);
             }
         }
 
         public void CalcLava()
         {
-            for (int i = 0; i < Defines.MAPSIZE; i++)
-                for (int j = 0; j < Defines.MAPSIZE; j++)
-                    for (int k = 0; k < Defines.MAPSIZE; k++)
-                        if (blockList[i, j, k] == BlockType.Lava)
+            for (int i = 0; i < Msettings.MapsizeX; i++)
+                for (int j = 0; j < Msettings.MapsizeY; j++)
+                    for (int k = 0; k < Msettings.MapsizeZ; k++)
+                        if (BlockList[i, j, k] == BlockType.Lava)
                         {
                             // RULES FOR LAVA EXPANSION:
                             // if the block below is lava, do nothing (not even horisontal)
                             // if the block below is empty space, move itself down and disalow horisontal lava movement
                             // if the block below is something solid add lava to the sides
-                            BlockType typeBelow = (j == 0) ? BlockType.Lava : blockList[i, j - 1, k];
-                            BlockType typeIincr = ((int)i == Defines.MAPSIZE - 1) ? BlockType.Lava : blockList[i + 1, j, k];
-                            BlockType typeIdesc = (i == 0) ? BlockType.Lava : blockList[i - 1, j, k];
-                            BlockType typeKincr = ((int)k == Defines.MAPSIZE - 1) ? BlockType.Lava : blockList[i, j, k + 1];
-                            BlockType typeKdesc = (k == 0) ? BlockType.Lava : blockList[i, j, k - 1];
+                            BlockType typeBelow = (j == 0) ? BlockType.Lava : BlockList[i, j - 1, k];
+                            BlockType typeIincr = (i == Msettings.MapsizeX - 1)
+                                                      ? BlockType.Lava
+                                                      : BlockList[i + 1, j, k];
+                            BlockType typeIdesc = (i == 0) ? BlockType.Lava : BlockList[i - 1, j, k];
+                            BlockType typeKincr = (k == Msettings.MapsizeZ - 1)
+                                                      ? BlockType.Lava
+                                                      : BlockList[i, j, k + 1];
+                            BlockType typeKdesc = (k == 0) ? BlockType.Lava : BlockList[i, j, k - 1];
 
                             bool doHorisontal = true;
                             if (typeBelow == BlockType.None)
                             {
                                 if (j > 0)
                                 {
-                                    SendSetBlock(i, (int)(j - 1), k, BlockType.Lava);
+                                    SendSetBlock(i, (j - 1), k, BlockType.Lava);
                                     SendRemoveBlock(i, j, k);
                                     doHorisontal = false;
                                 }
@@ -139,28 +136,28 @@ namespace MineWorld
                                 {
                                     if (i > 0)
                                     {
-                                        SendSetBlock((int)(i - 1), j, k, BlockType.Lava);
+                                        SendSetBlock((i - 1), j, k, BlockType.Lava);
                                     }
                                 }
                                 if (typeIincr == BlockType.None)
                                 {
-                                    if (i < Defines.MAPSIZE)
+                                    if (i < Msettings.MapsizeX)
                                     {
-                                        SendSetBlock((int)(i + 1), j, k, BlockType.Lava);
+                                        SendSetBlock((i + 1), j, k, BlockType.Lava);
                                     }
                                 }
                                 if (typeKdesc == BlockType.None)
                                 {
                                     if (k > 0)
                                     {
-                                        SendSetBlock(i, j, (int)(k - 1), BlockType.Lava);
+                                        SendSetBlock(i, j, (k - 1), BlockType.Lava);
                                     }
                                 }
                                 if (typeKincr == BlockType.None)
                                 {
-                                    if (k < Defines.MAPSIZE)
+                                    if (k < Msettings.MapsizeZ)
                                     {
-                                        SendSetBlock(i, j, (int)(k + 1), BlockType.Lava);
+                                        SendSetBlock(i, j, (k + 1), BlockType.Lava);
                                     }
                                 }
                             }
@@ -169,16 +166,16 @@ namespace MineWorld
 
         public void CalcGrass()
         {
-            for (int i = 0; i < Defines.MAPSIZE; i++)
-                for (int j = 0; j < Defines.MAPSIZE; j++)
-                    for (int k = 0; k < Defines.MAPSIZE; k++)
-                        if (blockList[i, j, k] == BlockType.Dirt)
+            for (int i = 0; i < Msettings.MapsizeX; i++)
+                for (int j = 0; j < Msettings.MapsizeY; j++)
+                    for (int k = 0; k < Msettings.MapsizeZ; k++)
+                        if (BlockList[i, j, k] == BlockType.Dirt)
                         {
-                            if (j >= Defines.GROUND_LEVEL)
+                            if (j >= Msettings.MapsizeY/2)
                             {
                                 if (InDirectSunLight(i, j, k))
                                 {
-                                    if (randGen.Next(0, 6) == 3)
+                                    if (_randGen.Next(0, 6) == 3)
                                     {
                                         SendSetBlock(i, j, k, BlockType.Grass);
                                     }
@@ -189,26 +186,26 @@ namespace MineWorld
 
         public void CalcFlowers()
         {
-            for (int i = 0; i < Defines.MAPSIZE; i++)
-                for (int k = 0; k < Defines.MAPSIZE; k++)
-                    for (int j = 0; j < Defines.MAPSIZE; j++)
-                        if (blockList[i, j, k] == BlockType.Grass)
+            for (int i = 0; i < Msettings.MapsizeX; i++)
+                for (int j = 0; j < Msettings.MapsizeY; j++)
+                    for (int k = 0; k < Msettings.MapsizeZ; k++)
+                        if (BlockList[i, j, k] == BlockType.Grass)
                         {
-                            int rand = randGen.Next(0, 1000);
-                            if (j == Defines.MAPSIZE - 1)
+                            int rand = _randGen.Next(0, 1000);
+                            if (j == Msettings.MapsizeY - 1)
                             {
                                 break;
                             }
                             if (rand == 400)
                             {
-                                if (blockList[i, j + 1, k] == BlockType.None)
+                                if (BlockList[i, j + 1, k] == BlockType.None)
                                 {
                                     SendSetBlock(i, ++j, k, BlockType.RedFlower);
                                 }
                             }
                             else if (rand == 500)
                             {
-                                if (blockList[i, j + 1, k] == BlockType.None)
+                                if (BlockList[i, j + 1, k] == BlockType.None)
                                 {
                                     SendSetBlock(i, ++j, k, BlockType.YellowFlower);
                                 }
@@ -219,16 +216,20 @@ namespace MineWorld
         public void CalcBlocks()
         {
             // If water touches lava or otherwise around turn it into stone then
-            for (int i = 0; i < Defines.MAPSIZE; i++)
-                for (int j = 0; j < Defines.MAPSIZE; j++)
-                    for (int k = 0; k < Defines.MAPSIZE; k++)
-                        if (blockList[i, j, k] == BlockType.Water)
+            for (int i = 0; i < Msettings.MapsizeX; i++)
+                for (int j = 0; j < Msettings.MapsizeY; j++)
+                    for (int k = 0; k < Msettings.MapsizeZ; k++)
+                        if (BlockList[i, j, k] == BlockType.Water)
                         {
-                            BlockType typeBelow = (j == 0) ? BlockType.Water : blockList[i, j - 1, k];
-                            BlockType typeIincr = (i == Defines.MAPSIZE - 1) ? BlockType.Water : blockList[i + 1, j, k];
-                            BlockType typeIdesc = (i == 0) ? BlockType.Water : blockList[i - 1, j, k];
-                            BlockType typeKincr = (k == Defines.MAPSIZE - 1) ? BlockType.Water : blockList[i, j, k + 1];
-                            BlockType typeKdesc = (k == 0) ? BlockType.Water : blockList[i, j, k - 1];
+                            BlockType typeBelow = (j == 0) ? BlockType.Water : BlockList[i, j - 1, k];
+                            BlockType typeIincr = (i == Msettings.MapsizeX - 1)
+                                                      ? BlockType.Water
+                                                      : BlockList[i + 1, j, k];
+                            BlockType typeIdesc = (i == 0) ? BlockType.Water : BlockList[i - 1, j, k];
+                            BlockType typeKincr = (k == Msettings.MapsizeZ - 1)
+                                                      ? BlockType.Water
+                                                      : BlockList[i, j, k + 1];
+                            BlockType typeKdesc = (k == 0) ? BlockType.Water : BlockList[i, j, k - 1];
 
                             if (typeBelow == BlockType.Lava)
                             {
@@ -246,7 +247,7 @@ namespace MineWorld
                             }
                             if (typeIincr == BlockType.Lava)
                             {
-                                if (i < Defines.MAPSIZE)
+                                if (i < Msettings.MapsizeX)
                                 {
                                     SendSetBlock((i + 1), j, k, BlockType.Rock);
                                 }
@@ -260,48 +261,53 @@ namespace MineWorld
                             }
                             if (typeKincr == BlockType.Lava)
                             {
-                                if (k < Defines.MAPSIZE)
+                                if (k < Msettings.MapsizeZ)
                                 {
                                     SendSetBlock(i, j, (k + 1), BlockType.Rock);
                                 }
                             }
                         }
-                        else if (blockList[i, j, k] == BlockType.YellowFlower || blockList[i, j, k] == BlockType.RedFlower)
+                        else if (BlockList[i, j, k] == BlockType.YellowFlower ||
+                                 BlockList[i, j, k] == BlockType.RedFlower)
                         {
                             //TODO WIP Removal of flowers when there is no grass beneath them
                             //int y = j;
                             //BlockType typeBelow = blockList[i, y - 1, k];
                             //if (typeBelow != BlockType.Grass)
                             //{
-                                //Omg a floating flower
-                                //SetBlock(i, j, k, BlockType.None);
+                            //Omg a floating flower
+                            //SetBlock(i, j, k, BlockType.None);
                             //}
                         }
         }
 
         public void CalcWater()
         {
-            for (int i = 0; i < Defines.MAPSIZE; i++)
-                for (int j = 0; j < Defines.MAPSIZE; j++)
-                    for (int k = 0; k < Defines.MAPSIZE; k++)
-                        if (blockList[i, j, k] == BlockType.Water)
+            for (int i = 0; i < Msettings.MapsizeX; i++)
+                for (int j = 0; j < Msettings.MapsizeY; j++)
+                    for (int k = 0; k < Msettings.MapsizeZ; k++)
+                        if (BlockList[i, j, k] == BlockType.Water)
                         {
                             // RULES FOR WATER EXPANSION:
                             // if the block below is water, do nothing (not even horisontal)
                             // if the block below is empty space, move itself down and disalow horisontal lava movement
                             // if the block below is something solid add water to the sides
-                            BlockType typeBelow = (j == 0) ? BlockType.Water : blockList[i, j - 1, k];
-                            BlockType typeIincr = (i == Defines.MAPSIZE - 1) ? BlockType.Water : blockList[i + 1, j, k];
-                            BlockType typeIdesc = (i == 0) ? BlockType.Water : blockList[i - 1, j, k];
-                            BlockType typeKincr = (k == Defines.MAPSIZE - 1) ? BlockType.Water : blockList[i, j, k + 1];
-                            BlockType typeKdesc = (k == 0) ? BlockType.Water : blockList[i, j, k - 1];
+                            BlockType typeBelow = (j == 0) ? BlockType.Water : BlockList[i, j - 1, k];
+                            BlockType typeIincr = (i == Msettings.MapsizeX - 1)
+                                                      ? BlockType.Water
+                                                      : BlockList[i + 1, j, k];
+                            BlockType typeIdesc = (i == 0) ? BlockType.Water : BlockList[i - 1, j, k];
+                            BlockType typeKincr = (k == Msettings.MapsizeZ - 1)
+                                                      ? BlockType.Water
+                                                      : BlockList[i, j, k + 1];
+                            BlockType typeKdesc = (k == 0) ? BlockType.Water : BlockList[i, j, k - 1];
 
                             bool doHorisontal = true;
                             if (typeBelow == BlockType.None)
                             {
                                 if (j > 0)
                                 {
-                                    SendSetBlock(i,(j - 1), k, BlockType.Water);
+                                    SendSetBlock(i, (j - 1), k, BlockType.Water);
                                     SendRemoveBlock(i, j, k);
                                     doHorisontal = false;
                                 }
@@ -325,7 +331,7 @@ namespace MineWorld
                                 }
                                 if (typeIincr == BlockType.None)
                                 {
-                                    if (i < Defines.MAPSIZE)
+                                    if (i < Msettings.MapsizeX)
                                     {
                                         SendSetBlock((i + 1), j, k, BlockType.Water);
                                     }
@@ -334,14 +340,14 @@ namespace MineWorld
                                 {
                                     if (k > 0)
                                     {
-                                        SendSetBlock(i, j,(k - 1), BlockType.Water);
+                                        SendSetBlock(i, j, (k - 1), BlockType.Water);
                                     }
                                 }
                                 if (typeKincr == BlockType.None)
                                 {
-                                    if (k < Defines.MAPSIZE)
+                                    if (k < Msettings.MapsizeZ)
                                     {
-                                        SendSetBlock(i, j,(k + 1), BlockType.Water);
+                                        SendSetBlock(i, j, (k + 1), BlockType.Water);
                                     }
                                 }
                             }

@@ -85,13 +85,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BlockInformation.cs" />
+    <Compile Include="MapGenerator.cs" />
     <Compile Include="DataFileWriter.cs" />
     <Compile Include="GeneralEnums.cs" />
-    <Compile Include="HTTPRequest.cs" />
-    <Compile Include="Player.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SharedConstants.cs" />
-    <Compile Include="SpriteModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <NestedContentProject Include="Content\Content.contentproj">

@@ -1,11 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Threading;
-using Lidgren.Network;
-using Lidgren.Network.Xna;
-using Microsoft.Xna.Framework;
 
 //Contains commands, mainly console related (but not dealing with the console itself)
 
@@ -30,7 +25,8 @@ namespace MineWorld
                 }
                 else
                 {
-                    FileStream file = new FileStream(Ssettings.SettingsDir + "/admins.txt", FileMode.Open, FileAccess.Read);
+                    FileStream file = new FileStream(Ssettings.SettingsDir + "/admins.txt", FileMode.Open,
+                                                     FileAccess.Read);
                     StreamReader sr = new StreamReader(file);
                     string line = sr.ReadLine();
                     while (line != null)
@@ -55,16 +51,19 @@ namespace MineWorld
         {
             try
             {
-                FileStream file = new FileStream(Ssettings.SettingsDir + "/admins.txt", FileMode.Create, FileAccess.Write);
+                FileStream file = new FileStream(Ssettings.SettingsDir + "/admins.txt", FileMode.Create,
+                                                 FileAccess.Write);
                 StreamWriter sw = new StreamWriter(file);
                 sw.WriteLine("#A list of all admins - just add one ip per line\n");
-                foreach (string ip in banList)
+                foreach (string ip in BanList)
                     sw.WriteLine(ip);
                 sw.Close();
                 file.Close();
                 return true;
             }
-            catch { }
+            catch (Exception)
+            {
+            }
             return false;
         }
 
@@ -85,7 +84,8 @@ namespace MineWorld
                 }
                 else
                 {
-                    FileStream file = new FileStream(Ssettings.SettingsDir + "/banlist.txt", FileMode.Open, FileAccess.Read);
+                    FileStream file = new FileStream(Ssettings.SettingsDir + "/banlist.txt", FileMode.Open,
+                                                     FileAccess.Read);
                     StreamReader sr = new StreamReader(file);
                     string line = sr.ReadLine();
                     while (line != null)
@@ -96,7 +96,6 @@ namespace MineWorld
                     }
                     sr.Close();
                     file.Close();
-
                 }
             }
             catch
@@ -111,14 +110,17 @@ namespace MineWorld
         {
             try
             {
-                FileStream file = new FileStream(Ssettings.SettingsDir + "/banlist.txt", FileMode.Create, FileAccess.Write);
+                FileStream file = new FileStream(Ssettings.SettingsDir + "/banlist.txt", FileMode.Create,
+                                                 FileAccess.Write);
                 StreamWriter sw = new StreamWriter(file);
-                foreach (string ip in banList)
+                foreach (string ip in BanList)
                     sw.WriteLine(ip);
                 sw.Close();
                 file.Close();
             }
-            catch { }
+            catch (Exception)
+            {
+            }
         }
 
         public List<string> LoadBannedNames()
@@ -138,7 +140,8 @@ namespace MineWorld
                 }
                 else
                 {
-                    FileStream file = new FileStream(Ssettings.SettingsDir + "/bannednames.txt", FileMode.Open, FileAccess.Read);
+                    FileStream file = new FileStream(Ssettings.SettingsDir + "/bannednames.txt", FileMode.Open,
+                                                     FileAccess.Read);
                     StreamReader sr = new StreamReader(file);
                     string line = sr.ReadLine();
                     while (line != null)
@@ -149,7 +152,6 @@ namespace MineWorld
                     }
                     sr.Close();
                     file.Close();
-
                 }
             }
             catch
@@ -163,9 +165,9 @@ namespace MineWorld
         public void KickPlayer(string ip, bool name)
         {
             List<ServerPlayer> playersToKick = new List<ServerPlayer>();
-            foreach (ServerPlayer p in playerList.Values)
+            foreach (ServerPlayer p in PlayerList.Values)
             {
-                if ((p.IP == ip && !name) || (p.Name.ToLower().Contains(ip.ToLower()) && name))
+                if ((p.Ip == ip && !name) || (p.Name.ToLower().Contains(ip.ToLower()) && name))
                     playersToKick.Add(p);
             }
             foreach (ServerPlayer p in playersToKick)
@@ -177,41 +179,36 @@ namespace MineWorld
 
         public void BanPlayer(string ip, bool name)
         {
-            if (!banList.Contains(ip))
-            {
-                banList.Add(ip);
-                KickPlayer(ip,name);
-                SaveBanList();
-            }
+            if (BanList.Contains(ip)) return;
+            BanList.Add(ip);
+            KickPlayer(ip, name);
+            SaveBanList();
         }
 
         public bool GetAdmin(string ip)
         {
-            if (admins.Contains(ip))
-            {
-                return true;
-            }
-            return false;
+            return Admins.Contains(ip);
         }
 
         public void AddAdmin(string ip)
         {
-            if(!admins.Contains(ip))
+            if (!Admins.Contains(ip))
             {
-                admins.Add(ip);
+                Admins.Add(ip);
                 SaveAdminList();
             }
         }
 
         public void RemoveAdmin(string ip)
         {
-            if (admins.Contains(ip))
+            if (Admins.Contains(ip))
             {
-                admins.Remove(ip);
+                Admins.Remove(ip);
                 SaveAdminList();
             }
         }
 
+        /*
         public void SaveLevel(string filename)
         {
             FileStream fs = new FileStream(filename, FileMode.Create);
@@ -225,12 +222,15 @@ namespace MineWorld
             sw.Close();
             fs.Close();
         }
-
+         */
+        /*
         public void BackupLevel()
         {
             SaveLevel(Ssettings.BackupDir + "/backup" + GetTime(false) + ".lvl");
         }
+         */
 
+        /*
         public bool LoadLevel(string filename)
         {
             try
@@ -262,10 +262,11 @@ namespace MineWorld
             catch { }
             return false;
         }
+         */
 
         public void DisconnectAllPlayers()
         {
-            foreach (ServerPlayer p in playerList.Values)
+            foreach (ServerPlayer p in PlayerList.Values)
             {
                 p.NetConn.Disconnect("disconnected", 0);
             }
@@ -275,27 +276,29 @@ namespace MineWorld
         {
             ConsoleWrite("Server is shutting down in 5 seconds.", ConsoleColor.Yellow);
             SendServerWideMessage("Server is shutting down in 5 seconds.");
-            shutdownTriggerd = true;
-            shutdownTime = DateTime.Now + TimeSpan.FromSeconds(5);
+            _shutdownTriggerd = true;
+            _shutdownTime = DateTime.Now + TimeSpan.FromSeconds(5);
         }
 
         public void RestartServer()
         {
             ConsoleWrite("Server restarting in 5 seconds.", ConsoleColor.Yellow);
             SendServerWideMessage("Server restarting in 5 seconds.");
-            restartTriggered = true;
-            restartTime = DateTime.Now + TimeSpan.FromSeconds(5);
+            _restartTriggered = true;
+            _restartTime = DateTime.Now + TimeSpan.FromSeconds(5);
         }
 
-        public void status()
+        public void GetInfo()
         {
+            ConsoleWrite("General information");
             ConsoleWrite("ServerName: " + Ssettings.Servername);
-            ConsoleWrite(playerList.Count + " / " + Ssettings.Maxplayers + " players");
+            ConsoleWrite(PlayerList.Count + " / " + Ssettings.Maxplayers + " players");
             ConsoleWrite("Public: " + Ssettings.Public.ToString());
             ConsoleWrite("Proxy: " + Ssettings.Proxy.ToString());
             ConsoleWrite("Logging: " + Ssettings.Logs.ToString());
             ConsoleWrite("MOTD: " + Ssettings.MOTD);
-            ConsoleWrite("Logging: " + Ssettings.Logs.ToString());
+            ConsoleWrite("");
+            ConsoleWrite("Extra information");
         }
     }
 }

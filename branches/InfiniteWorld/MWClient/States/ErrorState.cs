@@ -1,63 +1,56 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Diagnostics;
-using StateMasher;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.GamerServices;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Media;
-using Microsoft.Xna.Framework.Net;
-using Microsoft.Xna.Framework.Storage;
+using MineWorld.StateMasher;
 
 namespace MineWorld.States
 {
     public class ErrorState : State
     {
-        Texture2D texMenu;
-        Rectangle drawRect;
-        string nextState = null;
-        SpriteFont uiFont;
+        private Rectangle _drawRect;
+        private string _nextState;
+        private Texture2D _texMenu;
+        private SpriteFont _uiFont;
 
         public override void OnEnter(string oldState)
         {
-            _SM.IsMouseVisible = false;
+            Sm.IsMouseVisible = false;
 
             //TODO Replace this errorstate placeholder
-            texMenu = _SM.Content.Load<Texture2D>("menus/tex_menu_error");
+            _texMenu = Sm.Content.Load<Texture2D>("menus/tex_menu_error");
 
-            drawRect = new Rectangle(_SM.GraphicsDevice.Viewport.Width / 2 - 1024 / 2,
-                                     _SM.GraphicsDevice.Viewport.Height / 2 - 768 / 2,
+            _drawRect = new Rectangle(Sm.GraphicsDevice.Viewport.Width/2 - 1024/2,
+                                     Sm.GraphicsDevice.Viewport.Height/2 - 768/2,
                                      1024,
                                      1024);
 
-            uiFont = _SM.Content.Load<SpriteFont>("font_04b08");
+            _uiFont = Sm.Content.Load<SpriteFont>("font_04b08");
         }
 
         public override void OnLeave(string newState)
         {
-
         }
 
         public override string OnUpdate(GameTime gameTime, KeyboardState keyState, MouseState mouseState)
         {
-            return nextState;
+            return _nextState;
         }
 
         public override void OnRenderAtEnter(GraphicsDevice graphicsDevice)
         {
-
         }
 
         public override void OnRenderAtUpdate(GraphicsDevice graphicsDevice, GameTime gameTime)
         {
             SpriteBatch spriteBatch = new SpriteBatch(graphicsDevice);
             spriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Deferred, SaveStateMode.SaveState);
-            spriteBatch.Draw(texMenu, drawRect, Color.White);
-            spriteBatch.DrawString(uiFont, ErrorManager.ErrorMsg, new Vector2(((int)(_SM.GraphicsDevice.Viewport.Width / 2 - uiFont.MeasureString(ErrorManager.ErrorMsg).X / 2)), drawRect.Y + 430), Color.White);
+            spriteBatch.Draw(_texMenu, _drawRect, Color.White);
+            spriteBatch.DrawString(_uiFont, ErrorManager.ErrorMsg,
+                                   new Vector2(
+                                       ((int)
+                                        (Sm.GraphicsDevice.Viewport.Width/2 -
+                                         _uiFont.MeasureString(ErrorManager.ErrorMsg).X/2)), _drawRect.Y + 430),
+                                   Color.White);
             spriteBatch.End();
         }
 
@@ -65,31 +58,28 @@ namespace MineWorld.States
         {
             if (key == Keys.Escape)
             {
-                nextState = ErrorManager.NewState;
+                _nextState = ErrorManager.NewState;
             }
         }
 
         public override void OnKeyUp(Keys key)
         {
-
         }
 
         public override void OnMouseDown(MouseButtons button, int x, int y)
         {
             if (button == MouseButtons.LeftButton)
             {
-                nextState = ErrorManager.NewState;
+                _nextState = ErrorManager.NewState;
             }
         }
 
         public override void OnMouseUp(MouseButtons button, int x, int y)
         {
-
         }
 
         public override void OnMouseScroll(int scrollDelta)
         {
-
         }
     }
 }

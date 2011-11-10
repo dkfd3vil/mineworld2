@@ -7,8 +7,6 @@ namespace MineWorld
     {
         public void LogWrite(string consoletext)
         {
-            DateTime dt = DateTime.Now;
-
             string text = "[" + GetTime(true) + "] ";
 
             try
@@ -18,43 +16,28 @@ namespace MineWorld
                     FileStream fs = File.Create(Ssettings.LogsDir + "/" + GetDate(false) + ".txt");
                     fs.Close();
                 }
-                FileStream file = new FileStream(Ssettings.LogsDir + "/" + GetDate(false) + ".txt", FileMode.Append, FileAccess.Write);
+                FileStream file = new FileStream(Ssettings.LogsDir + "/" + GetDate(false) + ".txt", FileMode.Append,
+                                                 FileAccess.Write);
                 StreamWriter sw = new StreamWriter(file);
                 sw.WriteLine(text + consoletext);
                 sw.Close();
                 file.Close();
             }
-            catch
+            catch (Exception)
             {
             }
         }
 
         public string GetTime(bool usedots)
         {
-            string DateFormat = "";
-            if (usedots)
-            {
-                DateFormat = "hh:mm:ss";
-            }
-            else
-            {
-                DateFormat = "hh-mm-ss";
-            }
-            return DateTime.Now.ToString(DateFormat);
+            string dateFormat = usedots ? "hh:mm:ss" : "hh-mm-ss";
+            return DateTime.Now.ToString(dateFormat);
         }
 
         public string GetDate(bool usedots)
         {
-            string DateFormat = "";
-            if (usedots)
-            {
-                DateFormat = "yyyy:MM:dd";
-            }
-            else
-            {
-                DateFormat = "yyyy-MM-dd";
-            }
-            return DateTime.Now.ToString(DateFormat);
+            string dateFormat = usedots ? "yyyy:MM:dd" : "yyyy-MM-dd";
+            return DateTime.Now.ToString(dateFormat);
         }
     }
 }

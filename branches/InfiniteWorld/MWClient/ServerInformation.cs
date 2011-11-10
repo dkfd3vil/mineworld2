@@ -1,54 +1,52 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Net;
+﻿using System.Net;
 using Lidgren.Network;
 
 namespace MineWorld
 {
     public class ServerInformation
     {
-        public IPEndPoint ipEndPoint;
-        public string serverName;
-        public string gametag;
-        public string serverExtra;
-        public string numPlayers;
-        public string maxPlayers;
-        public bool lanServer;
+        public string Gametag;
+        public IPEndPoint IpEndPoint;
+        public bool LanServer;
+        public string MaxPlayers;
+        public string NumPlayers;
+        public string ServerExtra;
+        public string ServerName;
 
         public ServerInformation(NetBuffer netBuffer)
         {
-            ipEndPoint = netBuffer.ReadIPEndPoint();
-            serverName = ipEndPoint.Address.ToString();
-            lanServer = true;
+            IpEndPoint = netBuffer.ReadIPEndPoint();
+            ServerName = IpEndPoint.Address.ToString();
+            LanServer = true;
         }
 
-        public ServerInformation(IPAddress ip, string name,string gametag, string numPlayers, string maxPlayers,string extra)
+        public ServerInformation(IPAddress ip, string name, string gametag, string numPlayers, string maxPlayers,
+                                 string extra)
         {
-            serverName = name;
-            ipEndPoint = new IPEndPoint(ip, 5565);
-            this.gametag = gametag;
-            this.numPlayers = numPlayers;
-            this.maxPlayers = maxPlayers;
-            serverExtra = extra;
-            lanServer = false;
+            ServerName = name;
+            IpEndPoint = new IPEndPoint(ip, 5565);
+            Gametag = gametag;
+            NumPlayers = numPlayers;
+            MaxPlayers = maxPlayers;
+            ServerExtra = extra;
+            LanServer = false;
         }
 
         public string GetServerDesc()
         {
-            string serverDesc = "";
+            string serverDesc;
 
-            if (lanServer)
+            if (LanServer)
             {
-                serverDesc = serverName.Trim() + " ( LAN SERVER )";
+                serverDesc = ServerName.Trim() + " ( LAN SERVER )";
             }
             else
             {
-                serverDesc = serverName.Trim() + " ( " + numPlayers.Trim() + " / " + maxPlayers.Trim() + " )";
-                if (serverExtra.Trim() != "")
-                    serverDesc += " - " + serverExtra.Trim();
+                serverDesc = ServerName.Trim() + " ( " + NumPlayers.Trim() + " / " + MaxPlayers.Trim() + " )";
+                if (ServerExtra.Trim() != "")
+                    serverDesc += " - " + ServerExtra.Trim();
             }
-            
+
             return serverDesc;
         }
 
@@ -57,21 +55,15 @@ namespace MineWorld
             if (obj == null)
                 return false;
 
-            if (this.GetType() != obj.GetType())
+            if (GetType() != obj.GetType())
                 return false;
 
             ServerInformation serverInfo = obj as ServerInformation;
 
-            if (!ipEndPoint.Equals(serverInfo.ipEndPoint))
+            if (!IpEndPoint.Equals(serverInfo.IpEndPoint))
                 return false;
 
             return true;
         }
-
-        public override int GetHashCode()
-        {
-            return base.GetHashCode();
-        }
-
     }
 }

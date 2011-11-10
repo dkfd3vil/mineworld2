@@ -1,67 +1,55 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.GamerServices;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Media;
-using Microsoft.Xna.Framework.Net;
-using Microsoft.Xna.Framework.Storage;
 
 namespace MineWorld
 {
-    class GeometryDebugger
+    internal class GeometryDebugger
     {
-        GraphicsDevice graphicsDevice;
-        VertexDeclaration vertexDeclaration;
-        Effect effect;
-
-        public Matrix ViewMatrix = Matrix.Identity;
+        private readonly Effect _effect;
+        private readonly GraphicsDevice _graphicsDevice;
+        private readonly VertexDeclaration _vertexDeclaration;
         public Matrix ProjectionMatrix = Matrix.Identity;
+        public Matrix ViewMatrix = Matrix.Identity;
 
         public GeometryDebugger(GraphicsDevice graphicsDevice, Effect effect)
         {
-            this.graphicsDevice = graphicsDevice;
-            vertexDeclaration = new VertexDeclaration(graphicsDevice, VertexPositionColor.VertexElements);
-            this.effect = effect;
+            _graphicsDevice = graphicsDevice;
+            _vertexDeclaration = new VertexDeclaration(graphicsDevice, VertexPositionColor.VertexElements);
+            _effect = effect;
         }
 
         public void DrawSphere(Vector3 position, float radius, Color color)
         {
             VertexPositionColor[] sphereVertices = ConstructSphereVertices(position, radius, color);
-            effect.CurrentTechnique = effect.Techniques["Colored"];
-            effect.Parameters["World"].SetValue(Matrix.Identity);
-            effect.Parameters["View"].SetValue(ViewMatrix);
-            effect.Parameters["Projection"].SetValue(ProjectionMatrix);
-            effect.Begin();
-            foreach (EffectPass pass in effect.CurrentTechnique.Passes)
+            _effect.CurrentTechnique = _effect.Techniques["Colored"];
+            _effect.Parameters["World"].SetValue(Matrix.Identity);
+            _effect.Parameters["View"].SetValue(ViewMatrix);
+            _effect.Parameters["Projection"].SetValue(ProjectionMatrix);
+            _effect.Begin();
+            foreach (EffectPass pass in _effect.CurrentTechnique.Passes)
             {
                 pass.Begin();
-                graphicsDevice.RenderState.CullMode = CullMode.None;
-                graphicsDevice.VertexDeclaration = vertexDeclaration;
-                graphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleList, sphereVertices, 0, sphereVertices.Length / 3);
+                _graphicsDevice.RenderState.CullMode = CullMode.None;
+                _graphicsDevice.VertexDeclaration = _vertexDeclaration;
+                _graphicsDevice.DrawUserPrimitives(PrimitiveType.TriangleList, sphereVertices, 0, sphereVertices.Length/3);
                 pass.End();
             }
-            effect.End();
+            _effect.End();
         }
 
         public void DrawLine(Vector3 posStart, Vector3 posEnd, Color color)
         {
-            
         }
 
         public VertexPositionColor[] ConstructSphereVertices(Vector3 position, float radius, Color color)
         {
-            VertexPositionColor[] vertices = new VertexPositionColor[3 * 8];
-            VertexPositionColor top = new VertexPositionColor(Vector3.Up*radius+position, color);
-            VertexPositionColor bottom = new VertexPositionColor(Vector3.Down * radius + position, color);
-            VertexPositionColor left = new VertexPositionColor(Vector3.Left * radius + position, color);
-            VertexPositionColor right = new VertexPositionColor(Vector3.Right * radius + position, color);
-            VertexPositionColor back = new VertexPositionColor(Vector3.Backward * radius + position, color);
-            VertexPositionColor front = new VertexPositionColor(Vector3.Forward * radius + position, color);
+            VertexPositionColor[] vertices = new VertexPositionColor[3*8];
+            VertexPositionColor top = new VertexPositionColor(Vector3.Up*radius + position, color);
+            VertexPositionColor bottom = new VertexPositionColor(Vector3.Down*radius + position, color);
+            VertexPositionColor left = new VertexPositionColor(Vector3.Left*radius + position, color);
+            VertexPositionColor right = new VertexPositionColor(Vector3.Right*radius + position, color);
+            VertexPositionColor back = new VertexPositionColor(Vector3.Backward*radius + position, color);
+            VertexPositionColor front = new VertexPositionColor(Vector3.Forward*radius + position, color);
 
             // top
             vertices[0] = back;

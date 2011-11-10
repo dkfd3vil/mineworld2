@@ -1,30 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Threading;
-using Lidgren.Network;
-using Lidgren.Network.Xna;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
+﻿ //Contains assorted client settings
 
-//Contains assorted client settings
 namespace MineWorld
 {
     public struct ClientSettings
     {
         public string Directory;
-        public bool Fullscreen;
-        public int Width;
-        public int Height;
-        public bool Vsync;
-        public string playerHandle;
-        public float volumeLevel;
-        public bool RenderPretty;
         public bool DrawFrameRate;
+        public bool Fullscreen;
+        public int Height;
         public bool InvertMouseYAxis;
         public bool NoSound;
-        public float mouseSensitivity;
-        public Color color;
+        public bool RenderPretty;
+        public bool Vsync;
+        public int Width;
+
+        public int MapSeed;
+        public int MapX;
+        public int MapY;
+        public int MapZ;
+        public float MouseSensitivity;
+        public string PlayerHandle;
+        public float VolumeLevel;
     }
 }

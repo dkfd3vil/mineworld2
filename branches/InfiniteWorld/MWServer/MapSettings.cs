@@ -4,18 +4,22 @@
     {
         public struct MapSettings
         {
-            public bool Includewater;
+            public bool IncludeAdminblocks;
             public bool Includelava;
             public bool Includetrees;
-            public bool IncludeAdminblocks;
-            public Mapsize Mapsize;
+            public bool Includewater;
             public int Lavaspawns;
-            public int Waterspawns;
-            public int Treecount;
-            public int Orefactor; // 10
+            public int Mapseed;
 
             //Not used by configs
+            public int MapsizeX;
+            public int MapsizeY;
+            public int MapsizeZ;
+            public int Orefactor; // 10
+
             public string SettingsDir;
+            public int Treecount;
+            public int Waterspawns;
         }
     }
 }

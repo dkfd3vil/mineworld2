@@ -1,63 +1,38 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Lidgren.Network;
-using Lidgren.Network.Xna;
-using System.Threading;
+﻿using Lidgren.Network;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.GamerServices;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Media;
-using Microsoft.Xna.Framework.Net;
-using Microsoft.Xna.Framework.Storage;
 
 namespace MineWorld
 {
     public class ServerPlayer
     {
-        public EventWaitHandle WH;
-        public bool Kicked = false;
-        public bool Godmode = false;
-        public bool Approved = false;
-        public string Name = "";
+        private static int _uniqueId;
+        public bool Alive = true;
+        public bool Godmode;
+        public Vector3 Heading = Vector3.Zero;
         // DJ NOT NICE
         // TODO This needs to be done proper
-        public int Health = 0;
+        public int Health = 1;
         public int HealthMax = 100;
-        public bool Alive = false;
         public int ID;
-        public Vector3 Heading = Vector3.Zero;
-        public Vector3 Position = Vector3.Zero;
+        public string Ip = "";
+        public bool Kicked;
+        public string Name = "";
         public NetConnection NetConn;
-        public string IP = "";
+        public Vector3 Position = Vector3.Zero;
 
         public ServerPlayer(NetConnection netcon)
         {
-            this.NetConn = netcon;
-            this.ID = GetUniqueId();
+            NetConn = netcon;
+            ID = GetUniqueId();
 
             if (netcon != null)
-                this.IP = netcon.RemoteEndpoint.Address.ToString();
-
-            WH = new AutoResetEvent(false);
+                Ip = netcon.RemoteEndpoint.Address.ToString();
         }
 
-        public void Start()
-        {
-            while (true)
-            {
-                WH.WaitOne();
-            }
-        }
-
-        static int uniqueId = 0;
         public static int GetUniqueId()
         {
-            uniqueId += 1;
-            return uniqueId;
+            _uniqueId += 1;
+            return _uniqueId;
         }
     }
 }

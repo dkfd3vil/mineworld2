@@ -1,23 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.GamerServices;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Media;
-using Microsoft.Xna.Framework.Net;
-using Microsoft.Xna.Framework.Storage;
-using MineWorld;
 
-namespace StateMasher
+namespace MineWorld.StateMasher
 {
     public class State
     {
-        public StateMachine _SM = null;
-        public PropertyBag _P = null;
+        public PropertyBag P;
+        public StateMachine Sm;
 
         public virtual void OnEnter(string oldState)
         {
@@ -40,7 +30,7 @@ namespace StateMasher
         {
         }
 
-        public virtual void OnCharEntered(EventInput.CharacterEventArgs e)
+        public virtual void OnCharEntered(CharacterEventArgs e)
         {
         }
 
@@ -71,13 +61,5 @@ namespace StateMasher
         public virtual void MouseEvents(MouseState mouse)
         {
         }
-
-        //public virtual void OnStatusChange(NetConnectionStatus status)
-        //{
-        //}
-
-        //public virtual void OnPacket(NetBuffer buffer, NetMessageType type)
-        //{
-        //}
     }
 }

@@ -1,68 +1,57 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Diagnostics;
-using StateMasher;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Media;
-using Microsoft.Xna.Framework.Net;
-using Microsoft.Xna.Framework.Storage;
+using MineWorld.StateMasher;
 
 namespace MineWorld.States
 {
     public class TitleState : State
     {
-        Texture2D texMenu;
-        Rectangle drawRect;
-        string nextState = null;
-        DateTime titlescreenseconds;
+        private Rectangle _drawRect;
+        private string _nextState;
+        private Texture2D _texMenu;
+        private DateTime _titlescreenseconds;
 
         public override void OnEnter(string oldState)
         {
-            _SM.IsMouseVisible = true;
-            titlescreenseconds = DateTime.Now;
+            Sm.IsMouseVisible = true;
+            _titlescreenseconds = DateTime.Now;
 
-            texMenu = _SM.Content.Load<Texture2D>("menus/tex_menu_title");
+            _texMenu = Sm.Content.Load<Texture2D>("menus/tex_menu_title");
 
-            drawRect = new Rectangle(_SM.GraphicsDevice.Viewport.Width / 2 - 1024 / 2,
-                                     _SM.GraphicsDevice.Viewport.Height / 2 - 768 / 2,
-                                     1024,
-                                     1024);
+            _drawRect = new Rectangle(Sm.GraphicsDevice.Viewport.Width/2 - 1024/2,
+                                      Sm.GraphicsDevice.Viewport.Height/2 - 768/2,
+                                      1024,
+                                      1024);
         }
 
         public override void OnLeave(string newState)
         {
-
         }
 
         public override string OnUpdate(GameTime gameTime, KeyboardState keyState, MouseState mouseState)
         {
             // Do network stuff.
-            TimeSpan titlescreenbetween = DateTime.Now - titlescreenseconds;
+            TimeSpan titlescreenbetween = DateTime.Now - _titlescreenseconds;
             // After 3 seconds we go to the Serverbrowser state
             if (titlescreenbetween.TotalMilliseconds > 3000)
             {
-                nextState = "MineWorld.States.ServerBrowserState";
+                _nextState = "MineWorld.States.ServerBrowserState";
             }
 
-            return nextState;
+            return _nextState;
         }
 
         public override void OnRenderAtEnter(GraphicsDevice graphicsDevice)
         {
-
         }
 
         public override void OnRenderAtUpdate(GraphicsDevice graphicsDevice, GameTime gameTime)
         {
             SpriteBatch spriteBatch = new SpriteBatch(graphicsDevice);
             spriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Deferred, SaveStateMode.SaveState);
-            spriteBatch.Draw(texMenu, drawRect, Color.White);
+            spriteBatch.Draw(_texMenu, _drawRect, Color.White);
             spriteBatch.End();
         }
 
@@ -70,29 +59,26 @@ namespace MineWorld.States
         {
             if (key == Keys.Escape)
             {
-                _SM.Exit();
+                Sm.Exit();
             }
         }
 
         public override void OnKeyUp(Keys key)
         {
-
         }
 
         public override void OnMouseDown(MouseButtons button, int x, int y)
         {
-            nextState = "MineWorld.States.ServerBrowserState";
-            _P.PlaySound(MineWorldSound.ClickHigh);
+            _nextState = "MineWorld.States.ServerBrowserState";
+            P.PlaySound(MineWorldSound.ClickHigh);
         }
 
         public override void OnMouseUp(MouseButtons button, int x, int y)
         {
-
         }
 
         public override void OnMouseScroll(int scrollDelta)
         {
-
         }
     }
 }
