@@ -1,214 +1,163 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.GamerServices;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Media;
-using Microsoft.Xna.Framework.Net;
-using Microsoft.Xna.Framework.Storage;
 using Lidgren.Network;
 using Lidgren.Network.Xna;
-using System.IO;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
+using MineWorld.Engines;
 
 namespace MineWorld
 {
     public class PropertyBag
     {
         // Hearthbeat.
-        public DateTime lasthearthbeatreceived = DateTime.Now;
-
-        // Game engines.
-        public SkyEngine skyEngine = null;
-        public BlockEngine blockEngine = null;
-        public InterfaceEngine interfaceEngine = null;
-        public PlayerEngine playerEngine = null;
-        public ParticleEngine particleEngine = null;
-        public DebugEngine debugEngine = null;
+        private readonly Random _randGen = new Random();
+        public Vector3 MoveVector = Vector3.Zero;
+        public BlockEngine BlockEngine;
+        public List<ChatMessage> ChatBuffer = new List<ChatMessage>(); // chatBuffer[0] is most recent
+        public string ChatEntryBuffer = "";
+        public bool Chatting;
+        public float DayTime = 1.0f;
+        public DebugEngine DebugEngine;
+        public bool DebugMode;
+        public InterfaceEngine InterfaceEngine;
+        public DateTime LastBreath = DateTime.Now;
+        public Vector3 LastHeading = Vector3.Zero;
+        public Vector3 LastPosition = Vector3.Zero;
+        public DateTime Lasthearthbeatreceived = DateTime.Now;
+        public float MouseSensitivity = 0.005f;
+        public bool MovingOnRoad;
 
         // Network stuff.
-        public NetClient netClient = null;
-        public Dictionary<int, ClientPlayer> playerList = new Dictionary<int, ClientPlayer>();
-        public bool[,] mapLoadProgress = null;
-        public string serverName = "";
-
-        //Input stuff.
-        public KeyBindHandler keyBinds = null;
+        public NetClient NetClient;
+        public ParticleEngine ParticleEngine;
 
         // Player variables.
-        public Camera playerCamera = null;
-        public Vector3 MoveVector = Vector3.Zero;
-        public Vector3 playerPosition = Vector3.Zero;
-        public Vector3 playerVelocity = Vector3.Zero;
-        public Vector3 lastPosition = Vector3.Zero;
-        public Vector3 lastHeading = Vector3.Zero;
-        public bool playerDead = true;
-        public int playerHealth = 0;
-        public int playerHealthMax = 0;
-        public float playerHoldBreath = 20;
-        public DateTime lastBreath = DateTime.Now;
-        public bool playerRadarMute = false;
-        public string playerHandle = "Player";
-        public float volumeLevel = 1.0f;
-        public int playerMyId = 0;
-        public Color Owncolor = new Color();
+        public Camera PlayerCamera;
+        public bool PlayerDead = true;
+        public PlayerEngine PlayerEngine;
+        public string PlayerHandle = "Player";
+        public int PlayerHealth;
+        public int PlayerHealthMax;
+        public float PlayerHoldBreath = 20;
+        public Dictionary<int, ClientPlayer> PlayerList = new Dictionary<int, ClientPlayer>();
+        public int PlayerMyId;
+        public Vector3 PlayerPosition = Vector3.Zero;
+        public Vector3 PlayerVelocity = Vector3.Zero;
 
         //Movement flags
-        public bool movingOnRoad = false;
-        public bool sprinting = false;
-        public bool swimming = false;
-        public bool underwater = false;
-
-        //Todo implent crouching
-        //public bool crouching = false;
-
-        public float time = 1.0f;
-        public bool debugmode = false;
-        public float mouseSensitivity = 0.005f;
-
-        // Screen effect stuff.
-        private Random randGen = new Random();
-        public ScreenEffect screenEffect = ScreenEffect.None;
-        public double screenEffectCounter = 0;
+        public ScreenEffect ScreenEffect = ScreenEffect.None;
+        public double ScreenEffectCounter;
+        public string ServerName = "";
+        public SkyEngine SkyEngine;
 
         // Sound stuff.
-        public Dictionary<MineWorldSound, SoundEffect> soundList = new Dictionary<MineWorldSound, SoundEffect>();
+        public Dictionary<MineWorldSound, SoundEffect> SoundList = new Dictionary<MineWorldSound, SoundEffect>();
+        public bool Sprinting;
+        public bool Swimming;
+        public bool Underwater;
+        public float VolumeLevel = 1.0f;
 
         // Chat stuff.
-        public ChatMessageType chatMode = ChatMessageType.None;
-        public int chatMaxBuffer = 5;
-        public List<ChatMessage> chatBuffer = new List<ChatMessage>(); // chatBuffer[0] is most recent
-        //public List<ChatMessage> chatFullBuffer = new List<ChatMessage>(); //same as above, holds last several messages
-        public string chatEntryBuffer = "";
 
         public PropertyBag(MineWorldGame gameInstance)
         {
             // Initialize our network device.
-            NetConfiguration netConfig = new NetConfiguration("MineWorldPlus");
+            NetConfiguration netConfig = new NetConfiguration("MineWorld");
 
-            netClient = new NetClient(netConfig);
-            netClient.SetMessageTypeEnabled(NetMessageType.ConnectionRejected, true);
-            //netClient.SimulatedMinimumLatency = 0.1f;
-            //netClient.SimulatedLatencyVariance = 0.05f;
-            //netClient.SimulatedLoss = 0.1f;
-            //netClient.SimulatedDuplicates = 0.05f;
-            netClient.Start();
+            NetClient = new NetClient(netConfig);
+            NetClient.SetMessageTypeEnabled(NetMessageType.ConnectionRejected, true);
+            NetClient.Start();
 
             // Initialize engines.
-            skyEngine = new SkyEngine(gameInstance);
-            blockEngine = new BlockEngine(gameInstance);
-            interfaceEngine = new InterfaceEngine(gameInstance);
-            playerEngine = new PlayerEngine(gameInstance);
-            particleEngine = new ParticleEngine(gameInstance);
-            debugEngine = new DebugEngine(gameInstance);
+            SkyEngine = new SkyEngine(gameInstance);
+            BlockEngine = new BlockEngine(gameInstance);
+            InterfaceEngine = new InterfaceEngine(gameInstance);
+            PlayerEngine = new PlayerEngine(gameInstance);
+            ParticleEngine = new ParticleEngine(gameInstance);
+            DebugEngine = new DebugEngine(gameInstance);
 
             // Create a camera.
-            playerCamera = new Camera(gameInstance.GraphicsDevice);
-            UpdateCamera();
+            PlayerCamera = new Camera(gameInstance.GraphicsDevice);
 
             // Load sounds.
             if (!gameInstance.Csettings.NoSound)
             {
-                soundList[MineWorldSound.DigDirt] = gameInstance.Content.Load<SoundEffect>("sounds/dig-dirt");
-                soundList[MineWorldSound.DigMetal] = gameInstance.Content.Load<SoundEffect>("sounds/dig-metal");
-                soundList[MineWorldSound.Ping] = gameInstance.Content.Load<SoundEffect>("sounds/ping");
-                soundList[MineWorldSound.ConstructionGun] = gameInstance.Content.Load<SoundEffect>("sounds/build");
-                soundList[MineWorldSound.Death] = gameInstance.Content.Load<SoundEffect>("sounds/death");
-                soundList[MineWorldSound.CashDeposit] = gameInstance.Content.Load<SoundEffect>("sounds/cash");
-                soundList[MineWorldSound.ClickHigh] = gameInstance.Content.Load<SoundEffect>("sounds/click-loud");
-                soundList[MineWorldSound.ClickLow] = gameInstance.Content.Load<SoundEffect>("sounds/click-quiet");
-                soundList[MineWorldSound.GroundHit] = gameInstance.Content.Load<SoundEffect>("sounds/hitground");
-                soundList[MineWorldSound.Teleporter] = gameInstance.Content.Load<SoundEffect>("sounds/teleport");
-                soundList[MineWorldSound.Jumpblock] = gameInstance.Content.Load<SoundEffect>("sounds/jumpblock");
-                soundList[MineWorldSound.Explosion] = gameInstance.Content.Load<SoundEffect>("sounds/explosion");
-                soundList[MineWorldSound.RadarHigh] = gameInstance.Content.Load<SoundEffect>("sounds/radar-high");
-                soundList[MineWorldSound.RadarLow] = gameInstance.Content.Load<SoundEffect>("sounds/radar-low");
-                soundList[MineWorldSound.RadarSwitch] = gameInstance.Content.Load<SoundEffect>("sounds/switch");
+                SoundList[MineWorldSound.Dig] = gameInstance.Content.Load<SoundEffect>("sounds/dig-dirt");
+                SoundList[MineWorldSound.Build] = gameInstance.Content.Load<SoundEffect>("sounds/build");
+                SoundList[MineWorldSound.Death] = gameInstance.Content.Load<SoundEffect>("sounds/death");
+                SoundList[MineWorldSound.ClickHigh] = gameInstance.Content.Load<SoundEffect>("sounds/click-loud");
+                SoundList[MineWorldSound.ClickLow] = gameInstance.Content.Load<SoundEffect>("sounds/click-quiet");
+                SoundList[MineWorldSound.GroundHit] = gameInstance.Content.Load<SoundEffect>("sounds/hitground");
+                SoundList[MineWorldSound.Explosion] = gameInstance.Content.Load<SoundEffect>("sounds/explosion");
             }
         }
 
         public void KillMySelf()
         {
             PlaySound(MineWorldSound.Death);
-            playerVelocity = Vector3.Zero;
-            playerDead = true;
-            screenEffect = ScreenEffect.Death;
-            screenEffectCounter = 0;
+            PlayerVelocity = Vector3.Zero;
+            PlayerDead = true;
+            ScreenEffect = ScreenEffect.Death;
+            ScreenEffectCounter = 0;
         }
 
         public void MakeMySelfAlive()
         {
-            playerDead = false;
-            screenEffect = ScreenEffect.None;
-            screenEffectCounter = 0;
+            PlayerDead = false;
+            ScreenEffect = ScreenEffect.None;
+            ScreenEffectCounter = 0;
         }
 
         public void SendRespawnRequest()
         {
-            if (netClient.Status != NetConnectionStatus.Connected)
+            if (NetClient.Status != NetConnectionStatus.Connected)
                 return;
 
-            NetBuffer msgBuffer = netClient.CreateBuffer();
-            msgBuffer.Write((byte)MineWorldMessage.PlayerRequest);
-            msgBuffer.Write((byte)PlayerRequests.Respawn);
-            netClient.SendMessage(msgBuffer, NetChannel.ReliableUnordered);
+            NetBuffer msgBuffer = NetClient.CreateBuffer();
+            msgBuffer.Write((byte) MineWorldMessage.PlayerRequest);
+            msgBuffer.Write((byte) PlayerRequests.Respawn);
+            NetClient.SendMessage(msgBuffer, NetChannel.ReliableUnordered);
             return;
-}
+        }
 
         public void PlaySound(MineWorldSound sound)
         {
-            if (soundList.Count == 0)
+            if (SoundList.Count == 0)
                 return;
 
-            soundList[sound].Play(volumeLevel);
+            SoundList[sound].Play(VolumeLevel);
         }
 
         public void PlaySound(MineWorldSound sound, Vector3 position)
         {
-            if (soundList.Count == 0)
+            if (SoundList.Count == 0)
                 return;
 
-            float distance = (position - playerPosition).Length();
-            float volume = Math.Max(0, 10 - distance) / 10.0f * volumeLevel;
+            float distance = (position - PlayerPosition).Length();
+            float volume = Math.Max(0, 10 - distance)/10.0f*VolumeLevel;
             volume = volume > 1.0f ? 1.0f : volume < 0.0f ? 0.0f : volume;
-            soundList[sound].Play(volume);
-        }
-
-
-        public void PlaySound(MineWorldSound sound, Vector3 position, int magnification)
-        {
-            if (soundList.Count == 0)
-                return;
-            float distance = (position - playerPosition).Length() - magnification;
-
-            float volume = Math.Max(0, 64 - distance) / 10.0f * volumeLevel;
-
-            volume = volume > 1.0f ? 1.0f : volume < 0.0f ? 0.0f : volume;
-
-            soundList[sound].Play(volume);
+            SoundList[sound].Play(volume);
         }
 
         public void PlaySoundForEveryone(MineWorldSound sound, Vector3 position)
         {
-            if (netClient.Status != NetConnectionStatus.Connected)
+            if (NetClient.Status != NetConnectionStatus.Connected)
                 return;
 
             // The PlaySound message can be used to instruct the server to have all clients play a directional sound.
-            NetBuffer msgBuffer = netClient.CreateBuffer();
-            msgBuffer.Write((byte)MineWorldMessage.PlaySound);
-            msgBuffer.Write((byte)sound);
+            NetBuffer msgBuffer = NetClient.CreateBuffer();
+            msgBuffer.Write((byte) MineWorldMessage.PlaySound);
+            msgBuffer.Write((byte) sound);
             msgBuffer.Write(position);
-            netClient.SendMessage(msgBuffer, NetChannel.ReliableUnordered);
+            NetClient.SendMessage(msgBuffer, NetChannel.ReliableUnordered);
         }
 
-        public void addChatMessage(string ChatString, ChatMessageType ChatType,string Author)
+        public void AddChatMessage(string chatString, ChatMessageType chatType, string author)
         {
-            ChatMessage chatMsg = new ChatMessage(ChatString, ChatType, Author);
-            
-            chatBuffer.Insert(0, chatMsg);
+            ChatMessage chatMsg = new ChatMessage(chatString, chatType, author);
+
+            ChatBuffer.Insert(0, chatMsg);
             PlaySound(MineWorldSound.ClickLow);
         }
 
@@ -220,103 +169,97 @@ namespace MineWorld
                 return;
             }
 
-            screenEffectCounter += gameTime.ElapsedGameTime.TotalSeconds;
+            ScreenEffectCounter += gameTime.ElapsedGameTime.TotalSeconds;
 
-            switch (screenEffect)
+            switch (ScreenEffect)
             {
                 case ScreenEffect.Explosion:
                     {
                         // For 0 to 2, shake the camera.
-                        if (screenEffectCounter < 2)
+                        if (ScreenEffectCounter < 2)
                         {
-                            Vector3 newPosition = playerPosition;
-                            newPosition.X += (float)(2 - screenEffectCounter) * (float)(randGen.NextDouble() - 0.5) * 0.5f;
-                            newPosition.Y += (float)(2 - screenEffectCounter) * (float)(randGen.NextDouble() - 0.5) * 0.5f;
-                            newPosition.Z += (float)(2 - screenEffectCounter) * (float)(randGen.NextDouble() - 0.5) * 0.5f;
-                            if (!blockEngine.SolidAtPointForPlayer(newPosition) && (newPosition - playerPosition).Length() < 0.7f)
-                                playerCamera.Position = newPosition;
+                            Vector3 newPosition = PlayerPosition;
+                            newPosition.X += (float) (2 - ScreenEffectCounter)*(float) (_randGen.NextDouble() - 0.5)*0.5f;
+                            newPosition.Y += (float) (2 - ScreenEffectCounter)*(float) (_randGen.NextDouble() - 0.5)*0.5f;
+                            newPosition.Z += (float) (2 - ScreenEffectCounter)*(float) (_randGen.NextDouble() - 0.5)*0.5f;
+                            if (!BlockEngine.SolidAtPointForPlayer(newPosition) &&
+                                (newPosition - PlayerPosition).Length() < 0.7f)
+                                PlayerCamera.Position = newPosition;
                         }
-                        // For 2 to 3, move the camera back.
-                        else if (screenEffectCounter < 3)
+                            // For 2 to 3, move the camera back.
+                        else if (ScreenEffectCounter < 3)
                         {
-                            Vector3 lerpVector = playerPosition - playerCamera.Position;
-                            playerCamera.Position += 0.5f * lerpVector;
+                            Vector3 lerpVector = PlayerPosition - PlayerCamera.Position;
+                            PlayerCamera.Position += 0.5f*lerpVector;
                         }
                         else
                         {
-                            screenEffect = ScreenEffect.None;
-                            screenEffectCounter = 0;
-                            playerCamera.Position = playerPosition;
+                            ScreenEffect = ScreenEffect.None;
+                            ScreenEffectCounter = 0;
+                            PlayerCamera.Position = PlayerPosition;
                         }
                         break;
                     }
                 default:
                     {
-                        playerCamera.Position = playerPosition;
+                        PlayerCamera.Position = PlayerPosition;
                         break;
                     }
             }
 
-            playerCamera.Update();
-        }
-
-        public void UpdateCamera()
-        {
-            UpdateCamera(null);
+            PlayerCamera.Update();
         }
 
         public void UseTool(CustomMouseButtons button)
         {
-            if (netClient.Status != NetConnectionStatus.Connected)
+            if (NetClient.Status != NetConnectionStatus.Connected)
                 return;
 
-            NetBuffer msgBuffer = netClient.CreateBuffer();
-            msgBuffer.Write((byte)MineWorldMessage.UseTool);
-            msgBuffer.Write((byte)button);
-            msgBuffer.Write(playerPosition);
-            msgBuffer.Write(playerCamera.GetLookVector());
+            NetBuffer msgBuffer = NetClient.CreateBuffer();
+            msgBuffer.Write((byte) MineWorldMessage.UseTool);
+            msgBuffer.Write((byte) button);
+            msgBuffer.Write(PlayerPosition);
+            msgBuffer.Write(PlayerCamera.GetLookVector());
             //HACK Hardcoded the block that the player places
-            msgBuffer.Write((byte)BlockType.Leafs);
-            netClient.SendMessage(msgBuffer, NetChannel.ReliableUnordered);
+            msgBuffer.Write((byte) BlockType.Leafs);
+            NetClient.SendMessage(msgBuffer, NetChannel.ReliableUnordered);
         }
 
         public void SendPlayerUpdate()
         {
-            if (netClient.Status != NetConnectionStatus.Connected)
+            if (NetClient.Status != NetConnectionStatus.Connected)
                 return;
 
-            if (lastPosition != playerPosition)//do full network update
+            if (LastPosition != PlayerPosition) //do full network update
             {
-                lastPosition = playerPosition;
+                LastPosition = PlayerPosition;
 
-                NetBuffer msgBuffer = netClient.CreateBuffer();
-                msgBuffer.Write((byte)MineWorldMessage.PlayerUpdate);//full
-                msgBuffer.Write(playerPosition);
-                msgBuffer.Write(playerCamera.GetLookVector());
-                netClient.SendMessage(msgBuffer, NetChannel.UnreliableInOrder1);
+                NetBuffer msgBuffer = NetClient.CreateBuffer();
+                msgBuffer.Write((byte) MineWorldMessage.PlayerUpdate); //full
+                msgBuffer.Write(PlayerPosition);
+                msgBuffer.Write(PlayerCamera.GetLookVector());
+                NetClient.SendMessage(msgBuffer, NetChannel.UnreliableInOrder1);
             }
-            else if (lastHeading != playerCamera.GetLookVector())
+            else if (LastHeading != PlayerCamera.GetLookVector())
             {
-                lastHeading = playerCamera.GetLookVector();
-                NetBuffer msgBuffer = netClient.CreateBuffer();
-                msgBuffer.Write((byte)MineWorldMessage.PlayerUpdate1);//just heading
-                msgBuffer.Write(lastHeading);
-                //msgBuffer.Write((byte)playerTools[playerToolSelected]);
-                //msgBuffer.Write(playerToolCooldown > 0.001f);
-                netClient.SendMessage(msgBuffer, NetChannel.UnreliableInOrder1);
+                LastHeading = PlayerCamera.GetLookVector();
+                NetBuffer msgBuffer = NetClient.CreateBuffer();
+                msgBuffer.Write((byte) MineWorldMessage.PlayerUpdate1); //just heading
+                msgBuffer.Write(LastHeading);
+                NetClient.SendMessage(msgBuffer, NetChannel.UnreliableInOrder1);
             }
         }
 
-        public void SendPlayerHurt(int damage,bool flatdamage)
+        public void SendPlayerHurt(int damage, bool flatdamage)
         {
-            if (netClient.Status != NetConnectionStatus.Connected)
+            if (NetClient.Status != NetConnectionStatus.Connected)
                 return;
 
-            NetBuffer msgBuffer = netClient.CreateBuffer();
-            msgBuffer.Write((byte)MineWorldMessage.PlayerHurt);
+            NetBuffer msgBuffer = NetClient.CreateBuffer();
+            msgBuffer.Write((byte) MineWorldMessage.PlayerHurt);
             msgBuffer.Write(damage);
             msgBuffer.Write(flatdamage);
-            netClient.SendMessage(msgBuffer, NetChannel.ReliableInOrder1);
+            NetClient.SendMessage(msgBuffer, NetChannel.ReliableInOrder1);
         }
     }
 }

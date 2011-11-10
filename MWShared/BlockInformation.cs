@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.Xna.Framework.Graphics;
-
-namespace MineWorld
+﻿namespace MineWorld
 {
     public enum BlockType : byte
     {
@@ -61,7 +56,7 @@ namespace MineWorld
     }
 
     public class BlockInformation
-    {   
+    {
         public static BlockTexture GetTexture(BlockType blockType, BlockFaceDirection faceDir)
         {
             switch (blockType)
@@ -160,7 +155,7 @@ namespace MineWorld
             switch (type)
             {
                 default:
-                    return MineWorldSound.DigDirt;
+                    return MineWorldSound.Dig;
             }
         }
 

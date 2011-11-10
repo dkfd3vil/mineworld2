@@ -1,41 +1,37 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace MineWorld
+﻿namespace MineWorld
 {
     public partial class LuaManager
     {
         [AttrLuaFunc("PRINT_MSG")]
         public void printMsg(string msg)
         {
-            IServer.ConsoleWrite(msg);
+            _server.ConsoleWrite(msg);
         }
 
         [AttrLuaFunc("PRINT_ERROR")]
         public void printError(string msg)
         {
-            IServer.ConsoleWriteError(msg);
+            _server.ConsoleWriteError(msg);
         }
 
         [AttrLuaFunc("PRINT_SUCCES")]
         public void printSucces(string msg)
         {
-            IServer.ConsoleWriteSucces(msg);
+            _server.ConsoleWriteSucces(msg);
         }
 
         [AttrLuaFunc("REGISTER_EVENT")]
         public void registerEvent(string eventName, string functionName)
         {
-            if (eventTable.ContainsKey(eventName))
+            if (_eventTable.ContainsKey(eventName))
             {
-                eventTable[eventName].Add(functionName);
+                _eventTable[eventName].Add(functionName);
             }
         }
 
         public ServerPlayer getPlayerById(int id)
         {
-            foreach (ServerPlayer dummy in IServer.playerList.Values)
+            foreach (ServerPlayer dummy in _server.PlayerList.Values)
             {
                 if (dummy.ID == id)
                 {
@@ -55,7 +51,7 @@ namespace MineWorld
             }
             else
             {
-                IServer.KillPlayerSpecific(p);
+                _server.KillPlayerSpecific(p);
             }
         }
 
@@ -102,7 +98,7 @@ namespace MineWorld
         }
 
         [AttrLuaFunc("SET_GODMODE")]
-        public void setGodmode(int id,bool flag)
+        public void setGodmode(int id, bool flag)
         {
             ServerPlayer p = getPlayerById(id);
             if (p == null)

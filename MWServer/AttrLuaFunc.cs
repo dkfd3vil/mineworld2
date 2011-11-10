@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace MineWorld
 {
@@ -8,43 +6,45 @@ namespace MineWorld
      * Pretty much a Struct Class for Lua functions, where input parameters only require the name of the function.
      * Optional parameters include the documentation and additional parameters
      */
-    class AttrLuaFunc : Attribute
+
+    internal class AttrLuaFunc : Attribute
     {
-        private String FunctionName;
-        private String FunctionDoc;
-        private String[] FunctionParameters = null;
+        private readonly String _functionDoc;
+        private readonly String _functionName;
+        private readonly String[] _functionParameters;
 
         public AttrLuaFunc(String strFuncName, String strFuncDoc, params String[] strParamDocs)
         {
-            FunctionName = strFuncName;
-            FunctionDoc = strFuncDoc;
-            FunctionParameters = strParamDocs;
+            _functionName = strFuncName;
+            _functionDoc = strFuncDoc;
+            _functionParameters = strParamDocs;
         }
 
         public AttrLuaFunc(String strFuncName, String strFuncDoc)
         {
-            FunctionName = strFuncName;
-            FunctionDoc = strFuncDoc;
+            _functionName = strFuncName;
+            _functionDoc = strFuncDoc;
         }
+
         public AttrLuaFunc(String strFuncName)
         {
-            FunctionName = strFuncName;
-            FunctionDoc = "";
+            _functionName = strFuncName;
+            _functionDoc = "";
         }
 
-        public String getFuncName()
+        public String GetFuncName()
         {
-            return FunctionName;
+            return _functionName;
         }
 
-        public String getFuncDoc()
+        public String GetFuncDoc()
         {
-            return FunctionDoc;
+            return _functionDoc;
         }
 
-        public String[] getFuncParams()
+        public String[] GetFuncParams()
         {
-            return FunctionParameters;
+            return _functionParameters;
         }
     }
 }

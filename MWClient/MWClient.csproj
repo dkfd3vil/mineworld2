@@ -100,7 +100,6 @@
     <Compile Include="Camera.cs" />
     <Compile Include="ClickRegion.cs" />
     <Compile Include="Engines\DebugEngine.cs" />
-    <Compile Include="Engines\LightingEngine.cs" />
     <Compile Include="Engines\ParticleEngine.cs" />
     <Compile Include="Engines\SkyEngine.cs" />
     <Compile Include="ErrorManager.cs" />
@@ -120,6 +119,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PropertyBag.cs" />
     <Compile Include="ServerInformation.cs" />
+    <Compile Include="SpriteModel.cs" />
     <Compile Include="StateMasher\State.cs" />
     <Compile Include="StateMasher\StateMachine.cs" />
     <Compile Include="States\ErrorState.cs" />

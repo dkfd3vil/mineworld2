@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-//TODO Code all the files like in this one
-namespace MineWorld
+﻿namespace MineWorld
 {
     public class ChatMessage
     {
-        public string Message;
-        public ChatMessageType Type;
-        public float TimeStamp;
         public string Author;
+        public string Message;
+        public float TimeStamp;
+        public ChatMessageType Type;
 
         public ChatMessage(string message, ChatMessageType type, string author)
         {

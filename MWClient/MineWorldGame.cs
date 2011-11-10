@@ -1,60 +1,44 @@
 using System;
 using System.Collections.Generic;
-using System.Net;
+using System.Globalization;
 using System.IO;
+using System.Net;
 using System.Threading;
-using System.Windows.Forms;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.GamerServices;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Media;
-using Microsoft.Xna.Framework.Net;
-using Microsoft.Xna.Framework.Storage;
 using Lidgren.Network;
 using Lidgren.Network.Xna;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Media;
+using MineWorld.StateMasher;
 
 namespace MineWorld
 {
-    public class MineWorldGame : StateMasher.StateMachine
+    public class MineWorldGame : StateMachine
     {
-        public ClientSettings Csettings = new ClientSettings();
-        double timeSinceLastUpdate = 0;
-        NetBuffer msgBuffer = null;
-        Song songTitle = null;
-
-        public KeyBindHandler keyBinds = new KeyBindHandler();
-
-        public bool ConnectionApproved = false;
-
-        public IPAddress IPargument = null;
+        public ClientSettings Csettings;
+        public IPAddress Pargument;
+        public KeyBindHandler KeyBinds = new KeyBindHandler();
+        private NetBuffer _msgBuffer;
+        private Song _songTitle;
+        private double _timeSinceLastUpdate;
 
         public MineWorldGame(string[] args)
         {
             if (args.Length > 0)
             {
-                IPAddress.TryParse(args[0], out IPargument);
+                IPAddress.TryParse(args[0], out Pargument);
             }
         }
 
         public void JoinGame(IPEndPoint serverEndPoint)
         {
-            ConnectionApproved = false;
-            // Clear out the map load progress indicator.
-            propertyBag.mapLoadProgress = new bool[Defines.MAPSIZE,Defines.MAPSIZE];
-            for (int i = 0; i < Defines.MAPSIZE; i++)
-                for (int j=0; j< Defines.MAPSIZE; j++)
-                    propertyBag.mapLoadProgress[i,j] = false;
-
             // Create our connect message.
-            NetBuffer connectBuffer = propertyBag.netClient.CreateBuffer();
-            connectBuffer.Write(Defines.MINEWORLD_BUILD);
-            connectBuffer.Write(propertyBag.playerHandle);
+            NetBuffer connectBuffer = PropertyBag.NetClient.CreateBuffer();
+            connectBuffer.Write(Defines.MineworldBuild);
+            connectBuffer.Write(PropertyBag.PlayerHandle);
 
             // Connect to the server.
-            propertyBag.netClient.Connect(serverEndPoint, connectBuffer.ToArray());
+            PropertyBag.NetClient.Connect(serverEndPoint, connectBuffer.ToArray());
         }
 
         public List<ServerInformation> EnumerateServers(float discoveryTime)
@@ -62,13 +46,13 @@ namespace MineWorld
             List<ServerInformation> serverList = new List<ServerInformation>();
 
             // Discover local servers.
-            propertyBag.netClient.DiscoverLocalServers(5565);
-            NetBuffer msgBuffer = propertyBag.netClient.CreateBuffer();
-            NetMessageType msgType;
+            PropertyBag.NetClient.DiscoverLocalServers(5565);
+            NetBuffer msgBuffer = PropertyBag.NetClient.CreateBuffer();
             float timeTaken = 0;
             while (timeTaken < discoveryTime)
             {
-                while (propertyBag.netClient.ReadMessage(msgBuffer, out msgType))
+                NetMessageType msgType;
+                while (PropertyBag.NetClient.ReadMessage(msgBuffer, out msgType))
                 {
                     if (msgType == NetMessageType.ServerDiscovered)
                     {
@@ -115,27 +99,27 @@ namespace MineWorld
         public void UpdateNetwork(GameTime gameTime)
         {
             // Update the server with our status.
-            timeSinceLastUpdate += gameTime.ElapsedGameTime.TotalSeconds;
-            if (timeSinceLastUpdate > 0.05)
+            _timeSinceLastUpdate += gameTime.ElapsedGameTime.TotalSeconds;
+            if (_timeSinceLastUpdate > 0.05)
             {
-                timeSinceLastUpdate = 0;
+                _timeSinceLastUpdate = 0;
                 if (CurrentStateType == "MineWorld.States.MainGameState")
-                    propertyBag.SendPlayerUpdate();
+                    PropertyBag.SendPlayerUpdate();
             }
 
             // Recieve messages from the server.
             NetMessageType msgType;
-            while (propertyBag.netClient.ReadMessage(msgBuffer, out msgType))
+            while (PropertyBag.NetClient.ReadMessage(_msgBuffer, out msgType))
             {
                 switch (msgType)
                 {
                     case NetMessageType.StatusChanged:
                         {
-                            if (propertyBag.netClient.Status == NetConnectionStatus.Disconnected)
+                            if (PropertyBag.NetClient.Status == NetConnectionStatus.Disconnected)
                             {
                                 try
                                 {
-                                    string reason = msgBuffer.ReadString();
+                                    string reason = _msgBuffer.ReadString();
                                     if (reason.Length != 0)
                                     {
                                         switch (reason)
@@ -160,7 +144,7 @@ namespace MineWorld
                                                 }
                                             default:
                                                 {
-                                                    ErrorManager.ErrorMsg = "Error: Unknow error";
+                                                    ErrorManager.ErrorMsg = "Error: ( " + reason + " )";
                                                     ErrorManager.NewState = "MineWorld.States.ServerBrowserState";
                                                     break;
                                                 }
@@ -178,22 +162,21 @@ namespace MineWorld
                         break;
                     case NetMessageType.ConnectionApproval:
                         {
-                            ConnectionApproved = true;
                             break;
                         }
                     case NetMessageType.ConnectionRejected:
                         {
-                            ConnectionApproved = false;
                             try
                             {
-                                string reason = msgBuffer.ReadString();
+                                string reason = _msgBuffer.ReadString();
                                 if (reason.Length != 0)
                                 {
                                     switch (reason)
                                     {
                                         case "bannedname":
                                             {
-                                                ErrorManager.ErrorMsg = "Error: The name you choosed is banned from the server";
+                                                ErrorManager.ErrorMsg =
+                                                    "Error: The name you choosed is banned from the server";
                                                 ErrorManager.NewState = "MineWorld.States.SettingsState";
                                                 break;
                                             }
@@ -205,13 +188,15 @@ namespace MineWorld
                                             }
                                         case "changename":
                                             {
-                                                ErrorManager.ErrorMsg = "Error: You need to change your name you cannot choose name (player)";
+                                                ErrorManager.ErrorMsg =
+                                                    "Error: You need to change your name you cannot choose name (player)";
                                                 ErrorManager.NewState = "MineWorld.States.SettingsState";
                                                 break;
                                             }
                                         case "versionwrong":
                                             {
-                                                ErrorManager.ErrorMsg = "Error: Your client is out of date consider updating";
+                                                ErrorManager.ErrorMsg =
+                                                    "Error: Your client is out of date consider updating";
                                                 ErrorManager.NewState = "MineWorld.States.ServerBrowserState";
                                                 break;
                                             }
@@ -236,7 +221,7 @@ namespace MineWorld
                                     }
                                 }
                             }
-                            catch 
+                            catch
                             {
                                 ErrorManager.ErrorMsg = "Error: Unknow error";
                                 ErrorManager.NewState = "MineWorld.States.ServerBrowserState";
@@ -249,112 +234,94 @@ namespace MineWorld
                         {
                             try
                             {
-                                MineWorldMessage dataType = (MineWorldMessage)msgBuffer.ReadByte();
+                                MineWorldMessage dataType = (MineWorldMessage) _msgBuffer.ReadByte();
                                 switch (dataType)
                                 {
                                     case MineWorldMessage.BlockBulkTransfer:
                                         {
-                                            ConnectionApproved = true;
+                                            int x = _msgBuffer.ReadInt32();
+                                            int y = _msgBuffer.ReadInt32();
+                                            int z = _msgBuffer.ReadInt32();
+                                            int seed = _msgBuffer.ReadInt32();
 
-                                            try
-                                            {
-                                                byte x;
-                                                byte y;
+                                            Csettings.MapX = x;
+                                            Csettings.MapY = y;
+                                            Csettings.MapZ = z;
+                                            Csettings.MapSeed = seed;
 
-                                                x = msgBuffer.ReadByte();
-                                                y = msgBuffer.ReadByte();
-                                                propertyBag.mapLoadProgress[x, y] = true;
-                                                for (byte dy = 0; dy < Defines.PACKETSIZE; dy++)
-                                                {
-                                                    for (byte z = 0; z < Defines.MAPSIZE; z++)
-                                                    {
-                                                        BlockType blockType = (BlockType)msgBuffer.ReadByte();
-                                                        if (blockType != BlockType.None)
-                                                        {
-                                                            propertyBag.blockEngine.downloadList[x, y + dy, z] = blockType;
-                                                        }
-                                                    }
-                                                }
-                                                bool downloadComplete = true;
-                                                for (x = 0; x < Defines.MAPSIZE; x++)
-                                                    for (y = 0; y < Defines.MAPSIZE; y += Defines.PACKETSIZE)
-                                                        if (propertyBag.mapLoadProgress[x, y] == false)
-                                                        {
-                                                            downloadComplete = false;
-                                                            break;
-                                                        }
-                                                if (downloadComplete)
-                                                {
-                                                    ChangeState("MineWorld.States.MainGameState");
-                                                    if (!Csettings.NoSound)
-                                                        MediaPlayer.Stop();
-                                                    propertyBag.blockEngine.DownloadComplete();
-                                                }
-                                            }
-                                            catch
-                                            {
-                                                ErrorManager.ErrorMsg = "Map Bulk Transfer Failed";
-                                                ErrorManager.NewState = "MineWorld.States.ServerBrowserState";
-                                                ChangeState("MineWorld.States.ErrorState");
-                                            }
+
+                                            MapGenerator mpg = new MapGenerator(seed, x, y, z);
+                                            PropertyBag.BlockEngine.SetBlockList(mpg.GenerateSimpleCube(), x, y, z);
+                                            if (!Csettings.NoSound)
+                                                MediaPlayer.Stop();
+                                            ChangeState("MineWorld.States.MainGameState");
                                         }
                                         break;
 
+                                    case MineWorldMessage.PlayerId:
+                                        {
+                                            PropertyBag.PlayerMyId = _msgBuffer.ReadInt32();
+                                            break;
+                                        }
+
                                     case MineWorldMessage.DayUpdate:
                                         {
-                                            propertyBag.time = msgBuffer.ReadFloat();
+                                            PropertyBag.DayTime = _msgBuffer.ReadFloat();
                                             break;
                                         }
                                     case MineWorldMessage.HealthUpdate:
                                         {
                                             // Health, Healthmax both int
-                                            propertyBag.playerHealth = msgBuffer.ReadInt32();
-                                            propertyBag.playerHealthMax = msgBuffer.ReadInt32();
+                                            PropertyBag.PlayerHealth = _msgBuffer.ReadInt32();
+                                            PropertyBag.PlayerHealthMax = _msgBuffer.ReadInt32();
                                         }
                                         break;
                                     case MineWorldMessage.PlayerPosition:
                                         {
-                                            propertyBag.playerPosition = msgBuffer.ReadVector3();
+                                            PropertyBag.PlayerPosition = _msgBuffer.ReadVector3();
                                             break;
                                         }
                                     case MineWorldMessage.BlockSet:
                                         {
                                             // x, y, z, type, all bytes
-                                            byte x = msgBuffer.ReadByte();
-                                            byte y = msgBuffer.ReadByte();
-                                            byte z = msgBuffer.ReadByte();
+                                            byte x = _msgBuffer.ReadByte();
+                                            byte y = _msgBuffer.ReadByte();
+                                            byte z = _msgBuffer.ReadByte();
 
-                                            BlockType blockType = (BlockType)msgBuffer.ReadByte();
+                                            BlockType blockType = (BlockType) _msgBuffer.ReadByte();
                                             if (blockType == BlockType.None)
                                             {
-                                                if (propertyBag.blockEngine.BlockAtPoint(new Vector3(x, y, z)) != BlockType.None)
+                                                if (PropertyBag.BlockEngine.BlockAtPoint(new Vector3(x, y, z)) !=
+                                                    BlockType.None)
                                                 {
-                                                    propertyBag.blockEngine.RemoveBlock(x, y, z);
+                                                    PropertyBag.BlockEngine.RemoveBlock(x, y, z);
                                                 }
                                             }
                                             else
                                             {
-                                                if (propertyBag.blockEngine.BlockAtPoint(new Vector3(x, y, z)) != BlockType.None)
+                                                if (PropertyBag.BlockEngine.BlockAtPoint(new Vector3(x, y, z)) !=
+                                                    BlockType.None)
                                                 {
-                                                    propertyBag.blockEngine.RemoveBlock(x, y, z);
+                                                    PropertyBag.BlockEngine.RemoveBlock(x, y, z);
                                                 }
-                                                propertyBag.blockEngine.AddBlock(x, y, z, blockType);
+                                                PropertyBag.BlockEngine.AddBlock(x, y, z, blockType);
                                             }
                                         }
                                         break;
 
                                     case MineWorldMessage.TriggerExplosion:
                                         {
-                                            Vector3 blockPos = msgBuffer.ReadVector3();
+                                            Vector3 blockPos = _msgBuffer.ReadVector3();
 
                                             // Play the explosion sound.
-                                            propertyBag.PlaySound(MineWorldSound.Explosion, blockPos);
+                                            PropertyBag.PlaySound(MineWorldSound.Explosion, blockPos);
 
                                             // Create some particles.
-                                            propertyBag.particleEngine.CreateExplosionDebris(blockPos);
+                                            PropertyBag.ParticleEngine.CreateExplosionDebris(blockPos);
 
                                             // Figure out what the effect is.
-                                            float distFromExplosive = (blockPos + 0.5f * Vector3.One - propertyBag.playerPosition).Length();
+                                            float distFromExplosive =
+                                                (blockPos + 0.5f*Vector3.One - PropertyBag.PlayerPosition).Length();
                                             if (distFromExplosive < 3)
                                                 //if (propertyBag.godmode == false)
                                                 //{
@@ -364,71 +331,70 @@ namespace MineWorld
                                                 if (distFromExplosive < 8)
                                                 {
                                                     // If we're not in explosion mode, turn it on with the minimum ammount of shakiness.
-                                                    if (propertyBag.screenEffect != ScreenEffect.Explosion)
+                                                    if (PropertyBag.ScreenEffect != ScreenEffect.Explosion)
                                                     {
-                                                        propertyBag.screenEffect = ScreenEffect.Explosion;
-                                                        propertyBag.screenEffectCounter = 2;
+                                                        PropertyBag.ScreenEffect = ScreenEffect.Explosion;
+                                                        PropertyBag.ScreenEffectCounter = 2;
                                                     }
                                                     // If this bomb would result in a bigger shake, use its value.
-                                                    propertyBag.screenEffectCounter = Math.Min(propertyBag.screenEffectCounter, (distFromExplosive - 2) / 5);
+                                                    PropertyBag.ScreenEffectCounter =
+                                                        Math.Min(PropertyBag.ScreenEffectCounter,
+                                                                 (distFromExplosive - 2)/5);
                                                 }
                                         }
                                         break;
 
                                     case MineWorldMessage.PlayerJoined:
                                         {
-                                            int playerId = msgBuffer.ReadInt32();
-                                            string playerName = msgBuffer.ReadString();
-                                            bool thisIsMe = msgBuffer.ReadBoolean();
-                                            bool playerAlive = msgBuffer.ReadBoolean();
-                                            propertyBag.playerList[playerId] = new ClientPlayer(null, (Game)this);
-                                            propertyBag.playerList[playerId].Name = playerName;
-                                            propertyBag.playerList[playerId].ID = playerId;
-                                            propertyBag.playerList[playerId].Alive = playerAlive;
-                                            propertyBag.playerList[playerId].Owncolor = Csettings.color;
-                                            if (thisIsMe)
-                                                propertyBag.playerMyId = playerId;
+                                            int playerId = _msgBuffer.ReadInt32();
+                                            string playerName = _msgBuffer.ReadString();
+                                            bool playerAlive = _msgBuffer.ReadBoolean();
+                                            PropertyBag.PlayerList[playerId] = new ClientPlayer(this);
+                                            PropertyBag.PlayerList[playerId].Name = playerName;
+                                            PropertyBag.PlayerList[playerId].ID = playerId;
+                                            PropertyBag.PlayerList[playerId].Alive = playerAlive;
                                         }
                                         break;
 
                                     case MineWorldMessage.PlayerLeft:
                                         {
-                                            int playerId = msgBuffer.ReadInt32();
-                                            if (propertyBag.playerList.ContainsKey(playerId))
+                                            int playerId = _msgBuffer.ReadInt32();
+                                            if (PropertyBag.PlayerList.ContainsKey(playerId))
                                             {
-                                                propertyBag.playerList.Remove(playerId);
+                                                PropertyBag.PlayerList.Remove(playerId);
                                             }
                                         }
                                         break;
 
                                     case MineWorldMessage.PlayerDead:
                                         {
-                                            int playerId = msgBuffer.ReadInt32();
-                                            if (playerId == propertyBag.playerMyId)
+                                            int playerId = _msgBuffer.ReadInt32();
+                                            if (playerId == PropertyBag.PlayerMyId)
                                             {
                                                 //TODO Implent death message
-                                                propertyBag.KillMySelf();
+                                                PropertyBag.KillMySelf();
                                             }
-                                            else if (propertyBag.playerList.ContainsKey(playerId))
+                                            else if (PropertyBag.PlayerList.ContainsKey(playerId))
                                             {
-                                                ClientPlayer player = propertyBag.playerList[playerId];
+                                                ClientPlayer player = PropertyBag.PlayerList[playerId];
                                                 player.Alive = false;
-                                                propertyBag.particleEngine.CreateBloodSplatter(player.Position, player.Owncolor);
-                                                propertyBag.PlaySound(MineWorldSound.Death, player.Position);
+                                                PropertyBag.ParticleEngine.CreateBloodSplatter(player.Position,
+                                                                                               Color.Red);
+                                                PropertyBag.PlaySound(MineWorldSound.Death, player.Position);
                                             }
                                         }
                                         break;
 
                                     case MineWorldMessage.PlayerAlive:
                                         {
-                                            int playerId = msgBuffer.ReadInt32();
-                                            if (playerId == propertyBag.playerMyId)
+                                            int playerId = _msgBuffer.ReadInt32();
+                                            if (playerId == PropertyBag.PlayerMyId)
                                             {
-                                                propertyBag.MakeMySelfAlive();
+                                                PropertyBag.MakeMySelfAlive();
                                             }
-                                            if (propertyBag.playerList.ContainsKey(playerId))
+                                            if (PropertyBag.PlayerList.ContainsKey(playerId))
                                             {
-                                                ClientPlayer player = propertyBag.playerList[playerId];
+                                                ClientPlayer player = PropertyBag.PlayerList[playerId];
                                                 player.Alive = true;
                                             }
                                         }
@@ -436,45 +402,48 @@ namespace MineWorld
 
                                     case MineWorldMessage.PlayerUpdate:
                                         {
-                                            int playerId = msgBuffer.ReadInt32();
-                                            if (propertyBag.playerList.ContainsKey(playerId))
+                                            int playerId = _msgBuffer.ReadInt32();
+                                            if (PropertyBag.PlayerList.ContainsKey(playerId))
                                             {
-                                                ClientPlayer player = propertyBag.playerList[playerId];
-                                                player.UpdatePosition(msgBuffer.ReadVector3(), gameTime.TotalGameTime.TotalSeconds);
-                                                player.Heading = msgBuffer.ReadVector3();
+                                                ClientPlayer player = PropertyBag.PlayerList[playerId];
+                                                player.UpdatePosition(_msgBuffer.ReadVector3(),
+                                                                      gameTime.TotalGameTime.TotalSeconds);
+                                                player.Heading = _msgBuffer.ReadVector3();
                                             }
                                         }
                                         break;
 
                                     case MineWorldMessage.ChatMessage:
                                         {
-                                            ChatMessageType chatType = (ChatMessageType)msgBuffer.ReadByte();
-                                            string chatString = Defines.Sanitize(msgBuffer.ReadString());
-                                            string author = Defines.Sanitize(msgBuffer.ReadString());
-                                            propertyBag.addChatMessage(chatString, chatType, author);
+                                            ChatMessageType chatType = (ChatMessageType) _msgBuffer.ReadByte();
+                                            string chatString = _msgBuffer.ReadString();
+                                            string author = _msgBuffer.ReadString();
+                                            PropertyBag.AddChatMessage(chatString, chatType, author);
                                         }
                                         break;
                                     case MineWorldMessage.PlaySound:
                                         {
-                                            MineWorldSound sound = (MineWorldSound)msgBuffer.ReadByte();
-                                            bool hasPosition = msgBuffer.ReadBoolean();
+                                            MineWorldSound sound = (MineWorldSound) _msgBuffer.ReadByte();
+                                            bool hasPosition = _msgBuffer.ReadBoolean();
                                             if (hasPosition)
                                             {
-                                                Vector3 soundPosition = msgBuffer.ReadVector3();
-                                                propertyBag.PlaySound(sound, soundPosition);
+                                                Vector3 soundPosition = _msgBuffer.ReadVector3();
+                                                PropertyBag.PlaySound(sound, soundPosition);
                                             }
                                             else
-                                                propertyBag.PlaySound(sound);
+                                                PropertyBag.PlaySound(sound);
                                         }
                                         break;
                                     case MineWorldMessage.Hearthbeat:
                                         {
-                                            propertyBag.lasthearthbeatreceived = DateTime.Now;
+                                            PropertyBag.Lasthearthbeatreceived = DateTime.Now;
                                             break;
                                         }
                                 }
                             }
-                            catch { } //Error in a received message
+                            catch
+                            {
+                            } //Error in a received message
                         }
                         break;
                 }
@@ -486,14 +455,13 @@ namespace MineWorld
         protected override void Initialize()
         {
             Csettings.Directory = "ClientConfigs";
-            Csettings.playerHandle = "Player";
-            Csettings.volumeLevel = 1.0f;
+            Csettings.PlayerHandle = "Player";
+            Csettings.VolumeLevel = 1.0f;
             Csettings.RenderPretty = true;
             Csettings.DrawFrameRate = false;
             Csettings.InvertMouseYAxis = false;
             Csettings.NoSound = false;
-            Csettings.mouseSensitivity = 0.005f;
-            Csettings.color = Color.Red;
+            Csettings.MouseSensitivity = 0.005f;
             Csettings.Width = 1024;
             Csettings.Height = 768;
             Csettings.Fullscreen = false;
@@ -502,15 +470,15 @@ namespace MineWorld
             //Now moving to DatafileWriter only since it can read and write
             Datafile dataFile = new Datafile(Csettings.Directory + "/client.config.txt");
             if (dataFile.Data.ContainsKey("width"))
-                Csettings.Width = int.Parse(dataFile.Data["width"], System.Globalization.CultureInfo.InvariantCulture);
+                Csettings.Width = int.Parse(dataFile.Data["width"], CultureInfo.InvariantCulture);
             if (dataFile.Data.ContainsKey("height"))
-                Csettings.Height = int.Parse(dataFile.Data["height"], System.Globalization.CultureInfo.InvariantCulture);
+                Csettings.Height = int.Parse(dataFile.Data["height"], CultureInfo.InvariantCulture);
             if (dataFile.Data.ContainsKey("fullscreen"))
                 Csettings.Fullscreen = bool.Parse(dataFile.Data["fullscreen"]);
             if (dataFile.Data.ContainsKey("vsync"))
                 Csettings.Vsync = bool.Parse(dataFile.Data["vsync"]);
             if (dataFile.Data.ContainsKey("handle"))
-                Csettings.playerHandle = dataFile.Data["handle"];
+                Csettings.PlayerHandle = dataFile.Data["handle"];
             if (dataFile.Data.ContainsKey("showfps"))
                 Csettings.DrawFrameRate = bool.Parse(dataFile.Data["showfps"]);
             if (dataFile.Data.ContainsKey("yinvert"))
@@ -520,20 +488,15 @@ namespace MineWorld
             if (dataFile.Data.ContainsKey("pretty"))
                 Csettings.RenderPretty = bool.Parse(dataFile.Data["pretty"]);
             if (dataFile.Data.ContainsKey("volume"))
-                Csettings.volumeLevel = Math.Max(0, Math.Min(1, float.Parse(dataFile.Data["volume"], System.Globalization.CultureInfo.InvariantCulture)));
+                Csettings.VolumeLevel = Math.Max(0,
+                                                 Math.Min(1,
+                                                          float.Parse(dataFile.Data["volume"],
+                                                                      CultureInfo.InvariantCulture)));
             if (dataFile.Data.ContainsKey("sensitivity"))
-                Csettings.mouseSensitivity = Math.Max(0.001f, Math.Min(0.05f, float.Parse(dataFile.Data["sensitivity"], System.Globalization.CultureInfo.InvariantCulture) / 1000f));
-            if (dataFile.Data.ContainsKey("color"))
-            {
-                if (dataFile.Data["color"] == "red")
-                {
-                    Csettings.color = Color.Red;
-                }
-                else
-                {
-                    Csettings.color = Color.Blue;
-                }
-            }
+                Csettings.MouseSensitivity = Math.Max(0.001f,
+                                                      Math.Min(0.05f,
+                                                               float.Parse(dataFile.Data["sensitivity"],
+                                                                           CultureInfo.InvariantCulture)/1000f));
 
 
             //Now to read the key bindings
@@ -543,8 +506,6 @@ namespace MineWorld
                 temp.Close();
                 //Console.WriteLine("Keymap file does not exist, creating.");
             }
-            dataFile = new Datafile(Csettings.Directory + "/keymap.txt");
-            bool anyChanged = false;
             // Todo repair this to use keyboard and mousebinds ;)
             /*
             foreach (string key in dataFile.Data.Keys)
@@ -569,49 +530,40 @@ namespace MineWorld
              */
 
             //HACK Create defaultset the whole time :P
-            anyChanged = false;
             //If no keys are bound in this manner then create the default set
-            if (!anyChanged)
+            if (true)
             {
-                keyBinds.CreateDefaultSet();
-                keyBinds.SaveBinds(dataFile, Csettings.Directory + "/keymap.txt");
+                KeyBinds.CreateDefaultSet();
+                KeyBinds.SaveBinds(dataFile, Csettings.Directory + "/keymap.txt");
                 //Console.WriteLine("Creating default keymap...");
             }
 
-            graphicsDeviceManager.IsFullScreen = Csettings.Fullscreen;
-            graphicsDeviceManager.PreferredBackBufferHeight = Csettings.Height;
-            graphicsDeviceManager.PreferredBackBufferWidth = Csettings.Width;
-            graphicsDeviceManager.SynchronizeWithVerticalRetrace = Csettings.Vsync;
-            graphicsDeviceManager.PreferredDepthStencilFormat = DepthFormat.Depth24Stencil8;
-            this.IsFixedTimeStep = false;
-            graphicsDeviceManager.ApplyChanges();
-            base.Initialize();
-        }
-
-        protected override void Update(GameTime gameTime)
-        {
-            base.Update(gameTime);
+            GraphicsDeviceManager.IsFullScreen = Csettings.Fullscreen;
+            GraphicsDeviceManager.PreferredBackBufferHeight = Csettings.Height;
+            GraphicsDeviceManager.PreferredBackBufferWidth = Csettings.Width;
+            GraphicsDeviceManager.SynchronizeWithVerticalRetrace = Csettings.Vsync;
+            GraphicsDeviceManager.PreferredDepthStencilFormat = DepthFormat.Depth24Stencil8;
+            IsFixedTimeStep = false;
+            GraphicsDeviceManager.ApplyChanges();
         }
 
         protected override void OnExiting(object sender, EventArgs args)
         {
-            propertyBag.netClient.Shutdown("Client exiting.");
-            
+            PropertyBag.NetClient.Shutdown("Client exiting.");
+
             base.OnExiting(sender, args);
         }
 
         public void ResetPropertyBag()
         {
-            if (propertyBag != null)
-                propertyBag.netClient.Shutdown("");
+            if (PropertyBag != null)
+                PropertyBag.NetClient.Shutdown("");
 
-            propertyBag = new PropertyBag(this);
-            propertyBag.playerHandle = Csettings.playerHandle;
-            propertyBag.volumeLevel = Csettings.volumeLevel;
-            propertyBag.mouseSensitivity = Csettings.mouseSensitivity;
-            propertyBag.keyBinds = keyBinds;
-            propertyBag.Owncolor = Csettings.color;
-            msgBuffer = propertyBag.netClient.CreateBuffer();
+            PropertyBag = new PropertyBag(this);
+            PropertyBag.PlayerHandle = Csettings.PlayerHandle;
+            PropertyBag.VolumeLevel = Csettings.VolumeLevel;
+            PropertyBag.MouseSensitivity = Csettings.MouseSensitivity;
+            _msgBuffer = PropertyBag.NetClient.CreateBuffer();
         }
 
         protected override void LoadContent()
@@ -625,9 +577,9 @@ namespace MineWorld
             // Play the title music.
             if (!Csettings.NoSound)
             {
-                songTitle = Content.Load<Song>("song_title");
-                MediaPlayer.Play(songTitle);
-                MediaPlayer.Volume = propertyBag.volumeLevel;
+                _songTitle = Content.Load<Song>("song_title");
+                MediaPlayer.Play(_songTitle);
+                MediaPlayer.Volume = PropertyBag.VolumeLevel;
             }
         }
     }

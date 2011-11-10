@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.IO;
 
 namespace MineWorld
@@ -11,8 +10,8 @@ namespace MineWorld
 
     public class Datafile
     {
-        public string fullContent="";
         public Dictionary<string, string> Data = new Dictionary<string, string>();
+        public string FullContent = "";
 
         public Datafile(string filename)
         {
@@ -22,11 +21,11 @@ namespace MineWorld
                 FileStream file = new FileStream(filename, FileMode.Open, FileAccess.Read);
                 StreamReader sr = new StreamReader(file);
 
-                fullContent = "";
+                FullContent = "";
                 string line = sr.ReadLine();
                 while (line != null)
                 {
-                    fullContent += line;
+                    FullContent += line;
                     string[] args = line.Split("=".ToCharArray());
                     if (args.Length == 2 && line[0] != '#')
                     {
@@ -55,22 +54,23 @@ namespace MineWorld
                     FileStream temp = File.Create(filename);
                     temp.Close();
                 }
-                Dictionary<string, bool>seen = new Dictionary<string, bool>();
+                Dictionary<string, bool> seen = new Dictionary<string, bool>();
 
                 FileStream file = new FileStream(filename, FileMode.Open, FileAccess.Read);
                 StreamReader sr = new StreamReader(file);
 
                 string contentToWrite = "";
-                fullContent = "";
+                FullContent = "";
                 string line = sr.ReadLine();
                 bool changes = false;
                 while (line != null)
                 {
-                    string[] args = line.Split("=".ToCharArray(),2);
+                    string[] args = line.Split("=".ToCharArray(), 2);
                     if (args.Length == 2 && line[0] != '#')
                     {
                         seen[args[0].Trim()] = true;
-                        if (Data.ContainsKey(args[0].Trim()) && Data[args[0].Trim()] != args[1]) //Maybe we need to replace?
+                        if (Data.ContainsKey(args[0].Trim()) && Data[args[0].Trim()] != args[1])
+                            //Maybe we need to replace?
                         {
                             contentToWrite += args[0].Trim() + " = " + Data[args[0].Trim()] + "\r\n";
                             changes = true;
@@ -110,13 +110,13 @@ namespace MineWorld
                 }
                 return 1;
             }
-            catch (Exception e){
+            catch (Exception e)
+            {
                 Console.OpenStandardError();
                 Console.Out.WriteLine(e.ToString());
                 Console.Out.Close();
             }
             return 0;
         }
-
     }
 }

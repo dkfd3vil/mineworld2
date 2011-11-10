@@ -1,80 +1,57 @@
-﻿using System;
-using System.Collections.Generic;
-
-using System.Text;
+﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Media;
-using Microsoft.Xna.Framework.Net;
-using Microsoft.Xna.Framework.Storage;
 
-namespace MineWorld
+namespace MineWorld.Engines
 {
     public class InterfaceEngine
     {
-        MineWorldGame gameInstance;
-        PropertyBag _P;
-        SpriteBatch spriteBatch;
-        public SpriteFont uiFont;
-        Rectangle drawRect;
-
-        Texture2D texCrosshairs, texBlank, texHelpRed,texHelpBlue;
-
-        Dictionary<BlockType, Texture2D> blockIcons = new Dictionary<BlockType, Texture2D>();
+        private readonly Dictionary<BlockType, Texture2D> _blockIcons = new Dictionary<BlockType, Texture2D>();
+        private readonly Rectangle _drawRect;
+        private readonly MineWorldGame _gameInstance;
+        private readonly SpriteBatch _spriteBatch;
+        private readonly Texture2D _texBlank;
+        private readonly Texture2D _texCrosshairs;
+        private readonly Texture2D _texHelpBlue;
+        private PropertyBag _p;
+        public SpriteFont UiFont;
 
         public InterfaceEngine(MineWorldGame gameInstance)
         {
-            this.gameInstance = gameInstance;
-            spriteBatch = new SpriteBatch(gameInstance.GraphicsDevice);
+            _gameInstance = gameInstance;
+            _spriteBatch = new SpriteBatch(gameInstance.GraphicsDevice);
 
             // Load textures.
-            texCrosshairs = gameInstance.Content.Load<Texture2D>("ui/tex_ui_crosshair");
-            texBlank = new Texture2D(gameInstance.GraphicsDevice, 1, 1);
+            _texCrosshairs = gameInstance.Content.Load<Texture2D>("ui/tex_ui_crosshair");
+            _texBlank = new Texture2D(gameInstance.GraphicsDevice, 1, 1);
             //texBlank.SetData(new int[1] { 2147483647 });
-            texBlank.SetData(new uint[1] { 0xFFFFFFFF });
-            texHelpRed = gameInstance.Content.Load<Texture2D>("menus/tex_menu_help_red");
-            texHelpBlue = gameInstance.Content.Load<Texture2D>("menus/tex_menu_help_blue");
+            _texBlank.SetData(new[] {0xFFFFFFFF});
+            gameInstance.Content.Load<Texture2D>("menus/tex_menu_help_red");
+            _texHelpBlue = gameInstance.Content.Load<Texture2D>("menus/tex_menu_help_blue");
 
-            drawRect = new Rectangle(gameInstance.GraphicsDevice.Viewport.Width / 2 - 1024 / 2,
-                                     gameInstance.GraphicsDevice.Viewport.Height / 2 - 768 / 2,
+            _drawRect = new Rectangle(gameInstance.GraphicsDevice.Viewport.Width/2 - 1024/2,
+                                     gameInstance.GraphicsDevice.Viewport.Height/2 - 768/2,
                                      1024,
                                      1024);
 
             // Load icons.
-            blockIcons[BlockType.Lava] = gameInstance.Content.Load<Texture2D>("icons/tex_icon_lava");
-            blockIcons[BlockType.None] = gameInstance.Content.Load<Texture2D>("icons/tex_icon_deconstruction");
+            _blockIcons[BlockType.Lava] = gameInstance.Content.Load<Texture2D>("icons/tex_icon_lava");
+            _blockIcons[BlockType.None] = gameInstance.Content.Load<Texture2D>("icons/tex_icon_deconstruction");
 
             // Load fonts.
-            uiFont = gameInstance.Content.Load<SpriteFont>("font_04b08");
+            UiFont = gameInstance.Content.Load<SpriteFont>("font_04b08");
         }
 
-        public void RenderPickAxe(GraphicsDevice graphicsDevice, SpriteBatch spriteBatch)
+        public void RenderMessageCenter(SpriteBatch spriteBatch, string text, Vector2 pointCenter, Color colorText,
+                                        Color colorBackground)
         {
-            int screenWidth = graphicsDevice.Viewport.Width;
-            int screenHeight = graphicsDevice.Viewport.Height;
-            graphicsDevice.SamplerStates[0].MagFilter = TextureFilter.Point;
-            int drawX = screenWidth / 2 - 60 * 3;
-            int drawY = screenHeight - 91 * 3;
-            //Texture2D toDraw;
-            if (_P.Owncolor == Color.Red)
-            {
-                //toDraw = texToolPickaxeRed;
-            }
-            else
-            {
-                //toDraw = texToolPickaxeBlue;
-            }
-        }
-
-        public void RenderMessageCenter(SpriteBatch spriteBatch, string text, Vector2 pointCenter, Color colorText, Color colorBackground)
-        {
-            Vector2 textSize = uiFont.MeasureString(text);
-            spriteBatch.Draw(texBlank, new Rectangle((int)(pointCenter.X - textSize.X / 2 - 10), (int)(pointCenter.Y - textSize.Y / 2 - 10), (int)(textSize.X + 20), (int)(textSize.Y + 20)), colorBackground);
-            spriteBatch.DrawString(uiFont, text, pointCenter - textSize / 2, colorText);
+            Vector2 textSize = UiFont.MeasureString(text);
+            spriteBatch.Draw(_texBlank,
+                             new Rectangle((int) (pointCenter.X - textSize.X/2 - 10),
+                                           (int) (pointCenter.Y - textSize.Y/2 - 10), (int) (textSize.X + 20),
+                                           (int) (textSize.Y + 20)), colorBackground);
+            spriteBatch.DrawString(UiFont, text, pointCenter - textSize/2, colorText);
         }
 
         private static bool MessageExpired(ChatMessage msg)
@@ -84,33 +61,34 @@ namespace MineWorld
 
         public void Update(GameTime gameTime)
         {
-            if (_P == null)
+            if (_p == null)
                 return;
 
-            foreach (ChatMessage msg in _P.chatBuffer)
-                msg.TimeStamp -= (float)gameTime.ElapsedGameTime.TotalSeconds;
-            _P.chatBuffer.RemoveAll(MessageExpired);
+            foreach (ChatMessage msg in _p.ChatBuffer)
+                msg.TimeStamp -= (float) gameTime.ElapsedGameTime.TotalSeconds;
+            _p.ChatBuffer.RemoveAll(MessageExpired);
         }
 
-        public void drawChat(List<ChatMessage>messages, GraphicsDevice graphicsDevice)
+        public void DrawChat(List<ChatMessage> messages, GraphicsDevice graphicsDevice)
         {
             int newlines = 0;
             for (int i = 0; i < messages.Count; i++)
             {
                 newlines++;
                 Color chatColor = Color.White;
-                string chat = "";
+                string chat;
 
                 if (messages[i].Type == ChatMessageType.Server)
                     chatColor = Color.Blue;
 
-                switch(messages[i].Type)
+                switch (messages[i].Type)
                 {
                     case ChatMessageType.PlayerSay:
                         {
-                            if (messages[i].Author == "" || messages[i].Author == null)
+                            if (string.IsNullOrEmpty(messages[i].Author))
                             {
                                 chat = "MESSAGE SAY WAS SENT WITHOUT OWNER";
+                                break;
                             }
                             chat = messages[i].Author + ": " + messages[i].Message;
                             break;
@@ -128,11 +106,11 @@ namespace MineWorld
                 }
                 int y = graphicsDevice.Viewport.Height - 114;
                 //newlines += messages[i].NewLines;
-                y -= 16 * newlines;
+                y -= 16*newlines;
                 //y -= 16 * i;
 
-                spriteBatch.DrawString(uiFont, chat, new Vector2(22, y), Color.Black);
-                spriteBatch.DrawString(uiFont, chat, new Vector2(20, y - 2), chatColor);
+                _spriteBatch.DrawString(UiFont, chat, new Vector2(22, y), Color.Black);
+                _spriteBatch.DrawString(UiFont, chat, new Vector2(20, y - 2), chatColor);
             }
         }
 
@@ -140,103 +118,128 @@ namespace MineWorld
         {
             // If we don't have _P, grab it from the current gameInstance.
             // We can't do this in the constructor because we are created in the property bag's constructor!
-            if (_P == null)
-                _P = gameInstance.propertyBag;
+            if (_p == null)
+                _p = _gameInstance.PropertyBag;
 
             // Draw the UI.
-            spriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.SaveState);
+            _spriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.SaveState);
 
             // Draw the crosshair.
-            spriteBatch.Draw(texCrosshairs, new Rectangle(graphicsDevice.Viewport.Width / 2 - texCrosshairs.Width / 2,
-                                                            graphicsDevice.Viewport.Height / 2 - texCrosshairs.Height / 2,
-                                                            texCrosshairs.Width,
-                                                            texCrosshairs.Height), Color.White);
+            _spriteBatch.Draw(_texCrosshairs, new Rectangle(graphicsDevice.Viewport.Width/2 - _texCrosshairs.Width/2,
+                                                          graphicsDevice.Viewport.Height/2 - _texCrosshairs.Height/2,
+                                                          _texCrosshairs.Width,
+                                                          _texCrosshairs.Height), Color.White);
 
-            if (gameInstance.Csettings.DrawFrameRate)
-                RenderMessageCenter(spriteBatch, string.Format("FPS: {0:000}", gameInstance.FrameRate), new Vector2(60, graphicsDevice.Viewport.Height - 20), Color.Gray, Color.Black);
+            if (_gameInstance.Csettings.DrawFrameRate)
+                RenderMessageCenter(_spriteBatch, string.Format("FPS: {0:000}", _gameInstance.FrameRate),
+                                    new Vector2(60, graphicsDevice.Viewport.Height - 20), Color.Gray, Color.Black);
 
             // Show the altimeter.
-            int altitude = (int)(_P.playerPosition.Y - Defines.MAPSIZE + Defines.GROUND_LEVEL);
-            RenderMessageCenter(spriteBatch, string.Format("ALTITUDE: {0:00}", altitude), new Vector2(graphicsDevice.Viewport.Width - 90, graphicsDevice.Viewport.Height - 20), altitude >= 0 ? Color.Gray : Color.White, Color.Black);
+            //int altitude = (int)(_p.playerPosition.Y - + Defines.GROUND_LEVEL);
+            //RenderMessageCenter(spriteBatch, string.Format("ALTITUDE: {0:00}", altitude), new Vector2(graphicsDevice.Viewport.Width - 90, graphicsDevice.Viewport.Height - 20), altitude >= 0 ? Color.Gray : Color.White, Color.Black);
 
             // Draw the text-based information panel.
-            int textStart = (graphicsDevice.Viewport.Width - 1024) / 2;
-            spriteBatch.Draw(texBlank, new Rectangle(0, 0, graphicsDevice.Viewport.Width, 20), Color.Black);
-            RenderMessageCenter(spriteBatch, "Health: " + _P.playerHealth.ToString() + "/" + _P.playerHealthMax.ToString(), new Vector2(graphicsDevice.Viewport.Width - 300, graphicsDevice.Viewport.Height - 20),Color.Green, Color.Black);
+            _spriteBatch.Draw(_texBlank, new Rectangle(0, 0, graphicsDevice.Viewport.Width, 20), Color.Black);
+            RenderMessageCenter(_spriteBatch,
+                                "Health: " + _p.PlayerHealth.ToString() + "/" + _p.PlayerHealthMax.ToString(),
+                                new Vector2(graphicsDevice.Viewport.Width - 300, graphicsDevice.Viewport.Height - 20),
+                                Color.Green, Color.Black);
 
             // Draw player information.
-            if ((Keyboard.GetState().IsKeyDown(Keys.Tab) && _P.screenEffect == ScreenEffect.None))
+            if ((Keyboard.GetState().IsKeyDown(Keys.Tab) && _p.ScreenEffect == ScreenEffect.None))
             {
-                spriteBatch.Draw(texBlank, new Rectangle(0, 0, graphicsDevice.Viewport.Width, graphicsDevice.Viewport.Height), new Color(Color.Black, 0.7f));
+                _spriteBatch.Draw(_texBlank,
+                                 new Rectangle(0, 0, graphicsDevice.Viewport.Width, graphicsDevice.Viewport.Height),
+                                 new Color(Color.Black, 0.7f));
 
                 //Server name
-                RenderMessageCenter(spriteBatch, _P.serverName, new Vector2(graphicsDevice.Viewport.Width / 2, 32), Color.White, Color.Black);
+                RenderMessageCenter(_spriteBatch, _p.ServerName, new Vector2(graphicsDevice.Viewport.Width/2, 32),
+                                    Color.White, Color.Black);
 
                 //TODO Make sure we splitt this up if the left side is full
                 int drawY = 200;
-                foreach (ClientPlayer p in _P.playerList.Values)
+                foreach (ClientPlayer p in _p.PlayerList.Values)
                 {
-                    RenderMessageCenter(spriteBatch, p.Name, new Vector2(graphicsDevice.Viewport.Width / 4, drawY), Color.White, new Color(0, 0, 0, 0));
+                    RenderMessageCenter(_spriteBatch, p.Name, new Vector2(graphicsDevice.Viewport.Width/4, drawY),
+                                        Color.White, new Color(0, 0, 0, 0));
                     drawY += 35;
                 }
             }
 
             // Draw the chat buffer.
-            if (_P.chatMode == ChatMessageType.PlayerSay)
+            if (_p.Chatting)
             {
-                drawChat(_P.chatBuffer, graphicsDevice);
-                spriteBatch.DrawString(uiFont, "Say> " + _P.chatEntryBuffer, new Vector2(22, graphicsDevice.Viewport.Height - 98), Color.Black);
-                spriteBatch.DrawString(uiFont, "Say> " + _P.chatEntryBuffer, new Vector2(20, graphicsDevice.Viewport.Height - 100), Color.White);
+                DrawChat(_p.ChatBuffer, graphicsDevice);
+                _spriteBatch.DrawString(UiFont, "Say> " + _p.ChatEntryBuffer,
+                                       new Vector2(22, graphicsDevice.Viewport.Height - 98), Color.Black);
+                _spriteBatch.DrawString(UiFont, "Say> " + _p.ChatEntryBuffer,
+                                       new Vector2(20, graphicsDevice.Viewport.Height - 100), Color.White);
             }
             else
             {
-                drawChat(_P.chatBuffer, graphicsDevice);
+                DrawChat(_p.ChatBuffer, graphicsDevice);
             }
 
             // Draw escape message.
             if (Keyboard.GetState().IsKeyDown(Keys.Escape))
             {
-                RenderMessageCenter(spriteBatch, "PRESS Y TO CONFIRM THAT YOU WANT TO QUIT.", new Vector2(graphicsDevice.Viewport.Width / 2, graphicsDevice.Viewport.Height / 2 + 30), Color.White, Color.Black);
-                RenderMessageCenter(spriteBatch, "PRESS K TO COMMIT PIXELCIDE.", new Vector2(graphicsDevice.Viewport.Width / 2, graphicsDevice.Viewport.Height / 2 + 80), Color.White, Color.Black);
+                RenderMessageCenter(_spriteBatch, "PRESS Y TO CONFIRM THAT YOU WANT TO QUIT.",
+                                    new Vector2(graphicsDevice.Viewport.Width/2, graphicsDevice.Viewport.Height/2 + 30),
+                                    Color.White, Color.Black);
+                RenderMessageCenter(_spriteBatch, "PRESS K TO COMMIT PIXELCIDE.",
+                                    new Vector2(graphicsDevice.Viewport.Width/2, graphicsDevice.Viewport.Height/2 + 80),
+                                    Color.White, Color.Black);
             }
 
             // Draw the current screen effect.
-            if (_P.screenEffect == ScreenEffect.Death)
+            if (_p.ScreenEffect == ScreenEffect.Death)
             {
-                Color drawColor = new Color(1 - (float)_P.screenEffectCounter * 0.5f, 0f, 0f);
-                spriteBatch.Draw(texBlank, new Rectangle(0, 0, graphicsDevice.Viewport.Width, graphicsDevice.Viewport.Height), drawColor);
-                if (_P.screenEffectCounter >= 2)
-                    RenderMessageCenter(spriteBatch, "You have died. Click to respawn.", new Vector2(graphicsDevice.Viewport.Width / 2, graphicsDevice.Viewport.Height / 2), Color.White, Color.Black);
+                Color drawColor = new Color(1 - (float) _p.ScreenEffectCounter*0.5f, 0f, 0f);
+                _spriteBatch.Draw(_texBlank,
+                                 new Rectangle(0, 0, graphicsDevice.Viewport.Width, graphicsDevice.Viewport.Height),
+                                 drawColor);
+                if (_p.ScreenEffectCounter >= 2)
+                    RenderMessageCenter(_spriteBatch, "You have died. Click to respawn.",
+                                        new Vector2(graphicsDevice.Viewport.Width/2, graphicsDevice.Viewport.Height/2),
+                                        Color.White, Color.Black);
             }
-            if (_P.screenEffect == ScreenEffect.Teleport || _P.screenEffect == ScreenEffect.Explosion)
+            if (_p.ScreenEffect == ScreenEffect.Explosion)
             {
-                Color drawColor = new Color(1, 1, 1, 1 - (float)_P.screenEffectCounter * 0.5f);
-                spriteBatch.Draw(texBlank, new Rectangle(0, 0, graphicsDevice.Viewport.Width, graphicsDevice.Viewport.Height), drawColor);
-                if (_P.screenEffectCounter > 2)
-                    _P.screenEffect = ScreenEffect.None;
+                Color drawColor = new Color(1, 1, 1, 1 - (float) _p.ScreenEffectCounter*0.5f);
+                _spriteBatch.Draw(_texBlank,
+                                 new Rectangle(0, 0, graphicsDevice.Viewport.Width, graphicsDevice.Viewport.Height),
+                                 drawColor);
+                if (_p.ScreenEffectCounter > 2)
+                    _p.ScreenEffect = ScreenEffect.None;
             }
-            if (_P.screenEffect == ScreenEffect.Fall)
+            if (_p.ScreenEffect == ScreenEffect.Fall)
             {
-                Color drawColor = new Color(1, 0, 0, 1 - (float)_P.screenEffectCounter * 0.5f);
-                spriteBatch.Draw(texBlank, new Rectangle(0, 0, graphicsDevice.Viewport.Width, graphicsDevice.Viewport.Height), drawColor);
-                if (_P.screenEffectCounter > 2)
-                    _P.screenEffect = ScreenEffect.None;
+                Color drawColor = new Color(1, 0, 0, 1 - (float) _p.ScreenEffectCounter*0.5f);
+                _spriteBatch.Draw(_texBlank,
+                                 new Rectangle(0, 0, graphicsDevice.Viewport.Width, graphicsDevice.Viewport.Height),
+                                 drawColor);
+                if (_p.ScreenEffectCounter > 2)
+                    _p.ScreenEffect = ScreenEffect.None;
             }
-            if (_P.screenEffect == ScreenEffect.Water)
+            if (_p.ScreenEffect == ScreenEffect.Water)
             {
-                Color drawColor = new Color(0.0f, 0.5f, 1.0f, 1.0f - (float)_P.screenEffectCounter);
-                spriteBatch.Draw(texBlank, new Rectangle(0, 0, graphicsDevice.Viewport.Width, graphicsDevice.Viewport.Height), drawColor);
-                if (_P.screenEffectCounter > 2)
-                    _P.screenEffect = ScreenEffect.None;
+                Color drawColor = new Color(0.0f, 0.5f, 1.0f, 1.0f - (float) _p.ScreenEffectCounter);
+                _spriteBatch.Draw(_texBlank,
+                                 new Rectangle(0, 0, graphicsDevice.Viewport.Width, graphicsDevice.Viewport.Height),
+                                 drawColor);
+                if (_p.ScreenEffectCounter > 2)
+                    _p.ScreenEffect = ScreenEffect.None;
             }
-            if (_P.screenEffect == ScreenEffect.Drowning)
+            if (_p.ScreenEffect == ScreenEffect.Drowning)
             {
-                Color drawColor = new Color(0.5f, 0, 0.8f, 0.25f + (float)_P.screenEffectCounter * 0.2f);
-                spriteBatch.Draw(texBlank, new Rectangle(0, 0, graphicsDevice.Viewport.Width, graphicsDevice.Viewport.Height), drawColor);
-                if (_P.screenEffectCounter > 2)
+                Color drawColor = new Color(0.5f, 0, 0.8f, 0.25f + (float) _p.ScreenEffectCounter*0.2f);
+                _spriteBatch.Draw(_texBlank,
+                                 new Rectangle(0, 0, graphicsDevice.Viewport.Width, graphicsDevice.Viewport.Height),
+                                 drawColor);
+                if (_p.ScreenEffectCounter > 2)
                 {
-                    _P.screenEffect = ScreenEffect.Water;
-                    _P.screenEffectCounter = 1;
+                    _p.ScreenEffect = ScreenEffect.Water;
+                    _p.ScreenEffectCounter = 1;
                 }
             }
 
@@ -244,18 +247,13 @@ namespace MineWorld
             // Draw the help screen.
             if (Keyboard.GetState().IsKeyDown(Keys.F1))
             {
-                spriteBatch.Draw(texBlank, new Rectangle(0, 0, graphicsDevice.Viewport.Width, graphicsDevice.Viewport.Height), Color.Black);
-                if (_P.Owncolor == Color.Red)
-                {
-                    spriteBatch.Draw(texHelpRed, drawRect, Color.White);
-                }
-                else
-                {
-                    spriteBatch.Draw(texHelpBlue, drawRect, Color.White);
-                }
+                _spriteBatch.Draw(_texBlank,
+                                 new Rectangle(0, 0, graphicsDevice.Viewport.Width, graphicsDevice.Viewport.Height),
+                                 Color.Black);
+                _spriteBatch.Draw(_texHelpBlue, _drawRect, Color.White);
             }
 
-            spriteBatch.End();
+            _spriteBatch.End();
         }
     }
 }

@@ -1,76 +1,54 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 using System.Threading;
 using Lidgren.Network;
-using Lidgren.Network.Xna;
-using Microsoft.Xna.Framework;
-using System.Net;
-using System.Text;
-using System.Text.RegularExpressions;
 
 namespace MineWorld
 {
     public partial class MineWorldServer
     {
-        Random randomizer = new Random();
-
-        MineWorldNetServer netServer = null;
-        public DayManager dayManager = null;
-        public LuaManager luaManager = null;
-        public Dictionary<NetConnection, ServerPlayer> playerList = new Dictionary<NetConnection, ServerPlayer>();
-        public List<NetConnection> toGreet = new List<NetConnection>();
-        public List<string> admins = new List<string>(); //List of strings with all the admins
-        public List<string> bannednames = new List<string>(); // List of strings with all names that cannot be chosen
-        public List<string> banList = new List<string>(); // List of string with all thhe banned ip's
-        List<MapSender> mapSendingProgress = new List<MapSender>();
-
-        DateTime lasthearthbeatsend = DateTime.Now;
-        DateTime lastServerListUpdate = DateTime.Now;
-        DateTime lastMapBackup = DateTime.Now;
-        DateTime lastKeyAvaible = DateTime.Now;
-
-        public string serverIP;
-        public string sessionid;
-        int frameCount = 100;
-
+        public MapSettings Msettings;
+        public ServerExtraSettings SAsettings;
+        public ServerSettings Ssettings;
         public bool StopFluids;
+        public List<string> Admins = new List<string>(); //List of strings with all the admins
+        public List<string> BanList = new List<string>(); // List of string with all thhe banned ip's
+        public List<string> Bannednames = new List<string>(); // List of strings with all names that cannot be chosen
+        public DayManager DayManager;
 
-        bool keepRunning = true;
+        private int _frameCount = 100;
+
+        private DateTime _lastKeyAvaible = DateTime.Now;
+        private DateTime _lastMapBackup = DateTime.Now;
+        private DateTime _lasthearthbeatsend = DateTime.Now;
+        public LuaManager LuaManager;
+        private MineWorldNetServer _netServer;
+        public Dictionary<NetConnection, ServerPlayer> PlayerList = new Dictionary<NetConnection, ServerPlayer>();
 
         // Server restarting variables.
-        DateTime restartTime = DateTime.Now;
-        bool restartTriggered = false;
+        private DateTime _restartTime = DateTime.Now;
+        private bool _restartTriggered;
+        public string ServerIp;
+        public string Sessionid;
 
         // Server shutdown variables.
-        DateTime shutdownTime = DateTime.Now;
-        bool shutdownTriggerd = false;
-
-        public ServerSettings Ssettings = new ServerSettings();
-        public ServerExtraSettings SAsettings = new ServerExtraSettings();
-        public MapSettings Msettings = new MapSettings();
-
-        //TODO Find a proper place
-        // Fluids count
-        int Totallavablockcount;
-        int Totalwaterblockcount;
+        private DateTime _shutdownTime = DateTime.Now;
+        private bool _shutdownTriggerd;
+        public List<NetConnection> ToGreet = new List<NetConnection>();
 
         public string GetExternalIp()
         {
             //TODO Remove hardcoded external ip
-            string ip = "0.0.0.0";
-            //string ip = HttpRequest.Get(Defines.MASTERSERVER_BASE_URL + "ip.php", null);
-            return ip;
+            return "0.0.0";
         }
 
         public bool Start()
         {
             //Find a better place for this
-            luaManager = new LuaManager(this);
+            LuaManager = new LuaManager(this);
 
             //Display server version in console
-            ConsoleWrite(Defines.MINEWORLDSERVER_VERSION, ConsoleColor.Cyan);
+            ConsoleWrite(Defines.MineworldserverVersion, ConsoleColor.Cyan);
 
             // Load the directory's.
             LoadDirectorys();
@@ -85,41 +63,39 @@ namespace MineWorld
             LoadMapSettings();
 
             // Load the ban-list.
-            banList = LoadBanList();
+            BanList = LoadBanList();
 
             // Load the admin-list.
-            admins = LoadAdminList();
+            Admins = LoadAdminList();
 
             // Load the bannednames-list.
-            bannednames = LoadBannedNames();
+            Bannednames = LoadBannedNames();
 
             // Load scripts
             LoadScriptFiles();
 
             // Initialize the server.
-            NetConfiguration netConfig = new NetConfiguration("MineWorldPlus");
-            netConfig.MaxConnections = Ssettings.Maxplayers;
-            netConfig.Port = 5565;
-            netServer = new MineWorldNetServer(netConfig);
-            netServer.SetMessageTypeEnabled(NetMessageType.ConnectionApproval, true);
+            NetConfiguration netConfig = new NetConfiguration("MineWorld")
+                                             {MaxConnections = Ssettings.Maxplayers, Port = 5565};
+            _netServer = new MineWorldNetServer(netConfig);
+            _netServer.SetMessageTypeEnabled(NetMessageType.ConnectionApproval, true);
             //netServer.SimulatedMinimumLatency = 0.1f;
             //netServer.SimulatedLatencyVariance = 0.05f;
             //netServer.SimulatedLoss = 0.1f;
             //netServer.SimulatedDuplicates = 0.05f;
 
             // Initialize the daymanager.
-            dayManager = new DayManager(Ssettings.Lightsteps);
-
-            // Store the last time that we did a physics calculation.
-            DateTime lastCalc = DateTime.Now;
+            DayManager = new DayManager(Ssettings.Lightsteps);
 
             //Display external IP
             //Dont bother if it isnt public
-            if (Ssettings.Public == true)
+            if (Ssettings.Public)
             {
-                serverIP = GetExternalIp();
-                ConsoleWrite("Your external IP Adress: " + serverIP);
+                ServerIp = GetExternalIp();
+                ConsoleWrite("Your external IP Adress: " + ServerIp);
             }
+
+            /*
             bool loaded = false;
             //Check if we should autoload a level
             if (Ssettings.LevelName != "")
@@ -143,22 +119,21 @@ namespace MineWorld
                 ConsoleWriteSucces("NEW MAP GENERATED");
                 ConsoleWrite("MAPSIZE = [" + Defines.MAPSIZE + "] [" + Defines.MAPSIZE + "] [" + Defines.MAPSIZE + "]");
             }
+             */
 
-            int tempblocks = Defines.MAPSIZE * Defines.MAPSIZE * Defines.MAPSIZE;
-            ConsoleWrite("TOTAL BLOCKS = " + tempblocks.ToString("n0"));
-            ConsoleWrite("TOTAL LAVA BLOCKS = " + Totallavablockcount);
-            ConsoleWrite("TOTAL WATER BLOCKS = " + Totalwaterblockcount);
+            ConsoleWrite("GENERATING NEW MAP WITH SEED(" + Msettings.Mapseed + ")");
+            GenerateNewMap();
+            ConsoleWriteSucces("NEW MAP GENERATED");
 
-            lastMapBackup = DateTime.Now;
-            ServerListener listener = new ServerListener(netServer, this);
-            Thread listenerthread = new Thread(new ThreadStart(listener.start));
-            Thread physicsthread = new Thread(new ThreadStart(DoPhysics));
+            _lastMapBackup = DateTime.Now;
+            ServerListener listener = new ServerListener(_netServer, this);
+            Thread listenerthread = new Thread(listener.Start);
+            Thread physicsthread = new Thread(DoPhysics);
 
-            DateTime lastFPScheck = DateTime.Now;
-            double frameRate = 0;
+            DateTime lastFpsCheck = DateTime.Now;
 
             //Start netserver
-            netServer.Start();
+            _netServer.Start();
 
             //Start listernerthread
             listenerthread.Start();
@@ -169,7 +144,7 @@ namespace MineWorld
             // Main server loop!
             ConsoleWriteSucces("SERVER READY");
 
-            while (keepRunning)
+            while (true)
             {
                 // Check the state of our core threads
                 if (!listenerthread.IsAlive)
@@ -186,92 +161,87 @@ namespace MineWorld
                 }
 
                 // Fps for the server
-                frameCount = frameCount + 1;
-                if (lastFPScheck <= DateTime.Now - TimeSpan.FromMilliseconds(1000))
+                _frameCount = _frameCount + 1;
+                if (lastFpsCheck <= DateTime.Now - TimeSpan.FromMilliseconds(1000))
                 {
-                    lastFPScheck = DateTime.Now;
-                    frameRate = frameCount;
-                    if (frameCount <= 20)
+                    lastFpsCheck = DateTime.Now;
+                    if (_frameCount <= 20)
                     {
-                        ConsoleWrite("Heavy load: " + frameCount + " FPS", ConsoleColor.Yellow);
+                        ConsoleWrite("Heavy load: " + _frameCount + " FPS", ConsoleColor.Yellow);
                     }
-                    frameCount = 0;
+                    _frameCount = 0;
                 }
 
                 // Dont send hearthbeats too fast
-                TimeSpan updatehearthbeat = DateTime.Now - lasthearthbeatsend;
+                TimeSpan updatehearthbeat = DateTime.Now - _lasthearthbeatsend;
                 if (updatehearthbeat.TotalMilliseconds > 1000)
                 {
                     SendHearthBeat();
-                    lasthearthbeatsend = DateTime.Now;
+                    _lasthearthbeatsend = DateTime.Now;
                 }
 
                 //Check the time
-                dayManager.Update();
+                DayManager.Update();
 
                 // Look if the time is changed so that we tell the clients
-                if (dayManager.Timechanged())
+                if (DayManager.Timechanged())
                 {
-                    SendDayTimeUpdate(dayManager.Light);
+                    SendDayTimeUpdate(DayManager.Light);
                 }
 
                 //Time to backup map?
                 // If Ssettings.autosavetimer is 0 then autosave is disabled
                 if (Ssettings.Autosavetimer != 0)
                 {
-                    TimeSpan mapUpdateTimeSpan = DateTime.Now - lastMapBackup;
+                    TimeSpan mapUpdateTimeSpan = DateTime.Now - _lastMapBackup;
                     if (mapUpdateTimeSpan.TotalMinutes > Ssettings.Autosavetimer)
                     {
                         ConsoleWrite("BACK-UP STARTED");
-                        Thread backupthread = new Thread(new ThreadStart(BackupLevel));
-                        backupthread.Start();
-                        lastMapBackup = DateTime.Now;
+                        //Thread backupthread = new Thread(new ThreadStart(BackupLevel));
+                        //backupthread.Start();
+                        _lastMapBackup = DateTime.Now;
                         ConsoleWriteSucces("BACK-UP DONE");
                     }
                 }
 
-                //Time to terminate finished map sending threads?
-                TerminateFinishedThreads();
-
                 //Update our lua files
-                luaManager.Update();
+                LuaManager.Update();
 
                 // Handle console keypresses.
                 while (Console.KeyAvailable)
                 {
                     // What if there is constant keyavaible ?
                     // This code makes sure the rest of the program can also run
-                    TimeSpan timeSpanLastKeyAvaible = DateTime.Now - lastKeyAvaible;
+                    TimeSpan timeSpanLastKeyAvaible = DateTime.Now - _lastKeyAvaible;
                     if (timeSpanLastKeyAvaible.Milliseconds < 2000)
                     {
                         string input = Console.ReadLine();
                         ConsoleProcessInput(input);
-                        lastKeyAvaible = DateTime.Now;
+                        _lastKeyAvaible = DateTime.Now;
                         break;
                     }
                 }
 
                 // Restart the server?
-                if (restartTriggered && DateTime.Now > restartTime)
+                if (_restartTriggered && DateTime.Now > _restartTime)
                 {
                     DisconnectAllPlayers();
-                    netServer.Shutdown("serverrestart");
-                    BackupLevel();
+                    _netServer.Shutdown("serverrestart");
+                    //BackupLevel();
                     return true;
                 }
 
-                if (shutdownTriggerd && DateTime.Now > shutdownTime)
+                if (_shutdownTriggerd && DateTime.Now > _shutdownTime)
                 {
                     DisconnectAllPlayers();
-                    netServer.Shutdown("servershutdown");
-                    BackupLevel();
+                    _netServer.Shutdown("servershutdown");
+                    //BackupLevel();
                     return false;
                 }
 
                 // Pass control over to waiting threads.
                 Thread.Sleep(1);
             }
-            return false;
         }
 
         public void LoadSettings()
@@ -445,42 +415,9 @@ namespace MineWorld
                 ConsoleWriteError("Couldnt find waterspawns setting so we use the default (0)");
             }
 
-            /*
-            int temp;
-
-            if (dataFile.Data.ContainsKey("mapsize"))
-            {
-                temp = int.Parse(dataFile.Data["mapsize"]);
-                switch (temp)
-                {
-                    case 1:
-                        {
-                            Msettings.Mapsize = Mapsize.Small;
-                            break;
-                        }
-                    case 2:
-                        {
-                            Msettings.Mapsize = Mapsize.Normal;
-                            break;
-                        }
-                    case 3:
-                        {
-                            Msettings.Mapsize = Mapsize.Large;
-                            break;
-                        }
-                }
-            }
-            else
-            {
-                Msettings.Mapsize = Mapsize.Normal;
-                ConsoleWrite("Couldnt find mapsize settings so we use the default ((2)normal)");
-            }
-
-            if (!(Msettings.Mapsize == Mapsize.Small || Msettings.Mapsize == Mapsize.Normal || Msettings.Mapsize == Mapsize.Large))
-            {
-                Msettings.Mapsize = Mapsize.Normal;
-                ConsoleWrite("Invalid number in mapsize settings so we use the default ((2)normal)");
-            }*/
+            Msettings.MapsizeX = 256;
+            Msettings.MapsizeY = 256;
+            Msettings.MapsizeZ = 256;
 
             ConsoleWriteSucces("MAPSETTINGS LOADED");
         }
@@ -518,7 +455,7 @@ namespace MineWorld
         {
             ConsoleWrite("LOADING SCRIPTS");
 
-            luaManager.LoadScriptFiles(Ssettings.ScriptsDir);
+            LuaManager.LoadScriptFiles(Ssettings.ScriptsDir);
 
             ConsoleWriteSucces("SCRIPTS LOADED");
         }

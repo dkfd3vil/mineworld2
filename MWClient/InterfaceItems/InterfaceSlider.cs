@@ -1,29 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Diagnostics;
-using StateMasher;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Media;
-using Microsoft.Xna.Framework.Net;
-using Microsoft.Xna.Framework.Storage;
-using Microsoft.Xna.Framework.Design;
-using MineWorld;
 
-namespace InterfaceItems
+namespace MineWorld.InterfaceItems
 {
-    class InterfaceSlider : InterfaceElement
+    internal class InterfaceSlider : InterfaceElement
     {
-        public float minVal = 0f;
-        public float maxVal = 1f;
-        private bool sliding = false;
-        public float value = 0;
-        public bool integers = false;
+        public bool Integers;
+        public float MaxVal = 1f;
+        public float MinVal;
+        private bool _sliding;
+        public float Value;
 
         public InterfaceSlider()
         {
@@ -31,33 +19,33 @@ namespace InterfaceItems
 
         public InterfaceSlider(MineWorldGame gameInstance)
         {
-            uiFont = gameInstance.Content.Load<SpriteFont>("font_04b08");
+            UiFont = gameInstance.Content.Load<SpriteFont>("font_04b08");
         }
 
         public InterfaceSlider(MineWorldGame gameInstance, PropertyBag pb)
         {
-            uiFont = gameInstance.Content.Load<SpriteFont>("font_04b08");
-            _P = pb;
+            UiFont = gameInstance.Content.Load<SpriteFont>("font_04b08");
+            P = pb;
         }
 
-        public void setValue(float newVal)
+        public void SetValue(float newVal)
         {
-            if (integers)
-                value = (int)Math.Round((double)newVal);
+            if (Integers)
+                Value = (int) Math.Round(newVal);
             else
-                value = newVal;
+                Value = newVal;
         }
 
-        public float getPercent()
+        public float GetPercent()
         {
-            return (value - minVal) / (maxVal - minVal);
+            return (Value - MinVal)/(MaxVal - MinVal);
         }
 
         public override void OnMouseDown(MouseButtons button, int x, int y)
         {
-            if (size.Contains(x, y))
+            if (Size.Contains(x, y))
             {
-                sliding = true;
+                _sliding = true;
                 Update(x, y);
             }
         }
@@ -68,35 +56,35 @@ namespace InterfaceItems
             if (ms.LeftButton == ButtonState.Pressed)
                 Update(ms.X, ms.Y);
             else
-                sliding = false;
+                _sliding = false;
         }
 
         public void Update(int x, int y)
         {
-            if (sliding)
+            if (_sliding)
             {
                 MouseState ms = Mouse.GetState();
                 if (ms.LeftButton == ButtonState.Released)
-                    sliding = false;
+                    _sliding = false;
                 else
                 {
-                    if (x < size.X + size.Height)
-                        value = minVal;
-                    else if (x > size.X + size.Width - size.Height)
-                        value = maxVal;
+                    if (x < Size.X + Size.Height)
+                        Value = MinVal;
+                    else if (x > Size.X + Size.Width - Size.Height)
+                        Value = MaxVal;
                     else
                     {
-                        int xMouse = x - size.X - size.Height;
-                        int xMax = size.Width - 2 * size.Height;
-                        float sliderPercent = (float)xMouse / (float)xMax;
-                        if (integers)
-                            value = (int)Math.Round((sliderPercent * (maxVal - minVal)) + minVal);
+                        int xMouse = x - Size.X - Size.Height;
+                        int xMax = Size.Width - 2*Size.Height;
+                        float sliderPercent = xMouse/(float) xMax;
+                        if (Integers)
+                            Value = (int) Math.Round((sliderPercent*(MaxVal - MinVal)) + MinVal);
                         else
-                            value = sliderPercent * (maxVal - minVal) + minVal;
-                        if (value < minVal)
-                            value = minVal;
-                        else if (value > maxVal)
-                            value = maxVal;
+                            Value = sliderPercent*(MaxVal - MinVal) + MinVal;
+                        if (Value < MinVal)
+                            Value = MinVal;
+                        else if (Value > MaxVal)
+                            Value = MaxVal;
                     }
                 }
             }
@@ -106,41 +94,47 @@ namespace InterfaceItems
         {
             Update();
 
-            if (visible&&size.Width>0&&size.Height>0)
+            if (Visible && Size.Width > 0 && Size.Height > 0)
             {
                 Color drawColour = new Color(1f, 1f, 1f);
 
-                if (!enabled)
+                if (!Enabled)
                 {
                     drawColour = new Color(.5f, .5f, .5f);
                 }
                 //Generate 1px white texture
-                Texture2D shade = new Texture2D(graphicsDevice, 1,1,1,TextureUsage.None,SurfaceFormat.Color);
-                shade.SetData(new Color[] { Color.White });
+                Texture2D shade = new Texture2D(graphicsDevice, 1, 1, 1, TextureUsage.None, SurfaceFormat.Color);
+                shade.SetData(new[] {Color.White});
                 //Draw end boxes
                 SpriteBatch spriteBatch = new SpriteBatch(graphicsDevice);
                 spriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Deferred, SaveStateMode.SaveState);
-                spriteBatch.Draw(shade, new Rectangle(size.X, size.Y, size.Height, size.Height), drawColour);
-                spriteBatch.Draw(shade, new Rectangle(size.X + size.Width - size.Height, size.Y, size.Height, size.Height), drawColour);
-                
+                spriteBatch.Draw(shade, new Rectangle(Size.X, Size.Y, Size.Height, Size.Height), drawColour);
+                spriteBatch.Draw(shade,
+                                 new Rectangle(Size.X + Size.Width - Size.Height, Size.Y, Size.Height, Size.Height),
+                                 drawColour);
+
                 //Draw line
-                float sliderPercent = getPercent();
-                int sliderPartialWidth = size.Height / 4;
-                int midHeight = (size.Height/2)-1;
-                int actualWidth = size.Width - 2 * size.Height;
-                int actualPosition = (int)(sliderPercent * actualWidth);
-                spriteBatch.Draw(shade, new Rectangle(size.X, size.Y + midHeight, size.Width, 1), drawColour);
+                float sliderPercent = GetPercent();
+                int sliderPartialWidth = Size.Height/4;
+                int midHeight = (Size.Height/2) - 1;
+                int actualWidth = Size.Width - 2*Size.Height;
+                int actualPosition = (int) (sliderPercent*actualWidth);
+                spriteBatch.Draw(shade, new Rectangle(Size.X, Size.Y + midHeight, Size.Width, 1), drawColour);
 
                 //Draw slider
-                spriteBatch.Draw(shade, new Rectangle(size.X + size.Height + actualPosition - sliderPartialWidth, size.Y + midHeight - sliderPartialWidth, size.Height / 2, size.Height / 2), drawColour);
-                if (text != "")
+                spriteBatch.Draw(shade,
+                                 new Rectangle(Size.X + Size.Height + actualPosition - sliderPartialWidth,
+                                               Size.Y + midHeight - sliderPartialWidth, Size.Height/2, Size.Height/2),
+                                 drawColour);
+                if (Text != "")
                 {
                     //Draw text
-                    spriteBatch.DrawString(uiFont, text, new Vector2(size.X, size.Y - 36), drawColour);
+                    spriteBatch.DrawString(UiFont, Text, new Vector2(Size.X, Size.Y - 36), drawColour);
                 }
                 //Draw amount
-                spriteBatch.DrawString(uiFont, (((float)(int)(value * 10)) / 10).ToString(), new Vector2(size.X, size.Y - 20), drawColour); 
-                
+                spriteBatch.DrawString(UiFont, (((float) (int) (Value*10))/10).ToString(),
+                                       new Vector2(Size.X, Size.Y - 20), drawColour);
+
                 spriteBatch.End();
                 shade.Dispose();
             }

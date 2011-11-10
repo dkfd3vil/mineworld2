@@ -1,34 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.GamerServices;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Media;
-using Microsoft.Xna.Framework.Net;
-using Microsoft.Xna.Framework.Storage;
 
-namespace MineWorld
+namespace MineWorld.Engines
 {
     public class PlayerEngine
     {
-        MineWorldGame gameInstance;
-        PropertyBag _P;
+        private readonly MineWorldGame _gameInstance;
+        private PropertyBag _p;
 
         public PlayerEngine(MineWorldGame gameInstance)
         {
-            this.gameInstance = gameInstance;
+            _gameInstance = gameInstance;
         }
 
         public void Update(GameTime gameTime)
         {
-            if (_P == null)
+            if (_p == null)
                 return;
 
-            foreach (ClientPlayer p in _P.playerList.Values)
+            foreach (ClientPlayer p in _p.PlayerList.Values)
             {
                 p.StepInterpolation(gameTime.TotalGameTime.TotalSeconds);
                 p.SpriteModel.Update(gameTime);
@@ -39,18 +29,18 @@ namespace MineWorld
         {
             // If we don't have _P, grab it from the current gameInstance.
             // We can't do this in the constructor because we are created in the property bag's constructor!
-            if (_P == null)
-                _P = gameInstance.propertyBag;
+            if (_p == null)
+                _p = _gameInstance.PropertyBag;
 
-            foreach (ClientPlayer p in _P.playerList.Values)
+            foreach (ClientPlayer p in _p.PlayerList.Values)
             {
-                if (p.Alive && p.ID != _P.playerMyId)
+                if (p.Alive && p.ID != _p.PlayerMyId)
                 {
-                    p.SpriteModel.Draw(_P.playerCamera.ViewMatrix,
-                                       _P.playerCamera.ProjectionMatrix,
-                                       _P.playerCamera.Position,
-                                       _P.playerCamera.GetLookVector(),
-                                       p.Position - Vector3.UnitY * 1.5f,
+                    p.SpriteModel.Draw(_p.PlayerCamera.ViewMatrix,
+                                       _p.PlayerCamera.ProjectionMatrix,
+                                       _p.PlayerCamera.Position,
+                                       _p.PlayerCamera.GetLookVector(),
+                                       p.Position - Vector3.UnitY*1.5f,
                                        p.Heading,
                                        2);
                 }
@@ -61,39 +51,40 @@ namespace MineWorld
         {
             // If we don't have _P, grab it from the current gameInstance.
             // We can't do this in the constructor because we are created in the property bag's constructor!
-            if (_P == null)
-                _P = gameInstance.propertyBag;
+            if (_p == null)
+                _p = _gameInstance.PropertyBag;
 
-            foreach (ClientPlayer p in _P.playerList.Values)
+            foreach (ClientPlayer p in _p.PlayerList.Values)
             {
-                if (p.Alive && p.ID != _P.playerMyId)
+                if (p.Alive && p.ID != _p.PlayerMyId)
                 {
                     // Figure out what text we should draw on the player - only for teammates and nearby enemies
-                    string playerText = "";
-                    bool continueDraw=false;
-                    if (p.ID != _P.playerMyId)
+                    bool continueDraw = false;
+                    if (p.ID != _p.PlayerMyId)
                         continueDraw = true;
                     else
                     {
-                        Vector3 diff = (p.Position -_P.playerPosition);
+                        Vector3 diff = (p.Position - _p.PlayerPosition);
                         float len = diff.Length();
                         diff.Normalize();
-                        if (len<=15){
+                        if (len <= 15)
+                        {
                             Vector3 hit = Vector3.Zero;
                             Vector3 build = Vector3.Zero;
-                            gameInstance.propertyBag.blockEngine.RayCollision(_P.playerPosition + new Vector3(0f, 0.1f, 0f), diff, len, 25, ref hit, ref build);
+                            _gameInstance.PropertyBag.BlockEngine.RayCollision(
+                                _p.PlayerPosition + new Vector3(0f, 0.1f, 0f), diff, len, 25, ref hit, ref build);
                             if (hit == Vector3.Zero) //Why is this reversed?
                                 continueDraw = true;
                         }
                     }
                     if (continueDraw)
                     {
-                        playerText = p.Name;
+                        string playerText = p.Name;
                         playerText = "*** " + playerText + " ***";
 
-                        p.SpriteModel.DrawText(_P.playerCamera.ViewMatrix,
-                                               _P.playerCamera.ProjectionMatrix,
-                                               p.Position - Vector3.UnitY * 1.5f,
+                        p.SpriteModel.DrawText(_p.PlayerCamera.ViewMatrix,
+                                               _p.PlayerCamera.ProjectionMatrix,
+                                               p.Position - Vector3.UnitY*1.5f,
                                                playerText, Color.White);
                     }
                 }

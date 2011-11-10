@@ -1,255 +1,250 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Diagnostics;
-using StateMasher;
+using System.Windows.Forms;
+using Lidgren.Network;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Media;
-using Microsoft.Xna.Framework.Net;
-using Microsoft.Xna.Framework.Storage;
-using Lidgren.Network;
+using MineWorld.StateMasher;
+using Keys = Microsoft.Xna.Framework.Input.Keys;
 
 namespace MineWorld.States
 {
     public class MainGameState : State
     {
-        const float MOVESPEED = 3.5f;
-        const float GRAVITY = -16.0f;
-        const float JUMPVELOCITY = 6.0f;
-        const float CLIMBVELOCITY = 2.5f;
-        const float DIEVELOCITY = 20.0f;
-        InputHelper INPUT = new InputHelper();
+        private const float Movespeed = 3.5f;
+        private const float Gravity = -16.0f;
+        private const float Jumpvelocity = 6.0f;
+        private const float Dievelocity = 20.0f;
+        private readonly InputHelper _input = new InputHelper();
 
-        string nextState = null;
-        bool mouseInitialized = false;
+        private bool _mouseInitialized;
+        private string _nextState;
+        private DateTime _startChat = DateTime.Now;
 
         public override void OnEnter(string oldState)
         {
-            _SM.IsMouseVisible = false;
+            Sm.IsMouseVisible = false;
         }
 
         public override void OnLeave(string newState)
         {
-            _P.chatEntryBuffer = "";
-            _P.chatMode = ChatMessageType.None;
+            P.ChatEntryBuffer = "";
+            P.Chatting = false;
         }
 
         public override string OnUpdate(GameTime gameTime, KeyboardState keyState, MouseState mouseState)
         {
             // Update network stuff.
-            (_SM as MineWorldGame).UpdateNetwork(gameTime);
+            (Sm as MineWorldGame).UpdateNetwork(gameTime);
 
             // Update input stuff.
-            INPUT.Update();
+            _input.Update();
 
             // Handle input.
             HandleInput();
 
             // Update network stuff.
-            (_SM as MineWorldGame).UpdateNetwork(gameTime);
+            (Sm as MineWorldGame).UpdateNetwork(gameTime);
 
             // Update the current screen effect.
-            _P.screenEffectCounter += gameTime.ElapsedGameTime.TotalSeconds;
+            P.ScreenEffectCounter += gameTime.ElapsedGameTime.TotalSeconds;
 
             // Update engines.
-            _P.skyEngine.Update(gameTime);
-            _P.playerEngine.Update(gameTime);
-            _P.blockEngine.Update(gameTime);
-            _P.particleEngine.Update(gameTime);
-            _P.interfaceEngine.Update(gameTime);
+            P.SkyEngine.Update(gameTime);
+            P.PlayerEngine.Update(gameTime);
+            P.BlockEngine.Update(gameTime);
+            P.ParticleEngine.Update(gameTime);
+            P.InterfaceEngine.Update(gameTime);
 
             // Moving the mouse changes where we look.
-            if (_SM.WindowHasFocus())
+            if (Sm.WindowHasFocus())
             {
-                if (mouseInitialized)
+                if (_mouseInitialized)
                 {
-                    int dx = mouseState.X - _SM.GraphicsDevice.Viewport.Width / 2;
-                    int dy = mouseState.Y - _SM.GraphicsDevice.Viewport.Height / 2;
+                    int dx = mouseState.X - Sm.GraphicsDevice.Viewport.Width/2;
+                    int dy = mouseState.Y - Sm.GraphicsDevice.Viewport.Height/2;
 
-                    if ((_SM as MineWorldGame).Csettings.InvertMouseYAxis)
+                    if ((Sm as MineWorldGame).Csettings.InvertMouseYAxis)
                         dy = -dy;
 
-                    _P.playerCamera.Yaw -= (float)dx * (_P.mouseSensitivity);
-                    _P.playerCamera.Pitch = (float)Math.Min(Math.PI * 0.49, Math.Max(-Math.PI * 0.49, _P.playerCamera.Pitch - dy * (_P.mouseSensitivity)));
+                    P.PlayerCamera.Yaw -= dx*(P.MouseSensitivity);
+                    P.PlayerCamera.Pitch =
+                        (float)
+                        Math.Min(Math.PI*0.49, Math.Max(-Math.PI*0.49, P.PlayerCamera.Pitch - dy*(P.MouseSensitivity)));
                 }
                 else
                 {
-                    mouseInitialized = true;
+                    _mouseInitialized = true;
                 }
-                Mouse.SetPosition(_SM.GraphicsDevice.Viewport.Width / 2, _SM.GraphicsDevice.Viewport.Height / 2);
+                Mouse.SetPosition(Sm.GraphicsDevice.Viewport.Width/2, Sm.GraphicsDevice.Viewport.Height/2);
             }
             else
-                mouseInitialized = false;
+                _mouseInitialized = false;
 
             // Update the player's position.
-            if (!_P.playerDead)
-                UpdatePlayerPosition(gameTime, keyState);
+            if (!P.PlayerDead)
+                UpdatePlayerPosition(gameTime);
 
             // Update the camera regardless of if we're alive or not.
-            _P.UpdateCamera(gameTime);
+            P.UpdateCamera(gameTime);
 
             // Check for hearthbeat packets
-            TimeSpan timespanhearthbeat = DateTime.Now - _P.lasthearthbeatreceived;
+            TimeSpan timespanhearthbeat = DateTime.Now - P.Lasthearthbeatreceived;
             if (timespanhearthbeat.TotalMilliseconds > 5000)
             {
                 // The server crashed or connection lost lets exit
                 ErrorManager.ErrorMsg = "Connection lost to server";
                 ErrorManager.NewState = "MineWorld.States.ServerBrowserState";
-                nextState = "MineWorld.States.ErrorState";
+                _nextState = "MineWorld.States.ErrorState";
             }
 
-            return nextState;
+            return _nextState;
         }
 
         private void HandleInput()
         {
-            if(INPUT.IsCurPress(Keys.W))
+            if (_input.IsCurPress(Keys.W))
             {
-                _P.MoveVector += _P.playerCamera.GetLookVector();
+                P.MoveVector += P.PlayerCamera.GetLookVector();
             }
-            if (INPUT.IsCurPress(Keys.A))
+            if (_input.IsCurPress(Keys.A))
             {
-                _P.MoveVector -= _P.playerCamera.GetRightVector();
+                P.MoveVector -= P.PlayerCamera.GetRightVector();
             }
-            if (INPUT.IsCurPress(Keys.S))
+            if (_input.IsCurPress(Keys.S))
             {
-                _P.MoveVector -= _P.playerCamera.GetLookVector();
+                P.MoveVector -= P.PlayerCamera.GetLookVector();
             }
-            if (INPUT.IsCurPress(Keys.D))
+            if (_input.IsCurPress(Keys.D))
             {
-                _P.MoveVector += _P.playerCamera.GetRightVector();
+                P.MoveVector += P.PlayerCamera.GetRightVector();
             }
-            if (INPUT.IsNewPress(Keys.F5))
+            if (_input.IsNewPress(Keys.F5))
             {
-                _P.debugmode = !_P.debugmode;
+                P.DebugMode = !P.DebugMode;
             }
         }
 
-        private void UpdatePlayerPosition(GameTime gameTime, KeyboardState keyState)
+        private void UpdatePlayerPosition(GameTime gameTime)
         {
             // Apply "gravity".
-            Vector3 footPosition = _P.playerPosition + new Vector3(0f, -1.5f, 0f);
-            Vector3 headPosition = _P.playerPosition + new Vector3(0f, 0.1f, 0f);
-            Vector3 midPosition = _P.playerPosition + new Vector3(0f, -0.7f, 0f);
+            Vector3 footPosition = P.PlayerPosition + new Vector3(0f, -1.5f, 0f);
+            Vector3 headPosition = P.PlayerPosition + new Vector3(0f, 0.1f, 0f);
+            Vector3 midPosition = P.PlayerPosition + new Vector3(0f, -0.7f, 0f);
 
-            if (false)//_P.blockEngine.BlockAtPoint(footPosition) == BlockType.Water || _P.blockEngine.BlockAtPoint(midPosition) == BlockType.Water)
+            if (P.BlockEngine.BlockAtPoint(footPosition) == BlockType.Water ||
+                P.BlockEngine.BlockAtPoint(midPosition) == BlockType.Water)
             {
-                _P.swimming = true;
+                P.Swimming = true;
 
-                if (_P.blockEngine.BlockAtPoint(headPosition) == BlockType.Water)
+                if (P.BlockEngine.BlockAtPoint(headPosition) == BlockType.Water)
                 {
-                    _P.underwater = true;
+                    P.Underwater = true;
                     //if (_P.playerHoldBreath == 20)
                     //{
-                        //_P.playerVelocity.Y *= 0.2f;
+                    //_P.playerVelocity.Y *= 0.2f;
                     //}
-                    if (_P.playerHoldBreath > 8)
+                    if (P.PlayerHoldBreath > 8)
                     {
-                        _P.screenEffect = ScreenEffect.Water;
-                        _P.screenEffectCounter = 0.5;
+                        P.ScreenEffect = ScreenEffect.Water;
+                        P.ScreenEffectCounter = 0.5;
                     }
                     else
                     {
-                        _P.screenEffect = ScreenEffect.Drowning;
-                        _P.screenEffectCounter = 0.5;
+                        P.ScreenEffect = ScreenEffect.Drowning;
+                        P.ScreenEffectCounter = 0.5;
                     }
                 }
                 else
                 {
-                    _P.lastBreath = DateTime.Now;
-                    _P.underwater = false;
-                    _P.playerHoldBreath = 20;
+                    P.LastBreath = DateTime.Now;
+                    P.Underwater = false;
+                    P.PlayerHoldBreath = 20;
                 }
             }
             else
             {
-                _P.swimming = false;
-                _P.underwater = false;
-                _P.lastBreath = DateTime.Now;
+                P.Swimming = false;
+                P.Underwater = false;
+                P.LastBreath = DateTime.Now;
             }
 
-            if (_P.swimming || _P.underwater)
+            if (P.Swimming || P.Underwater)
             {
-                TimeSpan timeSpan = DateTime.Now - _P.lastBreath;
-                _P.playerVelocity.Y += (GRAVITY / 8) * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                TimeSpan timeSpan = DateTime.Now - P.LastBreath;
+                P.PlayerVelocity.Y += (Gravity/8)*(float) gameTime.ElapsedGameTime.TotalSeconds;
 
                 if (timeSpan.TotalMilliseconds > 1000)
                 {
-                    _P.lastBreath = DateTime.Now;
-                    _P.playerHoldBreath -= 1;
-                    if (_P.playerHoldBreath <= 0)
+                    P.LastBreath = DateTime.Now;
+                    P.PlayerHoldBreath -= 1;
+                    if (P.PlayerHoldBreath <= 0)
                     {
-                        _P.SendPlayerHurt(20, false);
+                        P.SendPlayerHurt(20, false);
                     }
                     //_P.PlaySoundForEveryone(MineWorldSound.Death, _P.playerPosition);
                 }
             }
             else
             {
-                _P.playerVelocity.Y += GRAVITY * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                P.PlayerVelocity.Y += Gravity*(float) gameTime.ElapsedGameTime.TotalSeconds;
             }
 
             // Let the server know and then move on
             // Todo Dont really know if this is needed the playerupdate here
-            _P.SendPlayerUpdate();
+            P.SendPlayerUpdate();
 
-            if (_P.blockEngine.SolidAtPointForPlayer(footPosition) || _P.blockEngine.SolidAtPointForPlayer(headPosition))
+            if (P.BlockEngine.SolidAtPointForPlayer(footPosition) || P.BlockEngine.SolidAtPointForPlayer(headPosition))
             {
-                BlockType standingOnBlock = _P.blockEngine.BlockAtPoint(footPosition);
-                BlockType hittingHeadOnBlock = _P.blockEngine.BlockAtPoint(headPosition);
+                BlockType standingOnBlock = P.BlockEngine.BlockAtPoint(footPosition);
+                BlockType hittingHeadOnBlock = P.BlockEngine.BlockAtPoint(headPosition);
 
                 // If we"re hitting the ground with a high velocity, die!
-                if (standingOnBlock != BlockType.None && _P.playerVelocity.Y < 0)
+                if (standingOnBlock != BlockType.None && P.PlayerVelocity.Y < 0)
                 {
-                    float fallDamage = Math.Abs(_P.playerVelocity.Y) / DIEVELOCITY;
+                    float fallDamage = Math.Abs(P.PlayerVelocity.Y)/Dievelocity;
                     if (fallDamage >= 0.5)
                     {
                         // Fall damage of 0.5 maps to a screenEffectCounter value of 2, meaning that the effect doesn't appear.
                         // Fall damage of 1.0 maps to a screenEffectCounter value of 0, making the effect very strong.
-                        _P.screenEffect = ScreenEffect.Fall;
-                        _P.screenEffectCounter = 2 - (fallDamage - 0.5) * 4;
-                        _P.PlaySoundForEveryone(MineWorldSound.GroundHit, _P.playerPosition);
+                        P.ScreenEffect = ScreenEffect.Fall;
+                        P.ScreenEffectCounter = 2 - (fallDamage - 0.5)*4;
+                        P.PlaySoundForEveryone(MineWorldSound.GroundHit, P.PlayerPosition);
                     }
                 }
                 else
                 {
-                    _P.PlaySoundForEveryone(MineWorldSound.GroundHit, _P.playerPosition);
+                    P.PlaySoundForEveryone(MineWorldSound.GroundHit, P.PlayerPosition);
                 }
 
-                if (_P.blockEngine.SolidAtPointForPlayer(midPosition))
+                if (P.BlockEngine.SolidAtPointForPlayer(midPosition))
                 {
                     //_P.KillPlayer(Defines.deathByCrush);
-                    _P.SendPlayerHurt(100, false);
+                    P.SendPlayerHurt(100, false);
                 }
 
                 // If the player has their head stuck in a block, push them down.
-                if (_P.blockEngine.SolidAtPointForPlayer(headPosition))
+                if (P.BlockEngine.SolidAtPointForPlayer(headPosition))
                 {
-                    int blockIn = (int)(headPosition.Y);
-                    _P.playerPosition.Y = (float)(blockIn - 0.15f);
+                    int blockIn = (int) (headPosition.Y);
+                    P.PlayerPosition.Y = (blockIn - 0.15f);
                 }
 
                 // If the player is stuck in the ground, bring them out.
                 // This happens because we're standing on a block at -1.5, but stuck in it at -1.4, so -1.45 is the sweet spot.
-                if (_P.blockEngine.SolidAtPointForPlayer(footPosition))
+                if (P.BlockEngine.SolidAtPointForPlayer(footPosition))
                 {
-                    int blockOn = (int)(footPosition.Y);
-                    _P.playerPosition.Y = (float)(blockOn + 1 + 1.45);
+                    int blockOn = (int) (footPosition.Y);
+                    P.PlayerPosition.Y = (float) (blockOn + 1 + 1.45);
                 }
 
-                _P.playerVelocity.Y = 0;
+                P.PlayerVelocity.Y = 0;
 
                 // Logic for standing on a block.
                 switch (standingOnBlock)
                 {
                     case BlockType.Lava:
-                        _P.SendPlayerHurt(100, false);
+                        P.SendPlayerHurt(100, false);
                         break;
                 }
 
@@ -257,113 +252,120 @@ namespace MineWorld.States
                 switch (hittingHeadOnBlock)
                 {
                     case BlockType.Lava:
-                        _P.SendPlayerHurt(100, false);
+                        P.SendPlayerHurt(100, false);
                         break;
                 }
             }
-            if (!_P.blockEngine.SolidAtPointForPlayer(midPosition + _P.playerVelocity * (float)gameTime.ElapsedGameTime.TotalSeconds))
+            if (
+                !P.BlockEngine.SolidAtPointForPlayer(midPosition +
+                                                      P.PlayerVelocity*(float) gameTime.ElapsedGameTime.TotalSeconds))
             {
-                _P.playerPosition += _P.playerVelocity * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                P.PlayerPosition += P.PlayerVelocity*(float) gameTime.ElapsedGameTime.TotalSeconds;
             }
 
             // Death by falling off the map.
-            if (_P.playerPosition.Y < 0)
+            if (P.PlayerPosition.Y < 0)
             {
-                _P.SendPlayerHurt(100,false);
+                P.SendPlayerHurt(100, false);
                 //_P.KillPlayer(Defines.deathByMiss);
                 return;
             }
 
-            if (_P.MoveVector.X != 0 || _P.MoveVector.Z != 0)
+            if (P.MoveVector.X != 0 || P.MoveVector.Z != 0)
             {
                 // "Flatten" the movement vector so that we don"t move up/down.
-                _P.MoveVector.Y = 0;
-                _P.MoveVector.Normalize();
-                _P.MoveVector *= MOVESPEED * (float)gameTime.ElapsedGameTime.TotalSeconds;
-                if (_P.movingOnRoad)
-                    _P.MoveVector *= 2;
+                P.MoveVector.Y = 0;
+                P.MoveVector.Normalize();
+                P.MoveVector *= Movespeed*(float) gameTime.ElapsedGameTime.TotalSeconds;
+                if (P.MovingOnRoad)
+                    P.MoveVector *= 2;
                 // Sprinting doubles speed, even if already on road
-                if (_P.sprinting)
-                    _P.MoveVector *= 1.5f;
-                if (_P.swimming)
-                    _P.MoveVector *= 0.5f;
+                if (P.Sprinting)
+                    P.MoveVector *= 1.5f;
+                if (P.Swimming)
+                    P.MoveVector *= 0.5f;
                 //if (_P.crouching)
-                    //_P.MoveVector.Y = -1;
+                //_P.MoveVector.Y = -1;
 
 
-                TryToMoveTo(_P.MoveVector, gameTime);
+                TryToMoveTo(P.MoveVector);
                 // Attempt to move, doing collision stuff.
-                if (TryToMoveTo(_P.MoveVector, gameTime))
+                if (TryToMoveTo(P.MoveVector))
                 {
                 }
                 else
                 {
-                    if (!TryToMoveTo(new Vector3(0, 0, _P.MoveVector.Z), gameTime)) 
+                    if (!TryToMoveTo(new Vector3(0, 0, P.MoveVector.Z)))
                     {
                     }
-                    if (!TryToMoveTo(new Vector3(_P.MoveVector.X, 0, 0), gameTime)) 
-                    { 
+                    if (!TryToMoveTo(new Vector3(P.MoveVector.X, 0, 0)))
+                    {
                     }
                 }
             }
 
             //Reset movement and flags
-            _P.MoveVector = Vector3.Zero;
-            _P.movingOnRoad = false;
-            _P.sprinting = false;
-            _P.swimming = false;
-            _P.underwater = false;
+            P.MoveVector = Vector3.Zero;
+            P.MovingOnRoad = false;
+            P.Sprinting = false;
+            P.Swimming = false;
+            P.Underwater = false;
         }
 
-        private bool TryToMoveTo(Vector3 moveVector, GameTime gameTime)
+        private bool TryToMoveTo(Vector3 moveVector)
         {
             // Build a "test vector" that is a little longer than the move vector.
             float moveLength = moveVector.Length();
             Vector3 testVector = moveVector;
             testVector.Normalize();
-            testVector = testVector * (moveLength);// + 0.1f);
+            testVector = testVector*(moveLength); // + 0.1f);
 
             // Apply this test vector.
-            Vector3 movePosition = _P.playerPosition + testVector;
+            Vector3 movePosition = P.PlayerPosition + testVector;
             Vector3 midBodyPoint = movePosition + new Vector3(0, -0.7f, 0);
             Vector3 lowerBodyPoint = movePosition + new Vector3(0, -1.4f, 0);
 
-            if (!_P.blockEngine.SolidAtPointForPlayer(movePosition) && !_P.blockEngine.SolidAtPointForPlayer(lowerBodyPoint) && !_P.blockEngine.SolidAtPointForPlayer(midBodyPoint))
+            if (!P.BlockEngine.SolidAtPointForPlayer(movePosition) &&
+                !P.BlockEngine.SolidAtPointForPlayer(lowerBodyPoint) &&
+                !P.BlockEngine.SolidAtPointForPlayer(midBodyPoint))
             {
                 testVector = moveVector;
                 testVector.Normalize();
-                testVector = testVector * (moveLength + 0.11f); // Makes sure the camera doesnt move too close to the block ;)
-                movePosition = _P.playerPosition + testVector;
+                testVector = testVector*(moveLength + 0.11f);
+                    // Makes sure the camera doesnt move too close to the block ;)
+                movePosition = P.PlayerPosition + testVector;
                 midBodyPoint = movePosition + new Vector3(0, -0.7f, 0);
                 lowerBodyPoint = movePosition + new Vector3(0, -1.4f, 0);
 
-                if (!_P.blockEngine.SolidAtPointForPlayer(movePosition) && !_P.blockEngine.SolidAtPointForPlayer(lowerBodyPoint) && !_P.blockEngine.SolidAtPointForPlayer(midBodyPoint))
+                if (!P.BlockEngine.SolidAtPointForPlayer(movePosition) &&
+                    !P.BlockEngine.SolidAtPointForPlayer(lowerBodyPoint) &&
+                    !P.BlockEngine.SolidAtPointForPlayer(midBodyPoint))
                 {
-                    _P.playerPosition = _P.playerPosition + moveVector;
+                    P.PlayerPosition = P.PlayerPosition + moveVector;
                     return true;
                 }
             }
 
             // It's solid there, so while we can't move we have officially collided with it.
-            BlockType lowerBlock = _P.blockEngine.BlockAtPoint(lowerBodyPoint);
-            BlockType midBlock = _P.blockEngine.BlockAtPoint(midBodyPoint);
-            BlockType upperBlock = _P.blockEngine.BlockAtPoint(movePosition);
+            BlockType lowerBlock = P.BlockEngine.BlockAtPoint(lowerBodyPoint);
+            BlockType midBlock = P.BlockEngine.BlockAtPoint(midBodyPoint);
+            BlockType upperBlock = P.BlockEngine.BlockAtPoint(movePosition);
 
             // It's solid there, so see if it's a lava block. If so, touching it will kill us!
             if (upperBlock == BlockType.Lava || lowerBlock == BlockType.Lava || midBlock == BlockType.Lava)
             {
-                _P.SendPlayerHurt(100, false);
+                P.SendPlayerHurt(100, false);
                 return true;
             }
 
             // If it's a ladder, move up.
             //if (upperBlock == BlockType.Ladder || lowerBlock == BlockType.Ladder || midBlock == BlockType.Ladder)
             //{
-                //_P.playerVelocity.Y = CLIMBVELOCITY;
-                //Vector3 footPosition = _P.playerPosition + new Vector3(0f, -1.5f, 0f);
-                //if (_P.blockEngine.SolidAtPointForPlayer(footPosition))
-                    //_P.playerPosition.Y += 0.1f;
-                //return true;
+            //_P.playerVelocity.Y = CLIMBVELOCITY;
+            //Vector3 footPosition = _P.playerPosition + new Vector3(0f, -1.5f, 0f);
+            //if (_P.blockEngine.SolidAtPointForPlayer(footPosition))
+            //_P.playerPosition.Y += 0.1f;
+            //return true;
             //}
 
             return false;
@@ -371,40 +373,37 @@ namespace MineWorld.States
 
         public override void OnRenderAtUpdate(GraphicsDevice graphicsDevice, GameTime gameTime)
         {
-            _P.skyEngine.Render(graphicsDevice);
-            _P.playerEngine.Render(graphicsDevice);
-            _P.playerEngine.RenderPlayerNames(graphicsDevice);
-            _P.blockEngine.Render(graphicsDevice, gameTime);
-            _P.particleEngine.Render(graphicsDevice);
-            _P.interfaceEngine.Render(graphicsDevice);
-            if (_P.debugmode)
-            {
-                _P.debugEngine.Render(graphicsDevice);
-            }
-
-            _SM.Window.Title = Defines.MINEWORLDCLIENT_VERSION;
+            P.SkyEngine.Render(graphicsDevice);
+            P.PlayerEngine.Render(graphicsDevice);
+            P.PlayerEngine.RenderPlayerNames(graphicsDevice);
+            P.BlockEngine.Render(graphicsDevice, gameTime);
+            P.ParticleEngine.Render(graphicsDevice);
+            P.InterfaceEngine.Render(graphicsDevice);
+            P.DebugEngine.Render(graphicsDevice);
+            Sm.Window.Title = Defines.MineworldclientVersion;
         }
 
-        DateTime startChat = DateTime.Now;
-        public override void OnCharEntered(EventInput.CharacterEventArgs e)
+        public override void OnCharEntered(CharacterEventArgs e)
         {
-            if ((int)e.Character < 32 || (int)e.Character > 126) //From space to tilde
+            if (e.Character < 32 || e.Character > 126) //From space to tilde
                 return; //Do nothing
-            if (_P.chatMode != ChatMessageType.None)
+            if (P.Chatting)
             {
                 //Chat delay to avoid entering the "start chat" key, an unfortunate side effect of the new key bind system
-                TimeSpan diff = DateTime.Now - startChat;
+                TimeSpan diff = DateTime.Now - _startChat;
                 if (diff.Milliseconds >= 2)
-                    if (!(Keyboard.GetState().IsKeyDown(Keys.LeftControl) || Keyboard.GetState().IsKeyDown(Keys.RightControl)))
+                    if (
+                        !(Keyboard.GetState().IsKeyDown(Keys.LeftControl) ||
+                          Keyboard.GetState().IsKeyDown(Keys.RightControl)))
                     {
-                        _P.chatEntryBuffer += e.Character;
+                        P.ChatEntryBuffer += e.Character;
                     }
             }
         }
 
         public override void OnKeyDown(Keys key)
         {
-            if (_P.playerDead)
+            if (P.PlayerDead)
             {
                 return;
             }
@@ -413,33 +412,34 @@ namespace MineWorld.States
                 // Exit!
                 if (key == Keys.Y && Keyboard.GetState().IsKeyDown(Keys.Escape))
                 {
-                    _P.netClient.Disconnect("Client disconnected.");
-                    nextState = "MineWorld.States.ServerBrowserState";
+                    P.NetClient.Disconnect("Client disconnected.");
+                    _nextState = "MineWorld.States.ServerBrowserState";
                 }
                 // Pixelcide!
-                if (key == Keys.K && Keyboard.GetState().IsKeyDown(Keys.Escape) && !_P.playerDead)
+                if (key == Keys.K && Keyboard.GetState().IsKeyDown(Keys.Escape) && !P.PlayerDead)
                 {
-                    _P.SendPlayerHurt(100, false);
+                    P.SendPlayerHurt(100, false);
                     return;
                 }
-                if (_P.chatMode != ChatMessageType.None)
+                if (P.Chatting)
                 {
-                    if (Keyboard.GetState().IsKeyDown(Keys.LeftControl) || Keyboard.GetState().IsKeyDown(Keys.RightControl))
+                    if (Keyboard.GetState().IsKeyDown(Keys.LeftControl) ||
+                        Keyboard.GetState().IsKeyDown(Keys.RightControl))
                     {
                         if (key == Keys.V)
                         {
-                            _P.chatEntryBuffer += System.Windows.Forms.Clipboard.GetText();
+                            P.ChatEntryBuffer += Clipboard.GetText();
                             return;
                         }
                         else if (key == Keys.C)
                         {
-                            System.Windows.Forms.Clipboard.SetText(_P.chatEntryBuffer);
+                            Clipboard.SetText(P.ChatEntryBuffer);
                             return;
                         }
                         else if (key == Keys.X)
                         {
-                            System.Windows.Forms.Clipboard.SetText(_P.chatEntryBuffer);
-                            _P.chatEntryBuffer = "";
+                            Clipboard.SetText(P.ChatEntryBuffer);
+                            P.ChatEntryBuffer = "";
                             return;
                         }
                     }
@@ -447,30 +447,30 @@ namespace MineWorld.States
                     if (key == Keys.Enter)
                     {
                         // If we have an actual message to send, fire it off at the server.
-                        if (_P.chatEntryBuffer.Length > 0)
+                        if (P.ChatEntryBuffer.Length > 0)
                         {
                             SendChatOrCommandMessage();
                         }
 
-                        _P.chatEntryBuffer = "";
-                        _P.chatMode = ChatMessageType.None;
+                        P.ChatEntryBuffer = "";
+                        P.Chatting = false;
                     }
                     else if (key == Keys.Back)
                     {
-                        if (_P.chatEntryBuffer.Length > 0)
-                            _P.chatEntryBuffer = _P.chatEntryBuffer.Substring(0, _P.chatEntryBuffer.Length - 1);
+                        if (P.ChatEntryBuffer.Length > 0)
+                            P.ChatEntryBuffer = P.ChatEntryBuffer.Substring(0, P.ChatEntryBuffer.Length - 1);
                     }
                     else if (key == Keys.Escape)
                     {
-                        _P.chatEntryBuffer = "";
-                        _P.chatMode = ChatMessageType.None;
+                        P.ChatEntryBuffer = "";
+                        P.Chatting = false;
                     }
                     return;
                 }
                 else
                 {
                     //If we arent typing lets move :P Everyday iam shuffling
-                    switch ((_SM as MineWorldGame).keyBinds.GetBoundKeyBoard(key))
+                    switch ((Sm as MineWorldGame).KeyBinds.GetBoundKeyBoard(key))
                     {
                             /*
                         case CustomKeyBoardButtons.Forward:
@@ -496,41 +496,40 @@ namespace MineWorld.States
                              */
                         case CustomKeyBoardButtons.Sprint:
                             {
-                                _P.sprinting = true;
+                                P.Sprinting = true;
                                 break;
                             }
                         case CustomKeyBoardButtons.Jump:
                             {
-                                Vector3 footPosition = _P.playerPosition + new Vector3(0f, -1.5f, 0f);
-                                Vector3 midPosition = _P.playerPosition + new Vector3(0f, -0.7f, 0f);
-                                if (_P.blockEngine.SolidAtPointForPlayer(footPosition) && _P.playerVelocity.Y == 0)
+                                Vector3 footPosition = P.PlayerPosition + new Vector3(0f, -1.5f, 0f);
+                                Vector3 midPosition = P.PlayerPosition + new Vector3(0f, -0.7f, 0f);
+                                if (P.BlockEngine.SolidAtPointForPlayer(footPosition) && P.PlayerVelocity.Y == 0)
                                 {
-                                    _P.playerVelocity.Y = JUMPVELOCITY;
-                                    float amountBelowSurface = ((int)footPosition.Y) + 1 - footPosition.Y;
-                                    _P.playerPosition.Y += amountBelowSurface + 0.01f;
+                                    P.PlayerVelocity.Y = Jumpvelocity;
+                                    float amountBelowSurface = ((int) footPosition.Y) + 1 - footPosition.Y;
+                                    P.PlayerPosition.Y += amountBelowSurface + 0.01f;
                                 }
 
-                                if (_P.blockEngine.BlockAtPoint(midPosition) == BlockType.Water)
+                                if (P.BlockEngine.BlockAtPoint(midPosition) == BlockType.Water)
                                 {
-                                    _P.playerVelocity.Y = JUMPVELOCITY * 0.4f;
+                                    P.PlayerVelocity.Y = Jumpvelocity*0.4f;
                                 }
                                 break;
                             }
                         case CustomKeyBoardButtons.Say:
                             {
-                                _P.chatMode = ChatMessageType.PlayerSay;
-                                startChat = DateTime.Now;
+                                P.Chatting = true;
+                                _startChat = DateTime.Now;
                                 break;
                             }
                     }
                 }
-            
             }
         }
 
         public override void OnKeyUp(Keys key)
         {
-            if (_P.playerDead)
+            if (P.PlayerDead)
             {
                 return;
             }
@@ -542,18 +541,18 @@ namespace MineWorld.States
 
         public override void OnMouseDown(MouseButtons button, int x, int y)
         {
-            if (_P.playerDead)
+            if (P.PlayerDead)
             {
-                _P.SendRespawnRequest();
+                P.SendRespawnRequest();
             }
             else
             {
-                switch ((_SM as MineWorldGame).keyBinds.GetBoundMouse(button))
+                switch ((Sm as MineWorldGame).KeyBinds.GetBoundMouse(button))
                 {
                     case CustomMouseButtons.Fire:
                     case CustomMouseButtons.AltFire:
                         {
-                            _P.UseTool((_SM as MineWorldGame).keyBinds.GetBoundMouse(button));
+                            P.UseTool((Sm as MineWorldGame).KeyBinds.GetBoundMouse(button));
                             break;
                         }
                 }
@@ -562,7 +561,7 @@ namespace MineWorld.States
 
         public override void OnMouseUp(MouseButtons button, int x, int y)
         {
-            if (_P.playerDead)
+            if (P.PlayerDead)
             {
                 return;
             }
@@ -574,7 +573,7 @@ namespace MineWorld.States
 
         public override void OnMouseScroll(int scrollDelta)
         {
-            if (_P.playerDead)
+            if (P.PlayerDead)
             {
                 return;
             }
@@ -595,24 +594,24 @@ namespace MineWorld.States
 
         private void SendChatOrCommandMessage()
         {
-            if (_P.netClient.Status == NetConnectionStatus.Connected)
+            if (P.NetClient.Status == NetConnectionStatus.Connected)
             {
                 //Its a player command :D?
-                if (_P.chatEntryBuffer.StartsWith("/"))
+                if (P.ChatEntryBuffer.StartsWith("/"))
                 {
-                    NetBuffer msgBuffer = _P.netClient.CreateBuffer();
-                    msgBuffer.Write((byte)MineWorldMessage.PlayerCommand);
-                    msgBuffer.Write(_P.chatEntryBuffer);
-                    _P.netClient.SendMessage(msgBuffer, NetChannel.ReliableInOrder6);
+                    NetBuffer msgBuffer = P.NetClient.CreateBuffer();
+                    msgBuffer.Write((byte) MineWorldMessage.PlayerCommand);
+                    msgBuffer.Write(P.ChatEntryBuffer);
+                    P.NetClient.SendMessage(msgBuffer, NetChannel.ReliableInOrder6);
                 }
                 else
                 {
-                    NetBuffer msgBuffer = _P.netClient.CreateBuffer();
-                    msgBuffer.Write((byte)MineWorldMessage.ChatMessage);
-                    msgBuffer.Write((byte)_P.chatMode);
-                    msgBuffer.Write(_P.chatEntryBuffer);
-                    msgBuffer.Write(_P.playerHandle);
-                    _P.netClient.SendMessage(msgBuffer, NetChannel.ReliableInOrder3);
+                    NetBuffer msgBuffer = P.NetClient.CreateBuffer();
+                    msgBuffer.Write((byte) MineWorldMessage.ChatMessage);
+                    msgBuffer.Write((byte) ChatMessageType.PlayerSay);
+                    msgBuffer.Write(P.ChatEntryBuffer);
+                    msgBuffer.Write(P.PlayerHandle);
+                    P.NetClient.SendMessage(msgBuffer, NetChannel.ReliableInOrder3);
                 }
             }
         }

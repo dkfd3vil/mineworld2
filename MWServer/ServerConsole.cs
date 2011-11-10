@@ -1,20 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Threading;
-using Lidgren.Network;
-using Lidgren.Network.Xna;
-using Microsoft.Xna.Framework;
 
 //Contains core console code
+
 namespace MineWorld
 {
     public partial class MineWorldServer
     {
         public void ConsoleWrite(string text)
         {
-            if (Ssettings.Logs == true)
+            if (Ssettings.Logs)
             {
                 LogWrite(text);
             }
@@ -33,7 +27,7 @@ namespace MineWorld
 
         public void ConsoleWrite(string text, ConsoleColor color)
         {
-            if (Ssettings.Logs == true)
+            if (Ssettings.Logs)
             {
                 LogWrite(text);
             }
@@ -47,7 +41,7 @@ namespace MineWorld
         {
             //Console.Clear();
             //TODO: Replace this simple by Console.Clear()
-            for (int i = 0; i < 80 * 25; i++)
+            for (int i = 0; i < 80*25; i++)
             {
                 Console.Write(" ");
             }
@@ -56,10 +50,10 @@ namespace MineWorld
         public void ConsoleProcessInput(string input)
         {
             ConsoleWrite("> " + input);
-            ProcessCommand(input,false);
+            ProcessCommand(input);
         }
 
-        public void ProcessCommand(string input,bool clientcommand)
+        public void ProcessCommand(string input)
         {
             // if the input is empty then return silent
             if (input == "")
@@ -67,17 +61,11 @@ namespace MineWorld
                 return;
             }
 
-            string[] args = input.Split(new char[] { ' ' });
-            if (clientcommand == true)
+            string[] args = input.Split(new[] {' '});
+
+            if (args[0].StartsWith("/") && args[0].Length > 1)
             {
-                args[0] = args[0].Substring(1);
-            }
-            else if (args[0].StartsWith("\\") && args[0].Length > 1)
-            {
-                args[0] = args[0].Substring(1);
-            }
-            else if(args[0].StartsWith("/") && args[0].Length > 1)
-            {
+                //Remove the forwardslash
                 args[0] = args[0].Substring(1);
             }
 
@@ -114,25 +102,25 @@ namespace MineWorld
                     }
                 case "listplayers":
                     {
-                        ConsoleWrite("( " + playerList.Count + " / " + Ssettings.Maxplayers + " )");
-                        foreach (ServerPlayer p in playerList.Values)
+                        ConsoleWrite("( " + PlayerList.Count + " / " + Ssettings.Maxplayers + " )");
+                        foreach (ServerPlayer p in PlayerList.Values)
                         {
                             string teamIdent = "";
-                            if (GetAdmin(p.IP))
+                            if (GetAdmin(p.Ip))
                                 teamIdent += " (Admin)";
                             ConsoleWrite(p.Name + teamIdent);
-                            ConsoleWrite(" - " + p.IP);
+                            ConsoleWrite(" - " + p.Ip);
                         }
                         break;
                     }
                 case "listadmins":
                     {
                         ConsoleWrite("Admin list:");
-                        foreach (ServerPlayer p in playerList.Values)
+                        foreach (ServerPlayer p in PlayerList.Values)
                         {
-                            if(GetAdmin(p.IP))
+                            if (GetAdmin(p.Ip))
                             {
-                                ConsoleWrite(p.Name + " - " + p.IP);
+                                ConsoleWrite(p.Name + " - " + p.Ip);
                             }
                         }
                         break;
@@ -155,14 +143,14 @@ namespace MineWorld
                     }
                 case "status":
                     {
-                        status();
+                        GetInfo();
                         break;
                     }
                 case "kick":
                     {
                         if (args.Length == 2)
                         {
-                            KickPlayer(args[1],false);
+                            KickPlayer(args[1], false);
                         }
                         break;
                     }
@@ -178,7 +166,7 @@ namespace MineWorld
                     {
                         if (args.Length == 2)
                         {
-                            BanPlayer(args[1],false);
+                            BanPlayer(args[1], false);
                         }
                         break;
                     }
@@ -186,7 +174,7 @@ namespace MineWorld
                     {
                         if (args.Length == 2)
                         {
-                            BanPlayer(args[1],true);
+                            BanPlayer(args[1], true);
                         }
                         break;
                     }
@@ -204,7 +192,7 @@ namespace MineWorld
                     {
                         if (args.Length >= 2)
                         {
-                            SaveLevel(args[1]);
+                            //SaveLevel(args[1]);
                         }
                         break;
                     }
@@ -212,17 +200,17 @@ namespace MineWorld
                     {
                         if (args.Length >= 2)
                         {
-                            LoadLevel(args[1]);
+                            //LoadLevel(args[1]);
                         }
                         else if (Ssettings.LevelName != "")
                         {
-                            LoadLevel(Ssettings.LevelName);
+                            //LoadLevel(Ssettings.LevelName);
                         }
                         break;
                     }
                 case "fps":
                     {
-                        ConsoleWrite("Server FPS:" + frameCount);
+                        ConsoleWrite("Server FPS:" + _frameCount);
                         break;
                     }
                 case "cls":
@@ -236,8 +224,7 @@ namespace MineWorld
                         ConsoleWrite("Command not reconized " + args[0]);
                         break;
                     }
-                    
             }
         }
     }
- }
+}

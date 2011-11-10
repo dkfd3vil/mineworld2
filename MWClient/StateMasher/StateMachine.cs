@@ -1,107 +1,97 @@
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Runtime.InteropServices; 
 using System.Reflection;
-using MineWorld;
+using System.Runtime.InteropServices;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Media;
-using Microsoft.Xna.Framework.Net;
-using Microsoft.Xna.Framework.Storage;
 
-namespace StateMasher
+namespace MineWorld.StateMasher
 {
     /// <summary>
-    /// This is the main type for your game
+    ///   This is the main type for your game
     /// </summary>
-    public class StateMachine : Microsoft.Xna.Framework.Game
+    public class StateMachine : Game
     {
-        [DllImport("user32.dll")]
-        public static extern int GetForegroundWindow(); 
+        private readonly FpsCounter _fpsCounter = new FpsCounter();
+        public GraphicsDeviceManager GraphicsDeviceManager;
 
-        public GraphicsDeviceManager graphicsDeviceManager;
-        public PropertyBag propertyBag = null;
+        private State _currentState;
+        private string _currentStateType = "";
 
-        private string currentStateType = "";
-        public string CurrentStateType
-        {
-            get { return currentStateType; }
-        }
-
-        private State currentState = null;
-        private bool needToRenderOnEnter = false;
-
-        private FPSCounter fpsCounter = new FPSCounter();
-        public double FrameRate
-        {
-            get { return fpsCounter.fps(); }
-        }
-
-        private MouseState msOld;
+        private MouseState _msOld;
+        private bool _needToRenderOnEnter;
+        public PropertyBag PropertyBag;
 
         public StateMachine()
         {
             Content.RootDirectory = "Content";
-            graphicsDeviceManager = new GraphicsDeviceManager(this);
-            EventInput.EventInput.Initialize(this.Window);
-            EventInput.EventInput.CharEntered += new EventInput.CharEnteredHandler(EventInput_CharEntered);
-            EventInput.EventInput.KeyDown += new EventInput.KeyEventHandler(EventInput_KeyDown);
-            EventInput.EventInput.KeyUp += new EventInput.KeyEventHandler(EventInput_KeyUp);
+            GraphicsDeviceManager = new GraphicsDeviceManager(this);
+            EventInput.Initialize(Window);
+            EventInput.CharEntered += EventInputCharEntered;
+            EventInput.KeyDown += EventInputKeyDown;
+            EventInput.KeyUp += EventInputKeyUp;
         }
+
+        public string CurrentStateType
+        {
+            get { return _currentStateType; }
+        }
+
+        public double FrameRate
+        {
+            get { return _fpsCounter.Fps(); }
+        }
+
+        [DllImport("user32.dll")]
+        public static extern int GetForegroundWindow();
 
         protected void ChangeState(string newState)
         {
-            Debug.Assert(newState != "","Newstate string at changestate was empty\n\r Report at dev");
+            Debug.Assert(newState != "", "Newstate string at changestate was empty\n\r Report at dev");
 
             // Call OnLeave for the old state.
-            if (currentState != null)
-                currentState.OnLeave(newState);
+            if (_currentState != null)
+                _currentState.OnLeave(newState);
 
             // Instantiate and set the new state.
             Assembly a = Assembly.GetExecutingAssembly();
             Type t = a.GetType(newState);
-            currentState = Activator.CreateInstance(t) as State;
+            _currentState = Activator.CreateInstance(t) as State;
 
             // Set up the new state.
-            currentState._P = propertyBag;
-            currentState._SM = this;
-            currentState.OnEnter(currentStateType);
-            currentStateType = newState;
-            needToRenderOnEnter = true;
+            if (_currentState != null)
+            {
+                _currentState.P = PropertyBag;
+                _currentState.Sm = this;
+                _currentState.OnEnter(_currentStateType);
+            }
+            _currentStateType = newState;
+            _needToRenderOnEnter = true;
         }
 
         public bool WindowHasFocus()
         {
-            return GetForegroundWindow() == (int)Window.Handle;
-        }
-
-        protected override void Initialize()
-        {
-            base.Initialize();
+            return GetForegroundWindow() == (int) Window.Handle;
         }
 
         //Keyboard input
-        public void EventInput_CharEntered(object sender, EventInput.CharacterEventArgs e)
+        public void EventInputCharEntered(object sender, CharacterEventArgs e)
         {
-            if (currentState != null)
-                currentState.OnCharEntered(e);
+            if (_currentState != null)
+                _currentState.OnCharEntered(e);
         }
 
-        public void EventInput_KeyDown(object sender, EventInput.KeyEventArgs e)
+        public void EventInputKeyDown(object sender, KeyEventArgs e)
         {
-            if (currentState != null)
-                currentState.OnKeyDown(e.KeyCode);
+            if (_currentState != null)
+                _currentState.OnKeyDown(e.KeyCode);
         }
 
-        public void EventInput_KeyUp(object sender, EventInput.KeyEventArgs e)
+        public void EventInputKeyUp(object sender, KeyEventArgs e)
         {
-            if (currentState != null)
-                currentState.OnKeyUp(e.KeyCode);
+            if (_currentState != null)
+                _currentState.OnKeyUp(e.KeyCode);
         }
 
         protected override void LoadContent()
@@ -115,36 +105,39 @@ namespace StateMasher
         protected override void Update(GameTime gameTime)
         {
             //If we dont got a property bag or state then return silent
-            if (currentState == null && propertyBag == null)
+            if (_currentState == null && PropertyBag == null)
             {
                 return;
             }
 
             // Call OnUpdate.
-            string newState = currentState.OnUpdate(gameTime, Keyboard.GetState(), Mouse.GetState());
-            if (newState != null)
-                ChangeState(newState);
+            if (_currentState != null)
+            {
+                string newState = _currentState.OnUpdate(gameTime, Keyboard.GetState(), Mouse.GetState());
+                if (newState != null)
+                    ChangeState(newState);
+            }
 
             // Check for mouse events.
             MouseState msNew = Mouse.GetState();
             if (WindowHasFocus())
             {
-                if (msOld.LeftButton == ButtonState.Released && msNew.LeftButton == ButtonState.Pressed)
-                    currentState.OnMouseDown(MouseButtons.LeftButton, msNew.X, msNew.Y);
-                if (msOld.MiddleButton == ButtonState.Released && msNew.MiddleButton == ButtonState.Pressed)
-                    currentState.OnMouseDown(MouseButtons.MiddleButton, msNew.X, msNew.Y);
-                if (msOld.RightButton == ButtonState.Released && msNew.RightButton == ButtonState.Pressed)
-                    currentState.OnMouseDown(MouseButtons.RightButton, msNew.X, msNew.Y);
-                if (msOld.LeftButton == ButtonState.Pressed && msNew.LeftButton == ButtonState.Released)
-                    currentState.OnMouseUp(MouseButtons.LeftButton, msNew.X, msNew.Y);
-                if (msOld.MiddleButton == ButtonState.Pressed && msNew.MiddleButton == ButtonState.Released)
-                    currentState.OnMouseUp(MouseButtons.MiddleButton, msNew.X, msNew.Y);
-                if (msOld.RightButton == ButtonState.Pressed && msNew.RightButton == ButtonState.Released)
-                    currentState.OnMouseUp(MouseButtons.RightButton, msNew.X, msNew.Y);
-                if (msOld.ScrollWheelValue != msNew.ScrollWheelValue)
-                    currentState.OnMouseScroll(msNew.ScrollWheelValue - msOld.ScrollWheelValue);
+                if (_msOld.LeftButton == ButtonState.Released && msNew.LeftButton == ButtonState.Pressed)
+                    _currentState.OnMouseDown(MouseButtons.LeftButton, msNew.X, msNew.Y);
+                if (_msOld.MiddleButton == ButtonState.Released && msNew.MiddleButton == ButtonState.Pressed)
+                    _currentState.OnMouseDown(MouseButtons.MiddleButton, msNew.X, msNew.Y);
+                if (_msOld.RightButton == ButtonState.Released && msNew.RightButton == ButtonState.Pressed)
+                    _currentState.OnMouseDown(MouseButtons.RightButton, msNew.X, msNew.Y);
+                if (_msOld.LeftButton == ButtonState.Pressed && msNew.LeftButton == ButtonState.Released)
+                    _currentState.OnMouseUp(MouseButtons.LeftButton, msNew.X, msNew.Y);
+                if (_msOld.MiddleButton == ButtonState.Pressed && msNew.MiddleButton == ButtonState.Released)
+                    _currentState.OnMouseUp(MouseButtons.MiddleButton, msNew.X, msNew.Y);
+                if (_msOld.RightButton == ButtonState.Pressed && msNew.RightButton == ButtonState.Released)
+                    _currentState.OnMouseUp(MouseButtons.RightButton, msNew.X, msNew.Y);
+                if (_msOld.ScrollWheelValue != msNew.ScrollWheelValue)
+                    _currentState.OnMouseScroll(msNew.ScrollWheelValue - _msOld.ScrollWheelValue);
             }
-            msOld = msNew;
+            _msOld = msNew;
 
             base.Update(gameTime);
         }
@@ -154,29 +147,30 @@ namespace StateMasher
             GraphicsDevice.Clear(Color.Black);
 
             //If we dont got a property bag or state then return silent
-            if (currentState == null && propertyBag == null)
+            if (_currentState == null && PropertyBag == null)
             {
                 return;
             }
 
             // TODO Find a better place for fps counter
             // I tottaly dont like the way how FPS is implented
-            StateMachine _SM = currentState._SM;
-            if ((_SM as MineWorldGame).Csettings.DrawFrameRate)
+            StateMachine sm = _currentState.Sm;
+            if ((sm as MineWorldGame).Csettings.DrawFrameRate)
             {
-                fpsCounter.frame((int)gameTime.TotalRealTime.Milliseconds + (int)gameTime.TotalRealTime.Seconds * 1000 + (int)gameTime.TotalRealTime.Minutes * 60000 + (int)gameTime.TotalRealTime.Hours * 3600000);
+                _fpsCounter.Frame(gameTime.TotalRealTime.Milliseconds + gameTime.TotalRealTime.Seconds*1000 +
+                                 gameTime.TotalRealTime.Minutes*60000 + gameTime.TotalRealTime.Hours*3600000);
             }
-            
+
             // Call OnRenderAtUpdate.
-            currentState.OnRenderAtUpdate(GraphicsDevice, gameTime);
+            _currentState.OnRenderAtUpdate(GraphicsDevice, gameTime);
 
             // If we have one queued, call OnRenderAtEnter.
-            if (needToRenderOnEnter)
+            if (_needToRenderOnEnter)
             {
-                needToRenderOnEnter = false;
-                currentState.OnRenderAtEnter(GraphicsDevice);
+                _needToRenderOnEnter = false;
+                _currentState.OnRenderAtEnter(GraphicsDevice);
             }
-            
+
             base.Draw(gameTime);
         }
     }

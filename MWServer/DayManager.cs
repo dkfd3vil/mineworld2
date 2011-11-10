@@ -1,89 +1,77 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Threading;
-using Lidgren.Network;
-using Lidgren.Network.Xna;
-using Microsoft.Xna.Framework;
 
 namespace MineWorld
 {
     public class DayManager
     {
-        bool goingup = false;
-        int lightsteps = 0;
-        float light = 1f;
-        float prevlight = 1f;
-        DateTime lastcalclight = DateTime.Now;
+        private readonly int _lightsteps;
+        private bool _goingup;
+        private DateTime _lastcalclight = DateTime.Now;
+        private float _light = 1f;
+        private float _prevlight = 1f;
 
         public DayManager(int amount)
         {
-            lightsteps = amount;
+            _lightsteps = amount;
         }
 
         public float Light
         {
-            get
-            {
-                return light;
-            }
-            set
-            {
-                light = value;
-            }
+            get { return _light; }
+            set { _light = value; }
         }
 
         public void Update()
         {
-            TimeSpan timespanlastcalclight = DateTime.Now - lastcalclight;
+            TimeSpan timespanlastcalclight = DateTime.Now - _lastcalclight;
 
-            if (timespanlastcalclight.Seconds > lightsteps)
+            if (timespanlastcalclight.Seconds > _lightsteps)
             {
-                if (goingup)
+                if (_goingup)
                 {
-                    light = light + 0.1f;
+                    _light = _light + 0.1f;
                 }
                 else
                 {
-                    light = light - 0.1f;
+                    _light = _light - 0.1f;
                 }
 
-                if (light <= 0.0f)
+                if (_light <= 0.0f)
                 {
-                    light = 0.0f;
-                    goingup = true;
+                    _light = 0.0f;
+                    _goingup = true;
                 }
-                if (light >= 1.0f)
+                if (_light >= 1.0f)
                 {
-                    light = 1.0f;
-                    goingup = false;
+                    _light = 1.0f;
+                    _goingup = false;
                 }
-                lastcalclight = DateTime.Now;
+                _lastcalclight = DateTime.Now;
             }
         }
 
+        //TODO Timechanged in Daymanager is fucked
         public bool Timechanged()
         {
-            if (light == prevlight)
+            if (_light == _prevlight)
             {
                 return false;
             }
             else
             {
-                prevlight = light;
+                _prevlight = _light;
                 return true;
             }
         }
 
         public void SetNight()
         {
-            light = 0.0f;
+            _light = 0.0f;
         }
 
         public void SetDay()
         {
-            light = 1.0f;
+            _light = 1.0f;
         }
     }
 }
