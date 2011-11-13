@@ -15,5 +15,10 @@
             TimeStamp = 10;
             Author = author;
         }
+
+        public bool MessageExpired()
+        {
+            return TimeStamp <= 0;
+        }
     }
 }

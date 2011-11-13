@@ -32,7 +32,7 @@ namespace MineWorld
                     while (line != null)
                     {
                         if (line.Trim().Length != 0 && line.Trim().ToCharArray()[0] != '#')
-                            temp.Add(line.Trim()); //This will be changed to note authority too
+                            temp.Add(line.Trim());
                         line = sr.ReadLine();
                     }
                     sr.Close();

@@ -182,12 +182,7 @@ namespace MineWorld
 
                 //Check the time
                 DayManager.Update();
-
-                // Look if the time is changed so that we tell the clients
-                if (DayManager.Timechanged())
-                {
-                    SendDayTimeUpdate(DayManager.Light);
-                }
+                SendDayTimeUpdate(DayManager.Light);
 
                 //Time to backup map?
                 // If Ssettings.autosavetimer is 0 then autosave is disabled
