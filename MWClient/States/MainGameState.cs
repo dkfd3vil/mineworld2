@@ -43,9 +43,6 @@ namespace MineWorld.States
             // Handle input.
             HandleInput();
 
-            // Update network stuff.
-            (Sm as MineWorldGame).UpdateNetwork(gameTime);
-
             // Update the current screen effect.
             P.ScreenEffectCounter += gameTime.ElapsedGameTime.TotalSeconds;
 
