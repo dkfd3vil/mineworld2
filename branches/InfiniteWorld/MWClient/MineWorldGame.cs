@@ -545,6 +545,7 @@ namespace MineWorld
             GraphicsDeviceManager.PreferredDepthStencilFormat = DepthFormat.Depth24Stencil8;
             IsFixedTimeStep = false;
             GraphicsDeviceManager.ApplyChanges();
+            base.Initialize();
         }
 
         protected override void OnExiting(object sender, EventArgs args)

@@ -50,20 +50,6 @@ namespace MineWorld
             }
         }
 
-        //TODO Timechanged in Daymanager is fucked
-        public bool Timechanged()
-        {
-            if (_light == _prevlight)
-            {
-                return false;
-            }
-            else
-            {
-                _prevlight = _light;
-                return true;
-            }
-        }
-
         public void SetNight()
         {
             _light = 0.0f;

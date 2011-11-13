@@ -32,7 +32,6 @@ namespace MineWorld.States
 
         public override string OnUpdate(GameTime gameTime, KeyboardState keyState, MouseState mouseState)
         {
-            // Do network stuff.
             TimeSpan titlescreenbetween = DateTime.Now - _titlescreenseconds;
             // After 3 seconds we go to the Serverbrowser state
             if (titlescreenbetween.TotalMilliseconds > 3000)

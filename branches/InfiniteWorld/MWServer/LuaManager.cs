@@ -10,7 +10,6 @@ namespace MineWorld
     {
         private readonly MineWorldServer _server;
         private readonly Lua _luaVm;
-        //LuaFunctions LuaF;
 
         private readonly Dictionary<string, List<string>> _eventTable = new Dictionary<string, List<string>>();
         private string _folderPath;
@@ -21,7 +20,6 @@ namespace MineWorld
         {
             _server = s;
             _luaVm = new Lua();
-            //LuaF = new LuaFunctions();
 
             _eventTable["ON_UPDATE"] = new List<string>();
             _eventTable["ON_PLAYERDIED"] = new List<string>();

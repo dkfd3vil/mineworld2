@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -138,6 +139,7 @@ namespace MineWorld.Engines
             // Check the textures
             if (!CheckTextures())
             {
+                Debug.Assert(Convert.ToBoolean("Texture file not found"));
                 //ToDo Show error by errorscreen
                 Environment.Exit(1);
             }

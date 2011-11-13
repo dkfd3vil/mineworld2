@@ -54,19 +54,19 @@ namespace MineWorld.Engines
             spriteBatch.DrawString(UiFont, text, pointCenter - textSize/2, colorText);
         }
 
-        private static bool MessageExpired(ChatMessage msg)
-        {
-            return msg.TimeStamp <= 0;
-        }
-
         public void Update(GameTime gameTime)
         {
             if (_p == null)
                 return;
 
             foreach (ChatMessage msg in _p.ChatBuffer)
+            {
                 msg.TimeStamp -= (float) gameTime.ElapsedGameTime.TotalSeconds;
-            _p.ChatBuffer.RemoveAll(MessageExpired);
+                if(msg.MessageExpired())
+                {
+                    _p.ChatBuffer.Remove(msg);
+                }
+            }
         }
 
         public void DrawChat(List<ChatMessage> messages, GraphicsDevice graphicsDevice)
