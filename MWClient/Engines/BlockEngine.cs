@@ -5,6 +5,7 @@ using System.IO;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MineWorld.BloomEffect;
+using System.Windows.Forms;
 
 namespace MineWorld.Engines
 {
@@ -139,7 +140,7 @@ namespace MineWorld.Engines
             // Check the textures
             if (!CheckTextures())
             {
-                Debug.Assert(Convert.ToBoolean("Texture file not found"));
+                MessageBox.Show("terrain.png missing");
                 //ToDo Show error by errorscreen
                 Environment.Exit(1);
             }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using Lidgren.Network;
+using System.Net;
 
 namespace MineWorld
 {
@@ -38,8 +39,9 @@ namespace MineWorld
 
         public string GetExternalIp()
         {
-            //TODO Remove hardcoded external ip
-            return "0.0.0";
+            WebClient client = new WebClient();
+            client.Proxy = null;
+            return client.DownloadString("http://whatismyip.org/");
         }
 
         public bool Start()
