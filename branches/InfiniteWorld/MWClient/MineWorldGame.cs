@@ -249,9 +249,10 @@ namespace MineWorld
                                             Csettings.MapZ = z;
                                             Csettings.MapSeed = seed;
 
-
-                                            MapGenerator mpg = new MapGenerator(seed, x, y, z);
-                                            PropertyBag.BlockEngine.SetBlockList(mpg.GenerateSimpleCube(), x, y, z);
+                                            //Needs to be replaced by BlockList
+                                            MapGenerator generator = new MapGenerator(seed, x, y, z);
+                                            generator.drawCube(0, 0, 0, x, y /2, z, BlockType.Dirt);
+                                            PropertyBag.BlockEngine.SetBlockList(generator.mapData, x, y, z);
                                             if (!Csettings.NoSound)
                                                 MediaPlayer.Stop();
                                             ChangeState("MineWorld.States.MainGameState");

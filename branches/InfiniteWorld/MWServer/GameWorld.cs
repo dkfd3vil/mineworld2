@@ -13,10 +13,11 @@ namespace MineWorld
         public void GenerateNewMap()
         {
             // Create our block world, translating the coordinates out of the cave generator (where Y points down)
-            MapGenerator cg = new MapGenerator(Msettings.Mapseed, Msettings.MapsizeX, Msettings.MapsizeY,
-                                               Msettings.MapsizeZ);
+            MapGenerator generator = new MapGenerator(Msettings.Mapseed, Msettings.MapsizeX, Msettings.MapsizeY,Msettings.MapsizeZ);
+            generator.drawCube(0, 0, 0, Msettings.MapsizeX, Msettings.MapsizeY /2, Msettings.MapsizeZ,BlockType.Dirt);
+            BlockList = generator.mapData;
             //blockList = Cg.GenerateCaveSystem();
-            BlockList = cg.GenerateSimpleCube();
+            //BlockList = cg.GenerateSimpleCube();
         }
 
         public void KillPlayerSpecific(ServerPlayer player)
