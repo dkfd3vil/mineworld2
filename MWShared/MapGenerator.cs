@@ -1,4 +1,5 @@
-﻿namespace MineWorld
+﻿using System;
+namespace MineWorld
 {
     public class MapGenerator
     {
@@ -7,6 +8,8 @@
         private readonly int _mapZ;
         private readonly int _seed;
 
+        public BlockType[, ,] mapData;
+
         //TODO Fix MapGenerator
         public MapGenerator(int seed, int x, int y, int z)
         {
@@ -14,36 +17,39 @@
             _mapX = x;
             _mapY = y;
             _mapZ = z;
-        }
 
-        public BlockType[,,] GenerateSimpleCube()
-        {
-            BlockType[,,] caveData = new BlockType[_mapX,_mapY,_mapZ];
-
-            FillMapPlaceholder(caveData);
-
-            for (int x = 0; x < _mapX; x++)
+            //Init nice and empty map in the constructor 
+            mapData = new BlockType[_mapX, _mapY, _mapZ];
+            for (int fx = 0; fx < _mapX; fx++)
             {
-                for (int y = 0; y < _mapY/2; y++)
+                for (int fy = 0; fy < _mapY; fy++)
                 {
-                    for (int z = 0; z < _mapZ; z++)
+                    for (int fz = 0; fz < _mapZ; fz++)
                     {
-                        caveData[x, y, z] = BlockType.Dirt;
+                        mapData[fx, fy, fz] = BlockType.None;
                     }
                 }
             }
-            return caveData;
+
         }
 
-        private void FillMapPlaceholder(BlockType[,,] caveData)
+        //draw 3D cube in map filled with brush
+        public void drawCube(int x1, int y1, int z1, int x2, int y2, int z2, BlockType brush)
         {
-            for (int x = 0; x < _mapX; x++)
+            int cx1 = Math.Min(x1, x2);
+            int cx2 = Math.Max(x1, x2);
+            int cy1 = Math.Min(y1, y2);
+            int cy2 = Math.Max(y1, y2);
+            int cz1 = Math.Min(z1, z2);
+            int cz2 = Math.Max(z1, z2);
+
+            for (int x = cx1; x < cx2; x++)
             {
-                for (int y = 0; y < _mapY; y++)
+                for (int y = cy1; y < cy2 / 2; y++)
                 {
-                    for (int z = 0; z < _mapZ; z++)
+                    for (int z = cz1; z < cz2; z++)
                     {
-                        caveData[x, y, z] = BlockType.None;
+                        mapData[x, y, z] = brush;
                     }
                 }
             }
