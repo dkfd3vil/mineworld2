@@ -6,6 +6,11 @@ namespace MineWorld
 {
     public partial class MineWorldServer
     {
+        public void ConsoleSetTitle(string title)
+        {
+            Console.Title = title;
+        }
+
         public void ConsoleWrite(string text)
         {
             if (Ssettings.Logs)
@@ -39,12 +44,13 @@ namespace MineWorld
 
         public void ConsoleClearScreen()
         {
-            //Console.Clear();
-            //TODO: Replace this simple by Console.Clear()
+            Console.Clear();
+            /*
             for (int i = 0; i < 80*25; i++)
             {
                 Console.Write(" ");
             }
+             */
         }
 
         public void ConsoleProcessInput(string input)

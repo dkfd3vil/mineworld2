@@ -9,9 +9,7 @@ namespace MineWorld
         public bool Alive = true;
         public bool Godmode;
         public Vector3 Heading = Vector3.Zero;
-        // DJ NOT NICE
-        // TODO This needs to be done proper
-        public int Health = 1;
+        public int Health;
         public int HealthMax = 100;
         public int ID;
         public string Ip = "";
@@ -24,9 +22,7 @@ namespace MineWorld
         {
             NetConn = netcon;
             ID = GetUniqueId();
-
-            if (netcon != null)
-                Ip = netcon.RemoteEndpoint.Address.ToString();
+            Ip = netcon.RemoteEndpoint.Address.ToString();
         }
 
         public static int GetUniqueId()

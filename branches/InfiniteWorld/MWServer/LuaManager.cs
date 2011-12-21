@@ -25,7 +25,6 @@ namespace MineWorld
             _eventTable["ON_PLAYERDIED"] = new List<string>();
 
             RegisterLuaFunctions(this);
-            //RegisterLuaFunctions(LuaF);
         }
 
         public void RegisterLuaFunctions(Object o)
@@ -50,35 +49,17 @@ namespace MineWorld
         public void LoadScriptFiles(string path)
         {
             _folderPath = path;
-            List<String> addonsToLoad = new List<string>();
-            try
+            List<String> scriptsToLoad = new List<string>();
+            foreach (FileInfo fileName in (new DirectoryInfo(_folderPath)).GetFiles())
             {
-                StreamReader sr = new StreamReader(File.OpenRead("scripts\\Addons.cfg"));
-                String line = sr.ReadLine();
-                while (line != null)
+                if (fileName.Name.EndsWith(".lua"))
                 {
-                    addonsToLoad.Add(line);
-                    line = sr.ReadLine();
-                }
-                sr.Close();
-            }
-            catch
-            {
-                foreach (FileInfo fileName in (new DirectoryInfo(_folderPath)).GetFiles())
-                {
-                    if (fileName.Name.Contains(".lua"))
-                    {
-                        addonsToLoad.Add(fileName.Name);
-                    }
+                    scriptsToLoad.Add(fileName.Name);
                 }
             }
-            foreach (FileInfo f in (new DirectoryInfo(_folderPath)).GetFiles())
+            foreach (string script in scriptsToLoad)
             {
-                if (f.Name.Contains(".lua") && addonsToLoad.Contains(f.Name))
-                {
-                    _luaVm.DoFile(f.FullName);
-                    //LOADED !!!
-                }
+                _luaVm.DoFile(script);
             }
         }
 
@@ -98,13 +79,7 @@ namespace MineWorld
             int elapsedTime = (int) Math.Round((DateTime.Now - _lastUpdate).TotalMilliseconds);
             foreach (string s in _eventTable["ON_UPDATE"])
             {
-                try
-                {
-                    _luaVm.DoString(s + "(" + elapsedTime + ");");
-                }
-                catch (Exception)
-                {
-                }
+                _luaVm.DoString(s + "(" + elapsedTime + ");");
             }
             _lastUpdate = DateTime.Now;
         }

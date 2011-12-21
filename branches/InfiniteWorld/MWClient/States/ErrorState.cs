@@ -16,7 +16,6 @@ namespace MineWorld.States
         {
             Sm.IsMouseVisible = false;
 
-            //TODO Replace this errorstate placeholder
             _texMenu = Sm.Content.Load<Texture2D>("menus/tex_menu_error");
 
             _drawRect = new Rectangle(Sm.GraphicsDevice.Viewport.Width/2 - 1024/2,

@@ -99,7 +99,7 @@ namespace MineWorld.States
         {
             if (key == Keys.Escape)
             {
-                P.NetClient.Disconnect("Client disconnected.");
+                P.Client.Disconnect("Client disconnected.");
                 _nextState = "MineWorld.States.ServerBrowserState";
             }
         }

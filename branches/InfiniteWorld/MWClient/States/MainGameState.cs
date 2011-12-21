@@ -187,10 +187,6 @@ namespace MineWorld.States
                 P.PlayerVelocity.Y += Gravity*(float) gameTime.ElapsedGameTime.TotalSeconds;
             }
 
-            // Let the server know and then move on
-            // Todo Dont really know if this is needed the playerupdate here
-            P.SendPlayerUpdate();
-
             if (P.BlockEngine.SolidAtPointForPlayer(footPosition) || P.BlockEngine.SolidAtPointForPlayer(headPosition))
             {
                 BlockType standingOnBlock = P.BlockEngine.BlockAtPoint(footPosition);
@@ -409,7 +405,7 @@ namespace MineWorld.States
                 // Exit!
                 if (key == Keys.Y && Keyboard.GetState().IsKeyDown(Keys.Escape))
                 {
-                    P.NetClient.Disconnect("Client disconnected.");
+                    P.Client.Disconnect("Client disconnected.");
                     _nextState = "MineWorld.States.ServerBrowserState";
                 }
                 // Pixelcide!
@@ -446,7 +442,7 @@ namespace MineWorld.States
                         // If we have an actual message to send, fire it off at the server.
                         if (P.ChatEntryBuffer.Length > 0)
                         {
-                            SendChatOrCommandMessage();
+                            P.SendChatMessage();
                         }
 
                         P.ChatEntryBuffer = "";
@@ -549,7 +545,7 @@ namespace MineWorld.States
                     case CustomMouseButtons.Fire:
                     case CustomMouseButtons.AltFire:
                         {
-                            P.UseTool((Sm as MineWorldGame).KeyBinds.GetBoundMouse(button));
+                            P.UseTool((Sm as MineWorldGame).KeyBinds.GetBoundMouse(button),P.Currentblock);
                             break;
                         }
                 }
@@ -578,37 +574,11 @@ namespace MineWorld.States
             {
                 if (scrollDelta >= 120)
                 {
-                    // Unused at the moment
-                    return;
+                    P.Currentblock = BlockType.Dirt;
                 }
                 else if (scrollDelta <= -120)
                 {
-                    // Unused at the moment
-                    return;
-                }
-            }
-        }
-
-        private void SendChatOrCommandMessage()
-        {
-            if (P.NetClient.Status == NetConnectionStatus.Connected)
-            {
-                //Its a player command :D?
-                if (P.ChatEntryBuffer.StartsWith("/"))
-                {
-                    NetBuffer msgBuffer = P.NetClient.CreateBuffer();
-                    msgBuffer.Write((byte) MineWorldMessage.PlayerCommand);
-                    msgBuffer.Write(P.ChatEntryBuffer);
-                    P.NetClient.SendMessage(msgBuffer, NetChannel.ReliableInOrder6);
-                }
-                else
-                {
-                    NetBuffer msgBuffer = P.NetClient.CreateBuffer();
-                    msgBuffer.Write((byte) MineWorldMessage.ChatMessage);
-                    msgBuffer.Write((byte) ChatMessageType.PlayerSay);
-                    msgBuffer.Write(P.ChatEntryBuffer);
-                    msgBuffer.Write(P.PlayerHandle);
-                    P.NetClient.SendMessage(msgBuffer, NetChannel.ReliableInOrder3);
+                    P.Currentblock = BlockType.Leafs;
                 }
             }
         }

@@ -78,7 +78,6 @@ namespace MineWorld
                     return false;
                 }
             }
-            ConsoleWrite("DEBUG FOUND BLOCK IN SUN");
             return true;
         }
 

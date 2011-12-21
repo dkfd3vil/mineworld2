@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -263,9 +262,7 @@ namespace MineWorld.States
                                                                                               float.Parse(
                                                                                                   (element as
                                                                                                    InterfaceSlider).
-                                                                                                      Value.ToString(),
-                                                                                                  CultureInfo.
-                                                                                                      InvariantCulture)/
+                                                                                                      Value.ToString())/
                                                                                               1000f));
                         break;
                     case "Bloom":

@@ -24,7 +24,7 @@ namespace MineWorld
                                  string extra)
         {
             ServerName = name;
-            IpEndPoint = new IPEndPoint(ip, 5565);
+            IpEndPoint = new IPEndPoint(ip, Defines.MineworldPort);
             Gametag = gametag;
             NumPlayers = numPlayers;
             MaxPlayers = maxPlayers;
@@ -64,6 +64,11 @@ namespace MineWorld
                 return false;
 
             return true;
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
         }
     }
 }

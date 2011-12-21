@@ -27,9 +27,11 @@ namespace MineWorld
         public DateTime Lasthearthbeatreceived = DateTime.Now;
         public float MouseSensitivity = 0.005f;
         public bool MovingOnRoad;
+        public BlockType Currentblock;
+        public List<BlockType> Avaibleblocks;
 
         // Network stuff.
-        public NetClient NetClient;
+        public MineWorldClient Client;
         public ParticleEngine ParticleEngine;
 
         // Player variables.
@@ -65,9 +67,9 @@ namespace MineWorld
             // Initialize our network device.
             NetConfiguration netConfig = new NetConfiguration("MineWorld");
 
-            NetClient = new NetClient(netConfig);
-            NetClient.SetMessageTypeEnabled(NetMessageType.ConnectionRejected, true);
-            NetClient.Start();
+            Client = new MineWorldClient(netConfig);
+            Client.EnableMessages(NetMessageType.ConnectionRejected);
+            Client.Start();
 
             // Initialize engines.
             SkyEngine = new SkyEngine(gameInstance);
@@ -111,13 +113,10 @@ namespace MineWorld
 
         public void SendRespawnRequest()
         {
-            if (NetClient.Status != NetConnectionStatus.Connected)
-                return;
-
-            NetBuffer msgBuffer = NetClient.CreateBuffer();
+            NetBuffer msgBuffer = Client.CreateBuffer();
             msgBuffer.Write((byte) MineWorldMessage.PlayerRequest);
             msgBuffer.Write((byte) PlayerRequests.Respawn);
-            NetClient.SendMessage(msgBuffer, NetChannel.ReliableUnordered);
+            Client.SendMsg(msgBuffer,NetChannel.ReliableUnordered);
             return;
         }
 
@@ -142,15 +141,12 @@ namespace MineWorld
 
         public void PlaySoundForEveryone(MineWorldSound sound, Vector3 position)
         {
-            if (NetClient.Status != NetConnectionStatus.Connected)
-                return;
-
             // The PlaySound message can be used to instruct the server to have all clients play a directional sound.
-            NetBuffer msgBuffer = NetClient.CreateBuffer();
+            NetBuffer msgBuffer = Client.CreateBuffer();
             msgBuffer.Write((byte) MineWorldMessage.PlaySound);
             msgBuffer.Write((byte) sound);
             msgBuffer.Write(position);
-            NetClient.SendMessage(msgBuffer, NetChannel.ReliableUnordered);
+            Client.SendMsg(msgBuffer,NetChannel.ReliableUnordered);
         }
 
         public void AddChatMessage(string chatString, ChatMessageType chatType, string author)
@@ -210,56 +206,56 @@ namespace MineWorld
             PlayerCamera.Update();
         }
 
-        public void UseTool(CustomMouseButtons button)
+        public void UseTool(CustomMouseButtons button, BlockType currentblock)
         {
-            if (NetClient.Status != NetConnectionStatus.Connected)
-                return;
-
-            NetBuffer msgBuffer = NetClient.CreateBuffer();
+            NetBuffer msgBuffer = Client.CreateBuffer();
             msgBuffer.Write((byte) MineWorldMessage.UseTool);
             msgBuffer.Write((byte) button);
             msgBuffer.Write(PlayerPosition);
             msgBuffer.Write(PlayerCamera.GetLookVector());
-            //HACK Hardcoded the block that the player places
-            msgBuffer.Write((byte) BlockType.Leafs);
-            NetClient.SendMessage(msgBuffer, NetChannel.ReliableUnordered);
+            msgBuffer.Write((byte) currentblock);
+            Client.SendMsg(msgBuffer,NetChannel.ReliableUnordered);
         }
 
         public void SendPlayerUpdate()
         {
-            if (NetClient.Status != NetConnectionStatus.Connected)
-                return;
-
             if (LastPosition != PlayerPosition) //do full network update
             {
                 LastPosition = PlayerPosition;
 
-                NetBuffer msgBuffer = NetClient.CreateBuffer();
+                NetBuffer msgBuffer = Client.CreateBuffer();
                 msgBuffer.Write((byte) MineWorldMessage.PlayerUpdate); //full
                 msgBuffer.Write(PlayerPosition);
                 msgBuffer.Write(PlayerCamera.GetLookVector());
-                NetClient.SendMessage(msgBuffer, NetChannel.UnreliableInOrder1);
+                Client.SendMsg(msgBuffer,NetChannel.UnreliableInOrder1);
             }
             else if (LastHeading != PlayerCamera.GetLookVector())
             {
                 LastHeading = PlayerCamera.GetLookVector();
-                NetBuffer msgBuffer = NetClient.CreateBuffer();
+                NetBuffer msgBuffer = Client.CreateBuffer();
                 msgBuffer.Write((byte) MineWorldMessage.PlayerUpdate1); //just heading
                 msgBuffer.Write(LastHeading);
-                NetClient.SendMessage(msgBuffer, NetChannel.UnreliableInOrder1);
+                Client.SendMsg(msgBuffer, NetChannel.UnreliableInOrder1);
             }
         }
 
         public void SendPlayerHurt(int damage, bool flatdamage)
         {
-            if (NetClient.Status != NetConnectionStatus.Connected)
-                return;
-
-            NetBuffer msgBuffer = NetClient.CreateBuffer();
+            NetBuffer msgBuffer = Client.CreateBuffer();
             msgBuffer.Write((byte) MineWorldMessage.PlayerHurt);
             msgBuffer.Write(damage);
             msgBuffer.Write(flatdamage);
-            NetClient.SendMessage(msgBuffer, NetChannel.ReliableInOrder1);
+            Client.SendMsg(msgBuffer,NetChannel.ReliableInOrder1);
+        }
+
+        public void SendChatMessage()
+        {
+            NetBuffer msgBuffer = Client.CreateBuffer();
+            msgBuffer.Write((byte)MineWorldMessage.ChatMessage);
+            msgBuffer.Write((byte)ChatMessageType.PlayerSay);
+            msgBuffer.Write(ChatEntryBuffer);
+            msgBuffer.Write(PlayerHandle);
+            Client.SendMsg(msgBuffer, NetChannel.ReliableInOrder3);
         }
     }
 }

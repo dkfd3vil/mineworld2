@@ -9,23 +9,17 @@ namespace MineWorld
         {
             string text = "[" + GetTime(true) + "] ";
 
-            try
+            if (!File.Exists(Ssettings.LogsDir + "/" + GetDate(false) + ".txt"))
             {
-                if (!File.Exists(Ssettings.LogsDir + "/" + GetDate(false) + ".txt"))
-                {
-                    FileStream fs = File.Create(Ssettings.LogsDir + "/" + GetDate(false) + ".txt");
-                    fs.Close();
-                }
-                FileStream file = new FileStream(Ssettings.LogsDir + "/" + GetDate(false) + ".txt", FileMode.Append,
-                                                 FileAccess.Write);
-                StreamWriter sw = new StreamWriter(file);
-                sw.WriteLine(text + consoletext);
-                sw.Close();
-                file.Close();
+                FileStream fs = File.Create(Ssettings.LogsDir + "/" + GetDate(false) + ".txt");
+                fs.Close();
             }
-            catch (Exception)
-            {
-            }
+            FileStream file = new FileStream(Ssettings.LogsDir + "/" + GetDate(false) + ".txt", FileMode.Append,
+                                             FileAccess.Write);
+            StreamWriter sw = new StreamWriter(file);
+            sw.WriteLine(text + consoletext);
+            sw.Close();
+            file.Close();
         }
 
         public string GetTime(bool usedots)

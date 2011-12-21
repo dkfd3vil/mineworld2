@@ -66,7 +66,6 @@
 
         //Update by Oeds
         Hearthbeat,
-        PlayerCommand, // int id, string command  This is sent by client
         PlayerHurt, // allows client to tell server of damage
         PlayerPosition, // server sends client new position
         DayUpdate, // float , Send by the server to notify the player how dark or light the game is

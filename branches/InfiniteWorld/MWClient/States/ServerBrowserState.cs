@@ -36,7 +36,7 @@ namespace MineWorld.States
         public override void OnEnter(string oldState)
         {
             Sm.IsMouseVisible = true;
-            (Sm as MineWorldGame).ResetPropertyBag();
+            (Sm as MineWorldGame).InitializePropertyBag();
             P = Sm.PropertyBag;
 
             _texMenu = Sm.Content.Load<Texture2D>("menus/tex_menu_server");
@@ -73,7 +73,7 @@ namespace MineWorld.States
                 IPAddress ptoJoin = (Sm as MineWorldGame).Pargument;
                 (Sm as MineWorldGame).Pargument = null;
                 (Sm as MineWorldGame).PropertyBag.ServerName = ptoJoin.ToString();
-                (Sm as MineWorldGame).JoinGame(new IPEndPoint(ptoJoin, 5565));
+                (Sm as MineWorldGame).JoinGame(new IPEndPoint(ptoJoin, Defines.MineworldPort));
 
                 _nextState = "MineWorld.States.LoadingState";
             }
@@ -148,26 +148,18 @@ namespace MineWorld.States
                     if (!IPAddress.TryParse(_directConnectIp, out connectIp))
                     {
                         connectIp = null;
-                        try
-                        {
-                            IPAddress[] resolveResults = Dns.GetHostAddresses(_directConnectIp);
-                            for (int i = 0; i < resolveResults.Length; i++)
-                                if (resolveResults[i].AddressFamily == AddressFamily.InterNetwork)
-                                {
-                                    connectIp = resolveResults[i];
-                                    break;
-                                }
-                        }
-                        catch (Exception)
-                        {
-                            // So, GetHostAddresses() might fail, but we don't really care. Just leave connectIp as null.
-                            // WTF or you inform the user....
-                        }
+                        IPAddress[] resolveResults = Dns.GetHostAddresses(_directConnectIp);
+                        for (int i = 0; i < resolveResults.Length; i++)
+                            if (resolveResults[i].AddressFamily == AddressFamily.InterNetwork)
+                            {
+                                connectIp = resolveResults[i];
+                                break;
+                            }
                     }
                     if (connectIp != null)
                     {
                         (Sm as MineWorldGame).PropertyBag.ServerName = _directConnectIp;
-                        (Sm as MineWorldGame).JoinGame(new IPEndPoint(connectIp, 5565));
+                        (Sm as MineWorldGame).JoinGame(new IPEndPoint(connectIp, Defines.MineworldPort));
                         _nextState = "MineWorld.States.LoadingState";
                     }
                     _directConnectIp = "";
@@ -176,13 +168,7 @@ namespace MineWorld.States
                 if (key == Keys.V &&
                     (Keyboard.GetState().IsKeyDown(Keys.LeftControl) || Keyboard.GetState().IsKeyDown(Keys.RightControl)))
                 {
-                    try
-                    {
-                        _directConnectIp += Clipboard.GetText();
-                    }
-                    catch (Exception)
-                    {
-                    }
+                    _directConnectIp += Clipboard.GetText();
                 }
                 /*else if (keyMap.IsKeyMapped(key))
                 {
