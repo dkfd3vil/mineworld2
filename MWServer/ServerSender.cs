@@ -10,12 +10,9 @@ namespace MineWorld
     {
         public void SendPlayerPosition(ServerPlayer player)
         {
-            if (player.NetConn.Status != NetConnectionStatus.Connected)
-                return;
-
-            NetBuffer msgBuffer = _netServer.CreateBuffer();
-            msgBuffer.Write((byte) MineWorldMessage.PlayerPosition);
-            msgBuffer.Write(player.Position);
+            NetOutgoingMessage packetout = _netServer.CreateMessage();
+            packetout.Write((byte)MineWorldMessage.PlayerPosition);
+            packetout.Write(player.Position);
             _netServer.SendMsg(msgBuffer, player.NetConn, NetChannel.ReliableUnordered);
         }
 
@@ -166,6 +163,22 @@ namespace MineWorld
             _netServer.SendMsg(msgBuffer, player.NetConn, NetChannel.ReliableUnordered);
         }
 
+        public void SendPlayerMessageToPlayers(string message, string author)
+        {
+            // Construct the message packet.
+            NetBuffer chatPacket = _netServer.CreateBuffer();
+            chatPacket.Write((byte) MineWorldMessage.ChatMessage);
+            chatPacket.Write((byte) ChatMessageType.PlayerSay);
+            chatPacket.Write(message);
+            chatPacket.Write(author);
+
+            // Send the packet to people who should recieve it.
+            foreach (ServerPlayer p in PlayerList.Values)
+            {
+                _netServer.SendMsg(chatPacket, p.NetConn, NetChannel.ReliableInOrder3);
+            }
+        }
+
         public void SendServerWideMessage(string message)
         {
             foreach (ServerPlayer player in PlayerList.Values)
@@ -192,7 +205,7 @@ namespace MineWorld
             BlockList[x, y, z] = BlockType.None;
 
             // x, y, z, type, all bytes
-            NetBuffer msgBuffer = _netServer.CreateBuffer();
+            NetOutgoingMessage msgBuffer = _netServer.CreateBuffer();
             msgBuffer.Write((byte) MineWorldMessage.BlockSet);
             msgBuffer.Write((byte) x);
             msgBuffer.Write((byte) y);
@@ -238,6 +251,169 @@ namespace MineWorld
             msgBuffer.Write(Msettings.MapsizeZ);
             msgBuffer.Write(Msettings.Mapseed);
             _netServer.SendMsg(msgBuffer, client, NetChannel.ReliableInOrder15);
+        }
+
+        public void SendPlayerCommandAnswer(ServerPlayer player,string command)
+        {
+            string answer = "";
+
+            if (GetAdmin(player.Ip))
+            {
+                string[] splitted = command.Split(new[] {' '});
+                splitted[0] = splitted[0].ToLower();
+
+                switch (splitted[0])
+                {
+                    case "/godmode":
+                        {
+                            if (player.Godmode == false)
+                            {
+                                player.Godmode = true;
+                                answer = "Godmode enabled";
+                            }
+                            else
+                            {
+                                player.Godmode = false;
+                                answer = "Godmode disabled";
+                            }
+                            break;
+                        }
+                    case "/stopfluids":
+                        {
+                            StopFluids = true;
+                            answer = "Stopfluids enabled";
+                            break;
+                        }
+                    case "/startfluids":
+                        {
+                            StopFluids = false;
+                            answer = "Stopfluids disabled";
+                            break;
+                        }
+                    case "/teleportto":
+                    case "/tpt":
+                        {
+                            bool playerfound = false;
+
+                            if (splitted.Length > 1)
+                            {
+                                splitted[1] = splitted[1].ToLower();
+
+                                if (player.Name.ToLower() == splitted[1])
+                                {
+                                    answer = "Cant teleport to yourself";
+                                    break;
+                                }
+                                foreach (
+                                    ServerPlayer dummy in PlayerList.Values)
+                                {
+                                    if (dummy.Name.ToLower() == splitted[1])
+                                    {
+                                        playerfound = true;
+                                        if (!dummy.Alive)
+                                        {
+                                            answer =
+                                                "Cant teleport to a dead player";
+                                            break;
+                                        }
+                                        player.Position = dummy.Position;
+                                        SendPlayerPosition(player);
+                                        answer = "Teleporting you to " + dummy.Name;
+                                        break;
+                                    }
+                                }
+                                if (!playerfound)
+                                {
+                                    answer = "Didnt find the player";
+                                }
+                            }
+                            else
+                            {
+                                answer = "You didnt enter a name";
+                            }
+                            break;
+                        }
+                    case "/kill":
+                        {
+                            bool playerfound = false;
+
+                            if (splitted.Length > 1)
+                            {
+                                splitted[1] = splitted[1].ToLower();
+
+                                if (player.Name.ToLower() == splitted[1])
+                                {
+                                    answer = "Cant kill yourself";
+                                    break;
+                                }
+                                foreach (
+                                    ServerPlayer dummy in PlayerList.Values)
+                                {
+                                    if (dummy.Name.ToLower() == splitted[1])
+                                    {
+                                        playerfound = true;
+                                        if (!dummy.Alive)
+                                        {
+                                            answer = "Player is already dead";
+                                            break;
+                                        }
+                                        SendPlayerHealthUpdate(dummy);
+                                        KillPlayerSpecific(dummy);
+                                        break;
+                                    }
+                                }
+                                if (!playerfound)
+                                {
+                                    answer = "Didnt find the player";
+                                }
+                            }
+                            else
+                            {
+                                answer = "You didnt enter a name";
+                            }
+                            break;
+                        }
+                    case "/setday":
+                        {
+                            DayManager.SetDay();
+                            answer = "Time changed to day";
+                            break;
+                        }
+                    case "/setnight":
+                        {
+                            DayManager.SetNight();
+                            answer = "Time changed to night";
+                            break;
+                        }
+                    case "/announce":
+                        {
+                            SendServerWideMessage(splitted[1]);
+                            break;
+                        }
+                    case "/restart":
+                        {
+                            RestartServer();
+                            break;
+                        }
+                    case "/shutdown":
+                        {
+                            ShutdownServer();
+                            break;
+                        }
+                    default:
+                        {
+                            answer = "Command not regonized";
+                            break;
+                        }
+                }
+                ConsoleWrite("COMMAND: (" + command +
+                                     ") has been used by (" + player.Name + ")");
+            }
+            else
+            {
+                answer = "You arent a admin";
+            }
+            SendServerMessageToPlayer(answer, player);
         }
     }
 }

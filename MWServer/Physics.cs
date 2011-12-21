@@ -72,7 +72,6 @@ namespace MineWorld
             {
                 if (p.Alive)
                 {
-                    // TODO Cast health to float otherwise data loss
                     p.Health += (p.HealthMax/100)*SAsettings.Playerregenrate;
                     if (p.Health >= p.HealthMax)
                     {

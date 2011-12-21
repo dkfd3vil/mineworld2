@@ -2,28 +2,8 @@
 {
     public enum BlockType : byte
     {
-        None = 0,
-
-        //Nature blocks
-        //Range from 1 - 100 
-        Adminblock = 1,
-        Dirt = 2,
-        Grass = 3,
-        Rock = 4,
-        Leafs = 5,
-        Wood = 6,
-        Water = 7,
-        Lava = 8,
-        RedFlower = 9,
-        YellowFlower = 10,
-
-        //Reserved blocks
-        //Range from 101 - 150
-
-        //Usermade blocks
-        //Range from 151 - 254
-
-        MAXIMUM = 255
+        Air = 0,
+        Dirt = 1,
     }
 
     public enum BlockTexture : byte

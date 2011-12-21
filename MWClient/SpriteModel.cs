@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Globalization;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -301,8 +300,8 @@ namespace MineWorld
                 if (argList.Length == 2)
                 {
                     AnimationFrame frame = new AnimationFrame();
-                    frame.SpriteColumn = int.Parse(argList[0], CultureInfo.InvariantCulture);
-                    frame.Length = float.Parse(argList[1], CultureInfo.InvariantCulture);
+                    frame.SpriteColumn = int.Parse(argList[0]);
+                    frame.Length = float.Parse(argList[1]);
                     animation.Add(frame);
                 }
             }

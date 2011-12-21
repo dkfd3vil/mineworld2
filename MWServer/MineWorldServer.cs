@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading;
+using System.IO;
 using Lidgren.Network;
 using System.Net;
+using EasyConfig;
 
 namespace MineWorld
 {
@@ -23,7 +25,7 @@ namespace MineWorld
         private DateTime _lastMapBackup = DateTime.Now;
         private DateTime _lasthearthbeatsend = DateTime.Now;
         public LuaManager LuaManager;
-        private MineWorldNetServer _netServer;
+        private NetServer _netServer;
         public Dictionary<NetConnection, ServerPlayer> PlayerList = new Dictionary<NetConnection, ServerPlayer>();
 
         // Server restarting variables.
@@ -49,11 +51,12 @@ namespace MineWorld
             //Find a better place for this
             LuaManager = new LuaManager(this);
 
-            //Display server version in console
+            //Display server version in console and adjust title
             ConsoleWrite(Defines.MineworldserverVersion, ConsoleColor.Cyan);
+            ConsoleSetTitle(Defines.MineworldserverVersion);
 
             // Load the directory's.
-            LoadDirectorys();
+            LoadDirectorysandFiles();
 
             // Load the general-settings.
             LoadSettings();
@@ -77,10 +80,11 @@ namespace MineWorld
             LoadScriptFiles();
 
             // Initialize the server.
-            NetConfiguration netConfig = new NetConfiguration("MineWorld")
-                                             {MaxConnections = Ssettings.Maxplayers, Port = 5565};
-            _netServer = new MineWorldNetServer(netConfig);
-            _netServer.SetMessageTypeEnabled(NetMessageType.ConnectionApproval, true);
+            NetPeerConfiguration netConfig = new NetPeerConfiguration("MineWorld");
+            netConfig.MaximumConnections = Ssettings.Maxplayers;
+            netConfig.Port = Defines.MineworldPort;
+            netConfig.EnableMessageType(NetIncomingMessageType.ConnectionApproval);
+            _netServer = new NetServer(netConfig);
             //netServer.SimulatedMinimumLatency = 0.1f;
             //netServer.SimulatedLatencyVariance = 0.05f;
             //netServer.SimulatedLoss = 0.1f;
@@ -346,6 +350,8 @@ namespace MineWorld
         {
             ConsoleWrite("LOADING MAPSETTINGS");
 
+            ConfigFile mapSettings = new ConfigFile(Msettings.SettingsDir + "/map.config.txt");
+
             Datafile dataFile = new Datafile(Msettings.SettingsDir + "/map.config.txt");
 
             if (dataFile.Data.ContainsKey("includetrees"))
@@ -412,9 +418,9 @@ namespace MineWorld
                 ConsoleWriteError("Couldnt find waterspawns setting so we use the default (0)");
             }
 
-            Msettings.MapsizeX = 256;
-            Msettings.MapsizeY = 256;
-            Msettings.MapsizeZ = 256;
+            Msettings.MapsizeX = 64;
+            Msettings.MapsizeY = 64;
+            Msettings.MapsizeZ = 64;
 
             ConsoleWriteSucces("MAPSETTINGS LOADED");
         }
@@ -435,10 +441,13 @@ namespace MineWorld
             ConsoleWriteSucces("EXTRASETTINGS LOADED");
         }
 
-        public void LoadDirectorys()
+        public void LoadDirectorysandFiles()
         {
-            ConsoleWrite("LOADING DIRECTORYS");
-
+            ConsoleWrite("LOADING DIRECTORYS AND FILES");
+            if (!Directory.Exists("ServerConfigs"))
+            {
+                Environment.Exit(1);
+            }
             Ssettings.SettingsDir = "ServerConfigs";
             Ssettings.LogsDir = "Logs";
             Ssettings.BackupDir = "Backups";

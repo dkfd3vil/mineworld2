@@ -13,35 +13,28 @@ namespace MineWorld
             ConsoleWrite("LOADING ADMINLIST");
             List<string> temp = new List<string>();
 
-            try
+            if (!File.Exists(Ssettings.SettingsDir + "/admins.txt"))
             {
-                if (!File.Exists(Ssettings.SettingsDir + "/admins.txt"))
-                {
-                    FileStream fs = File.Create(Ssettings.SettingsDir + "/admins.txt");
-                    StreamWriter sr = new StreamWriter(fs);
-                    sr.WriteLine("#A list of all admins - just add one ip per line");
-                    sr.Close();
-                    fs.Close();
-                }
-                else
-                {
-                    FileStream file = new FileStream(Ssettings.SettingsDir + "/admins.txt", FileMode.Open,
-                                                     FileAccess.Read);
-                    StreamReader sr = new StreamReader(file);
-                    string line = sr.ReadLine();
-                    while (line != null)
-                    {
-                        if (line.Trim().Length != 0 && line.Trim().ToCharArray()[0] != '#')
-                            temp.Add(line.Trim());
-                        line = sr.ReadLine();
-                    }
-                    sr.Close();
-                    file.Close();
-                }
+                FileStream fs = File.Create(Ssettings.SettingsDir + "/admins.txt");
+                StreamWriter sr = new StreamWriter(fs);
+                sr.WriteLine("#A list of all admins - just add one ip per line");
+                sr.Close();
+                fs.Close();
             }
-            catch
+            else
             {
-                ConsoleWriteError("Unable to load admin list.");
+                FileStream file = new FileStream(Ssettings.SettingsDir + "/admins.txt", FileMode.Open,
+                                                 FileAccess.Read);
+                StreamReader sr = new StreamReader(file);
+                string line = sr.ReadLine();
+                while (line != null)
+                {
+                    if (line.Trim().Length != 0 && line.Trim().ToCharArray()[0] != '#')
+                        temp.Add(line.Trim());
+                    line = sr.ReadLine();
+                }
+                sr.Close();
+                file.Close();
             }
             ConsoleWriteSucces(temp.Count + " ADMINS LOADED");
             return temp;
@@ -49,22 +42,15 @@ namespace MineWorld
 
         public bool SaveAdminList()
         {
-            try
-            {
-                FileStream file = new FileStream(Ssettings.SettingsDir + "/admins.txt", FileMode.Create,
-                                                 FileAccess.Write);
-                StreamWriter sw = new StreamWriter(file);
-                sw.WriteLine("#A list of all admins - just add one ip per line\n");
-                foreach (string ip in BanList)
-                    sw.WriteLine(ip);
-                sw.Close();
-                file.Close();
-                return true;
-            }
-            catch (Exception)
-            {
-            }
-            return false;
+            FileStream file = new FileStream(Ssettings.SettingsDir + "/admins.txt", FileMode.Create,
+                                             FileAccess.Write);
+            StreamWriter sw = new StreamWriter(file);
+            sw.WriteLine("#A list of all admins - just add one ip per line\n");
+            foreach (string ip in BanList)
+                sw.WriteLine(ip);
+            sw.Close();
+            file.Close();
+            return true;
         }
 
         public List<string> LoadBanList()
@@ -72,35 +58,28 @@ namespace MineWorld
             ConsoleWrite("LOADING BANLIST");
             List<string> retList = new List<string>();
 
-            try
+            if (!File.Exists(Ssettings.SettingsDir + "/banlist.txt"))
             {
-                if (!File.Exists(Ssettings.SettingsDir + "/banlist.txt"))
-                {
-                    FileStream fs = File.Create(Ssettings.SettingsDir + "/banlist.txt");
-                    StreamWriter sr = new StreamWriter(fs);
-                    sr.WriteLine("#A list of all banned people - just add one ip per line");
-                    sr.Close();
-                    fs.Close();
-                }
-                else
-                {
-                    FileStream file = new FileStream(Ssettings.SettingsDir + "/banlist.txt", FileMode.Open,
-                                                     FileAccess.Read);
-                    StreamReader sr = new StreamReader(file);
-                    string line = sr.ReadLine();
-                    while (line != null)
-                    {
-                        if (line.Trim().Length != 0 && line.Trim().ToCharArray()[0] != '#')
-                            retList.Add(line.Trim());
-                        line = sr.ReadLine();
-                    }
-                    sr.Close();
-                    file.Close();
-                }
+                FileStream fs = File.Create(Ssettings.SettingsDir + "/banlist.txt");
+                StreamWriter sr = new StreamWriter(fs);
+                sr.WriteLine("#A list of all banned people - just add one ip per line");
+                sr.Close();
+                fs.Close();
             }
-            catch
+            else
             {
-                ConsoleWriteError("Unable to load banlist");
+                FileStream file = new FileStream(Ssettings.SettingsDir + "/banlist.txt", FileMode.Open,
+                                                 FileAccess.Read);
+                StreamReader sr = new StreamReader(file);
+                string line = sr.ReadLine();
+                while (line != null)
+                {
+                    if (line.Trim().Length != 0 && line.Trim().ToCharArray()[0] != '#')
+                        retList.Add(line.Trim());
+                    line = sr.ReadLine();
+                }
+                sr.Close();
+                file.Close();
             }
             ConsoleWriteSucces(retList.Count + " BANNED IP's LOADED");
             return retList;
@@ -108,19 +87,13 @@ namespace MineWorld
 
         public void SaveBanList()
         {
-            try
-            {
-                FileStream file = new FileStream(Ssettings.SettingsDir + "/banlist.txt", FileMode.Create,
-                                                 FileAccess.Write);
-                StreamWriter sw = new StreamWriter(file);
-                foreach (string ip in BanList)
-                    sw.WriteLine(ip);
-                sw.Close();
-                file.Close();
-            }
-            catch (Exception)
-            {
-            }
+            FileStream file = new FileStream(Ssettings.SettingsDir + "/banlist.txt", FileMode.Create,
+                                             FileAccess.Write);
+            StreamWriter sw = new StreamWriter(file);
+            foreach (string ip in BanList)
+                sw.WriteLine(ip);
+            sw.Close();
+            file.Close();
         }
 
         public List<string> LoadBannedNames()
@@ -128,35 +101,28 @@ namespace MineWorld
             ConsoleWrite("LOADING BANNEDNAMES");
             List<string> retList = new List<string>();
 
-            try
+            if (!File.Exists(Ssettings.SettingsDir + "/bannednames.txt"))
             {
-                if (!File.Exists(Ssettings.SettingsDir + "/bannednames.txt"))
-                {
-                    FileStream fs = File.Create(Ssettings.SettingsDir + "/bannednames.txt");
-                    StreamWriter sr = new StreamWriter(fs);
-                    sr.WriteLine("#A list of all banned names - just add one name per line");
-                    sr.Close();
-                    fs.Close();
-                }
-                else
-                {
-                    FileStream file = new FileStream(Ssettings.SettingsDir + "/bannednames.txt", FileMode.Open,
-                                                     FileAccess.Read);
-                    StreamReader sr = new StreamReader(file);
-                    string line = sr.ReadLine();
-                    while (line != null)
-                    {
-                        if (line.Trim().Length != 0 && line.Trim().ToCharArray()[0] != '#')
-                            retList.Add(line.Trim());
-                        line = sr.ReadLine();
-                    }
-                    sr.Close();
-                    file.Close();
-                }
+                FileStream fs = File.Create(Ssettings.SettingsDir + "/bannednames.txt");
+                StreamWriter sr = new StreamWriter(fs);
+                sr.WriteLine("#A list of all banned names - just add one name per line");
+                sr.Close();
+                fs.Close();
             }
-            catch
+            else
             {
-                ConsoleWriteError("Unable to load bannednames");
+                FileStream file = new FileStream(Ssettings.SettingsDir + "/bannednames.txt", FileMode.Open,
+                                                 FileAccess.Read);
+                StreamReader sr = new StreamReader(file);
+                string line = sr.ReadLine();
+                while (line != null)
+                {
+                    if (line.Trim().Length != 0 && line.Trim().ToCharArray()[0] != '#')
+                        retList.Add(line.Trim());
+                    line = sr.ReadLine();
+                }
+                sr.Close();
+                file.Close();
             }
             ConsoleWriteSucces(retList.Count + " BANNEDNAMES LOADED");
             return retList;
@@ -233,8 +199,6 @@ namespace MineWorld
         /*
         public bool LoadLevel(string filename)
         {
-            try
-            {
                 if (!File.Exists(filename))
                 {
                     ConsoleWriteError("Unable to load level - " + filename + " does not exist!");
