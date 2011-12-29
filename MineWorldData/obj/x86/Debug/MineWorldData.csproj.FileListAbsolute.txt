@@ -1,8 +1,0 @@
-C:\Users\Oeds\Desktop\SVN\TempMerge\MineWorldData\bin\x86\Debug\MineWorldData.dll
-C:\Users\Oeds\Desktop\SVN\TempMerge\MineWorldData\bin\x86\Debug\MineWorldData.pdb
-C:\Users\Oeds\Desktop\SVN\TempMerge\MineWorldData\obj\x86\Debug\ResolveAssemblyReference.cache
-C:\Users\Oeds\Desktop\SVN\TempMerge\MineWorldData\obj\x86\Debug\Microsoft.Xna.Framework.RuntimeProfile.txt
-C:\Users\Oeds\Desktop\SVN\TempMerge\MineWorldData\obj\x86\Debug\MineWorldData.dll
-C:\Users\Oeds\Desktop\SVN\TempMerge\MineWorldData\obj\x86\Debug\MineWorldData.pdb
-C:\Users\Oeds\Desktop\SVN\TempMerge\MineWorldData\bin\x86\Debug\EasyConfig.dll
-C:\Users\Oeds\Desktop\SVN\TempMerge\MineWorldData\bin\x86\Debug\EasyConfig.pdb
