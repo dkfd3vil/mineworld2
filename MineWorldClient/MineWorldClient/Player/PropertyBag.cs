@@ -29,7 +29,6 @@ namespace MineWorld
 
         public void JoinGame()
         {
-            GameManager.SwitchState(GameStates.LoadingState);
             //IPEndPoint serverEndPoint
             // Create our connect message.
             NetOutgoingMessage connectBuffer = Client.CreateMessage();
@@ -38,6 +37,8 @@ namespace MineWorld
             // Connect to the server.
             //Client.Connect(serverEndPoint, connectBuffer);
             Client.Connect("127.0.0.1", Constants.MINEWORLD_PORT, connectBuffer);
+            Client.Connect("192.168.0.15", Constants.MINEWORLD_PORT, connectBuffer);
+            GameManager.SwitchState(GameStates.LoadingState);
         }
 
         public void ReceiveMessages()
