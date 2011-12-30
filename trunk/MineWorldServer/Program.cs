@@ -16,8 +16,10 @@ namespace MineWorldServer
             while (restartServer)
             {
                 MineWorldServer mineWorldServer = new MineWorldServer();
-                restartServer = mineWorldServer.Start();
+                mineWorldServer.Start();
+                restartServer = mineWorldServer.RestartServer;
             }
+            Environment.Exit(0);
         }
 
         static void Main()

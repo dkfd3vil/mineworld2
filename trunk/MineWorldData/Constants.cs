@@ -23,6 +23,7 @@ namespace MineWorldData
 
     public enum PacketTypes : byte
     {
+        WorldMapTransfer,
 
     }
 
