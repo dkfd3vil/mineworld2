@@ -38,9 +38,8 @@ namespace MineWorld
         //Effect ofcourse
         Effect effect;
 
-        public WorldManager(int x,int y,int z,GameStateManager manager,Player player)
+        public WorldManager(GameStateManager manager,Player player)
         {
-            Mapsize = new Vector3(x, y, z);
             this.gamemanager = manager;
             this.player = player;
         }
@@ -83,7 +82,12 @@ namespace MineWorld
             effect.Parameters["FogStart"].SetValue(128);
             effect.Parameters["FogEnd"].SetValue(160);
             effect.Parameters["WorldInverseTranspose"].SetValue(Matrix.Transpose(Matrix.Invert(Matrix.Identity)));
+        }
 
+        public void Start()
+        {
+            BlockMap = new BaseBlock[(int)Mapsize.X, (int)Mapsize.Y, (int)Mapsize.Z];
+            //This is called when we got all the info we need and then we construct a world on it
             //Lets create our map
             CreateSimpleMap();
 
@@ -96,7 +100,7 @@ namespace MineWorld
                 {
                     for (int z = 0; z < (int)(Mapsize.Z / 16); z++)
                     {
-                        Chunks[x, y, z] = new Chunk(new Vector3(x * 16, y * 16, z * 16), this,gamemanager.device); //Create each chunk with its position and pass it the game object
+                        Chunks[x, y, z] = new Chunk(new Vector3(x * 16, y * 16, z * 16), this, gamemanager.device); //Create each chunk with its position and pass it the game object
                     }
                 }
             }

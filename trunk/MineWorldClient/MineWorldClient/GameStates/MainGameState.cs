@@ -12,11 +12,7 @@ namespace MineWorld
 {
     public class MainGameState : BaseState
     {
-        public WorldManager worldmanager;
         public GameStateManager gamemanager;
-
-        //Player var
-        Player player;
 
         //Misc other vars
         float fTime = 0.201358f;
@@ -25,16 +21,14 @@ namespace MineWorld
             : base(manager, associatedState)
         {
             gamemanager = manager;
-            player = new Player(this); //Initialize player with game object
-            worldmanager = new WorldManager(256, 256, 256, gamemanager, player);
         }
 
         public override void LoadContent(ContentManager contentloader)
         {
             //Load our world
-            worldmanager.Load();
+            gamemanager.Pbag.WorldManager.Load();
             //Load our Player
-            player.Load();
+            gamemanager.Pbag.Player.Load();
         }
 
         public override void Update(GameTime gameTime,InputHelper input)
@@ -55,15 +49,14 @@ namespace MineWorld
             fTime %= (float)(MathHelper.TwoPi);
 
             //Update chunks to load close ones, unload far ones
-            worldmanager.Update(fTime);
-
-            player.Update(gameTime,input);
+            gamemanager.Pbag.WorldManager.Update(fTime);
+            gamemanager.Pbag.Player.Update(gameTime, input);
         }
 
         public override void Draw(GameTime gameTime)
         {
-            worldmanager.Draw();
-            player.Draw();
+            gamemanager.Pbag.WorldManager.Draw();
+            gamemanager.Pbag.Player.Draw();
         }
     }
 }

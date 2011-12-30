@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using Lidgren.Network;
 using MineWorldData;
+using System.IO;
 
 namespace MineWorld
 {
@@ -17,6 +18,7 @@ namespace MineWorld
         public NetClient Client;
         public NetIncomingMessage _msgBuffer;
         public Dictionary<int, ClientPlayer> ClientPlayers;
+        public BlockTypes[, ,] Tempblockmap;
 
         public PropertyBag(MineWorldClient Gamein,GameStateManager GameManagerin)
         {
@@ -25,6 +27,8 @@ namespace MineWorld
             NetPeerConfiguration netconfig = new NetPeerConfiguration("MineWorld");
             Client = new NetClient(netconfig);
             Client.Start();
+            Player = new Player(this);
+            WorldManager = new WorldManager(GameManager, Player);
         }
 
         public void JoinGame()
@@ -36,7 +40,7 @@ namespace MineWorld
 
             // Connect to the server.
             //Client.Connect(serverEndPoint, connectBuffer);
-            Client.Connect("127.0.0.1", Constants.MINEWORLD_PORT, connectBuffer);
+            //Client.Connect("127.0.0.1", Constants.MINEWORLD_PORT, connectBuffer);
             Client.Connect("192.168.0.15", Constants.MINEWORLD_PORT, connectBuffer);
             GameManager.SwitchState(GameStates.LoadingState);
         }
@@ -58,10 +62,29 @@ namespace MineWorld
                         {
                             break;
                         }
-
                     case NetIncomingMessageType.Data:
                         {
                             PacketTypes dataType = (PacketTypes)_msgBuffer.ReadByte();
+                            switch (dataType)
+                            {
+                                case PacketTypes.WorldMapTransfer:
+                                    {
+                                        int x = _msgBuffer.ReadInt32();
+                                        int y = _msgBuffer.ReadInt32();
+                                        int z = _msgBuffer.ReadInt32();
+
+                                        WorldManager.Mapsize.X = x;
+                                        WorldManager.Mapsize.Y = y;
+                                        WorldManager.Mapsize.Z = z;
+                                        WorldManager.Start();
+                                        GameManager.SwitchState(GameStates.MainGameState);
+                                        break;
+                                    }
+                                default:
+                                    {
+                                        break;
+                                    }
+                            }
                         }
                         break;
                 }

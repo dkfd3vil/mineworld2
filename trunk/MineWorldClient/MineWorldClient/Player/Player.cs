@@ -33,7 +33,7 @@ namespace MineWorld
         public int selectedblock = 0;
         public BlockTypes selectedblocktype = BlockTypes.Air;
 
-        private MainGameState game;
+        private PropertyBag game;
 
         //Drawing related vars
         SpriteFont myFont;
@@ -43,7 +43,7 @@ namespace MineWorld
         Texture2D tVignette;
 
         //Constructor
-        public Player(MainGameState gameIn)
+        public Player(PropertyBag gameIn)
         {
             Cam = new Camera(gameIn, new Vector3(0, 64, 0), new Vector3(0, 0, 0));
             game = gameIn;
@@ -52,11 +52,11 @@ namespace MineWorld
 
         public void Load()
         {
-            effect = game.gamemanager.conmanager.Load<Effect>("Effect");
-            myFont = game.gamemanager.conmanager.Load<SpriteFont>("SpriteFont1");
-            tGui = game.gamemanager.conmanager.Load<Texture2D>("gui");
-            tWaterOverlay = game.gamemanager.conmanager.Load<Texture2D>("water");
-            tVignette = game.gamemanager.conmanager.Load<Texture2D>("vignette");
+            effect = game.GameManager.conmanager.Load<Effect>("Effect");
+            myFont = game.GameManager.conmanager.Load<SpriteFont>("SpriteFont1");
+            tGui = game.GameManager.conmanager.Load<Texture2D>("gui");
+            tWaterOverlay = game.GameManager.conmanager.Load<Texture2D>("water");
+            tVignette = game.GameManager.conmanager.Load<Texture2D>("vignette");
         }
 
         //Main update method, is called from Game1.cs's update method
@@ -121,7 +121,7 @@ namespace MineWorld
                 Vector3 headPosition = Position + new Vector3(0f, 0.1f, 0f);
                 Vector3 midPosition = Position + new Vector3(0f, -0.7f, 0f);
 
-                if (game.worldmanager.BlockAtPoint(headPosition) == BlockTypes.Water)
+                if (game.WorldManager.BlockAtPoint(headPosition) == BlockTypes.Water)
                 {
                     bUnderwater = true;
                 }
@@ -132,13 +132,13 @@ namespace MineWorld
 
                 vPlayerVel.Y += Gravity * (float)gtime.ElapsedGameTime.TotalSeconds;
 
-                if (game.worldmanager.SolidAtPointForPlayer(footPosition) || game.worldmanager.SolidAtPointForPlayer(headPosition))
+                if (game.WorldManager.SolidAtPointForPlayer(footPosition) || game.WorldManager.SolidAtPointForPlayer(headPosition))
                 {
-                    BlockTypes standingOnBlock = game.worldmanager.BlockAtPoint(footPosition);
-                    BlockTypes hittingHeadOnBlock = game.worldmanager.BlockAtPoint(headPosition);
+                    BlockTypes standingOnBlock = game.WorldManager.BlockAtPoint(footPosition);
+                    BlockTypes hittingHeadOnBlock = game.WorldManager.BlockAtPoint(headPosition);
 
                     // If the player has their head stuck in a block, push them down.
-                    if (game.worldmanager.SolidAtPointForPlayer(headPosition))
+                    if (game.WorldManager.SolidAtPointForPlayer(headPosition))
                     {
                         int blockIn = (int)(headPosition.Y);
                         Position.Y = (blockIn - 0.15f);
@@ -146,7 +146,7 @@ namespace MineWorld
 
                     // If the player is stuck in the ground, bring them out.
                     // This happens because we're standing on a block at -1.5, but stuck in it at -1.4, so -1.45 is the sweet spot.
-                    if (game.worldmanager.SolidAtPointForPlayer(footPosition))
+                    if (game.WorldManager.SolidAtPointForPlayer(footPosition))
                     {
                         int blockOn = (int)(footPosition.Y);
                         Position.Y = (float)(blockOn + 1 + 1.45);
@@ -168,7 +168,7 @@ namespace MineWorld
                     vAim = Cam.Position - Cam.Forward * i;
                     try
                     {
-                        if (game.worldmanager.BlockMap[(int)Math.Floor(vAim.X), (int)Math.Floor(vAim.Y), (int)Math.Floor(vAim.Z)].AimSolid)
+                        if (game.WorldManager.BlockMap[(int)Math.Floor(vAim.X), (int)Math.Floor(vAim.Y), (int)Math.Floor(vAim.Z)].AimSolid)
                         {
                             break; //If there is, break the loop with the current aim vector
                         }
@@ -194,13 +194,13 @@ namespace MineWorld
             //cam.Position = vPosition + new Vector3(0, 1.167f, 0); //Set camera position to be player position plus 7/6ths on the z axis
             Cam.Position = Position;
 
-            if (game.gamemanager.WindowHasFocus())
+            if (game.GameManager.WindowHasFocus())
             {
                 if (mousehasfoccus)
                 {
                     Cam.Rotate( //Rotate the camera based off of mouse position, set mouse position to be screen center
-                        MathHelper.ToRadians((input.MousePosition.Y - game.gamemanager.device.DisplayMode.Height / 2) * Sensitivity * 0.1f),
-                        MathHelper.ToRadians((input.MousePosition.X - game.gamemanager.device.DisplayMode.Width / 2) * Sensitivity * 0.1f),
+                        MathHelper.ToRadians((input.MousePosition.Y - game.GameManager.device.DisplayMode.Height / 2) * Sensitivity * 0.1f),
+                        MathHelper.ToRadians((input.MousePosition.X - game.GameManager.device.DisplayMode.Width / 2) * Sensitivity * 0.1f),
                         0.0f
                         );
                 }
@@ -208,7 +208,7 @@ namespace MineWorld
                 {
                     mousehasfoccus = true;
                 }
-                Mouse.SetPosition(game.gamemanager.device.DisplayMode.Width / 2, game.gamemanager.device.DisplayMode.Height / 2);
+                Mouse.SetPosition(game.GameManager.device.DisplayMode.Width / 2, game.GameManager.device.DisplayMode.Height / 2);
             }
             else
             {
@@ -223,11 +223,11 @@ namespace MineWorld
                 {
                     if (selectedblocktype == BlockTypes.Air)
                     {
-                        game.worldmanager.SetBlock(vAimBlock, BlockTypes.Air);
+                        game.WorldManager.SetBlock(vAimBlock, BlockTypes.Air);
                     }
                     else
                     {
-                        game.worldmanager.SetBlock(GetFacingBlock(), selectedblocktype);
+                        game.WorldManager.SetBlock(GetFacingBlock(), selectedblocktype);
                     }
                     
                 }
@@ -237,7 +237,7 @@ namespace MineWorld
             {
                 if (GotSelection())
                 {
-                    game.worldmanager.UseBlock(vAimBlock);
+                    game.WorldManager.UseBlock(vAimBlock);
                 }
             }
 
@@ -284,7 +284,7 @@ namespace MineWorld
                 foreach (EffectPass pass in effect.CurrentTechnique.Passes)
                 {
                     pass.Apply();
-                    game.gamemanager.device.DrawUserPrimitives<VertexPositionTexture>(PrimitiveType.TriangleList, rFaceMarker, 0, 2); //Draw the face marker
+                    game.GameManager.device.DrawUserPrimitives<VertexPositionTexture>(PrimitiveType.TriangleList, rFaceMarker, 0, 2); //Draw the face marker
                 }
             }
 
@@ -292,24 +292,24 @@ namespace MineWorld
             //   START THE 2D   //
             //////////////////////
 
-            game.gamemanager.spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullNone); //Start 2d rendering
+            game.GameManager.spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullNone); //Start 2d rendering
             if (bUnderwater) //If underwater, apply several overlays
             {
-                game.gamemanager.spriteBatch.Draw(tWaterOverlay, new Rectangle(0, 0, game.gamemanager.device.DisplayMode.Width, game.gamemanager.device.DisplayMode.Height), Color.DarkBlue);
-                game.gamemanager.spriteBatch.Draw(tWaterOverlay, new Rectangle(0, 0, game.gamemanager.device.DisplayMode.Width, game.gamemanager.device.DisplayMode.Height), Color.White);
-                game.gamemanager.spriteBatch.Draw(tVignette, new Rectangle(0, 0, game.gamemanager.device.DisplayMode.Width, game.gamemanager.device.DisplayMode.Height), Color.White);
+                game.GameManager.spriteBatch.Draw(tWaterOverlay, new Rectangle(0, 0, game.GameManager.device.DisplayMode.Width, game.GameManager.device.DisplayMode.Height), Color.DarkBlue);
+                game.GameManager.spriteBatch.Draw(tWaterOverlay, new Rectangle(0, 0, game.GameManager.device.DisplayMode.Width, game.GameManager.device.DisplayMode.Height), Color.White);
+                game.GameManager.spriteBatch.Draw(tVignette, new Rectangle(0, 0, game.GameManager.device.DisplayMode.Width, game.GameManager.device.DisplayMode.Height), Color.White);
             }
 
             //Cursor!
-            game.gamemanager.spriteBatch.Draw(tGui, new Rectangle(game.gamemanager.device.DisplayMode.Width / 2 - 16, game.gamemanager.device.DisplayMode.Height / 2 - 16, 32, 32), new Rectangle(0, 0, 32, 32), Color.White);
+            game.GameManager.spriteBatch.Draw(tGui, new Rectangle(game.GameManager.device.DisplayMode.Width / 2 - 16, game.GameManager.device.DisplayMode.Height / 2 - 16, 32, 32), new Rectangle(0, 0, 32, 32), Color.White);
 
             if (Debug)
             {
-                game.gamemanager.spriteBatch.DrawString(myFont, Position.ToString(), new Vector2(0, 0), Color.Black);
-                game.gamemanager.spriteBatch.DrawString(myFont, selectedblocktype.ToString(), new Vector2(0, 15), Color.Black);
+                game.GameManager.spriteBatch.DrawString(myFont, Position.ToString(), new Vector2(0, 0), Color.Black);
+                game.GameManager.spriteBatch.DrawString(myFont, selectedblocktype.ToString(), new Vector2(0, 15), Color.Black);
             }
 
-            game.gamemanager.spriteBatch.End();
+            game.GameManager.spriteBatch.End();
         }
 
         public bool GotSelection()
@@ -335,9 +335,9 @@ namespace MineWorld
             Vector3 midBodyPoint = movePosition + new Vector3(0, -0.7f, 0);
             Vector3 lowerBodyPoint = movePosition + new Vector3(0, -1.4f, 0);
 
-            if (!game.worldmanager.SolidAtPointForPlayer(movePosition) &&
-                !game.worldmanager.SolidAtPointForPlayer(lowerBodyPoint) &&
-                !game.worldmanager.SolidAtPointForPlayer(midBodyPoint))
+            if (!game.WorldManager.SolidAtPointForPlayer(movePosition) &&
+                !game.WorldManager.SolidAtPointForPlayer(lowerBodyPoint) &&
+                !game.WorldManager.SolidAtPointForPlayer(midBodyPoint))
             {
                 testVector = moveVector;
                 testVector.Normalize();
@@ -347,9 +347,9 @@ namespace MineWorld
                 midBodyPoint = movePosition + new Vector3(0, -0.7f, 0);
                 lowerBodyPoint = movePosition + new Vector3(0, -1.4f, 0);
 
-                if (!game.worldmanager.SolidAtPointForPlayer(movePosition) &&
-                    !game.worldmanager.SolidAtPointForPlayer(lowerBodyPoint) &&
-                    !game.worldmanager.SolidAtPointForPlayer(midBodyPoint))
+                if (!game.WorldManager.SolidAtPointForPlayer(movePosition) &&
+                    !game.WorldManager.SolidAtPointForPlayer(lowerBodyPoint) &&
+                    !game.WorldManager.SolidAtPointForPlayer(midBodyPoint))
                 {
                     //vPosition = vPosition + moveVector;
                     return true;

@@ -31,7 +31,7 @@ namespace MineWorld
         public PropertyBag Pbag;
 
         private TitleState titlestate;
-        private LoadingState loadingstate;
+        public LoadingState loadingstate;
         private MainGameState maingamestate;
         private BaseState[] screens;
 
@@ -64,6 +64,7 @@ namespace MineWorld
 
         public void Update(GameTime gameTime)
         {
+            Pbag.ReceiveMessages();
             inputhelper.Update();
             curScreen.Update(gameTime,inputhelper);
         }

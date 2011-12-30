@@ -24,28 +24,21 @@ namespace MineWorld
         //Global variable definitions
         GameStateManager GameStateManager;
         GraphicsDeviceManager Graphics;
-        NetClient Client;
-        NetIncomingMessage _msgBuffer;
 
         public MineWorldClient()
         {
             Graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-            NetPeerConfiguration netConfig = new NetPeerConfiguration("MineWorld");
-            Client = new NetClient(netConfig);
         }
 
         protected override void Initialize()
         {
             //TODO Redo initialize of mineworldclient
             GameStateManager = new GameStateManager(Graphics,Content,this);
-            Graphics.PreferredBackBufferWidth = 800;
-            Graphics.PreferredBackBufferHeight = 600;
+            Graphics.PreferredBackBufferWidth = 1920;
+            Graphics.PreferredBackBufferHeight = 1080;
             Window.Title = "MineWorldClient Alpha";
             Graphics.ApplyChanges();
-
-            //Set mouse to the middle
-            //Mouse.SetPosition(1920 / 2, 1080 / 2);
 
             base.Initialize();
         }
@@ -53,7 +46,6 @@ namespace MineWorld
         protected override void LoadContent()
         {
             GameStateManager.LoadContent();
-            //GameStateManager.SwitchState(GameStates.TitleState);
             base.LoadContent();
         }
 

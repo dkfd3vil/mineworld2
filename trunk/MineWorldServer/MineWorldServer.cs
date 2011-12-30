@@ -25,21 +25,23 @@ namespace MineWorldServer
         private DateTime _lastKeyAvaible = DateTime.Now;
 
 
-        public Dictionary<NetConnection, ServerPlayer> PlayerList;
-        public BlockTypes[, ,] WorldMap = new BlockTypes[64, 64, 64];
+        public Dictionary<NetConnection, ServerPlayer> PlayerList = new Dictionary<NetConnection,ServerPlayer>();
         public Vector3 WorldMapSize = new Vector3(64,64,64);
+        public BlockTypes[, ,] WorldMap;
 
         public MineWorldServer()
         {
             NetPeerConfiguration netConfig = new NetPeerConfiguration("MineWorld");
             netConfig.Port = Constants.MINEWORLD_PORT;
             netConfig.MaximumConnections = 2;
+            netConfig.EnableMessageType(NetIncomingMessageType.ConnectionApproval);
             Server = new NetServer(netConfig);
             GameWorld = new GameWorld(this);
             console = new MineWorldConsole(this);
             ServerListener = new ServerListener(Server,this);
             ServerSender = new ServerSender(Server, this);
             Listener = new Thread(ServerListener.Start);
+            WorldMap = new BlockTypes[(int)WorldMapSize.X, (int)WorldMapSize.Y, (int)WorldMapSize.Z];
         }
 
         public void Start()
