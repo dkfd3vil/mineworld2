@@ -27,11 +27,11 @@ namespace MineWorld
         /// <param name="game">Game reference</param>
         /// <param name="pos">Camera position</param>
         /// <param name="ang">Camera angle</param>
-        public Camera(MainGameState game, Vector3 pos, Vector3 ang)
+        public Camera(PropertyBag game, Vector3 pos, Vector3 ang)
         {
             this.pos = pos;
             this.ang = ang;
-            this.SetPerspective(MathHelper.ToRadians(90), game.gamemanager.device.Viewport.AspectRatio, 0.01f, 100000.0f);
+            this.SetPerspective(MathHelper.ToRadians(90),game.GameManager.device.Viewport.AspectRatio, 0.01f, 100000.0f);
         }
 
         public void Update()

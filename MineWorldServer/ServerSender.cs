@@ -24,8 +24,9 @@ namespace MineWorldServer
         {
             outmsg = netserver.CreateMessage();
             outmsg.Write((byte)PacketTypes.WorldMapTransfer);
-            outmsg.WritePadBits();
-            outmsg.Write(mineserver.GameWorld.CurrentWorldMapToBytes());
+            outmsg.Write((int)mineserver.WorldMapSize.X);
+            outmsg.Write((int)mineserver.WorldMapSize.Y);
+            outmsg.Write((int)mineserver.WorldMapSize.Z);
             netserver.SendMessage(outmsg, player.NetConn, NetDeliveryMethod.ReliableOrdered);
         }
     }
