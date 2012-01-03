@@ -10,12 +10,14 @@ using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Media;
 using System.Runtime.InteropServices;
+using EasyConfig;
 
 namespace MineWorld
 {
     public enum GameStates
     {
         TitleState,
+        MainMenuState,
         LoadingState,
         MainGameState
     }
@@ -26,11 +28,15 @@ namespace MineWorld
         public GraphicsDeviceManager graphics;
         public SpriteBatch spriteBatch;
         public GraphicsDevice device;
+
+        public AudioManager audiomanager;
         private InputHelper inputhelper;
+        public ConfigFile config;
         public ContentManager conmanager;
         public PropertyBag Pbag;
 
         private TitleState titlestate;
+        private MainMenuState mainmenustate;
         public LoadingState loadingstate;
         private MainGameState maingamestate;
         private BaseState[] screens;
@@ -39,6 +45,8 @@ namespace MineWorld
 
         public GameStateManager(GraphicsDeviceManager man,ContentManager cman,MineWorldClient gam)
         {
+            audiomanager = new AudioManager();
+            config = new ConfigFile("data/settings.ini");
             inputhelper = new InputHelper();
             game = gam;
             conmanager = cman;
@@ -48,6 +56,7 @@ namespace MineWorld
             screens = new BaseState[]  
             { 
                 titlestate = new TitleState(this,GameStates.TitleState),
+                mainmenustate = new MainMenuState(this,GameStates.MainMenuState),
                 loadingstate = new LoadingState(this,GameStates.LoadingState),
                 maingamestate = new MainGameState(this, GameStates.MainGameState), 
             };
@@ -58,6 +67,7 @@ namespace MineWorld
 
         public void LoadContent()
         {
+            LoadSettings();
             foreach (BaseState screen in screens)
                 screen.LoadContent(conmanager);
         }
@@ -94,6 +104,22 @@ namespace MineWorld
         public bool WindowHasFocus()
         {
             return GetForegroundWindow() == (int)game.Window.Handle;
+        }
+
+        public void LoadSettings()
+        {
+            game.Window.Title = "MineWorldClient Alpha";
+
+            graphics.PreferredBackBufferHeight = config.SettingGroups["Video"].Settings["Height"].GetValueAsInt();
+            graphics.PreferredBackBufferWidth = config.SettingGroups["Video"].Settings["Width"].GetValueAsInt();
+            graphics.IsFullScreen = config.SettingGroups["Video"].Settings["Fullscreen"].GetValueAsBool();
+            graphics.ApplyChanges();
+
+            float volume = config.SettingGroups["Sound"].Settings["Volume"].GetValueAsFloat() / 100;
+            audiomanager.volume = volume;
+
+
+            Pbag.Player.Name = config.SettingGroups["Player"].Settings["Name"].GetValueAsString();
         }
 
         [DllImport("user32.dll")]

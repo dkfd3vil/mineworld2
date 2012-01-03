@@ -47,16 +47,16 @@ namespace MineWorld
         {
             Cam = new Camera(gameIn, new Vector3(0, 64, 0), new Vector3(0, 0, 0));
             game = gameIn;
-            Position = new Vector3(128, 128, 128);
+            Position = new Vector3(32, 128, 32);
         }
 
         public void Load()
         {
-            effect = game.GameManager.conmanager.Load<Effect>("Effect");
-            myFont = game.GameManager.conmanager.Load<SpriteFont>("SpriteFont1");
-            tGui = game.GameManager.conmanager.Load<Texture2D>("gui");
-            tWaterOverlay = game.GameManager.conmanager.Load<Texture2D>("water");
-            tVignette = game.GameManager.conmanager.Load<Texture2D>("vignette");
+            effect = game.GameManager.conmanager.Load<Effect>("Effects/DefaultEffect");
+            myFont = game.GameManager.conmanager.Load<SpriteFont>("Fonts/DefaultFont");
+            tGui = game.GameManager.conmanager.Load<Texture2D>("Textures/gui");
+            tWaterOverlay = game.GameManager.conmanager.Load<Texture2D>("Textures/water");
+            tVignette = game.GameManager.conmanager.Load<Texture2D>("Textures/vignette");
         }
 
         //Main update method, is called from Game1.cs's update method
@@ -301,7 +301,7 @@ namespace MineWorld
             }
 
             //Cursor!
-            game.GameManager.spriteBatch.Draw(tGui, new Rectangle(game.GameManager.device.DisplayMode.Width / 2 - 16, game.GameManager.device.DisplayMode.Height / 2 - 16, 32, 32), new Rectangle(0, 0, 32, 32), Color.White);
+            game.GameManager.spriteBatch.Draw(tGui, new Rectangle(game.GameManager.graphics.PreferredBackBufferWidth / 2 - 16, game.GameManager.graphics.PreferredBackBufferHeight / 2 - 16, 32, 32), new Rectangle(0, 0, 32, 32), Color.White);
 
             if (Debug)
             {

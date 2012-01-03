@@ -133,8 +133,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AudioManager.cs" />
     <Compile Include="ClientSender.cs" />
     <Compile Include="GameStates\LoadingState.cs" />
+    <Compile Include="GameStates\MainMenuState.cs" />
     <Compile Include="GameStates\TitleState.cs" />
     <Compile Include="Player\ClientPlayer.cs" />
     <Compile Include="Player\PropertyBag.cs" />
@@ -197,7 +199,11 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="Data\Settings.ini">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\Microsoft.Xna.GameStudio.targets" />
   <!--

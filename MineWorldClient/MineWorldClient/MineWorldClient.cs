@@ -34,12 +34,7 @@ namespace MineWorld
         protected override void Initialize()
         {
             //TODO Redo initialize of mineworldclient
-            GameStateManager = new GameStateManager(Graphics,Content,this);
-            Graphics.PreferredBackBufferWidth = 1920;
-            Graphics.PreferredBackBufferHeight = 1080;
-            Window.Title = "MineWorldClient Alpha";
-            Graphics.ApplyChanges();
-
+            GameStateManager = new GameStateManager(Graphics, Content, this);
             base.Initialize();
         }
 

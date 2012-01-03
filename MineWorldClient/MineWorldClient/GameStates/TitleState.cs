@@ -7,49 +7,54 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Content;
 using Ruminate.GUI.Content;
 using Ruminate.GUI.Framework;
+using Microsoft.Xna.Framework.Media;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace MineWorld
 {
     class TitleState : BaseState
     {
         GameStateManager gamemanager;
-        RuminateGUI gui;
-        Button start;
-        ScrollBars bar;
+        Song introsong;
+        bool introstarted = false;
+        Texture2D background;
+        Rectangle size;
 
         public TitleState(GameStateManager manager, GameStates associatedState)
             : base(manager, associatedState)
         {
             gamemanager = manager;
-            gui = new RuminateGUI(gamemanager.game);
-            gui.SetTheme(new EmbeddedTheme(gui));
         }
 
         public override void LoadContent(ContentManager contentloader)
         {
-            start = new Button(new Offset(10, 120, 80, 100), "StartGame", null);
-            gui.AddElement(start);
-
-            gamemanager.game.IsMouseVisible = true;
+            gamemanager.game.IsMouseVisible = false;
+            introsong = contentloader.Load<Song>("Music/intro");
+            background = contentloader.Load<Texture2D>("Textures/States/titlestate");
+            size.Width = gamemanager.graphics.PreferredBackBufferWidth;
+            size.Height = gamemanager.graphics.PreferredBackBufferHeight;
         }
 
         public override void Update(GameTime gameTime, InputHelper input)
         {
-            gui.Update();
-            if(input.IsNewPress(Keys.Enter))
+            if (!introstarted)
             {
-                gamemanager.Pbag.JoinGame();
+                //gamemanager.audiomanager.PlaySong(introsong, false);
+                introstarted = true;
             }
-            if (start.IsPressed)
+            if(input.IsCurPress(Keys.Enter) || input.IsCurPress(Keys.Space) || input.IsCurPress(MouseButtons.LeftButton))
             {
-                gamemanager.Pbag.JoinGame();
+                gamemanager.audiomanager.StopPlaying();
+                gamemanager.SwitchState(GameStates.MainMenuState);
             }
         }
 
         public override void Draw(GameTime gameTime)
         {
-            gamemanager.device.Clear(Color.White);
-            gui.Draw();
+            gamemanager.device.Clear(Color.Black);
+            gamemanager.spriteBatch.Begin();
+            gamemanager.spriteBatch.Draw(background, size, Color.White);
+            gamemanager.spriteBatch.End();
         }
     }
 }

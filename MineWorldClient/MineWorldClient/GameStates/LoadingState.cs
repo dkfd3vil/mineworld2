@@ -22,12 +22,13 @@ namespace MineWorld
 
         public override void LoadContent(ContentManager contentloader)
         {
-            myfont = contentloader.Load<SpriteFont>("SpriteFont1");
+            myfont = contentloader.Load<SpriteFont>("Fonts/DefaultFont");
+
+            gamemanager.game.IsMouseVisible = false;
         }
 
         public override void Update(GameTime gameTime, InputHelper input)
         {
-            //throw new NotImplementedException();
         }
 
         public override void Draw(Microsoft.Xna.Framework.GameTime gameTime)
