@@ -31,7 +31,7 @@ namespace MineWorld
             WorldManager = new WorldManager(GameManager, Player);
         }
 
-        public void JoinGame()
+        public void JoinGame(string ip)
         {
             //IPEndPoint serverEndPoint
             // Create our connect message.
@@ -41,7 +41,7 @@ namespace MineWorld
             // Connect to the server.
             //Client.Connect(serverEndPoint, connectBuffer);
             //Client.Connect("127.0.0.1", Constants.MINEWORLD_PORT, connectBuffer);
-            Client.Connect("192.168.0.15", Constants.MINEWORLD_PORT, connectBuffer);
+            Client.Connect(ip, Constants.MINEWORLD_PORT, connectBuffer);
             GameManager.SwitchState(GameStates.LoadingState);
         }
 
@@ -89,8 +89,6 @@ namespace MineWorld
                         break;
                 }
             }
-            // Make sure our network thread actually gets to run.
-            //Thread.Sleep(1);
         }
 
         public void SendMessage()

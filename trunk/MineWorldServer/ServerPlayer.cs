@@ -10,6 +10,7 @@ namespace MineWorldServer
     public class ServerPlayer
     {
         public long ID;
+        public string Name;
         public string Ip = "";
         public NetConnection NetConn;
         public Vector3 Position = Vector3.Zero;

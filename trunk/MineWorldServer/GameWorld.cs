@@ -29,6 +29,30 @@ namespace MineWorldServer
             }
         }
 
+        public void KickPlayerByName(string name)
+        {
+            foreach (ServerPlayer player in mineserver.PlayerList.Values)
+            {
+                if (player.Name.ToLower() == name.ToLower())
+                {
+                    KickPlayer(player);
+                }
+            }
+        }
+
+        public void KickPlayer(ServerPlayer player)
+        {
+            player.NetConn.Disconnect("kicked");
+        }
+
+        public void KickAllPlayers()
+        {
+            foreach (ServerPlayer player in mineserver.PlayerList.Values)
+            {
+                KickPlayer(player);
+            }
+        }
+
         public byte[] CurrentWorldMapToBytes()
         {
             using (MemoryStream m = new MemoryStream())

@@ -16,16 +16,32 @@ namespace MineWorldServer
 
         public void ProcessInput(string input)
         {
-            switch (input)
+            string[] inputsplitted = input.Split(new[] { ' ' });
+
+            switch (inputsplitted[0].ToLower())
             {
+                case "kick":
+                    {
+                        if (inputsplitted.Length == 2)
+                        {
+                            mineserver.GameWorld.KickPlayerByName(inputsplitted[1]);
+                        }
+                        else
+                        {
+                            ConsoleWrite("Specify player to be kicked");
+                        }
+                        break;
+                    }
                 case "exit":
                     {
+                        mineserver.Server.Shutdown("shutdown");
                         mineserver.KeepServerRunning = false;
                         mineserver.RestartServer = false;
                         break;
                     }
                 case "restart":
                     {
+                        mineserver.Server.Shutdown("restart");
                         mineserver.KeepServerRunning = false;
                         mineserver.RestartServer = true;
                         break;

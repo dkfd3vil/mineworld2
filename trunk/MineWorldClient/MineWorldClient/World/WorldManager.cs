@@ -52,8 +52,8 @@ namespace MineWorld
             CreateBlockTypes();
 
             //Load our sun and moon
-            Moon = gamemanager.conmanager.Load<Texture2D>("moon");
-            Sun = gamemanager.conmanager.Load<Texture2D>("sun");
+            Moon = gamemanager.conmanager.Load<Texture2D>("Textures/moon");
+            Sun = gamemanager.conmanager.Load<Texture2D>("Textures/sun");
 
             SunArray = new VertexPositionTexture[6];
             SunArray[0] = new VertexPositionTexture(new Vector3(-0.5f, 0, -0.5f), new Vector2(0, 0));
@@ -72,10 +72,10 @@ namespace MineWorld
             MoonArray[5] = new VertexPositionTexture(new Vector3(-0.5f, 0, 0.5f), new Vector2(0, 1));
 
             //Load our effect
-            effect = gamemanager.conmanager.Load<Effect>("Effect");
+            effect = gamemanager.conmanager.Load<Effect>("Effects/DefaultEffect");
 
             //Load our terrain
-            Terrain = gamemanager.conmanager.Load<Texture2D>("terrain");
+            Terrain = gamemanager.conmanager.Load<Texture2D>("Textures/terrain");
 
             //Set unchanging effect parameters (Fog and a constant value used for lighting)
             effect.Parameters["FogEnabled"].SetValue(true);
@@ -240,7 +240,7 @@ namespace MineWorld
                     for (int z = 0; z < (int)(Mapsize.Z / 16); z++)
                     {
                         curchunk = Chunks[x, y, z];
-                        if (Vector3.Distance(new Vector3(x * 16, y * 16, z * 16), player.Position) < 192) //If the current chunk selected is within the distance
+                        if (Vector3.Distance(new Vector3(x * 16, y * 16, z * 16), player.Position) < 256) //If the current chunk selected is within the distance
                         {
                             if (!curchunk.bDraw) //And if it isn't already loaded
                             {

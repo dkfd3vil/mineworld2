@@ -42,76 +42,89 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="SpriteFont1.spritefont">
-      <Name>SpriteFont1</Name>
+    <Compile Include="Fonts\DefaultFont.spritefont">
+      <Name>DefaultFont</Name>
       <Importer>FontDescriptionImporter</Importer>
       <Processor>FontDescriptionProcessor</Processor>
       <SubType>Designer</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="gui.png">
+    <Compile Include="Textures\gui.png">
       <Name>gui</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Effect.fx">
-      <Name>Effect</Name>
+    <Compile Include="Effects\DefaultEffect.fx">
+      <Name>DefaultEffect</Name>
       <Importer>EffectImporter</Importer>
       <Processor>EffectProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="water.png">
+    <Compile Include="Textures\water.png">
       <Name>water</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="vignette.png">
+    <Compile Include="Textures\vignette.png">
       <Name>vignette</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="moon.png">
+    <Compile Include="Textures\moon.png">
       <Name>moon</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="sun.png">
+    <Compile Include="Textures\sun.png">
       <Name>sun</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="icons.png">
+    <Compile Include="Textures\icons.png">
       <Name>icons</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="terrain.png">
+    <Compile Include="Textures\terrain.png">
       <Name>terrain</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Models\" />
-    <Folder Include="Textures\" />
+    <Folder Include="Sounds\" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="testsong.mp3">
-      <Name>testsong</Name>
+    <Compile Include="Music\intro.mp3">
+      <Name>intro</Name>
       <Importer>Mp3Importer</Importer>
       <Processor>SongProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\States\titlestate.png">
+      <Name>titlestate</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Textures\Ui\cursor.png">
+      <Name>cursor</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />
