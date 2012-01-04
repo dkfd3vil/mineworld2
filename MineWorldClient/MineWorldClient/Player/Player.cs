@@ -241,7 +241,7 @@ namespace MineWorld
                 }
             }
 
-            if (input.IsNewPress(Keys.Left))
+            if (input.MouseScrollWheelVelocity < 0f)
             {
                 selectedblock -= 1;
                 if (selectedblock < 0)
@@ -251,7 +251,7 @@ namespace MineWorld
                 selectedblocktype = (BlockTypes)selectedblock;
             }
 
-            if (input.IsNewPress(Keys.Right))
+            if (input.MouseScrollWheelVelocity > 0f)
             {
                 selectedblock += 1;
                 if (selectedblock > 63)

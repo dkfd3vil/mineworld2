@@ -38,6 +38,9 @@ namespace MineWorld
         //Effect ofcourse
         Effect effect;
 
+        //A bool to see if everything is loaded
+        bool allloaded;
+
         public WorldManager(GameStateManager manager,Player player)
         {
             this.gamemanager = manager;
@@ -107,6 +110,7 @@ namespace MineWorld
 
             //Initial update of the chunks
             UpdateChunks();
+            allloaded = true;
         }
 
         public void Update(float time)
@@ -297,6 +301,11 @@ namespace MineWorld
                 return;
             }
             BlockMap[(int)pos.X, (int)pos.Y, (int)pos.Z].OnUse();
+        }
+
+        public bool Everythingloaded()
+        {
+            return allloaded;
         }
 
         public void SetBlock(Vector3 pos, BlockTypes type)

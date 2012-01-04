@@ -37,12 +37,7 @@ namespace MineWorld
             // Create our connect message.
             NetOutgoingMessage connectBuffer = Client.CreateMessage();
             connectBuffer.Write(Constants.MINEWORLDCLIENT_VERSION);
-
-            // Connect to the server.
-            //Client.Connect(serverEndPoint, connectBuffer);
-            //Client.Connect("127.0.0.1", Constants.MINEWORLD_PORT, connectBuffer);
             Client.Connect(ip, Constants.MINEWORLD_PORT, connectBuffer);
-            GameManager.SwitchState(GameStates.LoadingState);
         }
 
         public void ReceiveMessages()
@@ -77,7 +72,6 @@ namespace MineWorld
                                         WorldManager.Mapsize.Y = y;
                                         WorldManager.Mapsize.Z = z;
                                         WorldManager.Start();
-                                        GameManager.SwitchState(GameStates.MainGameState);
                                         break;
                                     }
                                 default:
