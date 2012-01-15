@@ -108,7 +108,7 @@ namespace MineWorld
 
         public void LoadSettings()
         {
-            game.Window.Title = "MineWorldClient Alpha";
+            game.Window.Title = "tesr";
 
             graphics.PreferredBackBufferHeight = config.SettingGroups["Video"].Settings["Height"].GetValueAsInt();
             graphics.PreferredBackBufferWidth = config.SettingGroups["Video"].Settings["Width"].GetValueAsInt();

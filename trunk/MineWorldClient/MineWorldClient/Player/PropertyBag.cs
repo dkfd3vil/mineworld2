@@ -4,8 +4,10 @@ using System.Collections;
 using System.Linq;
 using System.Text;
 using Lidgren.Network;
+using Lidgren.Network.Xna;
 using MineWorldData;
 using System.IO;
+using Microsoft.Xna.Framework;
 
 namespace MineWorld
 {
@@ -59,19 +61,25 @@ namespace MineWorld
                         }
                     case NetIncomingMessageType.Data:
                         {
-                            PacketTypes dataType = (PacketTypes)_msgBuffer.ReadByte();
+                            PacketType dataType = (PacketType)_msgBuffer.ReadByte();
                             switch (dataType)
                             {
-                                case PacketTypes.WorldMapTransfer:
+                                case PacketType.WorldMapTransfer:
                                     {
-                                        int x = _msgBuffer.ReadInt32();
-                                        int y = _msgBuffer.ReadInt32();
-                                        int z = _msgBuffer.ReadInt32();
-
-                                        WorldManager.Mapsize.X = x;
-                                        WorldManager.Mapsize.Y = y;
-                                        WorldManager.Mapsize.Z = z;
+                                        WorldManager.Mapsize = _msgBuffer.ReadVector3();
                                         WorldManager.Start();
+                                        break;
+                                    }
+                                case PacketType.InitialUpdate:
+                                    {
+                                        Player.Position = _msgBuffer.ReadVector3();
+                                        break;
+                                    }
+                                case PacketType.TerrainTextureData:
+                                    {
+                                        int byteslength = _msgBuffer.ReadInt32();
+                                        byte[] tempdata = _msgBuffer.ReadBytes(byteslength);
+                                        WorldManager.SetTerrainData(tempdata);
                                         break;
                                     }
                                 default:

@@ -32,10 +32,12 @@ namespace MineWorldServer
                             {
                                 mineserver.console.ConsoleWrite("Newplayerconnect");
                                 int authcode = packetin.ReadInt32();
-                                ServerPlayer newplayer = new ServerPlayer(_msgSender);
-                                mineserver.PlayerList[_msgSender] = newplayer;
+                                mineserver.PlayerManager.AddPlayer(_msgSender);
                                 _msgSender.Approve();
-                                mineserver.ServerSender.SendCurrentWorld(newplayer);
+                                mineserver.GameWorld.GenerateSpawnPosition(mineserver.PlayerManager.GetPlayerByConnection(_msgSender));
+                                mineserver.ServerSender.SendTerrainTextureData(mineserver.PlayerManager.GetPlayerByConnection(_msgSender));
+                                mineserver.ServerSender.SendCurrentWorld(mineserver.PlayerManager.GetPlayerByConnection(_msgSender));
+                                mineserver.ServerSender.SendInitialUpdate(mineserver.PlayerManager.GetPlayerByConnection(_msgSender));
                                 break;
                             }
                     }

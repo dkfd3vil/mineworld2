@@ -21,10 +21,14 @@ namespace MineWorldData
         public const int MINEWORLD_PORT = 5565;
     }
 
-    public enum PacketTypes : byte
+    public enum PacketType
     {
+        TerrainTextureData,
         WorldMapTransfer,
-
+        BlockSet,
+        BlockUse,
+        InitialUpdate,
+        MovementUpdate,
     }
 
     public enum BlockTypes

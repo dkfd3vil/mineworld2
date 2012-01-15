@@ -33,13 +33,14 @@ namespace MineWorld
         VertexPositionTexture[] MoonArray;
 
         //Containing our blocks from terrain.png
-        Texture2D Terrain;
+        public Texture2D Terrain;
 
         //Effect ofcourse
         Effect effect;
 
         //A bool to see if everything is loaded
-        bool allloaded;
+        bool worldmaploaded = false;
+        bool terraindataloaded = false;
 
         public WorldManager(GameStateManager manager,Player player)
         {
@@ -110,7 +111,7 @@ namespace MineWorld
 
             //Initial update of the chunks
             UpdateChunks();
-            allloaded = true;
+            worldmaploaded = true;
         }
 
         public void Update(float time)
@@ -305,7 +306,14 @@ namespace MineWorld
 
         public bool Everythingloaded()
         {
-            return allloaded;
+            return worldmaploaded && terraindataloaded;
+        }
+
+        public void SetTerrainData(byte[] terrainbytes)
+        {
+            Texture2D temptext;
+            //temptext.SetData<Texture2D>(terrainbytes.Cast<Texture2D>());
+            terraindataloaded = true;
         }
 
         public void SetBlock(Vector3 pos, BlockTypes type)

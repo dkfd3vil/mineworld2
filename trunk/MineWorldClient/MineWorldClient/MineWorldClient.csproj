@@ -141,6 +141,7 @@
     <Compile Include="Player\ClientPlayer.cs" />
     <Compile Include="Player\PropertyBag.cs" />
     <Compile Include="World\Block\BaseBlock.cs" />
+    <Compile Include="World\Block\BlockIcon.cs" />
     <Compile Include="World\Block\Special\MusicBlock.cs" />
     <Compile Include="World\Chunk.cs" />
     <Compile Include="Player\Camera.cs" />
