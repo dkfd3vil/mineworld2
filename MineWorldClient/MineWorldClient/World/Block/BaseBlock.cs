@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using MineWorldData;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace MineWorld
 {
@@ -31,6 +32,7 @@ namespace MineWorld
         public bool AimSolid;
         public BlockModel Model;
         public BlockTypes Type;
+        public Texture2D Icon;
 
         public BaseBlock(Vector2 top, Vector2 forward, Vector2 backward, Vector2 right, Vector2 left, Vector2 bottom, BlockModel modelIn, bool SolidIn, bool TransparentIn, bool AimSolidIn, BlockTypes typeIn)
         {

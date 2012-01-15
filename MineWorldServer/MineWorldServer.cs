@@ -6,6 +6,9 @@ using Lidgren.Network;
 using System.Threading;
 using MineWorldData;
 using Microsoft.Xna.Framework;
+using EasyConfig;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Content;
 
 namespace MineWorldServer
 {
@@ -14,9 +17,13 @@ namespace MineWorldServer
         //Server variables
         public NetServer Server;
         public GameWorld GameWorld;
+        public MapManager MapManager;
+        public PlayerManager PlayerManager;
+
         public Thread Listener;
         public ServerListener ServerListener;
         public ServerSender ServerSender;
+
         public bool KeepServerRunning = true;
         public bool RestartServer = false;
 
@@ -24,10 +31,9 @@ namespace MineWorldServer
         public MineWorldConsole console;
         private DateTime _lastKeyAvaible = DateTime.Now;
 
+        public ConfigFile Configloader;
 
-        public Dictionary<NetConnection, ServerPlayer> PlayerList = new Dictionary<NetConnection,ServerPlayer>();
-        public Vector3 WorldMapSize = new Vector3(64,64,64);
-        public BlockTypes[, ,] WorldMap;
+        public byte[] Terrain;
 
         public MineWorldServer()
         {
@@ -41,16 +47,20 @@ namespace MineWorldServer
             ServerListener = new ServerListener(Server,this);
             ServerSender = new ServerSender(Server, this);
             Listener = new Thread(ServerListener.Start);
-            WorldMap = new BlockTypes[(int)WorldMapSize.X, (int)WorldMapSize.Y, (int)WorldMapSize.Z];
+            MapManager = new MapManager();
+            PlayerManager = new PlayerManager();
+            Configloader = new ConfigFile("Data/Settings.ini");
         }
 
         public void Start()
         {
             console.SetTitle("MineWorldServer v" + Constants.MINEWORLDSERVER_VERSION);
+
+            LoadSettings();
+            MapManager.GenerateCubeMap(BlockTypes.Dirt);
+
             Server.Start();
             Listener.Start();
-
-            GameWorld.GenerateSimpleMap(BlockTypes.Dirt);
 
             while (KeepServerRunning)
             {
@@ -69,6 +79,15 @@ namespace MineWorldServer
                     }
                 }
             }
+        }
+
+        public void LoadSettings()
+        {
+            Server.Configuration.MaximumConnections = Configloader.SettingGroups["Server"].Settings["Maxplayer"].GetValueAsInt();
+            int tempx = Configloader.SettingGroups["Map"].Settings["Mapx"].GetValueAsInt();
+            int tempy = Configloader.SettingGroups["Map"].Settings["Mapy"].GetValueAsInt();
+            int tempz = Configloader.SettingGroups["Map"].Settings["Mapz"].GetValueAsInt();
+            MapManager.SetMapSize(tempx, tempy, tempz);
         }
     }
 }

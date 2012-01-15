@@ -24,7 +24,7 @@ namespace MineWorldServer
                     {
                         if (inputsplitted.Length == 2)
                         {
-                            mineserver.GameWorld.KickPlayerByName(inputsplitted[1]);
+                            mineserver.PlayerManager.KickPlayerByName(inputsplitted[1]);
                         }
                         else
                         {

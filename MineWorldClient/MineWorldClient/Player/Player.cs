@@ -15,7 +15,7 @@ namespace MineWorld
         private const float Movespeed = 3.5f;
         private const float Gravity = -16.0f;
 
-        public int Myid;
+        public long Myid;
         public string Name;
         public Camera Cam;
         public bool mousehasfoccus;
@@ -47,7 +47,6 @@ namespace MineWorld
         {
             Cam = new Camera(gameIn, new Vector3(0, 64, 0), new Vector3(0, 0, 0));
             game = gameIn;
-            Position = new Vector3(32, 128, 32);
         }
 
         public void Load()
