@@ -47,6 +47,9 @@ namespace MineWorld
 
         public override void Draw(Microsoft.Xna.Framework.GameTime gameTime)
         {
+            loadingorgin = new Vector2(loadingimg.Width / 2, loadingimg.Height / 2);
+            loadinglocation = new Vector2(gamemanager.graphics.PreferredBackBufferWidth / 2, gamemanager.graphics.PreferredBackBufferHeight / 2);
+            loadingrectangle = new Rectangle(0, 0, loadingimg.Width, loadingimg.Height);
             gamemanager.device.Clear(Color.Black);
             gamemanager.spriteBatch.Begin();
             gamemanager.spriteBatch.Draw(loadingimg, loadinglocation, loadingrectangle, Color.White, loadingangle, loadingorgin, 1.0f, SpriteEffects.None, 1);
