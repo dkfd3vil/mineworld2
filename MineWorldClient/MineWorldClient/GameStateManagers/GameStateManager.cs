@@ -110,7 +110,7 @@ namespace MineWorld
         public void LoadSettings()
         {
             game.Window.Title = "MineWorldClient v" + Constants.MINEWORLDCLIENT_VERSION;
-
+            game.Window.AllowUserResizing = true;
             graphics.PreferredBackBufferHeight = config.SettingGroups["Video"].Settings["Height"].GetValueAsInt();
             graphics.PreferredBackBufferWidth = config.SettingGroups["Video"].Settings["Width"].GetValueAsInt();
             graphics.IsFullScreen = config.SettingGroups["Video"].Settings["Fullscreen"].GetValueAsBool();
