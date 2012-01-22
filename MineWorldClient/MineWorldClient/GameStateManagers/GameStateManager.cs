@@ -111,6 +111,7 @@ namespace MineWorld
         {
             game.Window.Title = "MineWorldClient v" + Constants.MINEWORLDCLIENT_VERSION;
             game.Window.AllowUserResizing = true;
+            game.Window.ClientSizeChanged += new EventHandler<EventArgs>(Window_ClientSizeChanged);
             graphics.PreferredBackBufferHeight = config.SettingGroups["Video"].Settings["Height"].GetValueAsInt();
             graphics.PreferredBackBufferWidth = config.SettingGroups["Video"].Settings["Width"].GetValueAsInt();
             graphics.IsFullScreen = config.SettingGroups["Video"].Settings["Fullscreen"].GetValueAsBool();
@@ -121,6 +122,12 @@ namespace MineWorld
             audiomanager.volume = config.SettingGroups["Sound"].Settings["Volume"].GetValueAsFloat() / 100;
 
             Pbag.Player.Name = config.SettingGroups["Player"].Settings["Name"].GetValueAsString();
+        }
+
+        void Window_ClientSizeChanged(object sender, EventArgs e)
+        {
+            graphics.PreferredBackBufferWidth = game.Window.ClientBounds.Width;
+            graphics.PreferredBackBufferHeight = game.Window.ClientBounds.Height;
         }
 
         [DllImport("user32.dll")]
