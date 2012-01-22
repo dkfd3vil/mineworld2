@@ -40,8 +40,9 @@ namespace MineWorld
 
             if (input.IsNewPress((Keys)ClientKey.FullScreen))
             {
-                gamemanager.graphics.IsFullScreen = !gamemanager.graphics.IsFullScreen;
-                gamemanager.graphics.ApplyChanges();
+                gamemanager.graphics.ToggleFullScreen();
+                //gamemanager.graphics.IsFullScreen = !gamemanager.graphics.IsFullScreen;
+                //gamemanager.graphics.ApplyChanges();
             }
 
             //Update chunks to load close ones, unload far ones

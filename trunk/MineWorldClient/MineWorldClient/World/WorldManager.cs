@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MineWorldData;
 using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Input;
 
 namespace MineWorld
 {
@@ -126,6 +127,11 @@ namespace MineWorld
             fTime %= (float)(MathHelper.TwoPi);
 
             UpdateChunks();
+
+            if (input.IsNewPress((Keys)ClientKey.WireFrame))
+            {
+                gamemanager.Pbag.WireMode = !gamemanager.Pbag.WireMode;
+            }
         }
 
         public void Draw()
@@ -149,7 +155,14 @@ namespace MineWorld
 
             RasterizerState rs = new RasterizerState();
             rs.CullMode = CullMode.CullCounterClockwiseFace;
-            //rs.FillMode = FillMode.WireFrame;
+            if (gamemanager.Pbag.WireMode)
+            {
+                rs.FillMode = FillMode.WireFrame;
+            }
+            else
+            {
+                rs.FillMode = FillMode.Solid;
+            }
             gamemanager.device.RasterizerState = rs;
 
             //CHUNKS

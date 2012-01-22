@@ -24,6 +24,8 @@ namespace MineWorld
         public NetIncomingMessage _msgBuffer;
         public BlockTypes[, ,] Tempblockmap;
 
+        public bool WireMode;
+
         public PropertyBag(MineWorldClient Gamein,GameStateManager GameManagerin)
         {
             Game = Gamein;
