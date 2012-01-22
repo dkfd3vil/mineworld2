@@ -381,6 +381,37 @@ namespace MineWorld
         }
 
         /// <summary>
+        ///   Checks if any key is pressed
+        /// </summary>
+        /// <param name = "includemouse">
+        ///   bool if mouse also counts
+        /// </param>
+        /// <returns>
+        ///   a bool that indicates whether any key is pressed
+        /// </returns>
+        public bool AnyKeyPressed(bool includemouse)
+        {
+            bool anykeypressed = false;
+
+            if (_currentKeyboardState.GetPressedKeys().Length > 0)
+            {
+                anykeypressed = true;
+            }
+            else if (includemouse == true)
+            {
+                if (IsCurPress(MouseButtons.LeftButton))
+                {
+                    anykeypressed = true;
+                }
+                else if (IsCurPress(MouseButtons.RightButton))
+                {
+                    anykeypressed = true;
+                }
+            }
+            return anykeypressed;
+        }
+
+        /// <summary>
         ///   Checks if the requested key is a current press.
         /// </summary>
         /// <param name = "key">

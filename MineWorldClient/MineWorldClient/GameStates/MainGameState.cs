@@ -14,9 +14,6 @@ namespace MineWorld
     {
         public GameStateManager gamemanager;
 
-        //Misc other vars
-        float fTime = 0.201358f;
-
         public MainGameState(GameStateManager manager, GameStates associatedState)
             : base(manager, associatedState)
         {
@@ -26,37 +23,38 @@ namespace MineWorld
         public override void LoadContent(ContentManager contentloader)
         {
             //Load our world
-            gamemanager.Pbag.WorldManager.Load();
+            gamemanager.Pbag.WorldManager.Load(contentloader);
             //Load our Player
-            gamemanager.Pbag.Player.Load();
+            gamemanager.Pbag.Player.Load(contentloader);
+            //Load our debugger
+            gamemanager.Pbag.Debugger.Load(contentloader);
         }
 
         public override void Update(GameTime gameTime,InputHelper input)
         {
             //Lets see if we need to end this game
-            if (input.IsNewPress(Keys.Back) || input.IsNewPress(Keys.Escape))
+            if (input.IsNewPress((Keys)ClientKey.Exit))
             {
                 gamemanager.ExitState();
             }
 
-            if (input.IsNewPress(Keys.F2))
+            if (input.IsNewPress((Keys)ClientKey.FullScreen))
             {
                 gamemanager.graphics.IsFullScreen = !gamemanager.graphics.IsFullScreen;
+                gamemanager.graphics.ApplyChanges();
             }
 
-            //Time increases at rate of 1 ingame day/night cycle per 20 minutes (actual value is 0 at dawn, 0.5pi at noon, pi at dusk, 1.5pi at midnight, and 0 or 2pi at dawn again)
-            fTime += (float)(Math.PI / 36000);
-            fTime %= (float)(MathHelper.TwoPi);
-
             //Update chunks to load close ones, unload far ones
-            gamemanager.Pbag.WorldManager.Update(fTime);
+            gamemanager.Pbag.WorldManager.Update(gameTime,input);
             gamemanager.Pbag.Player.Update(gameTime, input);
+            gamemanager.Pbag.Debugger.Update(gameTime, input);
         }
 
         public override void Draw(GameTime gameTime)
         {
             gamemanager.Pbag.WorldManager.Draw();
             gamemanager.Pbag.Player.Draw();
+            gamemanager.Pbag.Debugger.Draw();
         }
     }
 }

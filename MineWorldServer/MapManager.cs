@@ -26,6 +26,7 @@ namespace MineWorldServer
 
         public void GenerateCubeMap(BlockTypes type)
         {
+            WorldMap = new BlockTypes[(int)WorldMapSize.X, (int)WorldMapSize.Y, (int)WorldMapSize.Z];
             EmptyMap();
 
             for (int xi = 0; xi < WorldMapSize.X; xi++)

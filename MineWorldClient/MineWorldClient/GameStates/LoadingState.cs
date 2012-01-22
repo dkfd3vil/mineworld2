@@ -41,6 +41,7 @@ namespace MineWorld
             if (gamemanager.Pbag.WorldManager.Everythingloaded())
             {
                 gamemanager.SwitchState(GameStates.MainGameState);
+                gamemanager.Pbag.ClientSender.SendPlayerInWorld();
             }
         }
 

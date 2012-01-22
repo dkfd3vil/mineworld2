@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace MineWorldData
+namespace MineWorld
 {
-    public static class Utils
+    public abstract class Tool
     {
-        public static Random RandGen = new Random();
+        public abstract void Use();
     }
 }

@@ -14,11 +14,14 @@ namespace MineWorld
         //Our manager
         GameStateManager gamemanager;
 
-        //Our time
-        float time;
+        //Our fTime
+        float fTime = 0.201358f;
 
         //Our player for in the world
         Player player;
+
+        //Our other players
+        public Dictionary<long, ClientPlayer> playerlist = new Dictionary<long, ClientPlayer>();
 
         //Our block world
         public Vector3 Mapsize;
@@ -40,7 +43,9 @@ namespace MineWorld
 
         //A bool to see if everything is loaded
         bool worldmaploaded = false;
-        bool terraindataloaded = false;
+
+        //A bool for debug purpose
+        public bool Debug = false;
 
         public WorldManager(GameStateManager manager,Player player)
         {
@@ -48,7 +53,7 @@ namespace MineWorld
             this.player = player;
         }
 
-        public void Load()
+        public void Load(ContentManager conmanager)
         {
             //Load our blocks
             Blocks = new BaseBlock[64];
@@ -56,8 +61,8 @@ namespace MineWorld
             CreateBlockTypes();
 
             //Load our sun and moon
-            Moon = gamemanager.conmanager.Load<Texture2D>("Textures/moon");
-            Sun = gamemanager.conmanager.Load<Texture2D>("Textures/sun");
+            Moon = conmanager.Load<Texture2D>("Textures/moon");
+            Sun = conmanager.Load<Texture2D>("Textures/sun");
 
             SunArray = new VertexPositionTexture[6];
             SunArray[0] = new VertexPositionTexture(new Vector3(-0.5f, 0, -0.5f), new Vector2(0, 0));
@@ -76,10 +81,10 @@ namespace MineWorld
             MoonArray[5] = new VertexPositionTexture(new Vector3(-0.5f, 0, 0.5f), new Vector2(0, 1));
 
             //Load our effect
-            effect = gamemanager.conmanager.Load<Effect>("Effects/DefaultEffect");
+            effect = conmanager.Load<Effect>("Effects/DefaultEffect");
 
             //Load our terrain
-            Terrain = gamemanager.conmanager.Load<Texture2D>("Textures/terrain");
+            Terrain = conmanager.Load<Texture2D>("Textures/terrain");
 
             //Set unchanging effect parameters (Fog and a constant value used for lighting)
             effect.Parameters["FogEnabled"].SetValue(true);
@@ -114,15 +119,18 @@ namespace MineWorld
             worldmaploaded = true;
         }
 
-        public void Update(float time)
+        public void Update(GameTime gamefTime,InputHelper input)
         {
-            this.time = time;
+            //fTime increases at rate of 1 ingame day/night cycle per 20 minutes (actual value is 0 at dawn, 0.5pi at noon, pi at dusk, 1.5pi at midnight, and 0 or 2pi at dawn again)
+            fTime += (float)(Math.PI / 36000);
+            fTime %= (float)(MathHelper.TwoPi);
+
             UpdateChunks();
         }
 
         public void Draw()
         {
-            //Set the void color and the fog color (based off of the time of day)
+            //Set the void color and the fog color (based off of the fTime of day)
             gamemanager.device.Clear(Color.SkyBlue);
             effect.Parameters["FogColor"].SetValue(Color.SkyBlue.ToVector4());
             //effect.Parameters["FogColor"].SetValue(Color.Black.ToVector4());
@@ -141,6 +149,7 @@ namespace MineWorld
 
             RasterizerState rs = new RasterizerState();
             rs.CullMode = CullMode.CullCounterClockwiseFace;
+            rs.FillMode = FillMode.WireFrame;
             gamemanager.device.RasterizerState = rs;
 
             //CHUNKS
@@ -151,10 +160,10 @@ namespace MineWorld
             effect.Parameters["Projection"].SetValue(player.Cam.Projection);
             effect.Parameters["myTexture"].SetValue(Terrain);
 
-            //Set lighting variables based off of time of day
-            effect.Parameters["DiffuseColor"].SetValue(new Vector4(0.5f, 0.5f, 0.5f, 1) + new Vector4(0.5f, 0.5f, 0.5f, 0) * (float)(MathHelper.Clamp((float)Math.Sin(time) * 5, -1, 1)));
-            effect.Parameters["Direction"].SetValue(new Vector3((float)(1 + ((time + MathHelper.PiOver2) % MathHelper.TwoPi) * (-1 / Math.PI)), (float)-(Math.Abs(1 + ((time + MathHelper.PiOver2) % MathHelper.TwoPi) * (-1 / Math.PI)) - 1) / 2, 0f));
-            effect.Parameters["AmbientColor"].SetValue(new Vector4(0.25f, 0.25f, 0.25f, 1) + new Vector4(0.2f, 0.2f, 0.2f, 0) * (float)(MathHelper.Clamp((float)Math.Sin(time) * 5, -1, 1)));
+            //Set lighting variables based off of fTime of day
+            effect.Parameters["DiffuseColor"].SetValue(new Vector4(0.5f, 0.5f, 0.5f, 1) + new Vector4(0.5f, 0.5f, 0.5f, 0) * (float)(MathHelper.Clamp((float)Math.Sin(fTime) * 5, -1, 1)));
+            effect.Parameters["Direction"].SetValue(new Vector3((float)(1 + ((fTime + MathHelper.PiOver2) % MathHelper.TwoPi) * (-1 / Math.PI)), (float)-(Math.Abs(1 + ((fTime + MathHelper.PiOver2) % MathHelper.TwoPi) * (-1 / Math.PI)) - 1) / 2, 0f));
+            effect.Parameters["AmbientColor"].SetValue(new Vector4(0.25f, 0.25f, 0.25f, 1) + new Vector4(0.2f, 0.2f, 0.2f, 0) * (float)(MathHelper.Clamp((float)Math.Sin(fTime) * 5, -1, 1)));
 
             foreach (EffectPass pass in effect.CurrentTechnique.Passes) //For each pass in the current technique
             {
@@ -170,12 +179,18 @@ namespace MineWorld
                 }
             }
 
+            //Draw the other players
+            foreach (ClientPlayer dummy in playerlist.Values)
+            {
+                dummy.Draw(player.Cam.View, player.Cam.Projection);
+            }
+
             effect.CurrentTechnique = effect.Techniques["Technique2"]; //Switch to technique 2 (gui and skybox)
 
             //SUN
-            //Set the sun texture and world matrix (which transforms its position and angle based off of the time of day
+            //Set the sun texture and world matrix (which transforms its position and angle based off of the fTime of day
             effect.Parameters["myTexture"].SetValue(Sun);
-            effect.Parameters["World"].SetValue(Matrix.CreateScale(50) * Matrix.CreateFromYawPitchRoll(0, 0, time + MathHelper.PiOver2) * Matrix.CreateTranslation(player.Cam.Position + new Vector3((float)(Math.Cos(time) * 192), (float)(Math.Sin(time) * 192), 0)));
+            effect.Parameters["World"].SetValue(Matrix.CreateScale(50) * Matrix.CreateFromYawPitchRoll(0, 0, fTime + MathHelper.PiOver2) * Matrix.CreateTranslation(player.Cam.Position + new Vector3((float)(Math.Cos(fTime) * 192), (float)(Math.Sin(fTime) * 192), 0)));
             foreach (EffectPass pass in effect.CurrentTechnique.Passes)
             {
                 pass.Apply();
@@ -185,7 +200,7 @@ namespace MineWorld
             //MOON
             //Set the texture, set the world matrix to be the same thing as the sun, but negated
             effect.Parameters["myTexture"].SetValue(Moon);
-            effect.Parameters["World"].SetValue(Matrix.CreateScale(50) * Matrix.CreateFromYawPitchRoll(0, 0, (float)((time + MathHelper.PiOver2) + Math.PI)) * Matrix.CreateTranslation(player.Cam.Position - new Vector3((float)(Math.Cos(time) * 192), (float)(Math.Sin(time) * 192), 0)));
+            effect.Parameters["World"].SetValue(Matrix.CreateScale(50) * Matrix.CreateFromYawPitchRoll(0, 0, (float)((fTime + MathHelper.PiOver2) + Math.PI)) * Matrix.CreateTranslation(player.Cam.Position - new Vector3((float)(Math.Cos(fTime) * 192), (float)(Math.Sin(fTime) * 192), 0)));
             foreach (EffectPass pass in effect.CurrentTechnique.Passes)
             {
                 pass.Apply();
@@ -306,14 +321,7 @@ namespace MineWorld
 
         public bool Everythingloaded()
         {
-            return worldmaploaded && terraindataloaded;
-        }
-
-        public void SetTerrainData(byte[] terrainbytes)
-        {
-            Texture2D temptext;
-            //temptext.SetData<Texture2D>(terrainbytes.Cast<Texture2D>());
-            terraindataloaded = true;
+            return worldmaploaded;
         }
 
         public void SetBlock(Vector3 pos, BlockTypes type)

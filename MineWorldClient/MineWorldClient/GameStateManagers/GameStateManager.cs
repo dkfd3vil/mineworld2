@@ -11,6 +11,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Media;
 using System.Runtime.InteropServices;
 using EasyConfig;
+using MineWorldData;
 
 namespace MineWorld
 {
@@ -74,7 +75,7 @@ namespace MineWorld
 
         public void Update(GameTime gameTime)
         {
-            Pbag.ReceiveMessages();
+            Pbag.ClientListener.Update();
             inputhelper.Update();
             curScreen.Update(gameTime,inputhelper);
         }
@@ -108,16 +109,16 @@ namespace MineWorld
 
         public void LoadSettings()
         {
-            game.Window.Title = "tesr";
+            game.Window.Title = "MineWorldClient v" + Constants.MINEWORLDCLIENT_VERSION;
 
             graphics.PreferredBackBufferHeight = config.SettingGroups["Video"].Settings["Height"].GetValueAsInt();
             graphics.PreferredBackBufferWidth = config.SettingGroups["Video"].Settings["Width"].GetValueAsInt();
             graphics.IsFullScreen = config.SettingGroups["Video"].Settings["Fullscreen"].GetValueAsBool();
+            graphics.SynchronizeWithVerticalRetrace = config.SettingGroups["Video"].Settings["Vsync"].GetValueAsBool();
+            graphics.PreferMultiSampling = config.SettingGroups["Video"].Settings["Multisampling"].GetValueAsBool();
             graphics.ApplyChanges();
 
-            float volume = config.SettingGroups["Sound"].Settings["Volume"].GetValueAsFloat() / 100;
-            audiomanager.volume = volume;
-
+            audiomanager.volume = config.SettingGroups["Sound"].Settings["Volume"].GetValueAsFloat() / 100;
 
             Pbag.Player.Name = config.SettingGroups["Player"].Settings["Name"].GetValueAsString();
         }

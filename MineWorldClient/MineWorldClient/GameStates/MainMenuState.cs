@@ -46,7 +46,7 @@ namespace MineWorld
             gui.Update();
             if (start.IsPressed)
             {
-                gamemanager.Pbag.JoinGame(ipadress.Value);
+                gamemanager.Pbag.ClientSender.SendJoinGame(ipadress.Value);
                 gamemanager.SwitchState(GameStates.LoadingState);
             }
             cursorpos = input.MousePosition;

@@ -23,12 +23,14 @@ namespace MineWorldData
 
     public enum PacketType
     {
-        TerrainTextureData,
+        PlayerLeft,
+        PlayerJoined,
         WorldMapTransfer,
-        BlockSet,
-        BlockUse,
-        InitialUpdate,
-        MovementUpdate,
+        PlayerInWorld,
+        PlayerBlockSet,
+        PlayerBlockUse,
+        PlayerInitialUpdate,
+        PlayerMovementUpdate,
     }
 
     public enum BlockTypes
