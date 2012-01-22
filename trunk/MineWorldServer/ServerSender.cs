@@ -26,7 +26,8 @@ namespace MineWorldServer
         public void SendInitialUpdate(ServerPlayer player)
         {
             outmsg = netserver.CreateMessage();
-            outmsg.Write((byte)PacketType.InitialUpdate);
+            outmsg.Write((byte)PacketType.PlayerInitialUpdate);
+            outmsg.Write(player.ID);
             outmsg.Write(player.Position);
             netserver.SendMessage(outmsg, player.NetConn, NetDeliveryMethod.ReliableOrdered);
         }
@@ -39,15 +40,50 @@ namespace MineWorldServer
             netserver.SendMessage(outmsg, player.NetConn, NetDeliveryMethod.ReliableOrdered);
         }
 
-        public void SendTerrainTextureData(ServerPlayer player)
+        public void SendPlayerJoined(ServerPlayer player)
         {
-            FileStream opener = new FileStream("Data/Terrain.png", FileMode.Open);
-            mineserver.Terrain = new byte[opener.Length];
-            opener.Read(mineserver.Terrain, 0, (int)opener.Length);
             outmsg = netserver.CreateMessage();
-            outmsg.Write(mineserver.Terrain.Length);
-            outmsg.Write(mineserver.Terrain);
-            netserver.SendMessage(outmsg, player.NetConn, NetDeliveryMethod.ReliableOrdered);
+            outmsg.Write((byte)PacketType.PlayerJoined);
+            outmsg.Write(player.ID);
+            outmsg.Write(player.Name);
+            outmsg.Write(player.Position);
+            outmsg.Write(player.Heading);
+            foreach (ServerPlayer dummy in mineserver.PlayerManager.PlayerList.Values)
+            {
+                if (player.ID != dummy.ID)
+                {
+                    netserver.SendMessage(outmsg, dummy.NetConn, NetDeliveryMethod.ReliableOrdered);
+                }
+            }
+        }
+
+        public void SendPlayerLeft(ServerPlayer player)
+        {
+            outmsg = netserver.CreateMessage();
+            outmsg.Write((byte)PacketType.PlayerLeft);
+            outmsg.Write(player.ID);
+            foreach (ServerPlayer dummy in mineserver.PlayerManager.PlayerList.Values)
+            {
+                if (player.ID != dummy.ID)
+                {
+                    netserver.SendMessage(outmsg, dummy.NetConn, NetDeliveryMethod.ReliableOrdered);
+                }
+            }
+        }
+
+        public void SendMovementUpdate(ServerPlayer player)
+        {
+            outmsg = netserver.CreateMessage();
+            outmsg.Write((byte)PacketType.PlayerMovementUpdate);
+            outmsg.Write(player.ID);
+            outmsg.Write(player.Position);
+            foreach (ServerPlayer dummy in mineserver.PlayerManager.PlayerList.Values)
+            {
+                if (player.ID != dummy.ID)
+                {
+                    netserver.SendMessage(outmsg, dummy.NetConn, NetDeliveryMethod.ReliableOrdered);
+                }
+            }
         }
     }
 }

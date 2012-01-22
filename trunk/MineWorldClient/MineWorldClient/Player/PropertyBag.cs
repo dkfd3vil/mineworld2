@@ -17,9 +17,11 @@ namespace MineWorld
         public GameStateManager GameManager;
         public WorldManager WorldManager;
         public Player Player;
+        public Debug Debugger;
         public NetClient Client;
+        public ClientListener ClientListener;
+        public ClientSender ClientSender;
         public NetIncomingMessage _msgBuffer;
-        public Dictionary<int, ClientPlayer> ClientPlayers;
         public BlockTypes[, ,] Tempblockmap;
 
         public PropertyBag(MineWorldClient Gamein,GameStateManager GameManagerin)
@@ -31,71 +33,9 @@ namespace MineWorld
             Client.Start();
             Player = new Player(this);
             WorldManager = new WorldManager(GameManager, Player);
-        }
-
-        public void JoinGame(string ip)
-        {
-            //IPEndPoint serverEndPoint
-            // Create our connect message.
-            NetOutgoingMessage connectBuffer = Client.CreateMessage();
-            connectBuffer.Write(Constants.MINEWORLDCLIENT_VERSION);
-            Client.Connect(ip, Constants.MINEWORLD_PORT, connectBuffer);
-        }
-
-        public void ReceiveMessages()
-        {
-            // Recieve messages from the server.
-            while ((_msgBuffer = Client.ReadMessage()) != null)
-            {
-                NetIncomingMessageType msgType = _msgBuffer.MessageType;
-
-                switch (msgType)
-                {
-                    case NetIncomingMessageType.StatusChanged:
-                        {
-                        }
-                        break;
-                    case NetIncomingMessageType.ConnectionApproval:
-                        {
-                            break;
-                        }
-                    case NetIncomingMessageType.Data:
-                        {
-                            PacketType dataType = (PacketType)_msgBuffer.ReadByte();
-                            switch (dataType)
-                            {
-                                case PacketType.WorldMapTransfer:
-                                    {
-                                        WorldManager.Mapsize = _msgBuffer.ReadVector3();
-                                        WorldManager.Start();
-                                        break;
-                                    }
-                                case PacketType.InitialUpdate:
-                                    {
-                                        Player.Position = _msgBuffer.ReadVector3();
-                                        break;
-                                    }
-                                case PacketType.TerrainTextureData:
-                                    {
-                                        int byteslength = _msgBuffer.ReadInt32();
-                                        byte[] tempdata = _msgBuffer.ReadBytes(byteslength);
-                                        WorldManager.SetTerrainData(tempdata);
-                                        break;
-                                    }
-                                default:
-                                    {
-                                        break;
-                                    }
-                            }
-                        }
-                        break;
-                }
-            }
-        }
-
-        public void SendMessage()
-        {
-            NetOutgoingMessage msg;
+            ClientListener = new ClientListener(Client, this);
+            ClientSender = new ClientSender(Client, this);
+            Debugger = new Debug(this);
         }
     }
 }

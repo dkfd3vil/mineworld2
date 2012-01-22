@@ -41,6 +41,7 @@ namespace MineWorldServer
             netConfig.Port = Constants.MINEWORLD_PORT;
             netConfig.MaximumConnections = 2;
             netConfig.EnableMessageType(NetIncomingMessageType.ConnectionApproval);
+            netConfig.DisableMessageType(NetIncomingMessageType.UnconnectedData);
             Server = new NetServer(netConfig);
             GameWorld = new GameWorld(this);
             console = new MineWorldConsole(this);
@@ -83,7 +84,7 @@ namespace MineWorldServer
 
         public void LoadSettings()
         {
-            Server.Configuration.MaximumConnections = Configloader.SettingGroups["Server"].Settings["Maxplayer"].GetValueAsInt();
+            Server.Configuration.MaximumConnections = Configloader.SettingGroups["Server"].Settings["Maxplayers"].GetValueAsInt();
             int tempx = Configloader.SettingGroups["Map"].Settings["Mapx"].GetValueAsInt();
             int tempy = Configloader.SettingGroups["Map"].Settings["Mapy"].GetValueAsInt();
             int tempz = Configloader.SettingGroups["Map"].Settings["Mapz"].GetValueAsInt();

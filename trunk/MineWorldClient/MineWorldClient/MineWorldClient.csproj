@@ -134,12 +134,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AudioManager.cs" />
+    <Compile Include="ClientListener.cs" />
     <Compile Include="ClientSender.cs" />
+    <Compile Include="Debug.cs" />
+    <Compile Include="GameStateManagers\Helpers\ClientKeys.cs" />
     <Compile Include="GameStates\LoadingState.cs" />
     <Compile Include="GameStates\MainMenuState.cs" />
     <Compile Include="GameStates\TitleState.cs" />
     <Compile Include="Player\ClientPlayer.cs" />
     <Compile Include="Player\PropertyBag.cs" />
+    <Compile Include="Player\Tools\BlockAdder.cs" />
+    <Compile Include="Player\Tools\BlockRemover.cs" />
+    <Compile Include="Player\Tools\Stacker.cs" />
+    <Compile Include="Player\Tools\Tool.cs" />
     <Compile Include="World\Block\BaseBlock.cs" />
     <Compile Include="World\Block\BlockIcon.cs" />
     <Compile Include="World\Block\Special\MusicBlock.cs" />

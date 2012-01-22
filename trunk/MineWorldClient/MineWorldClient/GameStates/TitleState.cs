@@ -42,7 +42,7 @@ namespace MineWorld
                 //gamemanager.audiomanager.PlaySong(introsong, false);
                 introstarted = true;
             }
-            if(input.IsCurPress(Keys.Enter) || input.IsCurPress(Keys.Space) || input.IsCurPress(MouseButtons.LeftButton))
+            if(input.AnyKeyPressed(true))
             {
                 gamemanager.audiomanager.StopPlaying();
                 gamemanager.SwitchState(GameStates.MainMenuState);

@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
 using MineWorldData;
+using Microsoft.Xna.Framework.Content;
 
 namespace MineWorld
 {
@@ -29,9 +30,11 @@ namespace MineWorld
         public Vector3 vPlayerVel;
         public bool bUnderwater;
         public bool NoClip = true;
-        public bool Debug = false;
         public int selectedblock = 0;
         public BlockTypes selectedblocktype = BlockTypes.Air;
+
+        public Tool LeftHand;
+        public Tool RightHand;
 
         private PropertyBag game;
 
@@ -49,13 +52,18 @@ namespace MineWorld
             game = gameIn;
         }
 
-        public void Load()
+        public void Load(ContentManager conmanager)
         {
-            effect = game.GameManager.conmanager.Load<Effect>("Effects/DefaultEffect");
-            myFont = game.GameManager.conmanager.Load<SpriteFont>("Fonts/DefaultFont");
-            tGui = game.GameManager.conmanager.Load<Texture2D>("Textures/gui");
-            tWaterOverlay = game.GameManager.conmanager.Load<Texture2D>("Textures/water");
-            tVignette = game.GameManager.conmanager.Load<Texture2D>("Textures/vignette");
+            effect = conmanager.Load<Effect>("Effects/DefaultEffect");
+            myFont = conmanager.Load<SpriteFont>("Fonts/DefaultFont");
+            tGui = conmanager.Load<Texture2D>("Textures/gui");
+            tWaterOverlay = conmanager.Load<Texture2D>("Textures/water");
+            tVignette = conmanager.Load<Texture2D>("Textures/vignette");
+
+            //Lets give our player 2 tools 1 for each hand
+            LeftHand = new BlockAdder(this, game.WorldManager);
+            RightHand = new BlockRemover(this, game.WorldManager);
+            //LeftHand = new Stacker(this, game.WorldManager);
         }
 
         //Main update method, is called from Game1.cs's update method
@@ -71,88 +79,88 @@ namespace MineWorld
                 {
                     Speed = 0.5f;
                 }
-                if (input.IsCurPress(Keys.W))
+                if (input.IsCurPress((Keys)ClientKey.MoveForward))
                 {
                     Position -= Cam.Forward * Speed;
                 }
-                if (input.IsCurPress(Keys.A))
+                if (input.IsCurPress((Keys)ClientKey.MoveLeft))
                 {
                     Position -= Cam.Right * Speed;
                 }
-                if (input.IsCurPress(Keys.S))
+                if (input.IsCurPress((Keys)ClientKey.MoveBack))
                 {
                     Position += Cam.Forward * Speed;
                 }
-                if (input.IsCurPress(Keys.D))
+                if (input.IsCurPress((Keys)ClientKey.MoveRight))
                 {
                     Position += Cam.Right * Speed;
                 }
-                if (input.IsCurPress(Keys.Space))
+                if (input.IsCurPress((Keys)ClientKey.MoveUp))
                 {
                     Position += Vector3.Up * Speed;
                 }
-                if (input.IsCurPress(Keys.LeftControl))
+                if (input.IsCurPress((Keys)ClientKey.MoveDown))
                 {
                     Position += Vector3.Down * Speed;
                 }
             }
             else
             {
-                if (input.IsCurPress(Keys.W))
-                {
-                    Position -= Cam.Forward * Speed;
-                }
-                if (input.IsCurPress(Keys.A))
-                {
-                    Position -= Cam.Right * Speed;
-                }
-                if (input.IsCurPress(Keys.S))
-                {
-                    Position += Cam.Forward * Speed;
-                }
-                if (input.IsCurPress(Keys.D))
-                {
-                    Position += Cam.Right * Speed;
-                }
+                //if (input.IsCurPress(Keys.W))
+                //{
+                //    Position -= Cam.Forward * Speed;
+                //}
+                //if (input.IsCurPress(Keys.A))
+                //{
+                //    Position -= Cam.Right * Speed;
+                //}
+                //if (input.IsCurPress(Keys.S))
+                //{
+                //    Position += Cam.Forward * Speed;
+                //}
+                //if (input.IsCurPress(Keys.D))
+                //{
+                //    Position += Cam.Right * Speed;
+                //}
 
-                //Execute standard movement
-                Vector3 footPosition = Position + new Vector3(0f, -1.5f, 0f);
-                Vector3 headPosition = Position + new Vector3(0f, 0.1f, 0f);
-                Vector3 midPosition = Position + new Vector3(0f, -0.7f, 0f);
+                ////Execute standard movement
+                //Vector3 footPosition = Position + new Vector3(0f, -1.5f, 0f);
+                //Vector3 headPosition = Position + new Vector3(0f, 0.1f, 0f);
+                //Vector3 midPosition = Position + new Vector3(0f, -0.7f, 0f);
 
-                if (game.WorldManager.BlockAtPoint(headPosition) == BlockTypes.Water)
-                {
-                    bUnderwater = true;
-                }
-                else
-                {
-                    bUnderwater = false;
-                }
+                //if (game.WorldManager.BlockAtPoint(headPosition) == BlockTypes.Water)
+                //{
+                //    bUnderwater = true;
+                //}
+                //else
+                //{
+                //    bUnderwater = false;
+                //}
 
-                vPlayerVel.Y += Gravity * (float)gtime.ElapsedGameTime.TotalSeconds;
+                //vPlayerVel.Y += Gravity * (float)gtime.ElapsedGameTime.TotalSeconds;
 
-                if (game.WorldManager.SolidAtPointForPlayer(footPosition) || game.WorldManager.SolidAtPointForPlayer(headPosition))
-                {
-                    BlockTypes standingOnBlock = game.WorldManager.BlockAtPoint(footPosition);
-                    BlockTypes hittingHeadOnBlock = game.WorldManager.BlockAtPoint(headPosition);
+                //if (game.WorldManager.SolidAtPointForPlayer(footPosition) || game.WorldManager.SolidAtPointForPlayer(headPosition))
+                //{
+                //    BlockTypes standingOnBlock = game.WorldManager.BlockAtPoint(footPosition);
+                //    BlockTypes hittingHeadOnBlock = game.WorldManager.BlockAtPoint(headPosition);
 
-                    // If the player has their head stuck in a block, push them down.
-                    if (game.WorldManager.SolidAtPointForPlayer(headPosition))
-                    {
-                        int blockIn = (int)(headPosition.Y);
-                        Position.Y = (blockIn - 0.15f);
-                    }
+                //    // If the player has their head stuck in a block, push them down.
+                //    if (game.WorldManager.SolidAtPointForPlayer(headPosition))
+                //    {
+                //        int blockIn = (int)(headPosition.Y);
+                //        Position.Y = (blockIn - 0.15f);
+                //    }
 
-                    // If the player is stuck in the ground, bring them out.
-                    // This happens because we're standing on a block at -1.5, but stuck in it at -1.4, so -1.45 is the sweet spot.
-                    if (game.WorldManager.SolidAtPointForPlayer(footPosition))
-                    {
-                        int blockOn = (int)(footPosition.Y);
-                        Position.Y = (float)(blockOn + 1 + 1.45);
-                    }
+                //    // If the player is stuck in the ground, bring them out.
+                //    // This happens because we're standing on a block at -1.5, but stuck in it at -1.4, so -1.45 is the sweet spot.
+                //    if (game.WorldManager.SolidAtPointForPlayer(footPosition))
+                //    {
+                //        int blockOn = (int)(footPosition.Y);
+                //        Position.Y = (float)(blockOn + 1 + 1.45);
+                //    }
 
-                    vPlayerVel.Y = 0;
-                }
+                //    vPlayerVel.Y = 0;
+                //}
             }
 
             //Re-initialize aim and aimblock vectors
@@ -189,25 +197,30 @@ namespace MineWorld
                 vAimBlock = new Vector3((int)Math.Floor(vAim.X), (int)Math.Floor(vAim.Y), (int)Math.Floor(vAim.Z)); //Get the aim block based off of that aim vector
             }
 
-
-            //cam.Position = vPosition + new Vector3(0, 1.167f, 0); //Set camera position to be player position plus 7/6ths on the z axis
             Cam.Position = Position;
 
             if (game.GameManager.WindowHasFocus())
             {
                 if (mousehasfoccus)
                 {
-                    Cam.Rotate( //Rotate the camera based off of mouse position, set mouse position to be screen center
-                        MathHelper.ToRadians((input.MousePosition.Y - game.GameManager.device.DisplayMode.Height / 2) * Sensitivity * 0.1f),
-                        MathHelper.ToRadians((input.MousePosition.X - game.GameManager.device.DisplayMode.Width / 2) * Sensitivity * 0.1f),
-                        0.0f
-                        );
+                    if (!input.IsCurPress(Keys.LeftAlt))
+                    {
+                        Cam.Rotate( //Rotate the camera based off of mouse position, set mouse position to be screen center
+                            MathHelper.ToRadians((input.MousePosition.Y - game.GameManager.device.DisplayMode.Height / 2) * Sensitivity * 0.1f),
+                            MathHelper.ToRadians((input.MousePosition.X - game.GameManager.device.DisplayMode.Width / 2) * Sensitivity * 0.1f),
+                            0.0f
+                            );
+                        Mouse.SetPosition(game.GameManager.device.DisplayMode.Width / 2, game.GameManager.device.DisplayMode.Height / 2);
+                    }
+                    else
+                    {
+                        mousehasfoccus = false;
+                    }
                 }
                 else
                 {
                     mousehasfoccus = true;
                 }
-                Mouse.SetPosition(game.GameManager.device.DisplayMode.Width / 2, game.GameManager.device.DisplayMode.Height / 2);
             }
             else
             {
@@ -216,27 +229,21 @@ namespace MineWorld
 
             CreateFaceMarker(); //Create the face marker's vertices - I need to redo this method
 
-            if (input.IsNewPress(MouseButtons.LeftButton))
+            if (input.IsNewPress((MouseButtons)ClientKey.ActionOne))
             {
-                if (GotSelection())
+                //We cant do a thing with empty hand
+                if (LeftHand != null)
                 {
-                    if (selectedblocktype == BlockTypes.Air)
-                    {
-                        game.WorldManager.SetBlock(vAimBlock, BlockTypes.Air);
-                    }
-                    else
-                    {
-                        game.WorldManager.SetBlock(GetFacingBlock(), selectedblocktype);
-                    }
-                    
+                    LeftHand.Use();
                 }
             }
 
-            if (input.IsNewPress(MouseButtons.RightButton))
+            if (input.IsNewPress((MouseButtons)ClientKey.ActionTwo))
             {
-                if (GotSelection())
+                //We cant do a thing with empty hand
+                if (RightHand != null)
                 {
-                    game.WorldManager.UseBlock(vAimBlock);
+                    RightHand.Use();
                 }
             }
 
@@ -260,13 +267,10 @@ namespace MineWorld
                 selectedblocktype = (BlockTypes)selectedblock;
             }
 
-            if (input.IsNewPress(Keys.F1))
-            {
-                Debug = !Debug;
-            }
-
             //Update our camera
             Cam.Update();
+            //Send our position to the server
+            game.ClientSender.SendMovementUpdate();
         }
 
 
@@ -301,12 +305,6 @@ namespace MineWorld
 
             //Cursor!
             game.GameManager.spriteBatch.Draw(tGui, new Rectangle(game.GameManager.graphics.PreferredBackBufferWidth / 2 - 16, game.GameManager.graphics.PreferredBackBufferHeight / 2 - 16, 32, 32), new Rectangle(0, 0, 32, 32), Color.White);
-
-            if (Debug)
-            {
-                game.GameManager.spriteBatch.DrawString(myFont, Position.ToString(), new Vector2(0, 0), Color.Black);
-                game.GameManager.spriteBatch.DrawString(myFont, selectedblocktype.ToString(), new Vector2(0, 15), Color.Black);
-            }
 
             game.GameManager.spriteBatch.End();
         }
