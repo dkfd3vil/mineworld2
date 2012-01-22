@@ -149,7 +149,7 @@ namespace MineWorld
 
             RasterizerState rs = new RasterizerState();
             rs.CullMode = CullMode.CullCounterClockwiseFace;
-            rs.FillMode = FillMode.WireFrame;
+            //rs.FillMode = FillMode.WireFrame;
             gamemanager.device.RasterizerState = rs;
 
             //CHUNKS
