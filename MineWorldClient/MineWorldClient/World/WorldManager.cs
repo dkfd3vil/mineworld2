@@ -42,6 +42,10 @@ namespace MineWorld
         //Effect ofcourse
         Effect effect;
 
+        //Our rasterstates
+        RasterizerState Wired;
+        RasterizerState Solid;
+
         //A bool to see if everything is loaded
         bool worldmaploaded = false;
 
@@ -92,6 +96,14 @@ namespace MineWorld
             effect.Parameters["FogStart"].SetValue(128);
             effect.Parameters["FogEnd"].SetValue(160);
             effect.Parameters["WorldInverseTranspose"].SetValue(Matrix.Transpose(Matrix.Invert(Matrix.Identity)));
+
+            //Setup our rasterstates
+            Wired = new RasterizerState();
+            Wired.CullMode = CullMode.CullCounterClockwiseFace;
+            Wired.FillMode = FillMode.WireFrame;
+            Solid = new RasterizerState();
+            Solid.CullMode = CullMode.CullCounterClockwiseFace;
+            Solid.FillMode = FillMode.Solid;
         }
 
         public void Start()
@@ -153,17 +165,16 @@ namespace MineWorld
                 DepthBufferEnable = true
             };
 
-            RasterizerState rs = new RasterizerState();
-            rs.CullMode = CullMode.CullCounterClockwiseFace;
             if (gamemanager.Pbag.WireMode)
             {
-                rs.FillMode = FillMode.WireFrame;
+                gamemanager.device.RasterizerState = Wired;
             }
             else
             {
-                rs.FillMode = FillMode.Solid;
+                gamemanager.device.RasterizerState = Solid;
             }
-            gamemanager.device.RasterizerState = rs;
+
+            
 
             //CHUNKS
             //Select a rendering technique from the effect file
@@ -191,6 +202,9 @@ namespace MineWorld
                     }
                 }
             }
+
+            //After the blocks make sure fillmode = solid once again
+            gamemanager.device.RasterizerState = Solid;
 
             //Draw the other players
             foreach (ClientPlayer dummy in playerlist.Values)
