@@ -16,7 +16,7 @@ namespace MineWorld
         GameStateManager gamemanager;
 
         //Our fTime
-        float fTime = 0.201358f;
+        public float fTime = 0.201358f;
 
         //Our player for in the world
         Player player;
@@ -146,18 +146,18 @@ namespace MineWorld
             }
         }
 
-        public void Draw()
+        public void Draw(GameTime gameTime, GraphicsDevice gDevice, SpriteBatch sBatch)
         {
             //Set the void color and the fog color (based off of the fTime of day)
-            gamemanager.device.Clear(Color.SkyBlue);
+            gDevice.Clear(Color.SkyBlue);
             effect.Parameters["FogColor"].SetValue(Color.SkyBlue.ToVector4());
             //effect.Parameters["FogColor"].SetValue(Color.Black.ToVector4());
 
             //Set some draw things
-            gamemanager.device.DepthStencilState = DepthStencilState.None;
-            gamemanager.device.BlendState = BlendState.AlphaBlend;
-            gamemanager.device.SamplerStates[0] = SamplerState.PointWrap;
-            gamemanager.device.DepthStencilState = new DepthStencilState
+            gDevice.DepthStencilState = DepthStencilState.None;
+            gDevice.BlendState = BlendState.AlphaBlend;
+            gDevice.SamplerStates[0] = SamplerState.PointWrap;
+            gDevice.DepthStencilState = new DepthStencilState
             {
                 StencilEnable = true,
                 StencilFunction = CompareFunction.GreaterEqual,
@@ -167,11 +167,11 @@ namespace MineWorld
 
             if (gamemanager.Pbag.WireMode)
             {
-                gamemanager.device.RasterizerState = Wired;
+                gDevice.RasterizerState = Wired;
             }
             else
             {
-                gamemanager.device.RasterizerState = Solid;
+                gDevice.RasterizerState = Solid;
             }
 
             
@@ -197,14 +197,14 @@ namespace MineWorld
                     {
                         effect.Parameters["World"].SetValue(Matrix.CreateTranslation(curchunk.vPosition)); //Transform it to a world position
                         pass.Apply();
-                        gamemanager.device.SetVertexBuffer(curchunk.buffer); //Load its data from its buffer
-                        gamemanager.device.DrawPrimitives(PrimitiveType.TriangleList, 0, curchunk.buffer.VertexCount / 3); //Draw it
+                        gDevice.SetVertexBuffer(curchunk.buffer); //Load its data from its buffer
+                        gDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, curchunk.buffer.VertexCount / 3); //Draw it
                     }
                 }
             }
 
             //After the blocks make sure fillmode = solid once again
-            gamemanager.device.RasterizerState = Solid;
+            gDevice.RasterizerState = Solid;
 
             //Draw the other players
             foreach (ClientPlayer dummy in playerlist.Values)
@@ -221,7 +221,7 @@ namespace MineWorld
             foreach (EffectPass pass in effect.CurrentTechnique.Passes)
             {
                 pass.Apply();
-                gamemanager.device.DrawUserPrimitives<VertexPositionTexture>(PrimitiveType.TriangleList, SunArray, 0, 2); //Draw it
+                gDevice.DrawUserPrimitives<VertexPositionTexture>(PrimitiveType.TriangleList, SunArray, 0, 2); //Draw it
 
             }
             //MOON
@@ -231,7 +231,7 @@ namespace MineWorld
             foreach (EffectPass pass in effect.CurrentTechnique.Passes)
             {
                 pass.Apply();
-                gamemanager.device.DrawUserPrimitives<VertexPositionTexture>(PrimitiveType.TriangleList, SunArray, 0, 2); //Draw it (the same vertex data can be used because it's still just a square
+                gDevice.DrawUserPrimitives<VertexPositionTexture>(PrimitiveType.TriangleList, SunArray, 0, 2); //Draw it (the same vertex data can be used because it's still just a square
 
             }
         }

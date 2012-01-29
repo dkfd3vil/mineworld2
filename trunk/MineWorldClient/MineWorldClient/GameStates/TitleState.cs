@@ -39,7 +39,7 @@ namespace MineWorld
         {
             if (!introstarted)
             {
-                //gamemanager.audiomanager.PlaySong(introsong, false);
+                gamemanager.audiomanager.PlaySong(introsong, false);
                 introstarted = true;
             }
             if(input.AnyKeyPressed(true))
@@ -49,12 +49,12 @@ namespace MineWorld
             }
         }
 
-        public override void Draw(GameTime gameTime)
+        public override void Draw(GameTime gameTime, GraphicsDevice gDevice, SpriteBatch sBatch)
         {
-            gamemanager.device.Clear(Color.Black);
-            gamemanager.spriteBatch.Begin();
-            gamemanager.spriteBatch.Draw(background, size, Color.White);
-            gamemanager.spriteBatch.End();
+            gDevice.Clear(Color.Black);
+            sBatch.Begin();
+            sBatch.Draw(background, size, Color.White);
+            sBatch.End();
         }
     }
 }

@@ -16,7 +16,7 @@ namespace MineWorld
         Vector2 loadingorgin;
         Vector2 loadinglocation;
         Rectangle loadingrectangle;
-        
+
 
         public LoadingState(GameStateManager manager, GameStates associatedState)
             : base(manager, associatedState)
@@ -45,15 +45,13 @@ namespace MineWorld
             }
         }
 
-        public override void Draw(Microsoft.Xna.Framework.GameTime gameTime)
+        public override void Draw(GameTime gameTime, GraphicsDevice gDevice, SpriteBatch sBatch)
         {
-            loadingorgin = new Vector2(loadingimg.Width / 2, loadingimg.Height / 2);
             loadinglocation = new Vector2(gamemanager.graphics.PreferredBackBufferWidth / 2, gamemanager.graphics.PreferredBackBufferHeight / 2);
-            loadingrectangle = new Rectangle(0, 0, loadingimg.Width, loadingimg.Height);
-            gamemanager.device.Clear(Color.Black);
-            gamemanager.spriteBatch.Begin();
-            gamemanager.spriteBatch.Draw(loadingimg, loadinglocation, loadingrectangle, Color.White, loadingangle, loadingorgin, 1.0f, SpriteEffects.None, 1);
-            gamemanager.spriteBatch.End();
+            gDevice.Clear(Color.Black);
+            sBatch.Begin();
+            sBatch.Draw(loadingimg, loadinglocation, loadingrectangle, Color.White, loadingangle, loadingorgin, 1.0f, SpriteEffects.None, 1);
+            sBatch.End();
         }
     }
 }

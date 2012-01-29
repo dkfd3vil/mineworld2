@@ -99,7 +99,7 @@ namespace MineWorld
 
         public void Draw(GameTime gameTime)
         {
-            curScreen.Draw(gameTime);
+            curScreen.Draw(gameTime,device,spriteBatch);
         }
 
         public bool WindowHasFocus()

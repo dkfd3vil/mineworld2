@@ -35,6 +35,7 @@ namespace MineWorld
             //Lets see if we need to end this game
             if (input.IsNewPress((Keys)ClientKey.Exit))
             {
+                gamemanager.Pbag.Client.Disconnect("exit");
                 gamemanager.ExitState();
             }
 
@@ -51,11 +52,11 @@ namespace MineWorld
             gamemanager.Pbag.Debugger.Update(gameTime, input);
         }
 
-        public override void Draw(GameTime gameTime)
+        public override void Draw(GameTime gameTime, GraphicsDevice gDevice, SpriteBatch sBatch)
         {
-            gamemanager.Pbag.WorldManager.Draw();
-            gamemanager.Pbag.Player.Draw();
-            gamemanager.Pbag.Debugger.Draw();
+            gamemanager.Pbag.WorldManager.Draw(gameTime, gDevice, sBatch);
+            gamemanager.Pbag.Player.Draw(gameTime, gDevice, sBatch);
+            gamemanager.Pbag.Debugger.Draw(gameTime, gDevice, sBatch);
         }
     }
 }

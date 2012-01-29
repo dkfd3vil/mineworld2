@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace MineWorld
 {
@@ -20,6 +21,6 @@ namespace MineWorld
 
         public abstract void LoadContent(ContentManager contentloader);
         public abstract void Update(GameTime gameTime, InputHelper input);
-        public abstract void Draw(GameTime gameTime);
+        public abstract void Draw(GameTime gameTime,GraphicsDevice gDevice,SpriteBatch sBtach);
     }
 }

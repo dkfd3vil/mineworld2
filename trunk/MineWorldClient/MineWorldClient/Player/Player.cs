@@ -66,7 +66,6 @@ namespace MineWorld
             //LeftHand = new Stacker(this, game.WorldManager);
         }
 
-        //Main update method, is called from Game1.cs's update method
         public void Update(GameTime gtime, InputHelper input)
         {
             if (NoClip) //If noclipped
@@ -274,7 +273,7 @@ namespace MineWorld
         }
 
 
-        public void Draw()
+        public void Draw(GameTime gameTime, GraphicsDevice gDevice, SpriteBatch sBatch)
         {
             if (rFaceMarker != null)
             {
@@ -287,7 +286,7 @@ namespace MineWorld
                 foreach (EffectPass pass in effect.CurrentTechnique.Passes)
                 {
                     pass.Apply();
-                    game.GameManager.device.DrawUserPrimitives<VertexPositionTexture>(PrimitiveType.TriangleList, rFaceMarker, 0, 2); //Draw the face marker
+                    gDevice.DrawUserPrimitives<VertexPositionTexture>(PrimitiveType.TriangleList, rFaceMarker, 0, 2); //Draw the face marker
                 }
             }
 
@@ -295,18 +294,18 @@ namespace MineWorld
             //   START THE 2D   //
             //////////////////////
 
-            game.GameManager.spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullNone); //Start 2d rendering
+            sBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullNone); //Start 2d rendering
             if (bUnderwater) //If underwater, apply several overlays
             {
-                game.GameManager.spriteBatch.Draw(tWaterOverlay, new Rectangle(0, 0, game.GameManager.device.DisplayMode.Width, game.GameManager.device.DisplayMode.Height), Color.DarkBlue);
-                game.GameManager.spriteBatch.Draw(tWaterOverlay, new Rectangle(0, 0, game.GameManager.device.DisplayMode.Width, game.GameManager.device.DisplayMode.Height), Color.White);
-                game.GameManager.spriteBatch.Draw(tVignette, new Rectangle(0, 0, game.GameManager.device.DisplayMode.Width, game.GameManager.device.DisplayMode.Height), Color.White);
+                sBatch.Draw(tWaterOverlay, new Rectangle(0, 0, gDevice.DisplayMode.Width, gDevice.DisplayMode.Height), Color.DarkBlue);
+                sBatch.Draw(tWaterOverlay, new Rectangle(0, 0, gDevice.DisplayMode.Width, gDevice.DisplayMode.Height), Color.White);
+                sBatch.Draw(tVignette, new Rectangle(0, 0, gDevice.DisplayMode.Width, gDevice.DisplayMode.Height), Color.White);
             }
 
             //Cursor!
-            game.GameManager.spriteBatch.Draw(tGui, new Rectangle(game.GameManager.graphics.PreferredBackBufferWidth / 2 - 16, game.GameManager.graphics.PreferredBackBufferHeight / 2 - 16, 32, 32), new Rectangle(0, 0, 32, 32), Color.White);
+            sBatch.Draw(tGui, new Rectangle(game.GameManager.graphics.PreferredBackBufferWidth / 2 - 16, game.GameManager.graphics.PreferredBackBufferHeight / 2 - 16, 32, 32), new Rectangle(0, 0, 32, 32), Color.White);
 
-            game.GameManager.spriteBatch.End();
+            sBatch.End();
         }
 
         public bool GotSelection()
