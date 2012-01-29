@@ -14,20 +14,16 @@ namespace MineWorldServer
         {
         }
 
-        public void AddPlayer(NetConnection con)
+        public void AddPlayer(ServerPlayer play)
         {
-            ServerPlayer player = new ServerPlayer(con);
-            PlayerList[con] = player;
+            PlayerList.Add(play.NetConn, play);
         }
 
         public void RemovePlayer(ServerPlayer play)
         {
-            foreach (ServerPlayer dummy in PlayerList.Values)
+            if(PlayerList.ContainsValue(play))
             {
-                if (play == dummy)
-                {
-                    PlayerList.Remove(dummy.NetConn);
-                }
+                PlayerList.Remove(play.NetConn);
             }
         }
 

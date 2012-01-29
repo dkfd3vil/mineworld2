@@ -35,6 +35,7 @@ namespace MineWorldServer
                                 //Player doesnt want to play anymore
                                 if (_msgSender.Status == NetConnectionStatus.Disconnected)
                                 {
+                                    mineserver.console.ConsoleWrite(mineserver.PlayerManager.GetPlayerByConnection(_msgSender).Name + " Disconnected");
                                     mineserver.ServerSender.SendPlayerLeft(mineserver.PlayerManager.GetPlayerByConnection(_msgSender));
                                     mineserver.PlayerManager.RemovePlayer(mineserver.PlayerManager.GetPlayerByConnection(_msgSender));
                                 }
@@ -44,7 +45,9 @@ namespace MineWorldServer
                             {
                                 int authcode = packetin.ReadInt32();
                                 string name = packetin.ReadString();
-                                mineserver.PlayerManager.AddPlayer(_msgSender);
+                                ServerPlayer dummy = new ServerPlayer(_msgSender);
+                                dummy.Name = name;
+                                mineserver.PlayerManager.AddPlayer(dummy);
                                 _msgSender.Approve();
                                 mineserver.GameWorld.GenerateSpawnPosition(mineserver.PlayerManager.GetPlayerByConnection(_msgSender));
                                 mineserver.ServerSender.SendCurrentWorld(mineserver.PlayerManager.GetPlayerByConnection(_msgSender));

@@ -9,6 +9,7 @@ namespace MineWorld
 {
     public class AudioManager
     {
+        //Todo extend audiomanager to fit my needs
         SoundEffectInstance soundinstance;
         public float volume;
 

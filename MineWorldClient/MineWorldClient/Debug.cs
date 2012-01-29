@@ -34,15 +34,20 @@ namespace MineWorld
             }
         }
 
-        public void Draw()
+        public void Draw(GameTime gameTime, GraphicsDevice gDevice, SpriteBatch sBatch)
         {
             if (Enabled)
             {
-                game.GameManager.spriteBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullNone);
-                game.GameManager.spriteBatch.DrawString(myFont, game.Player.Position.ToString(), new Vector2(0, 0), Color.Black);
-                game.GameManager.spriteBatch.DrawString(myFont, game.Player.selectedblocktype.ToString(), new Vector2(0, 15), Color.Black);
-                game.GameManager.spriteBatch.DrawString(myFont, game.Client.ServerConnection.AverageRoundtripTime.ToString(), new Vector2(0, 30), Color.Black);
-                game.GameManager.spriteBatch.End();
+                sBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullNone);
+                sBatch.DrawString(myFont, "Position:" + game.Player.Position.ToString(), new Vector2(0, 0), Color.Black);
+                sBatch.DrawString(myFont, "Angle:" + game.Player.Cam.Angle.ToString(), new Vector2(0, 15), Color.Black);
+                sBatch.DrawString(myFont, "Selectedblock:" + game.Player.vAimBlock.ToString(), new Vector2(0, 30), Color.Black);
+                sBatch.DrawString(myFont, "Selectedblocktype:" + game.Player.selectedblocktype.ToString(), new Vector2(0, 45), Color.Black);
+                sBatch.DrawString(myFont, "Time:" + game.WorldManager.fTime.ToString(), new Vector2(0, 60), Color.Black);
+                sBatch.DrawString(myFont, "Ping:" + game.Client.ServerConnection.AverageRoundtripTime.ToString(), new Vector2(0, 75), Color.Black);
+                sBatch.DrawString(myFont, "Bytessend:" + game.Client.ServerConnection.Statistics.SentBytes.ToString(), new Vector2(0, 90), Color.Black);
+                sBatch.DrawString(myFont, "Bytesreceived:" + game.Client.ServerConnection.Statistics.ReceivedBytes.ToString(), new Vector2(0, 105), Color.Black);
+                sBatch.End();
             }
         }
     }

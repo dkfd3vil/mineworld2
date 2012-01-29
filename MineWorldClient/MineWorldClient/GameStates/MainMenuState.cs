@@ -52,13 +52,13 @@ namespace MineWorld
             cursorpos = input.MousePosition;
         }
 
-        public override void Draw(GameTime gameTime)
+        public override void Draw(GameTime gameTime, GraphicsDevice gDevice, SpriteBatch sBatch)
         {
-            gamemanager.device.Clear(Color.Blue);
+            gDevice.Clear(Color.Blue);
             gui.Draw();
-            gamemanager.spriteBatch.Begin();
-            gamemanager.spriteBatch.Draw(cursor, cursorpos, Color.White);
-            gamemanager.spriteBatch.End();
+            sBatch.Begin();
+            sBatch.Draw(cursor, cursorpos, Color.White);
+            sBatch.End();
         }
     }
 }
