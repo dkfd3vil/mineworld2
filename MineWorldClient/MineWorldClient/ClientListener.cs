@@ -32,6 +32,33 @@ namespace MineWorld
                 {
                     case NetIncomingMessageType.StatusChanged:
                         {
+                            if (Client.ConnectionStatus == NetConnectionStatus.Disconnected)
+                            {
+                                string reason = _msgBuffer.ReadString();
+                                switch (reason)
+                                {
+                                    case "kicked":
+                                        {
+                                            Pbag.GameManager.SetErrorState(ErrorMsg.Kicked);
+                                            break;
+                                        }
+                                    case "banned":
+                                        {
+                                            Pbag.GameManager.SetErrorState(ErrorMsg.Banned);
+                                            break;
+                                        }
+                                    case "serverfull":
+                                        {
+                                            Pbag.GameManager.SetErrorState(ErrorMsg.ServerFull);
+                                            break;
+                                        }
+                                    default:
+                                        {
+                                            Pbag.GameManager.SetErrorState(ErrorMsg.Unkown);
+                                            break;
+                                        }
+                                }
+                            }
                         }
                         break;
                     case NetIncomingMessageType.ConnectionApproval:

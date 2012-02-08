@@ -20,7 +20,8 @@ namespace MineWorld
         TitleState,
         MainMenuState,
         LoadingState,
-        MainGameState
+        MainGameState,
+        ErrorState
     }
 
     public class GameStateManager
@@ -38,8 +39,9 @@ namespace MineWorld
 
         private TitleState titlestate;
         private MainMenuState mainmenustate;
-        public LoadingState loadingstate;
+        private LoadingState loadingstate;
         private MainGameState maingamestate;
+        private ErrorState errorstate;
         private BaseState[] screens;
 
         private BaseState curScreen;
@@ -59,7 +61,8 @@ namespace MineWorld
                 titlestate = new TitleState(this,GameStates.TitleState),
                 mainmenustate = new MainMenuState(this,GameStates.MainMenuState),
                 loadingstate = new LoadingState(this,GameStates.LoadingState),
-                maingamestate = new MainGameState(this, GameStates.MainGameState), 
+                maingamestate = new MainGameState(this, GameStates.MainGameState),
+                errorstate = new ErrorState(this,GameStates.ErrorState)
             };
             //Set initial state in the manager itself
             curScreen = titlestate;
@@ -90,6 +93,12 @@ namespace MineWorld
                     break;
                 }
             }
+        }
+
+        public void SetErrorState(ErrorMsg msg)
+        {
+            errorstate.SetError(msg);
+            curScreen = errorstate;
         }
 
         public void ExitState()

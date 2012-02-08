@@ -174,7 +174,8 @@ namespace MineWorld
                     vAim = Cam.Position - Cam.Forward * i;
                     try
                     {
-                        if (game.WorldManager.BlockMap[(int)Math.Floor(vAim.X), (int)Math.Floor(vAim.Y), (int)Math.Floor(vAim.Z)].AimSolid)
+                        BaseBlock select = game.WorldManager.BlockAtPoint(vAim);
+                        if (select.AimSolid)
                         {
                             break; //If there is, break the loop with the current aim vector
                         }

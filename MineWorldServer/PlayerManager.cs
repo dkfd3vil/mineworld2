@@ -66,6 +66,7 @@ namespace MineWorldServer
 
         public void KickPlayer(ServerPlayer player)
         {
+            //We dont need to remove the player here cause its handled in the serverlistener on status changed
             player.NetConn.Disconnect("kicked");
         }
 
@@ -75,6 +76,23 @@ namespace MineWorldServer
             {
                 KickPlayer(player);
             }
+        }
+
+        public void BanPlayerByName(string name)
+        {
+            foreach (ServerPlayer player in PlayerList.Values)
+            {
+                if (player.Name.ToLower() == name.ToLower())
+                {
+                    BanPlayer(player);
+                }
+            }
+        }
+
+        public void BanPlayer(ServerPlayer player)
+        {
+            //We dont need to remove the player here cause its handled in the serverlistener on status changed
+            player.NetConn.Disconnect("banned");
         }
     }
 }
