@@ -309,19 +309,20 @@ namespace MineWorld
             }
         }
 
-        public BlockTypes BlockAtPoint(Vector3 pos)
+        public BaseBlock BlockAtPoint(Vector3 pos)
         {
             if (pos.X < 0 || pos.X >= Mapsize.X || pos.Y < 0 || pos.Y >= Mapsize.Y || pos.Z < 0 || pos.Z >= Mapsize.Z)
             {
-                return BlockTypes.Air;
+                return Blocks[(int)(BlockTypes.Air)];
             }
-            return BlockMap[(int)pos.X, (int)pos.Y, (int)pos.Z].Type;
+
+            return BlockMap[(int)pos.X, (int)pos.Y, (int)pos.Z];
         }
 
         // Returns true if we are solid at this point.
         public bool SolidAtPoint(Vector3 point)
         {
-            return BlockAtPoint(point) != BlockTypes.Air;
+            return BlockAtPoint(point).Type != BlockTypes.Air;
         }
 
         public bool SolidAtPointForPlayer(Vector3 point)
@@ -329,10 +330,12 @@ namespace MineWorld
             return !BlockPassibleForPlayer(BlockAtPoint(point));
         }
 
-        private bool BlockPassibleForPlayer(BlockTypes blockType)
+        private bool BlockPassibleForPlayer(BaseBlock block)
         {
-            if (blockType == BlockTypes.Air)
+            if (block.Type == BlockTypes.Air)
+            {
                 return true;
+            }
 
             return false;
         }

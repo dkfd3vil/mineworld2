@@ -43,6 +43,11 @@ namespace MineWorldServer
                             }
                         case NetIncomingMessageType.ConnectionApproval:
                             {
+                                //If the server is full then deny
+                                if (netserver.ConnectionsCount == netserver.Configuration.MaximumConnections)
+                                {
+                                    _msgSender.Deny("serverfull");
+                                }
                                 int authcode = packetin.ReadInt32();
                                 string name = packetin.ReadString();
                                 ServerPlayer dummy = new ServerPlayer(_msgSender);
