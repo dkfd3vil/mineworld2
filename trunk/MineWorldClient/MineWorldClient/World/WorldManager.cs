@@ -19,28 +19,22 @@ namespace MineWorld
         public float fTime = 0.201358f;
 
         //Our player for in the world
-        Player player;
+        public Player player;
 
         //Our other players
         public Dictionary<long, ClientPlayer> playerlist = new Dictionary<long, ClientPlayer>();
 
         //Our block world
-        public Vector3 Mapsize;
-        public Chunk[, ,] Chunks;
-        public BaseBlock[, ,] BlockMap;
+        public int Mapsize;
+        public Chunk[,] Chunks;
+        public int ChunkX;
+        public int ChunkZ;
+
         public BaseBlock[] Blocks;
 
         //Our sky
-        Texture2D Sun;
-        VertexPositionTexture[] SunArray;
-        Texture2D Moon;
-        VertexPositionTexture[] MoonArray;
-
-        //Containing our blocks from terrain.png
-        public Texture2D Terrain;
-
-        //Effect ofcourse
-        Effect effect;
+        Sun Sun = new Sun();
+        Moon Moon = new Moon();
 
         //Our rasterstates
         RasterizerState Wired;
@@ -61,41 +55,12 @@ namespace MineWorld
         public void Load(ContentManager conmanager)
         {
             //Load our blocks
-            Blocks = new BaseBlock[64];
-            BlockMap = new BaseBlock[(int)Mapsize.X, (int)Mapsize.Y, (int)Mapsize.Z];
+            Blocks = new BaseBlock[(int)BlockTypes.MAX];
             CreateBlockTypes();
 
             //Load our sun and moon
-            Moon = conmanager.Load<Texture2D>("Textures/moon");
-            Sun = conmanager.Load<Texture2D>("Textures/sun");
-
-            SunArray = new VertexPositionTexture[6];
-            SunArray[0] = new VertexPositionTexture(new Vector3(-0.5f, 0, -0.5f), new Vector2(0, 0));
-            SunArray[1] = new VertexPositionTexture(new Vector3(0.5f, 0, -0.5f), new Vector2(1, 0));
-            SunArray[2] = new VertexPositionTexture(new Vector3(-0.5f, 0, 0.5f), new Vector2(0, 1));
-            SunArray[3] = new VertexPositionTexture(new Vector3(0.5f, 0, -0.5f), new Vector2(1, 0));
-            SunArray[4] = new VertexPositionTexture(new Vector3(0.5f, 0, 0.5f), new Vector2(1, 1));
-            SunArray[5] = new VertexPositionTexture(new Vector3(-0.5f, 0, 0.5f), new Vector2(0, 1));
-
-            MoonArray = new VertexPositionTexture[6];
-            MoonArray[0] = new VertexPositionTexture(new Vector3(-0.5f, 0, -0.5f), new Vector2(0, 0));
-            MoonArray[1] = new VertexPositionTexture(new Vector3(0.5f, 0, -0.5f), new Vector2(1, 0));
-            MoonArray[2] = new VertexPositionTexture(new Vector3(-0.5f, 0, 0.5f), new Vector2(0, 1));
-            MoonArray[3] = new VertexPositionTexture(new Vector3(0.5f, 0, -0.5f), new Vector2(1, 0));
-            MoonArray[4] = new VertexPositionTexture(new Vector3(0.5f, 0, 0.5f), new Vector2(1, 1));
-            MoonArray[5] = new VertexPositionTexture(new Vector3(-0.5f, 0, 0.5f), new Vector2(0, 1));
-
-            //Load our effect
-            effect = conmanager.Load<Effect>("Effects/DefaultEffect");
-
-            //Load our terrain
-            Terrain = conmanager.Load<Texture2D>("Textures/terrain");
-
-            //Set unchanging effect parameters (Fog and a constant value used for lighting)
-            effect.Parameters["FogEnabled"].SetValue(true);
-            effect.Parameters["FogStart"].SetValue(128);
-            effect.Parameters["FogEnd"].SetValue(160);
-            effect.Parameters["WorldInverseTranspose"].SetValue(Matrix.Transpose(Matrix.Invert(Matrix.Identity)));
+            Sun.Load(conmanager);
+            Moon.Load(conmanager);
 
             //Setup our rasterstates
             Wired = new RasterizerState();
@@ -108,27 +73,24 @@ namespace MineWorld
 
         public void Start()
         {
-            BlockMap = new BaseBlock[(int)Mapsize.X, (int)Mapsize.Y, (int)Mapsize.Z];
             //This is called when we got all the info we need and then we construct a world on it
-            //Lets create our map
-            CreateSimpleMap();
-
             //Initialize the chunk array
-            Chunks = new Chunk[(int)(Mapsize.X / 16), (int)(Mapsize.Y / 16), (int)(Mapsize.Z / 16)];
+            ChunkX = (int)Mapsize / Chunk.Size;
+            ChunkZ = (int)Mapsize / Chunk.Size;
 
-            for (int x = 0; x < (int)(Mapsize.X / 16); x++)
+            Chunks = new Chunk[ChunkX, ChunkZ];
+
+            for (int x = 0; x < ChunkX; x++)
             {
-                for (int y = 0; y < (int)(Mapsize.Y / 16); y++)
+                for (int z = 0; z < ChunkZ; z++)
                 {
-                    for (int z = 0; z < (int)(Mapsize.Z / 16); z++)
-                    {
-                        Chunks[x, y, z] = new Chunk(new Vector3(x * 16, y * 16, z * 16), this, gamemanager.device); //Create each chunk with its position and pass it the game object
-                    }
+                    Chunks[x, z] = new Chunk(x * Chunk.Size, z * Chunk.Size, this, gamemanager); //Create each chunk with its position and pass it the game object
                 }
             }
 
-            //Initial update of the chunks
-            UpdateChunks();
+            //Lets create our map
+            CreateSimpleMap();
+
             worldmaploaded = true;
         }
 
@@ -138,7 +100,15 @@ namespace MineWorld
             fTime += (float)(Math.PI / 36000);
             fTime %= (float)(MathHelper.TwoPi);
 
-            UpdateChunks();
+            foreach (Chunk c in Chunks)
+            {
+                c.Update(player.Position,fTime);
+            }
+
+            //Update our moon and sun for the correct offset
+            Sun.Update(fTime, gamemanager.Pbag.Player.Position);
+            Moon.Update(fTime, gamemanager.Pbag.Player.Position);
+
 
             if (input.IsNewPress((Keys)ClientKey.WireFrame))
             {
@@ -148,10 +118,7 @@ namespace MineWorld
 
         public void Draw(GameTime gameTime, GraphicsDevice gDevice, SpriteBatch sBatch)
         {
-            //Set the void color and the fog color (based off of the fTime of day)
             gDevice.Clear(Color.SkyBlue);
-            effect.Parameters["FogColor"].SetValue(Color.SkyBlue.ToVector4());
-            //effect.Parameters["FogColor"].SetValue(Color.Black.ToVector4());
 
             //Set some draw things
             gDevice.DepthStencilState = DepthStencilState.None;
@@ -174,34 +141,12 @@ namespace MineWorld
                 gDevice.RasterizerState = Solid;
             }
 
-            
 
-            //CHUNKS
-            //Select a rendering technique from the effect file
-            effect.CurrentTechnique = effect.Techniques["Technique1"];
-            //Set the view and projection matrices, as well as the texture
-            effect.Parameters["View"].SetValue(player.Cam.View);
-            effect.Parameters["Projection"].SetValue(player.Cam.Projection);
-            effect.Parameters["myTexture"].SetValue(Terrain);
-
-            //Set lighting variables based off of fTime of day
-            effect.Parameters["DiffuseColor"].SetValue(new Vector4(0.5f, 0.5f, 0.5f, 1) + new Vector4(0.5f, 0.5f, 0.5f, 0) * (float)(MathHelper.Clamp((float)Math.Sin(fTime) * 5, -1, 1)));
-            effect.Parameters["Direction"].SetValue(new Vector3((float)(1 + ((fTime + MathHelper.PiOver2) % MathHelper.TwoPi) * (-1 / Math.PI)), (float)-(Math.Abs(1 + ((fTime + MathHelper.PiOver2) % MathHelper.TwoPi) * (-1 / Math.PI)) - 1) / 2, 0f));
-            effect.Parameters["AmbientColor"].SetValue(new Vector4(0.25f, 0.25f, 0.25f, 1) + new Vector4(0.2f, 0.2f, 0.2f, 0) * (float)(MathHelper.Clamp((float)Math.Sin(fTime) * 5, -1, 1)));
-
-            foreach (EffectPass pass in effect.CurrentTechnique.Passes) //For each pass in the current technique
+            foreach (Chunk c in Chunks)
             {
-                foreach (Chunk curchunk in Chunks) //And for each chunk
-                {
-                    if (curchunk.bDraw && !curchunk.bEmpty) //If the chunk is loaded and it isn't empty
-                    {
-                        effect.Parameters["World"].SetValue(Matrix.CreateTranslation(curchunk.vPosition)); //Transform it to a world position
-                        pass.Apply();
-                        gDevice.SetVertexBuffer(curchunk.buffer); //Load its data from its buffer
-                        gDevice.DrawPrimitives(PrimitiveType.TriangleList, 0, curchunk.buffer.VertexCount / 3); //Draw it
-                    }
-                }
+                c.Draw(gDevice);
             }
+
 
             //After the blocks make sure fillmode = solid once again
             gDevice.RasterizerState = Solid;
@@ -212,28 +157,9 @@ namespace MineWorld
                 dummy.Draw(player.Cam.View, player.Cam.Projection);
             }
 
-            effect.CurrentTechnique = effect.Techniques["Technique2"]; //Switch to technique 2 (gui and skybox)
-
-            //SUN
-            //Set the sun texture and world matrix (which transforms its position and angle based off of the fTime of day
-            effect.Parameters["myTexture"].SetValue(Sun);
-            effect.Parameters["World"].SetValue(Matrix.CreateScale(50) * Matrix.CreateFromYawPitchRoll(0, 0, fTime + MathHelper.PiOver2) * Matrix.CreateTranslation(player.Cam.Position + new Vector3((float)(Math.Cos(fTime) * 192), (float)(Math.Sin(fTime) * 192), 0)));
-            foreach (EffectPass pass in effect.CurrentTechnique.Passes)
-            {
-                pass.Apply();
-                gDevice.DrawUserPrimitives<VertexPositionTexture>(PrimitiveType.TriangleList, SunArray, 0, 2); //Draw it
-
-            }
-            //MOON
-            //Set the texture, set the world matrix to be the same thing as the sun, but negated
-            effect.Parameters["myTexture"].SetValue(Moon);
-            effect.Parameters["World"].SetValue(Matrix.CreateScale(50) * Matrix.CreateFromYawPitchRoll(0, 0, (float)((fTime + MathHelper.PiOver2) + Math.PI)) * Matrix.CreateTranslation(player.Cam.Position - new Vector3((float)(Math.Cos(fTime) * 192), (float)(Math.Sin(fTime) * 192), 0)));
-            foreach (EffectPass pass in effect.CurrentTechnique.Passes)
-            {
-                pass.Apply();
-                gDevice.DrawUserPrimitives<VertexPositionTexture>(PrimitiveType.TriangleList, SunArray, 0, 2); //Draw it (the same vertex data can be used because it's still just a square
-
-            }
+            //Draw our beautifull sky
+            Sun.Draw(gDevice);
+            Moon.Draw(gDevice);
         }
 
         public void CreateBlockTypes()
@@ -256,67 +182,104 @@ namespace MineWorld
 
         public void CreateSimpleMap()
         {
+            //Empty the map first
+            EmptyMap();
             //This code is for test purpose and will be removed
-            for (int x = 0; x < (int)Mapsize.X; x++)
+            for (int x = 0; x < Mapsize; x++)
             {
-                for (int z = 0; z < (int)Mapsize.Z; z++)
+                for (int z = 0; z < Mapsize; z++)
                 {
-                    for (int y = 0; y < (int)Mapsize.Y; y++)
+                    for (int y = 0; y < Chunk.Height; y++)
                     {
-                        if (y > (Mapsize.Y / 2))
+                        if (y < (Chunk.Height / 2))
                         {
-                            BlockMap[x, y, z] = Blocks[(int)BlockTypes.Air];
-                        }
-                        else
-                        {
-                            BlockMap[x, y, z] = Blocks[(int)BlockTypes.Dirt];
+                            SetMapBlock(x, y, z, BlockTypes.Dirt);
                         }
                     }
                 }
             }
         }
 
-        public void UpdateChunks()
+        public void EmptyMap()
         {
-            //This method decides which chunks to load or not, based off of distance from player
-            Chunk curchunk;
-            for (int x = 0; x < (int)(Mapsize.X / 16); x++)
+            //This code is for test purpose and will be removed
+            for (int x = 0; x < Mapsize; x++)
             {
-                for (int y = 0; y < (int)(Mapsize.Y / 16); y++)
+                for (int z = 0; z < Mapsize; z++)
                 {
-                    for (int z = 0; z < (int)(Mapsize.Z / 16); z++)
+                    for (int y = 0; y < Chunk.Height; y++)
                     {
-                        curchunk = Chunks[x, y, z];
-                        if (Vector3.Distance(new Vector3(x * 16, y * 16, z * 16), player.Position) < 256) //If the current chunk selected is within the distance
-                        {
-                            if (!curchunk.bDraw) //And if it isn't already loaded
-                            {
-                                curchunk.CreateVertices(); //Load it
-                                curchunk.bDraw = true;
-                            }
-                        }
-                        else
-                        {
-                            if (curchunk.bDraw) //Otherwise if it is out of the distance and it IS loaded
-                            {
-                                curchunk.lVertices = null; //Unload it
-                                curchunk.buffer = null;
-                                curchunk.bDraw = false;
-                            }
-                        }
+                        SetMapBlock(x, y, z, BlockTypes.Air);
                     }
                 }
+            }
+        }
+
+        public Chunk GetChunkAtPosition(int x, int z)
+        {
+            Chunk c = Chunks[x / Chunk.Size, z / Chunk.Size];
+
+            return c;
+        }
+
+        public void SetBlock(int x,int y, int z, BlockTypes type)
+        {
+            ////If its outside the map then ignore it
+            if (x < 0 || x >= Mapsize || y < 0 || y >= Chunk.Height || z < 0 || z >= Mapsize)
+            {
+                return;
+            }
+
+            Chunk c = GetChunkAtPosition(x, z);
+
+            int xb,yb,zb;
+            xb = (x % Chunk.Size);
+            yb = y;
+            zb = (z % Chunk.Size);
+            c.SetBlock(xb, yb, zb, Blocks[(int)type],true);
+        }
+
+        public void SetMapBlock(int x, int y, int z, BlockTypes type)
+        {
+            if (PointWithinMap(new Vector3(x, y, z)))
+            {
+                Chunk c = GetChunkAtPosition(x, z);
+
+                int xb, yb, zb;
+                xb = (x % Chunk.Size);
+                yb = y;
+                zb = (z % Chunk.Size);
+                c.SetBlock(xb, yb, zb, Blocks[(int)type], false);
             }
         }
 
         public BaseBlock BlockAtPoint(Vector3 pos)
         {
-            if (pos.X < 0 || pos.X >= Mapsize.X || pos.Y < 0 || pos.Y >= Mapsize.Y || pos.Z < 0 || pos.Z >= Mapsize.Z)
+            if (PointWithinMap(pos))
+            {
+                Chunk c = GetChunkAtPosition((int)pos.X, (int)pos.Z);
+
+                int xb, yb, zb;
+                xb = ((int)pos.X % Chunk.Size);
+                yb = (int)pos.Y;
+                zb = ((int)pos.Z % Chunk.Size);
+                return c.GetBlockAtPoint(xb, yb, zb);
+            }
+            else
             {
                 return Blocks[(int)(BlockTypes.Air)];
             }
+        }
 
-            return BlockMap[(int)pos.X, (int)pos.Y, (int)pos.Z];
+        public bool PointWithinMap(Vector3 pos)
+        {
+            ////If its outside the map then ignore it
+            if (pos.X < 0 || pos.X >= Mapsize || pos.Y < 0 || pos.Y >= Chunk.Height || pos.Z < 0 || pos.Z >= Mapsize)
+            {
+                return false;
+            }
+
+            return true;
         }
 
         // Returns true if we are solid at this point.
@@ -340,59 +303,9 @@ namespace MineWorld
             return false;
         }
 
-        public void UseBlock(Vector3 pos)
-        {
-            if (pos.X < 0 || pos.X >= Mapsize.X || pos.Y < 0 || pos.Y >= Mapsize.Y || pos.Z < 0 || pos.Z >= Mapsize.Z)
-            {
-                return;
-            }
-            BlockMap[(int)pos.X, (int)pos.Y, (int)pos.Z].OnUse();
-        }
-
         public bool Everythingloaded()
         {
             return worldmaploaded;
-        }
-
-        public void SetBlock(Vector3 pos, BlockTypes type)
-        {
-            if (pos.X < 0 || pos.X >= Mapsize.X || pos.Y < 0 || pos.Y >= Mapsize.Y || pos.Z < 0 || pos.Z >= Mapsize.Z)
-            {
-                return;
-            }
-            if (BlockMap[(int)pos.X, (int)pos.Y, (int)pos.Z].Type != type) //If the target block isn't already what you want it to be
-            {
-                BlockMap[(int)pos.X, (int)pos.Y, (int)pos.Z] = Blocks[(int)type]; //Then set the block to be that type
-                Chunks[(int)Math.Floor((pos.X) / 16), (int)Math.Floor((pos.Y) / 16), (int)Math.Floor((pos.Z) / 16)].CreateVertices(); //Update current chunk
-                try //Update surrounding chunks if needed
-                {
-                    if (Math.Round(pos.X + 1) % 16 == 0)
-                    {
-                        Chunks[(int)Math.Floor((pos.X) / 16) + 1, (int)Math.Floor((pos.Y) / 16), (int)Math.Floor((pos.Z) / 16)].CreateVertices();
-                    }
-                    else if (Math.Round(pos.X + 1) % 16 == 1)
-                    {
-                        Chunks[(int)Math.Floor((pos.X) / 16) - 1, (int)Math.Floor((pos.Y) / 16), (int)Math.Floor((pos.Z) / 16)].CreateVertices();
-                    }
-                    if (Math.Round(pos.Z + 1) % 16 == 0)
-                    {
-                        Chunks[(int)Math.Floor((pos.X) / 16), (int)Math.Floor((pos.Y) / 16), (int)Math.Floor((pos.Z) / 16) + 1].CreateVertices();
-                    }
-                    else if (Math.Round(pos.Z + 1) % 16 == 1)
-                    {
-                        Chunks[(int)Math.Floor((pos.X) / 16), (int)Math.Floor((pos.Y) / 16), (int)Math.Floor((pos.Z) / 16) - 1].CreateVertices();
-                    }
-                    if (Math.Round(pos.Y + 1) % 16 == 0)
-                    {
-                        Chunks[(int)Math.Floor((pos.X) / 16), (int)Math.Floor((pos.Y) / 16) + 1, (int)Math.Floor((pos.Z) / 16)].CreateVertices();
-                    }
-                    else if (Math.Round(pos.Y + 1) % 16 == 1)
-                    {
-                        Chunks[(int)Math.Floor((pos.X) / 16), (int)Math.Floor((pos.Y) / 16) - 1, (int)Math.Floor((pos.Z) / 16)].CreateVertices();
-                    }
-                }
-                catch { }
-            }
         }
     }
 }

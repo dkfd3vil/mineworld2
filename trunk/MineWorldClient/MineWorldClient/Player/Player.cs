@@ -319,41 +319,41 @@ namespace MineWorld
             return true;
         }
 
-        private bool TryToMoveTo(Vector3 moveVector)
-        {
-            // Build a "test vector" that is a little longer than the move vector.
-            float moveLength = moveVector.Length();
-            Vector3 testVector = moveVector;
-            testVector.Normalize();
-            testVector = testVector * (moveLength); // + 0.1f);
+        //private bool TryToMoveTo(Vector3 moveVector)
+        //{
+        //    // Build a "test vector" that is a little longer than the move vector.
+        //    float moveLength = moveVector.Length();
+        //    Vector3 testVector = moveVector;
+        //    testVector.Normalize();
+        //    testVector = testVector * (moveLength); // + 0.1f);
 
-            // Apply this test vector.
-            Vector3 movePosition = Position + testVector;
-            Vector3 midBodyPoint = movePosition + new Vector3(0, -0.7f, 0);
-            Vector3 lowerBodyPoint = movePosition + new Vector3(0, -1.4f, 0);
+        //    // Apply this test vector.
+        //    Vector3 movePosition = Position + testVector;
+        //    Vector3 midBodyPoint = movePosition + new Vector3(0, -0.7f, 0);
+        //    Vector3 lowerBodyPoint = movePosition + new Vector3(0, -1.4f, 0);
 
-            if (!game.WorldManager.SolidAtPointForPlayer(movePosition) &&
-                !game.WorldManager.SolidAtPointForPlayer(lowerBodyPoint) &&
-                !game.WorldManager.SolidAtPointForPlayer(midBodyPoint))
-            {
-                testVector = moveVector;
-                testVector.Normalize();
-                testVector = testVector * (moveLength + 0.11f);
-                // Makes sure the camera doesnt move too close to the block ;)
-                movePosition = Position + testVector;
-                midBodyPoint = movePosition + new Vector3(0, -0.7f, 0);
-                lowerBodyPoint = movePosition + new Vector3(0, -1.4f, 0);
+        //    if (!game.WorldManager.SolidAtPointForPlayer(movePosition) &&
+        //        !game.WorldManager.SolidAtPointForPlayer(lowerBodyPoint) &&
+        //        !game.WorldManager.SolidAtPointForPlayer(midBodyPoint))
+        //    {
+        //        testVector = moveVector;
+        //        testVector.Normalize();
+        //        testVector = testVector * (moveLength + 0.11f);
+        //        // Makes sure the camera doesnt move too close to the block ;)
+        //        movePosition = Position + testVector;
+        //        midBodyPoint = movePosition + new Vector3(0, -0.7f, 0);
+        //        lowerBodyPoint = movePosition + new Vector3(0, -1.4f, 0);
 
-                if (!game.WorldManager.SolidAtPointForPlayer(movePosition) &&
-                    !game.WorldManager.SolidAtPointForPlayer(lowerBodyPoint) &&
-                    !game.WorldManager.SolidAtPointForPlayer(midBodyPoint))
-                {
-                    //vPosition = vPosition + moveVector;
-                    return true;
-                }
-            }
-            return false;
-        }
+        //        if (!game.WorldManager.SolidAtPointForPlayer(movePosition) &&
+        //            !game.WorldManager.SolidAtPointForPlayer(lowerBodyPoint) &&
+        //            !game.WorldManager.SolidAtPointForPlayer(midBodyPoint))
+        //        {
+        //            //vPosition = vPosition + moveVector;
+        //            return true;
+        //        }
+        //    }
+        //    return false;
+        //}
 
         public void CreateFaceMarker()
         {

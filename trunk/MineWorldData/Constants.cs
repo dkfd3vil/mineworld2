@@ -25,7 +25,7 @@ namespace MineWorldData
     {
         PlayerLeft,
         PlayerJoined,
-        WorldMapTransfer,
+        WorldMapSize,
         PlayerInWorld,
         PlayerBlockSet,
         PlayerBlockUse,
@@ -98,6 +98,7 @@ namespace MineWorldData
         unused2 = 60, //Dirt changes for seeds
         Furnace = 61,
         Burningfurnace = 62,
-        Signpost = 63
+        Signpost = 63,
+        MAX = 64,
     }
 }

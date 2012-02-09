@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using MineWorldData;
+using Microsoft.Xna.Framework;
 
 namespace MineWorld
 {
@@ -21,7 +22,8 @@ namespace MineWorld
         {
             if (player.GotSelection())
             {
-                worldmanager.SetBlock(player.GetFacingBlock(), BlockTypes.Dirt);
+                Vector3 block = player.GetFacingBlock();
+                worldmanager.SetBlock((int)block.X,(int)block.Y,(int)block.Z, BlockTypes.Dirt);
             }
         }
     }

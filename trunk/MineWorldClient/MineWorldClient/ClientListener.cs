@@ -70,9 +70,9 @@ namespace MineWorld
                             PacketType dataType = (PacketType)_msgBuffer.ReadByte();
                             switch (dataType)
                             {
-                                case PacketType.WorldMapTransfer:
+                                case PacketType.WorldMapSize:
                                     {
-                                        Pbag.WorldManager.Mapsize = _msgBuffer.ReadVector3();
+                                        Pbag.WorldManager.Mapsize = _msgBuffer.ReadInt32();
                                         Pbag.WorldManager.Start();
                                         break;
                                     }

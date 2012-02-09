@@ -24,10 +24,10 @@ namespace MineWorld
             if (player.GotSelection())
             {
                 Vector3 temppos = player.GetFacingBlock();
-                for (int height = (int)temppos.Y; height < worldmanager.Mapsize.Y; height++)
+                for (int height = (int)temppos.Y; height < Chunk.Height; height++)
                 {
                     Vector3 pos = new Vector3(temppos.X,height,temppos.Z);
-                    worldmanager.SetBlock(pos, BlockTypes.Dirt);
+                    worldmanager.SetBlock((int)pos.X,(int)pos.Y,(int)pos.Z, BlockTypes.Dirt);
                 }
             }
         }
