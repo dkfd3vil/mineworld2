@@ -55,7 +55,7 @@ namespace MineWorldServer
                                 mineserver.PlayerManager.AddPlayer(dummy);
                                 _msgSender.Approve();
                                 mineserver.GameWorld.GenerateSpawnPosition(mineserver.PlayerManager.GetPlayerByConnection(_msgSender));
-                                mineserver.ServerSender.SendCurrentWorld(mineserver.PlayerManager.GetPlayerByConnection(_msgSender));
+                                mineserver.ServerSender.SendCurrentWorldSize(mineserver.PlayerManager.GetPlayerByConnection(_msgSender));
                                 mineserver.ServerSender.SendInitialUpdate(mineserver.PlayerManager.GetPlayerByConnection(_msgSender));
                                 mineserver.ServerSender.SendPlayerJoined(mineserver.PlayerManager.GetPlayerByConnection(_msgSender));
                                 mineserver.console.ConsoleWrite(name + " Connected");

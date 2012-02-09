@@ -49,6 +49,7 @@ namespace MineWorld
             //SUN
             //Set the sun texture and world matrix (which transforms its position and angle based off of the fTime of day
             effect.Parameters["myTexture"].SetValue(SunTex);
+            //effect.Parameters["World"].SetValue(Matrix.CreateScale(50) * Matrix.CreateFromYawPitchRoll(0, 0, MathHelper.ToRadians(180)) * Matrix.CreateTranslation(playerpos));
             effect.Parameters["World"].SetValue(Matrix.CreateScale(50) * Matrix.CreateFromYawPitchRoll(0, 0, fTime + MathHelper.PiOver2) * Matrix.CreateTranslation(playerpos + new Vector3((float)(Math.Cos(fTime) * 192), (float)(Math.Sin(fTime) * 192), 0)));
             foreach (EffectPass pass in effect.CurrentTechnique.Passes)
             {

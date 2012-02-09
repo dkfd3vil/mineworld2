@@ -32,11 +32,11 @@ namespace MineWorldServer
             netserver.SendMessage(outmsg, player.NetConn, NetDeliveryMethod.ReliableOrdered);
         }
 
-        public void SendCurrentWorld(ServerPlayer player)
+        public void SendCurrentWorldSize(ServerPlayer player)
         {
             outmsg = netserver.CreateMessage();
-            outmsg.Write((byte)PacketType.WorldMapTransfer);
-            outmsg.Write(mineserver.MapManager.WorldMapSize);
+            outmsg.Write((byte)PacketType.WorldMapSize);
+            outmsg.Write(mineserver.MapManager.Mapsize);
             netserver.SendMessage(outmsg, player.NetConn, NetDeliveryMethod.ReliableOrdered);
         }
 

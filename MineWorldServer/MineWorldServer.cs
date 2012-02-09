@@ -85,10 +85,8 @@ namespace MineWorldServer
         public void LoadSettings()
         {
             Server.Configuration.MaximumConnections = Configloader.SettingGroups["Server"].Settings["Maxplayers"].GetValueAsInt();
-            int tempx = Configloader.SettingGroups["Map"].Settings["Mapx"].GetValueAsInt();
-            int tempy = Configloader.SettingGroups["Map"].Settings["Mapy"].GetValueAsInt();
-            int tempz = Configloader.SettingGroups["Map"].Settings["Mapz"].GetValueAsInt();
-            MapManager.SetMapSize(tempx, tempy, tempz);
+            int size = Configloader.SettingGroups["Map"].Settings["Mapsize"].GetValueAsInt();
+            MapManager.SetMapSize(size);
         }
     }
 }
