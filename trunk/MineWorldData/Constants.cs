@@ -13,7 +13,7 @@ namespace MineWorldData
 {
     public class Constants
     {
-        public const int LINDGREN_VERSION = 275;
+        public const int LINDGREN_VERSION = 285;
         public const int EASYCONFIG_VERSION = 61482;
         public const int MINEWORLDCLIENT_VERSION = 0;
         public const int MINEWORLDSERVER_VERSION = 0;
