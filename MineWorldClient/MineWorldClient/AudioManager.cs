@@ -17,9 +17,14 @@ namespace MineWorld
         {
         }
 
-        public void SetVolume(float vol)
+        public void SetVolume(int vol)
         {
-            volume = vol;
+            volume = (float)vol;
+        }
+
+        public int GetVolume()
+        {
+            return (int)(volume);
         }
 
         public void PlaySong(Song song,bool repeat)

@@ -13,6 +13,8 @@ namespace MineWorld
         Kicked,
         Banned,
         ServerFull,
+        VersionMismatch,
+        ServerShutdown,
         Unkown,
     }
 
@@ -35,23 +37,37 @@ namespace MineWorld
             gamemanager.game.IsMouseVisible = false;
         }
 
+        public override void Unload()
+        {
+        }
+
         public void SetError(ErrorMsg msg)
         {
             switch (msg)
             {
                 case ErrorMsg.Banned:
                     {
-                        error = "You have been kicked from the server";
+                        error = "You have been banned from the server";
                         break;
                     }
                 case ErrorMsg.Kicked:
                     {
-                        error = "You have been banned from the server";
+                        error = "You have been kicked from the server";
                         break;
                     }
                 case ErrorMsg.ServerFull:
                     {
                         error = "The server is full";
+                        break;
+                    }
+                case ErrorMsg.VersionMismatch:
+                    {
+                        error = "Client/Server version mismatch";
+                        break;
+                    }
+                case ErrorMsg.ServerShutdown:
+                    {
+                        error = "Server has shutdown";
                         break;
                     }
                 case ErrorMsg.Unkown:
@@ -64,9 +80,12 @@ namespace MineWorld
 
         public override void Update(GameTime gameTime, InputHelper input)
         {
-            if(input.AnyKeyPressed(true))
+            if (gamemanager.game.IsActive)
             {
-                gamemanager.SwitchState(GameStates.MainMenuState);
+                if (input.AnyKeyPressed(true))
+                {
+                    gamemanager.SwitchState(GameStates.MainMenuState);
+                }
             }
         }
 

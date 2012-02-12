@@ -28,6 +28,7 @@ namespace MineWorldServer
             outmsg = netserver.CreateMessage();
             outmsg.Write((byte)PacketType.PlayerInitialUpdate);
             outmsg.Write(player.ID);
+            outmsg.Write(player.Name);
             outmsg.Write(player.Position);
             netserver.SendMessage(outmsg, player.NetConn, NetDeliveryMethod.ReliableOrdered);
         }
@@ -53,6 +54,23 @@ namespace MineWorldServer
                 if (player.ID != dummy.ID)
                 {
                     netserver.SendMessage(outmsg, dummy.NetConn, NetDeliveryMethod.ReliableOrdered);
+                }
+            }
+        }
+
+        public void SendOtherPlayersInWorld(ServerPlayer player)
+        {
+            foreach (ServerPlayer dummy in mineserver.PlayerManager.PlayerList.Values)
+            {
+                if (player.ID != dummy.ID)
+                {
+                    outmsg = netserver.CreateMessage();
+                    outmsg.Write((byte)PacketType.PlayerJoined);
+                    outmsg.Write(dummy.ID);
+                    outmsg.Write(dummy.Name);
+                    outmsg.Write(dummy.Position);
+                    outmsg.Write(dummy.Heading);
+                    netserver.SendMessage(outmsg, player.NetConn, NetDeliveryMethod.ReliableOrdered);
                 }
             }
         }
@@ -83,6 +101,18 @@ namespace MineWorldServer
                 {
                     netserver.SendMessage(outmsg, dummy.NetConn, NetDeliveryMethod.ReliableOrdered);
                 }
+            }
+        }
+
+        public void SendNameSet(ServerPlayer player)
+        {
+            outmsg = netserver.CreateMessage();
+            outmsg.Write((byte)PacketType.PlayerMovementUpdate);
+            outmsg.Write(player.ID);
+            outmsg.Write(player.Name);
+            foreach (ServerPlayer dummy in mineserver.PlayerManager.PlayerList.Values)
+            {
+                netserver.SendMessage(outmsg, dummy.NetConn, NetDeliveryMethod.ReliableOrdered);
             }
         }
     }

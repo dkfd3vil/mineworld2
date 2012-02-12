@@ -21,7 +21,8 @@ namespace MineWorld
         MainMenuState,
         LoadingState,
         MainGameState,
-        ErrorState
+        ErrorState,
+        SettingsState
     }
 
     public class GameStateManager
@@ -42,6 +43,7 @@ namespace MineWorld
         private LoadingState loadingstate;
         private MainGameState maingamestate;
         private ErrorState errorstate;
+        private SettingsState settingsstate;
         private BaseState[] screens;
 
         private BaseState curScreen;
@@ -62,11 +64,14 @@ namespace MineWorld
                 mainmenustate = new MainMenuState(this,GameStates.MainMenuState),
                 loadingstate = new LoadingState(this,GameStates.LoadingState),
                 maingamestate = new MainGameState(this, GameStates.MainGameState),
-                errorstate = new ErrorState(this,GameStates.ErrorState)
+                errorstate = new ErrorState(this,GameStates.ErrorState),
+                settingsstate = new SettingsState(this,GameStates.SettingsState)
             };
-            //Set initial state in the manager itself
-            curScreen = titlestate;
+            //curScreen = titlestate;
             Pbag = new PropertyBag(gam,this);
+
+            //Set initial state in the manager itself
+            SwitchState(GameStates.TitleState);
         }
 
         public void LoadContent()
@@ -89,7 +94,23 @@ namespace MineWorld
             {
                 if (screen.AssociatedState == newState)
                 {
+                    //This is true for the first time
+                    if (curScreen != null)
+                    {
+                        //Call unload for our currentscreen
+                        curScreen.Unload();
+                        curScreen.Contentloaded = false;
+                    }
+
+                    //Switch our currentscreen to our new screen
                     curScreen = screen;
+
+                    //If our new screen content isnt loaded yet call it
+                    if (curScreen.Contentloaded == false)
+                    {
+                        curScreen.LoadContent(conmanager);
+                        curScreen.Contentloaded = true;
+                    }
                     break;
                 }
             }
@@ -98,10 +119,10 @@ namespace MineWorld
         public void SetErrorState(ErrorMsg msg)
         {
             errorstate.SetError(msg);
-            curScreen = errorstate;
+            SwitchState(GameStates.ErrorState);
         }
 
-        public void ExitState()
+        public void ExitGame()
         {
             game.Exit();
         }
@@ -111,16 +132,12 @@ namespace MineWorld
             curScreen.Draw(gameTime,device,spriteBatch);
         }
 
-        public bool WindowHasFocus()
-        {
-            return GetForegroundWindow() == (int)game.Window.Handle;
-        }
-
         public void LoadSettings()
         {
-            game.Window.Title = "MineWorldClient v" + Constants.MINEWORLDCLIENT_VERSION;
+            game.Window.Title = "MineWorldClient v" + Constants.MINEWORLDCLIENT_VERSION.ToString();
             game.Window.AllowUserResizing = true;
             game.Window.ClientSizeChanged += new EventHandler<EventArgs>(Window_ClientSizeChanged);
+
             graphics.PreferredBackBufferHeight = config.SettingGroups["Video"].Settings["Height"].GetValueAsInt();
             graphics.PreferredBackBufferWidth = config.SettingGroups["Video"].Settings["Width"].GetValueAsInt();
             graphics.IsFullScreen = config.SettingGroups["Video"].Settings["Fullscreen"].GetValueAsBool();
@@ -128,9 +145,24 @@ namespace MineWorld
             graphics.PreferMultiSampling = config.SettingGroups["Video"].Settings["Multisampling"].GetValueAsBool();
             graphics.ApplyChanges();
 
-            audiomanager.volume = config.SettingGroups["Sound"].Settings["Volume"].GetValueAsFloat() / 100;
+            audiomanager.SetVolume(config.SettingGroups["Sound"].Settings["Volume"].GetValueAsInt());
 
             Pbag.Player.Name = config.SettingGroups["Player"].Settings["Name"].GetValueAsString();
+        }
+
+        public void SaveSettings()
+        {
+            config.SettingGroups["Video"].Settings["Height"].SetValue(graphics.PreferredBackBufferHeight);
+            config.SettingGroups["Video"].Settings["Width"].SetValue(graphics.PreferredBackBufferWidth);
+            config.SettingGroups["Video"].Settings["Fullscreen"].SetValue(graphics.IsFullScreen);
+            config.SettingGroups["Video"].Settings["Vsync"].SetValue(graphics.SynchronizeWithVerticalRetrace);
+            config.SettingGroups["Video"].Settings["Multisampling"].SetValue(graphics.PreferMultiSampling);
+
+            config.SettingGroups["Sound"].Settings["Volume"].SetValue(audiomanager.GetVolume());
+
+            config.SettingGroups["Player"].Settings["Name"].SetValue(Pbag.Player.Name);
+
+            config.Save("data/settings.ini");
         }
 
         void Window_ClientSizeChanged(object sender, EventArgs e)
@@ -138,8 +170,5 @@ namespace MineWorld
             graphics.PreferredBackBufferWidth = game.Window.ClientBounds.Width;
             graphics.PreferredBackBufferHeight = game.Window.ClientBounds.Height;
         }
-
-        [DllImport("user32.dll")]
-        public static extern int GetForegroundWindow();
     }
 }

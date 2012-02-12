@@ -5,6 +5,7 @@ using System.Text;
 using Lidgren.Network;
 using Lidgren.Network.Xna;
 using MineWorldData;
+using System.Threading;
 
 namespace MineWorldServer
 {
@@ -32,8 +33,9 @@ namespace MineWorldServer
                     {
                         case NetIncomingMessageType.StatusChanged:
                             {
+                                NetConnectionStatus status = (NetConnectionStatus)packetin.ReadByte();
                                 //Player doesnt want to play anymore
-                                if (_msgSender.Status == NetConnectionStatus.Disconnected)
+                                if (status == NetConnectionStatus.Disconnected)
                                 {
                                     mineserver.console.ConsoleWrite(mineserver.PlayerManager.GetPlayerByConnection(_msgSender).Name + " Disconnected");
                                     mineserver.ServerSender.SendPlayerLeft(mineserver.PlayerManager.GetPlayerByConnection(_msgSender));
@@ -48,16 +50,29 @@ namespace MineWorldServer
                                 {
                                     _msgSender.Deny("serverfull");
                                 }
-                                int authcode = packetin.ReadInt32();
+
+                                int version = packetin.ReadInt32();
                                 string name = packetin.ReadString();
+
+                                if(mineserver.VersionMatch(version) == false)
+                                {
+                                    _msgSender.Deny("versionmismatch");
+                                }
+
                                 ServerPlayer dummy = new ServerPlayer(_msgSender);
+                                if (mineserver.PlayerManager.NameExists(name))
+                                {
+                                    name += dummy.ID;
+                                }
                                 dummy.Name = name;
                                 mineserver.PlayerManager.AddPlayer(dummy);
                                 _msgSender.Approve();
+                                Thread.Sleep(4000);
                                 mineserver.GameWorld.GenerateSpawnPosition(mineserver.PlayerManager.GetPlayerByConnection(_msgSender));
                                 mineserver.ServerSender.SendCurrentWorldSize(mineserver.PlayerManager.GetPlayerByConnection(_msgSender));
                                 mineserver.ServerSender.SendInitialUpdate(mineserver.PlayerManager.GetPlayerByConnection(_msgSender));
                                 mineserver.ServerSender.SendPlayerJoined(mineserver.PlayerManager.GetPlayerByConnection(_msgSender));
+                                mineserver.ServerSender.SendOtherPlayersInWorld(mineserver.PlayerManager.GetPlayerByConnection(_msgSender));
                                 mineserver.console.ConsoleWrite(name + " Connected");
                                 break;
                             }

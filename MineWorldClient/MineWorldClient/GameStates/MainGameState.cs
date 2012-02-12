@@ -30,20 +30,26 @@ namespace MineWorld
             gamemanager.Pbag.Debugger.Load(contentloader);
         }
 
+        public override void Unload()
+        {
+            gamemanager.Pbag.WorldManager.worldmaploaded = false;
+        }
+
         public override void Update(GameTime gameTime,InputHelper input)
         {
-            //Lets see if we need to end this game
-            if (input.IsNewPress((Keys)ClientKey.Exit))
+            if (gamemanager.game.IsActive)
             {
-                gamemanager.Pbag.Client.Disconnect("exit");
-                gamemanager.ExitState();
-            }
+                //Lets see if we need to end this game
+                if (input.IsNewPress((Keys)ClientKey.Exit))
+                {
+                    gamemanager.Pbag.Client.Disconnect("exit");
+                    gamemanager.SwitchState(GameStates.MainMenuState);
+                }
 
-            if (input.IsNewPress((Keys)ClientKey.FullScreen))
-            {
-                gamemanager.graphics.ToggleFullScreen();
-                //gamemanager.graphics.IsFullScreen = !gamemanager.graphics.IsFullScreen;
-                //gamemanager.graphics.ApplyChanges();
+                if (input.IsNewPress((Keys)ClientKey.FullScreen))
+                {
+                    gamemanager.graphics.ToggleFullScreen();
+                }
             }
 
             //Update chunks to load close ones, unload far ones

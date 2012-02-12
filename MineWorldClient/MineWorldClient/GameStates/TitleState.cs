@@ -5,8 +5,6 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Content;
-using Ruminate.GUI.Content;
-using Ruminate.GUI.Framework;
 using Microsoft.Xna.Framework.Media;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -35,6 +33,10 @@ namespace MineWorld
             size.Height = gamemanager.graphics.PreferredBackBufferHeight;
         }
 
+        public override void Unload()
+        {
+        }
+
         public override void Update(GameTime gameTime, InputHelper input)
         {
             if (!introstarted)
@@ -42,10 +44,13 @@ namespace MineWorld
                 gamemanager.audiomanager.PlaySong(introsong, false);
                 introstarted = true;
             }
-            if(input.AnyKeyPressed(true))
+            if (gamemanager.game.IsActive)
             {
-                gamemanager.audiomanager.StopPlaying();
-                gamemanager.SwitchState(GameStates.MainMenuState);
+                if (input.AnyKeyPressed(true))
+                {
+                    gamemanager.audiomanager.StopPlaying();
+                    gamemanager.SwitchState(GameStates.MainMenuState);
+                }
             }
         }
 
