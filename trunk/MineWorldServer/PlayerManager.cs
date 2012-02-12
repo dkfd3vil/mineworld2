@@ -94,5 +94,29 @@ namespace MineWorldServer
             //We dont need to remove the player here cause its handled in the serverlistener on status changed
             player.NetConn.Disconnect("banned");
         }
+
+        public bool NameExists(string name)
+        {
+            foreach (ServerPlayer player in PlayerList.Values)
+            {
+                if (player.Name.ToLower() == name.ToLower())
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public void SetPlayerName(ServerPlayer player, string name)
+        {
+            foreach (ServerPlayer dummy in PlayerList.Values)
+            {
+                if (dummy == player)
+                {
+                    dummy.Name = name;
+                }
+            }
+        }
     }
 }

@@ -5,6 +5,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Input;
 
 namespace MineWorld
 {
@@ -34,14 +35,23 @@ namespace MineWorld
             gamemanager.game.IsMouseVisible = false;
         }
 
+        public override void Unload()
+        {
+        }
+
         public override void Update(GameTime gameTime, InputHelper input)
         {
             loadingangle += 0.01f;
+            if (input.IsNewPress((Keys)ClientKey.Exit))
+            {
+                gamemanager.SwitchState(GameStates.MainMenuState);
+            }
+
             //If everything is loaded then lets play
             if (gamemanager.Pbag.WorldManager.Everythingloaded())
             {
                 gamemanager.SwitchState(GameStates.MainGameState);
-                gamemanager.Pbag.ClientSender.SendPlayerInWorld();
+                //gamemanager.Pbag.ClientSender.SendPlayerInWorld();
             }
         }
 

@@ -9,7 +9,7 @@ namespace MineWorldServer
 {
     public class ServerPlayer
     {
-        public long ID;
+        public int ID;
         public string Name;
         public string Ip = "";
         public NetConnection NetConn;
@@ -19,8 +19,15 @@ namespace MineWorldServer
         public ServerPlayer(NetConnection netcon)
         {
             NetConn = netcon;
-            ID = netcon.RemoteUniqueIdentifier;
+            ID = GetId();
             Ip = netcon.RemoteEndpoint.Address.ToString();
+        }
+
+        public static int id = 0;
+        public static int GetId()
+        {
+            id = id + 1;
+            return id;
         }
     }
 }

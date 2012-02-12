@@ -28,9 +28,12 @@ namespace MineWorld
 
         public void Update(GameTime gameTime,InputHelper input)
         {
-            if (input.IsNewPress((Keys)ClientKey.Debug))
+            if (game.Game.IsActive)
             {
-                Enabled = !Enabled;
+                if (input.IsNewPress((Keys)ClientKey.Debug))
+                {
+                    Enabled = !Enabled;
+                }
             }
         }
 

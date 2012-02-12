@@ -12,6 +12,7 @@ namespace MineWorld
     {
         public GameStateManager Manager;
         public GameStates AssociatedState;
+        public bool Contentloaded;
 
         public BaseState(GameStateManager manager, GameStates associatedState)
         {
@@ -19,6 +20,7 @@ namespace MineWorld
             this.AssociatedState = associatedState;
         }
 
+        public abstract void Unload();
         public abstract void LoadContent(ContentManager contentloader);
         public abstract void Update(GameTime gameTime, InputHelper input);
         public abstract void Draw(GameTime gameTime,GraphicsDevice gDevice,SpriteBatch sBtach);

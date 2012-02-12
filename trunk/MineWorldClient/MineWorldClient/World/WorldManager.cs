@@ -22,7 +22,7 @@ namespace MineWorld
         public Player player;
 
         //Our other players
-        public Dictionary<long, ClientPlayer> playerlist = new Dictionary<long, ClientPlayer>();
+        public Dictionary<int, ClientPlayer> playerlist = new Dictionary<int, ClientPlayer>();
 
         //Our block world
         public int Mapsize;
@@ -41,7 +41,7 @@ namespace MineWorld
         RasterizerState Solid;
 
         //A bool to see if everything is loaded
-        bool worldmaploaded = false;
+        public bool worldmaploaded = false;
 
         //A bool for debug purpose
         public bool Debug = false;
@@ -109,10 +109,12 @@ namespace MineWorld
             Sun.Update(fTime, gamemanager.Pbag.Player.Position);
             Moon.Update(fTime, gamemanager.Pbag.Player.Position);
 
-
-            if (input.IsNewPress((Keys)ClientKey.WireFrame))
+            if (gamemanager.game.IsActive)
             {
-                gamemanager.Pbag.WireMode = !gamemanager.Pbag.WireMode;
+                if (input.IsNewPress((Keys)ClientKey.WireFrame))
+                {
+                    gamemanager.Pbag.WireMode = !gamemanager.Pbag.WireMode;
+                }
             }
         }
 

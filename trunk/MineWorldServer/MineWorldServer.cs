@@ -55,7 +55,7 @@ namespace MineWorldServer
 
         public void Start()
         {
-            console.SetTitle("MineWorldServer v" + Constants.MINEWORLDSERVER_VERSION);
+            console.SetTitle("MineWorldServer v" + Constants.MINEWORLDSERVER_VERSION.ToString());
 
             LoadSettings();
             MapManager.GenerateCubeMap(BlockTypes.Dirt);
@@ -87,6 +87,16 @@ namespace MineWorldServer
             Server.Configuration.MaximumConnections = Configloader.SettingGroups["Server"].Settings["Maxplayers"].GetValueAsInt();
             int size = Configloader.SettingGroups["Map"].Settings["Mapsize"].GetValueAsInt();
             MapManager.SetMapSize(size);
+        }
+
+        public bool VersionMatch(int version)
+        {
+            if (Constants.MINEWORLDSERVER_VERSION == version)
+            {
+                return true;
+            }
+
+            return false;
         }
     }
 }

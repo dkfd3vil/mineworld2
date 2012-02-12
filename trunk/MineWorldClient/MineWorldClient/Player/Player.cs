@@ -16,7 +16,7 @@ namespace MineWorld
         private const float Movespeed = 3.5f;
         private const float Gravity = -16.0f;
 
-        public long Myid;
+        public int Myid;
         public string Name;
         public Camera Cam;
         public bool mousehasfoccus;
@@ -68,98 +68,101 @@ namespace MineWorld
 
         public void Update(GameTime gtime, InputHelper input)
         {
-            if (NoClip) //If noclipped
+            if (game.GameManager.game.IsActive)
             {
-                if (input.IsCurPress(Keys.LeftShift))
+                if (NoClip) //If noclipped
                 {
-                    Speed = 1.0f;
+                    if (input.IsCurPress(Keys.LeftShift))
+                    {
+                        Speed = 1.0f;
+                    }
+                    else
+                    {
+                        Speed = 0.5f;
+                    }
+                    if (input.IsCurPress((Keys)ClientKey.MoveForward))
+                    {
+                        Position -= Cam.Forward * Speed;
+                    }
+                    if (input.IsCurPress((Keys)ClientKey.MoveLeft))
+                    {
+                        Position -= Cam.Right * Speed;
+                    }
+                    if (input.IsCurPress((Keys)ClientKey.MoveBack))
+                    {
+                        Position += Cam.Forward * Speed;
+                    }
+                    if (input.IsCurPress((Keys)ClientKey.MoveRight))
+                    {
+                        Position += Cam.Right * Speed;
+                    }
+                    if (input.IsCurPress((Keys)ClientKey.MoveUp))
+                    {
+                        Position += Vector3.Up * Speed;
+                    }
+                    if (input.IsCurPress((Keys)ClientKey.MoveDown))
+                    {
+                        Position += Vector3.Down * Speed;
+                    }
                 }
                 else
                 {
-                    Speed = 0.5f;
-                }
-                if (input.IsCurPress((Keys)ClientKey.MoveForward))
-                {
-                    Position -= Cam.Forward * Speed;
-                }
-                if (input.IsCurPress((Keys)ClientKey.MoveLeft))
-                {
-                    Position -= Cam.Right * Speed;
-                }
-                if (input.IsCurPress((Keys)ClientKey.MoveBack))
-                {
-                    Position += Cam.Forward * Speed;
-                }
-                if (input.IsCurPress((Keys)ClientKey.MoveRight))
-                {
-                    Position += Cam.Right * Speed;
-                }
-                if (input.IsCurPress((Keys)ClientKey.MoveUp))
-                {
-                    Position += Vector3.Up * Speed;
-                }
-                if (input.IsCurPress((Keys)ClientKey.MoveDown))
-                {
-                    Position += Vector3.Down * Speed;
-                }
-            }
-            else
-            {
-                //if (input.IsCurPress(Keys.W))
-                //{
-                //    Position -= Cam.Forward * Speed;
-                //}
-                //if (input.IsCurPress(Keys.A))
-                //{
-                //    Position -= Cam.Right * Speed;
-                //}
-                //if (input.IsCurPress(Keys.S))
-                //{
-                //    Position += Cam.Forward * Speed;
-                //}
-                //if (input.IsCurPress(Keys.D))
-                //{
-                //    Position += Cam.Right * Speed;
-                //}
+                    //if (input.IsCurPress(Keys.W))
+                    //{
+                    //    Position -= Cam.Forward * Speed;
+                    //}
+                    //if (input.IsCurPress(Keys.A))
+                    //{
+                    //    Position -= Cam.Right * Speed;
+                    //}
+                    //if (input.IsCurPress(Keys.S))
+                    //{
+                    //    Position += Cam.Forward * Speed;
+                    //}
+                    //if (input.IsCurPress(Keys.D))
+                    //{
+                    //    Position += Cam.Right * Speed;
+                    //}
 
-                ////Execute standard movement
-                //Vector3 footPosition = Position + new Vector3(0f, -1.5f, 0f);
-                //Vector3 headPosition = Position + new Vector3(0f, 0.1f, 0f);
-                //Vector3 midPosition = Position + new Vector3(0f, -0.7f, 0f);
+                    ////Execute standard movement
+                    //Vector3 footPosition = Position + new Vector3(0f, -1.5f, 0f);
+                    //Vector3 headPosition = Position + new Vector3(0f, 0.1f, 0f);
+                    //Vector3 midPosition = Position + new Vector3(0f, -0.7f, 0f);
 
-                //if (game.WorldManager.BlockAtPoint(headPosition) == BlockTypes.Water)
-                //{
-                //    bUnderwater = true;
-                //}
-                //else
-                //{
-                //    bUnderwater = false;
-                //}
+                    //if (game.WorldManager.BlockAtPoint(headPosition) == BlockTypes.Water)
+                    //{
+                    //    bUnderwater = true;
+                    //}
+                    //else
+                    //{
+                    //    bUnderwater = false;
+                    //}
 
-                //vPlayerVel.Y += Gravity * (float)gtime.ElapsedGameTime.TotalSeconds;
+                    //vPlayerVel.Y += Gravity * (float)gtime.ElapsedGameTime.TotalSeconds;
 
-                //if (game.WorldManager.SolidAtPointForPlayer(footPosition) || game.WorldManager.SolidAtPointForPlayer(headPosition))
-                //{
-                //    BlockTypes standingOnBlock = game.WorldManager.BlockAtPoint(footPosition);
-                //    BlockTypes hittingHeadOnBlock = game.WorldManager.BlockAtPoint(headPosition);
+                    //if (game.WorldManager.SolidAtPointForPlayer(footPosition) || game.WorldManager.SolidAtPointForPlayer(headPosition))
+                    //{
+                    //    BlockTypes standingOnBlock = game.WorldManager.BlockAtPoint(footPosition);
+                    //    BlockTypes hittingHeadOnBlock = game.WorldManager.BlockAtPoint(headPosition);
 
-                //    // If the player has their head stuck in a block, push them down.
-                //    if (game.WorldManager.SolidAtPointForPlayer(headPosition))
-                //    {
-                //        int blockIn = (int)(headPosition.Y);
-                //        Position.Y = (blockIn - 0.15f);
-                //    }
+                    //    // If the player has their head stuck in a block, push them down.
+                    //    if (game.WorldManager.SolidAtPointForPlayer(headPosition))
+                    //    {
+                    //        int blockIn = (int)(headPosition.Y);
+                    //        Position.Y = (blockIn - 0.15f);
+                    //    }
 
-                //    // If the player is stuck in the ground, bring them out.
-                //    // This happens because we're standing on a block at -1.5, but stuck in it at -1.4, so -1.45 is the sweet spot.
-                //    if (game.WorldManager.SolidAtPointForPlayer(footPosition))
-                //    {
-                //        int blockOn = (int)(footPosition.Y);
-                //        Position.Y = (float)(blockOn + 1 + 1.45);
-                //    }
+                    //    // If the player is stuck in the ground, bring them out.
+                    //    // This happens because we're standing on a block at -1.5, but stuck in it at -1.4, so -1.45 is the sweet spot.
+                    //    if (game.WorldManager.SolidAtPointForPlayer(footPosition))
+                    //    {
+                    //        int blockOn = (int)(footPosition.Y);
+                    //        Position.Y = (float)(blockOn + 1 + 1.45);
+                    //    }
 
-                //    vPlayerVel.Y = 0;
-                //}
+                    //    vPlayerVel.Y = 0;
+                    //}
+                }
             }
 
             //Re-initialize aim and aimblock vectors
@@ -199,7 +202,7 @@ namespace MineWorld
 
             Cam.Position = Position;
 
-            if (game.GameManager.WindowHasFocus())
+            if (game.GameManager.game.IsActive)
             {
                 if (mousehasfoccus)
                 {

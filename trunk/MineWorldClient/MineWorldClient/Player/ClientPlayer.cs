@@ -12,7 +12,7 @@ namespace MineWorld
     {
         Model playermodel;
 
-        public long ID;
+        public int ID;
         public string name;
         public Vector3 position;
         public Vector3 heading;

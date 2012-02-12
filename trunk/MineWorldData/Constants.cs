@@ -31,6 +31,7 @@ namespace MineWorldData
         PlayerBlockUse,
         PlayerInitialUpdate,
         PlayerMovementUpdate,
+        PlayerNameSet,
     }
 
     public enum BlockTypes
