@@ -49,6 +49,7 @@ namespace MineWorldServer
                                 if (netserver.ConnectionsCount == netserver.Configuration.MaximumConnections)
                                 {
                                     _msgSender.Deny("serverfull");
+                                    break;
                                 }
 
                                 int version = packetin.ReadInt32();
@@ -57,6 +58,7 @@ namespace MineWorldServer
                                 if(mineserver.VersionMatch(version) == false)
                                 {
                                     _msgSender.Deny("versionmismatch");
+                                    break;
                                 }
 
                                 ServerPlayer dummy = new ServerPlayer(_msgSender);
