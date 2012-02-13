@@ -5,6 +5,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MineWorldData;
+using System.IO;
 
 namespace MineWorld
 {
@@ -48,7 +49,15 @@ namespace MineWorld
             effect = gameman.conmanager.Load<Effect>("Effects/DefaultEffect");
 
             //Load our terrain
-            Terrain = gameman.conmanager.Load<Texture2D>("Textures/terrain");
+            //Check if the user want to use custom textures
+            if (world.customtexturepath != "")
+            {
+                Terrain = TextureFromFile(world.customtexturepath);
+            }
+            else
+            {
+                Terrain = gameman.conmanager.Load<Texture2D>("Textures/terrain");
+            }
 
             //Set unchanging effect parameters (Fog and a constant value used for lighting)
             effect.Parameters["FogEnabled"].SetValue(true);
@@ -394,6 +403,14 @@ namespace MineWorld
         public BaseBlock GetBlockAtPoint(int x,int y,int z)
         {
             return BlockMap[x, y, z];
+        }
+
+        private Texture2D TextureFromFile(string path)
+        {
+            FileStream fs = new FileStream(path, FileMode.Open);
+            Texture2D t2d = Texture2D.FromStream(gameman.device, fs);
+            fs.Close();
+            return t2d;
         }
     }
 }
