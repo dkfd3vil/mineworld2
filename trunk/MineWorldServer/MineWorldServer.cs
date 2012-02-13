@@ -27,6 +27,8 @@ namespace MineWorldServer
         public bool KeepServerRunning = true;
         public bool RestartServer = false;
 
+        public string ServerName;
+
         //Console part
         public MineWorldConsole console;
         private DateTime _lastKeyAvaible = DateTime.Now;
@@ -41,6 +43,7 @@ namespace MineWorldServer
             netConfig.Port = Constants.MINEWORLD_PORT;
             netConfig.MaximumConnections = 2;
             netConfig.EnableMessageType(NetIncomingMessageType.ConnectionApproval);
+            netConfig.EnableMessageType(NetIncomingMessageType.DiscoveryRequest);
             netConfig.DisableMessageType(NetIncomingMessageType.UnconnectedData);
             Server = new NetServer(netConfig);
             GameWorld = new GameWorld(this);
@@ -84,6 +87,7 @@ namespace MineWorldServer
 
         public void LoadSettings()
         {
+            ServerName = Configloader.SettingGroups["Server"].Settings["Name"].GetValueAsString();
             Server.Configuration.MaximumConnections = Configloader.SettingGroups["Server"].Settings["Maxplayers"].GetValueAsInt();
             int size = Configloader.SettingGroups["Map"].Settings["Mapsize"].GetValueAsInt();
             MapManager.SetMapSize(size);

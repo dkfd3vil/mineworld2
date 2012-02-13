@@ -31,6 +31,7 @@ namespace MineWorld
             Game = Gamein;
             GameManager = GameManagerin;
             NetPeerConfiguration netconfig = new NetPeerConfiguration("MineWorld");
+            netconfig.EnableMessageType(NetIncomingMessageType.DiscoveryResponse);
             Client = new NetClient(netconfig);
             Client.Start();
             Player = new Player(this);

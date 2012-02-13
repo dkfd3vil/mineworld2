@@ -134,6 +134,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AudioManager.cs" />
+    <Compile Include="GameStates\ServerBrowsingState.cs" />
     <Compile Include="Network\ClientListener.cs" />
     <Compile Include="Network\ClientSender.cs" />
     <Compile Include="Debug.cs" />
@@ -149,6 +150,7 @@
     <Compile Include="Player\Tools\BlockRemover.cs" />
     <Compile Include="Player\Tools\Stacker.cs" />
     <Compile Include="Player\Tools\Tool.cs" />
+    <Compile Include="ServerInformation.cs" />
     <Compile Include="World\Block\BaseBlock.cs" />
     <Compile Include="World\Block\BlockIcon.cs" />
     <Compile Include="World\Block\Special\MusicBlock.cs" />

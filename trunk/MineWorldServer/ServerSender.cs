@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework;
 using MineWorldData;
 using Microsoft.Xna.Framework.Graphics;
 using System.IO;
+using System.Net;
 
 namespace MineWorldServer
 {
@@ -114,6 +115,16 @@ namespace MineWorldServer
             {
                 netserver.SendMessage(outmsg, dummy.NetConn, NetDeliveryMethod.ReliableOrdered);
             }
+        }
+
+        public void SendDiscoverResponse(IPEndPoint endpoint)
+        {
+            // Create a response and write some example data to it
+            outmsg = netserver.CreateMessage();
+            outmsg.Write(mineserver.ServerName);
+
+            // Send the response to the sender of the request
+            netserver.SendDiscoveryResponse(outmsg, endpoint);
         }
     }
 }
