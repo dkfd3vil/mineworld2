@@ -148,6 +148,8 @@ namespace MineWorld
             audiomanager.SetVolume(config.SettingGroups["Sound"].Settings["Volume"].GetValueAsInt());
 
             Pbag.Player.Name = config.SettingGroups["Player"].Settings["Name"].GetValueAsString();
+
+            Pbag.WorldManager.customtexturepath = config.SettingGroups["Game"].Settings["Customtexturepath"].GetValueAsString();
         }
 
         public void SaveSettings()

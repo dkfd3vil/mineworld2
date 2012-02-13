@@ -43,6 +43,9 @@ namespace MineWorld
         //A bool to see if everything is loaded
         public bool worldmaploaded = false;
 
+        //Custom texture path
+        public string customtexturepath = "";
+
         //A bool for debug purpose
         public bool Debug = false;
 
