@@ -76,8 +76,14 @@ namespace MineWorld
                                         }
                                 }
                             }
+                            break;
                         }
-                        break;
+                    case NetIncomingMessageType.DiscoveryResponse:
+                        {
+                            ServerInformation newserver = new ServerInformation(_msgBuffer.ReadString(), _msgBuffer.SenderEndpoint.Address.ToString());
+                            Pbag.GameManager.AddServer(newserver);
+                            break;
+                        }
                     case NetIncomingMessageType.ConnectionApproval:
                         {
                             break;

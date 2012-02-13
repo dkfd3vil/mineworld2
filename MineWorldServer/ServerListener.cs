@@ -43,6 +43,11 @@ namespace MineWorldServer
                                 }
                                 break;
                             }
+                        case NetIncomingMessageType.DiscoveryRequest:
+                            {
+                                mineserver.ServerSender.SendDiscoverResponse(packetin.SenderEndpoint);
+                                break;
+                            }
                         case NetIncomingMessageType.ConnectionApproval:
                             {
                                 //If the server is full then deny

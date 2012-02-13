@@ -91,8 +91,9 @@ namespace MineWorld
                 if (play.Pushed)
                 {
                     play.Pushed = false;
-                    gamemanager.Pbag.ClientSender.SendJoinGame("127.0.0.1");
-                    gamemanager.SwitchState(GameStates.LoadingState);
+                    //gamemanager.Pbag.ClientSender.SendJoinGame("127.0.0.1");
+                    //gamemanager.SwitchState(GameStates.LoadingState);
+                    gamemanager.SwitchState(GameStates.ServerBrowsingState);
                 }
                 if (settings.Pushed)
                 {

@@ -22,7 +22,8 @@ namespace MineWorld
         LoadingState,
         MainGameState,
         ErrorState,
-        SettingsState
+        SettingsState,
+        ServerBrowsingState,
     }
 
     public class GameStateManager
@@ -44,6 +45,7 @@ namespace MineWorld
         private MainGameState maingamestate;
         private ErrorState errorstate;
         private SettingsState settingsstate;
+        private ServerBrowsingState serverbrowsingstate;
         private BaseState[] screens;
 
         private BaseState curScreen;
@@ -65,7 +67,8 @@ namespace MineWorld
                 loadingstate = new LoadingState(this,GameStates.LoadingState),
                 maingamestate = new MainGameState(this, GameStates.MainGameState),
                 errorstate = new ErrorState(this,GameStates.ErrorState),
-                settingsstate = new SettingsState(this,GameStates.SettingsState)
+                settingsstate = new SettingsState(this,GameStates.SettingsState),
+                serverbrowsingstate = new ServerBrowsingState(this,GameStates.ServerBrowsingState),
             };
             //curScreen = titlestate;
             Pbag = new PropertyBag(gam,this);
@@ -120,6 +123,16 @@ namespace MineWorld
         {
             errorstate.SetError(msg);
             SwitchState(GameStates.ErrorState);
+        }
+
+        public void AddServer(ServerInformation server)
+        {
+            serverbrowsingstate.AddServer(server);
+        }
+
+        public void RemoveServer(ServerInformation server)
+        {
+            serverbrowsingstate.RemoveServer(server);
         }
 
         public void ExitGame()

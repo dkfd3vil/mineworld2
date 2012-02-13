@@ -55,5 +55,10 @@ namespace MineWorld
             outmsg.Write(pos);
             outmsg.Write((byte)type);
         }
+
+        public void DiscoverLocalServers(int port)
+        {
+            Client.DiscoverLocalPeers(port);
+        }
     }
 }
