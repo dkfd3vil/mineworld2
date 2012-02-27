@@ -64,6 +64,11 @@ namespace MineWorld
                                             Pbag.GameManager.SetErrorState(ErrorMsg.ServerShutdown);
                                             break;
                                         }
+                                    case "restart":
+                                        {
+                                            Pbag.GameManager.SetErrorState(ErrorMsg.ServerRestart);
+                                            break;
+                                        }
                                     case "exit":
                                         {
                                             //Todo need to find more info about this case in the disconnect switch
@@ -71,7 +76,8 @@ namespace MineWorld
                                         }
                                     default:
                                         {
-                                            Pbag.GameManager.SetErrorState(ErrorMsg.Unkown);
+                                            Pbag.GameManager.temperrormsg(reason);
+                                            //Pbag.GameManager.SetErrorState(ErrorMsg.Unkown);
                                             break;
                                         }
                                 }
@@ -80,7 +86,12 @@ namespace MineWorld
                         }
                     case NetIncomingMessageType.DiscoveryResponse:
                         {
-                            ServerInformation newserver = new ServerInformation(_msgBuffer.ReadString(), _msgBuffer.SenderEndpoint.Address.ToString());
+                            string name = _msgBuffer.ReadString();
+                            int playercount = _msgBuffer.ReadInt32();
+                            int playermax = _msgBuffer.ReadInt32();
+                            bool lan = _msgBuffer.ReadBoolean();
+                            string ip = _msgBuffer.SenderEndpoint.Address.ToString();
+                            ServerInformation newserver = new ServerInformation(name,ip,playercount,playermax,lan);
                             Pbag.GameManager.AddServer(newserver);
                             break;
                         }

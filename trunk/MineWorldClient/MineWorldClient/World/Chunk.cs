@@ -70,7 +70,7 @@ namespace MineWorld
         public void Update(Vector3 playerpos,float time)
         {
             fTime = time;
-            if (Vector3.Distance(new Vector3(PosX, Height / 2, PosZ), playerpos) < 256)//If the current chunk selected is within the distance
+            if (Vector3.Distance(new Vector3(PosX + Chunk.Size, Height / 2, PosZ + Chunk.Size), playerpos) < 256)//If the current chunk selected is within the distance
             {
                 if (!bDraw) //And if it isn't already loaded
                 {
@@ -132,12 +132,12 @@ namespace MineWorld
                         {
                             if (
                                 (
-                                BlockMap[IntClamp(x + 1, 0, Size - 1), y, z].Type == BlockTypes.Air ||
-                                BlockMap[IntClamp(x - 1, 0, Size - 1), y, z].Type == BlockTypes.Air ||
-                                BlockMap[x, IntClamp(y + 1, 0, Height - 1), z].Type == BlockTypes.Air ||
-                                BlockMap[x, IntClamp(y - 1, 0, Height - 1), z].Type == BlockTypes.Air ||
-                                BlockMap[x, y, IntClamp(z + 1, 0, Size - 1)].Type == BlockTypes.Air ||
-                                BlockMap[x, y, IntClamp(z - 1, 0, Size - 1)].Type == BlockTypes.Air //And if it's not completely surrounded
+                                BlockMap[IntClamp(x + 1, 0, Size - 1), y, z].Transparent ||
+                                BlockMap[IntClamp(x - 1, 0, Size - 1), y, z].Transparent ||
+                                BlockMap[x, IntClamp(y + 1, 0, Height - 1), z].Transparent ||
+                                BlockMap[x, IntClamp(y - 1, 0, Height - 1), z].Transparent ||
+                                BlockMap[x, y, IntClamp(z + 1, 0, Size - 1)].Transparent ||
+                                BlockMap[x, y, IntClamp(z - 1, 0, Size - 1)].Transparent //And if it's not completely surrounded
                                 )
                                 &&
                                 BlockMap[x, y, z].Type != BlockTypes.Air //And if it's not air

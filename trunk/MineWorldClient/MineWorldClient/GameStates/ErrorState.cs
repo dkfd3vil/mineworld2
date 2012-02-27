@@ -15,6 +15,7 @@ namespace MineWorld
         ServerFull,
         VersionMismatch,
         ServerShutdown,
+        ServerRestart,
         Unkown,
     }
 
@@ -22,7 +23,7 @@ namespace MineWorld
     {
         GameStateManager gamemanager;
         SpriteFont myFont;
-        string error;
+        public string error;
         Vector2 errorlocation;
 
         public ErrorState(GameStateManager manager, GameStates associatedState)
@@ -68,6 +69,11 @@ namespace MineWorld
                 case ErrorMsg.ServerShutdown:
                     {
                         error = "Server has shutdown";
+                        break;
+                    }
+                case ErrorMsg.ServerRestart:
+                    {
+                        error = "Server is restarting";
                         break;
                     }
                 case ErrorMsg.Unkown:

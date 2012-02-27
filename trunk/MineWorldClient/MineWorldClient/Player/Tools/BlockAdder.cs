@@ -23,7 +23,7 @@ namespace MineWorld
             if (player.GotSelection())
             {
                 Vector3 block = player.GetFacingBlock();
-                worldmanager.SetBlock((int)block.X,(int)block.Y,(int)block.Z, BlockTypes.Dirt);
+                worldmanager.SetBlock((int)block.X,(int)block.Y,(int)block.Z, player.selectedblocktype);
             }
         }
     }

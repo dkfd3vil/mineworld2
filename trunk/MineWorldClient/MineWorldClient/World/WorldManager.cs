@@ -183,6 +183,8 @@ namespace MineWorld
             Blocks[(int)BlockTypes.Glass] = new BaseBlock(new Vector2(1, 3), BlockModel.Cube, true, true, true, BlockTypes.Glass);
             //25 - Noteblock
             Blocks[(int)BlockTypes.Noteblock] = new MusicBlock(new Vector2(10, 4), new Vector2(11, 4), new Vector2(11, 4), new Vector2(11, 4), new Vector2(11, 4), new Vector2(11, 4), BlockModel.Cube, true, false, true, BlockTypes.Noteblock, gamemanager.conmanager);
+            //78 - Snow
+            Blocks[(int)BlockTypes.Snow] = new BaseBlock(new Vector2(2, 4), BlockModel.Slab, false, true, true, BlockTypes.Snow);
         }
 
         public void CreateSimpleMap()
@@ -199,6 +201,14 @@ namespace MineWorld
                         if (y < (Chunk.Height / 2))
                         {
                             SetMapBlock(x, y, z, BlockTypes.Dirt);
+                        }
+                        if (y == Chunk.Height / 2)
+                        {
+                            SetMapBlock(x, y, z, BlockTypes.Grass);
+                        }
+                        if (y == (Chunk.Height / 2) + 1)
+                        {
+                            SetMapBlock(x, y, z, BlockTypes.Snow);
                         }
                     }
                 }

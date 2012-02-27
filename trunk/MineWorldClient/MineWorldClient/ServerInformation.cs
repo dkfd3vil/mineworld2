@@ -9,11 +9,22 @@ namespace MineWorld
     {
         public string servername;
         public string ipaddress;
+        public int playercount;
+        public int maxplayercount;
+        public bool lan;
 
-        public ServerInformation(string name,string ip)
+        public ServerInformation(string name,string ip,int playerc, int playermax,bool la)
         {
             servername = name;
             ipaddress = ip;
+            playercount = playerc;
+            maxplayercount = playermax;
+            lan = la;
+        }
+
+        public string GetTag()
+        {
+            return servername + " " + playercount.ToString() + "/" + maxplayercount.ToString();
         }
     }
 }

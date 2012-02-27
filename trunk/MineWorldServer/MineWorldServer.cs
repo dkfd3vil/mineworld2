@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework;
 using EasyConfig;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
+using System.Diagnostics;
 
 namespace MineWorldServer
 {
@@ -25,7 +26,6 @@ namespace MineWorldServer
         public ServerSender ServerSender;
 
         public bool KeepServerRunning = true;
-        public bool RestartServer = false;
 
         public string ServerName;
 
@@ -34,8 +34,6 @@ namespace MineWorldServer
         private DateTime _lastKeyAvaible = DateTime.Now;
 
         public ConfigFile Configloader;
-
-        public byte[] Terrain;
 
         public MineWorldServer()
         {
@@ -59,13 +57,21 @@ namespace MineWorldServer
         public void Start()
         {
             console.SetTitle("MineWorldServer v" + Constants.MINEWORLDSERVER_VERSION.ToString());
+            console.ConsoleWrite("Starting server");
 
+            console.ConsoleWrite("Loading settings");
             LoadSettings();
+
+            console.ConsoleWrite("Generating map");
             MapManager.GenerateCubeMap(BlockTypes.Dirt);
 
+            console.ConsoleWrite("Starting network protocols");
             Server.Start();
+
+            console.ConsoleWrite("Starting listener thread");
             Listener.Start();
 
+            console.ConsoleWrite("Server ready");
             while (KeepServerRunning)
             {
                 // Handle console keypresses.
@@ -88,6 +94,10 @@ namespace MineWorldServer
         public void LoadSettings()
         {
             ServerName = Configloader.SettingGroups["Server"].Settings["Name"].GetValueAsString();
+            if (ServerName == "")
+            {
+                console.WriteError("Servername isnt set");
+            }
             Server.Configuration.MaximumConnections = Configloader.SettingGroups["Server"].Settings["Maxplayers"].GetValueAsInt();
             int size = Configloader.SettingGroups["Map"].Settings["Mapsize"].GetValueAsInt();
             MapManager.SetMapSize(size);
@@ -101,6 +111,32 @@ namespace MineWorldServer
             }
 
             return false;
+        }
+
+        public void ShutdownServer(int seconds)
+        {
+            if (seconds == 0)
+            {
+                Server.Shutdown("shutdown");
+                KeepServerRunning = false;
+
+                Environment.Exit(0);
+            }
+        }
+
+        public void RestartServer(int seconds)
+        {
+            if (seconds == 0)
+            {
+                Server.Shutdown("restart");
+                KeepServerRunning = false;
+
+                Process mineworldserver = new Process();
+                mineworldserver.StartInfo.FileName = Environment.CurrentDirectory.ToString() + "/mineworldserver.exe";
+                mineworldserver.Start();
+
+                Environment.Exit(0);
+            }
         }
     }
 }

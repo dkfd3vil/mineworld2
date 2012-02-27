@@ -26,12 +26,11 @@ namespace MineWorld
                     }
                     catch (Exception e)
                     {
-                        string logtext = "";
-                        if (File.Exists("Clientcrashlog.log"))
+                        if(!Directory.Exists("Crashlogs"))
                         {
-                            logtext = File.ReadAllText("Clientcrashlog.log");
-                        }
-                        File.WriteAllText("Clientcrashlog.log", logtext + "\r\n" + e.Message + "\r\n\r\n" + e.StackTrace);
+                            Directory.CreateDirectory("Crashlogs");
+                        }                   
+                        File.WriteAllText("Crashlogs/" + DateTime.Now.ToString("hh-mm-ss-dd-mm-yyyy") + ".log", e.Message + "\r\n\r\n" + e.StackTrace);
                         MessageBox.Show("The game has crashed. The crash info has been written to the crashlog.",
                                         "Crash and Burn", MessageBoxButtons.OK, MessageBoxIcon.Error,
                                         MessageBoxDefaultButton.Button1);

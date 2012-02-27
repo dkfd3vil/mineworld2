@@ -102,15 +102,19 @@ namespace MineWorld
                 if (join.Pushed)
                 {
                     join.Pushed = false;
-                    string selectedserver;
-                    selectedserver = serversbox.Items[serversbox.ItemIndex].ToString();
-
-                    foreach (ServerInformation server in servers.Values)
+                    //Make sure we have a valid selection
+                    if (serversbox.ItemIndex != -1)
                     {
-                        if (selectedserver == server.servername)
+                        string selectedserver;
+                        selectedserver = serversbox.Items[serversbox.ItemIndex].ToString();
+
+                        foreach (ServerInformation server in servers.Values)
                         {
-                            gamemanager.Pbag.ClientSender.SendJoinGame(server.ipaddress);
-                            gamemanager.SwitchState(GameStates.LoadingState);
+                            if (selectedserver == server.GetTag())
+                            {
+                                gamemanager.Pbag.ClientSender.SendJoinGame(server.ipaddress);
+                                gamemanager.SwitchState(GameStates.LoadingState);
+                            }
                         }
                     }
                 }
@@ -119,7 +123,7 @@ namespace MineWorld
                     refresh.Pushed = false;
                     serversbox.Items.Clear();
                     servers.Clear();
-                    gamemanager.Pbag.ClientSender.DiscoverLocalServers(Constants.MINEWORLD_PORT);
+                    gamemanager.Pbag.ClientSender.DiscoverLocalServers();
                 }
                 if (back.Pushed)
                 {
@@ -131,14 +135,14 @@ namespace MineWorld
 
         public void AddServer(ServerInformation server)
         {
-            servers.Add(server.servername, server);
-            serversbox.Items.Add(server.servername);
+            servers.Add(server.GetTag(), server);
+            serversbox.Items.Add(server.GetTag());
         }
 
         public void RemoveServer(ServerInformation server)
         {
-            servers.Remove(server.servername);
-            serversbox.Items.Remove(server.servername);
+            servers.Remove(server.GetTag());
+            serversbox.Items.Remove(server.GetTag());
         }
 
         public override void Draw(GameTime gameTime, GraphicsDevice gDevice, SpriteBatch sBatch)

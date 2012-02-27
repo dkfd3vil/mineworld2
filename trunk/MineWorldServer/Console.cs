@@ -12,6 +12,7 @@ namespace MineWorldServer
         public MineWorldConsole(MineWorldServer mines)
         {
             mineserver = mines;
+            Console.TreatControlCAsInput = true;
         }
 
         public void ProcessInput(string input)
@@ -34,16 +35,26 @@ namespace MineWorldServer
                     }
                 case "exit":
                     {
-                        mineserver.Server.Shutdown("shutdown");
-                        mineserver.KeepServerRunning = false;
-                        mineserver.RestartServer = false;
+                        if (inputsplitted.Length == 2)
+                        {
+                            mineserver.ShutdownServer(int.Parse(inputsplitted[1]));
+                        }
+                        else
+                        {
+                            mineserver.ShutdownServer(0);
+                        }
                         break;
                     }
                 case "restart":
                     {
-                        mineserver.Server.Shutdown("restart");
-                        mineserver.KeepServerRunning = false;
-                        mineserver.RestartServer = true;
+                        if (inputsplitted.Length == 2)
+                        {
+                            mineserver.RestartServer(int.Parse(inputsplitted[1]));
+                        }
+                        else
+                        {
+                            mineserver.RestartServer(0);
+                        }
                         break;
                     }
                 default:

@@ -12,14 +12,8 @@ namespace MineWorldServer
     {
         private static void RunServer()
         {
-            bool restartServer = true;
-            while (restartServer)
-            {
-                MineWorldServer mineWorldServer = new MineWorldServer();
-                mineWorldServer.Start();
-                restartServer = mineWorldServer.RestartServer;
-            }
-            Environment.Exit(0);
+            MineWorldServer mineWorldServer = new MineWorldServer();
+            mineWorldServer.Start();
         }
 
         static void Main()
@@ -36,12 +30,11 @@ namespace MineWorldServer
                 }
                 catch (Exception e)
                 {
-                    string logtext = "";
-                    if (File.Exists("Servercrashlog.log"))
+                    if (!Directory.Exists("Crashlogs"))
                     {
-                        logtext = File.ReadAllText("Servercrashlog.log");
+                        Directory.CreateDirectory("Crashlogs");
                     }
-                    File.WriteAllText("Servercrashlog.log", logtext + "\r\n" + e.Message + "\r\n\r\n" + e.StackTrace);
+                    File.WriteAllText("Crashlogs/" + DateTime.Now.ToString("hh-mm-ss-dd-mm-yyyy") + ".log", e.Message + "\r\n\r\n" + e.StackTrace);
                     MessageBox.Show("The game has crashed. The crash info has been written to the crashlog.",
                                     "Crash and Burn", MessageBoxButtons.OK, MessageBoxIcon.Error,
                                     MessageBoxDefaultButton.Button1);
