@@ -1,20 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using MineWorldData;
 using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Media;
 
-namespace MineWorld
+namespace MineWorld.World.Block.Special
 {
     public class MusicBlock : BaseBlock
     {
         //Song currentsong;
 
-        public MusicBlock(Vector2 top, Vector2 forward, Vector2 backward, Vector2 right, Vector2 left, Vector2 bottom, BlockModel modelIn, bool SolidIn, bool TransparentIn, bool AimSolidIn, BlockTypes typeIn,ContentManager content) : 
-            base(top,forward,backward,right,left,bottom,modelIn,SolidIn,TransparentIn,AimSolidIn,typeIn)
+        public MusicBlock(Vector2 top, Vector2 forward, Vector2 backward, Vector2 right, Vector2 left, Vector2 bottom, BlockModel modelIn, bool solidIn, bool transparentIn, bool aimSolidIn, BlockTypes typeIn,ContentManager content) : 
+            base(top,forward,backward,right,left,bottom,modelIn,solidIn,transparentIn,aimSolidIn,typeIn)
         {
             //currentsong = content.Load<Song>("testsong");
         }

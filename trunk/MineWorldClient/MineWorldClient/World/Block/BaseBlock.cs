@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using MineWorldData;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace MineWorld
+namespace MineWorld.World.Block
 {
     public enum BlockModel
     {
@@ -21,12 +17,12 @@ namespace MineWorld
         //This class only contains UV map coordinates, and solid/transparent bools
         //The only constructor available requires all fields
 
-        public Vector2 UVMapTop;
-        public Vector2 UVMapRight;
-        public Vector2 UVMapLeft;
-        public Vector2 UVMapForward;
-        public Vector2 UVMapBackward;
-        public Vector2 UVMapBottom;
+        public Vector2 UvMapTop;
+        public Vector2 UvMapRight;
+        public Vector2 UvMapLeft;
+        public Vector2 UvMapForward;
+        public Vector2 UvMapBackward;
+        public Vector2 UvMapBottom;
         public bool Solid;
         public bool Transparent;
         public bool AimSolid;
@@ -34,39 +30,38 @@ namespace MineWorld
         public BlockTypes Type;
         public Texture2D Icon;
 
-        public BaseBlock(Vector2 top, Vector2 forward, Vector2 backward, Vector2 right, Vector2 left, Vector2 bottom, BlockModel modelIn, bool SolidIn, bool TransparentIn, bool AimSolidIn, BlockTypes typeIn)
+        public BaseBlock(Vector2 top, Vector2 forward, Vector2 backward, Vector2 right, Vector2 left, Vector2 bottom, BlockModel modelIn, bool solidIn, bool transparentIn, bool aimSolidIn, BlockTypes typeIn)
         {
-            UVMapTop = top / 16f;
-            UVMapForward = forward / 16f;
-            UVMapBackward = backward / 16f;
-            UVMapLeft = left / 16f;
-            UVMapRight = right / 16f;
-            UVMapBottom = bottom / 16f;
+            UvMapTop = top / 16f;
+            UvMapForward = forward / 16f;
+            UvMapBackward = backward / 16f;
+            UvMapLeft = left / 16f;
+            UvMapRight = right / 16f;
+            UvMapBottom = bottom / 16f;
             Model = modelIn;
-            Transparent = TransparentIn;
-            Solid = SolidIn;
-            AimSolid = AimSolidIn;
+            Transparent = transparentIn;
+            Solid = solidIn;
+            AimSolid = aimSolidIn;
             Type = typeIn;
         }
 
-        public BaseBlock(Vector2 UVMapIn, BlockModel modelIn, bool SolidIn, bool TransparentIn, bool AimSolidIn, BlockTypes typeIn)
+        public BaseBlock(Vector2 uvMapIn, BlockModel modelIn, bool solidIn, bool transparentIn, bool aimSolidIn, BlockTypes typeIn)
         {
-            UVMapTop = UVMapIn / 16f;
-            UVMapForward = UVMapIn / 16f;
-            UVMapBackward = UVMapIn / 16f;
-            UVMapLeft = UVMapIn / 16f;
-            UVMapRight = UVMapIn / 16f;
-            UVMapBottom = UVMapIn / 16f;
+            UvMapTop = uvMapIn / 16f;
+            UvMapForward = uvMapIn / 16f;
+            UvMapBackward = uvMapIn / 16f;
+            UvMapLeft = uvMapIn / 16f;
+            UvMapRight = uvMapIn / 16f;
+            UvMapBottom = uvMapIn / 16f;
             Model = modelIn;
-            Transparent = TransparentIn;
-            Solid = SolidIn;
-            AimSolid = AimSolidIn;
+            Transparent = transparentIn;
+            Solid = solidIn;
+            AimSolid = aimSolidIn;
             Type = typeIn;
         }
 
         public virtual void OnUse()
         {
-            return;
         }
     }
 }

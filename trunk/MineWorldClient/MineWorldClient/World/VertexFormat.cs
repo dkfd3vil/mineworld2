@@ -1,26 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Graphics.PackedVector; //I included this because it contains the Byte4 type
 
-namespace MineWorld
+//I included this because it contains the Byte4 type
+
+namespace MineWorld.World
 {
     public struct VertexFormat
     {
         //This is my own custom vertex format, which uses bytes for a position rather than vectors composed of floats
-        private Vector4 Position;
-        private Vector3 Normal;
-        private Vector2 TexCoord;
+        private Vector4 _position;
+        private Vector3 _normal;
+        private Vector2 _texCoord;
 
         //The constructor takes a 3 byte position, a vector3 normal, and a vector2 UV map coordinate
-        public VertexFormat(float x, float y, float z, Vector3 normal, Vector2 UV)
+        public VertexFormat(float x, float y, float z, Vector3 normal, Vector2 uv)
         {
-            this.Position = new Vector4(x, y, z, 1);
-            this.Normal = normal;
-            this.TexCoord = UV;
+            _position = new Vector4(x, y, z, 1);
+            _normal = normal;
+            _texCoord = uv;
         }
 
 

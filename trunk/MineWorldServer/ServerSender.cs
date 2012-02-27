@@ -1,133 +1,126 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Lidgren.Network;
+﻿using Lidgren.Network;
 using Lidgren.Network.Xna;
-using Microsoft.Xna.Framework;
 using MineWorldData;
-using Microsoft.Xna.Framework.Graphics;
-using System.IO;
 using System.Net;
 
 namespace MineWorldServer
 {
     public class ServerSender
     {
-        MineWorldServer mineserver;
-        NetServer netserver;
-        NetOutgoingMessage outmsg;
+        readonly MineWorldServer _mineserver;
+        readonly NetServer _netserver;
+        NetOutgoingMessage _outmsg;
 
         public ServerSender(NetServer nets,MineWorldServer mines)
         {
-            mineserver = mines;
-            netserver = nets;
+            _mineserver = mines;
+            _netserver = nets;
         }
 
         public void SendInitialUpdate(ServerPlayer player)
         {
-            outmsg = netserver.CreateMessage();
-            outmsg.Write((byte)PacketType.PlayerInitialUpdate);
-            outmsg.Write(player.ID);
-            outmsg.Write(player.Name);
-            outmsg.Write(player.Position);
-            netserver.SendMessage(outmsg, player.NetConn, NetDeliveryMethod.ReliableOrdered);
+            _outmsg = _netserver.CreateMessage();
+            _outmsg.Write((byte)PacketType.PlayerInitialUpdate);
+            _outmsg.Write(player.Id);
+            _outmsg.Write(player.Name);
+            _outmsg.Write(player.Position);
+            _netserver.SendMessage(_outmsg, player.NetConn, NetDeliveryMethod.ReliableOrdered);
         }
 
         public void SendCurrentWorld(ServerPlayer player)
         {
-            outmsg = netserver.CreateMessage();
-            outmsg.Write((byte)PacketType.WorldMapSize);
-            outmsg.Write(mineserver.MapManager.Mapsize);
-            netserver.SendMessage(outmsg, player.NetConn, NetDeliveryMethod.ReliableOrdered);
+            _outmsg = _netserver.CreateMessage();
+            _outmsg.Write((byte)PacketType.WorldMapSize);
+            _outmsg.Write(_mineserver.MapManager.Mapsize);
+            _netserver.SendMessage(_outmsg, player.NetConn, NetDeliveryMethod.ReliableOrdered);
         }
 
         public void SendPlayerJoined(ServerPlayer player)
         {
-            outmsg = netserver.CreateMessage();
-            outmsg.Write((byte)PacketType.PlayerJoined);
-            outmsg.Write(player.ID);
-            outmsg.Write(player.Name);
-            outmsg.Write(player.Position);
-            outmsg.Write(player.Heading);
-            foreach (ServerPlayer dummy in mineserver.PlayerManager.PlayerList.Values)
+            _outmsg = _netserver.CreateMessage();
+            _outmsg.Write((byte)PacketType.PlayerJoined);
+            _outmsg.Write(player.Id);
+            _outmsg.Write(player.Name);
+            _outmsg.Write(player.Position);
+            _outmsg.Write(player.Heading);
+            foreach (ServerPlayer dummy in _mineserver.PlayerManager.PlayerList.Values)
             {
-                if (player.ID != dummy.ID)
+                if (player.Id != dummy.Id)
                 {
-                    netserver.SendMessage(outmsg, dummy.NetConn, NetDeliveryMethod.ReliableOrdered);
+                    _netserver.SendMessage(_outmsg, dummy.NetConn, NetDeliveryMethod.ReliableOrdered);
                 }
             }
         }
 
         public void SendOtherPlayersInWorld(ServerPlayer player)
         {
-            foreach (ServerPlayer dummy in mineserver.PlayerManager.PlayerList.Values)
+            foreach (ServerPlayer dummy in _mineserver.PlayerManager.PlayerList.Values)
             {
-                if (player.ID != dummy.ID)
+                if (player.Id != dummy.Id)
                 {
-                    outmsg = netserver.CreateMessage();
-                    outmsg.Write((byte)PacketType.PlayerJoined);
-                    outmsg.Write(dummy.ID);
-                    outmsg.Write(dummy.Name);
-                    outmsg.Write(dummy.Position);
-                    outmsg.Write(dummy.Heading);
-                    netserver.SendMessage(outmsg, player.NetConn, NetDeliveryMethod.ReliableOrdered);
+                    _outmsg = _netserver.CreateMessage();
+                    _outmsg.Write((byte)PacketType.PlayerJoined);
+                    _outmsg.Write(dummy.Id);
+                    _outmsg.Write(dummy.Name);
+                    _outmsg.Write(dummy.Position);
+                    _outmsg.Write(dummy.Heading);
+                    _netserver.SendMessage(_outmsg, player.NetConn, NetDeliveryMethod.ReliableOrdered);
                 }
             }
         }
 
         public void SendPlayerLeft(ServerPlayer player)
         {
-            outmsg = netserver.CreateMessage();
-            outmsg.Write((byte)PacketType.PlayerLeft);
-            outmsg.Write(player.ID);
-            foreach (ServerPlayer dummy in mineserver.PlayerManager.PlayerList.Values)
+            _outmsg = _netserver.CreateMessage();
+            _outmsg.Write((byte)PacketType.PlayerLeft);
+            _outmsg.Write(player.Id);
+            foreach (ServerPlayer dummy in _mineserver.PlayerManager.PlayerList.Values)
             {
-                if (player.ID != dummy.ID)
+                if (player.Id != dummy.Id)
                 {
-                    netserver.SendMessage(outmsg, dummy.NetConn, NetDeliveryMethod.ReliableOrdered);
+                    _netserver.SendMessage(_outmsg, dummy.NetConn, NetDeliveryMethod.ReliableOrdered);
                 }
             }
         }
 
         public void SendMovementUpdate(ServerPlayer player)
         {
-            outmsg = netserver.CreateMessage();
-            outmsg.Write((byte)PacketType.PlayerMovementUpdate);
-            outmsg.Write(player.ID);
-            outmsg.Write(player.Position);
-            foreach (ServerPlayer dummy in mineserver.PlayerManager.PlayerList.Values)
+            _outmsg = _netserver.CreateMessage();
+            _outmsg.Write((byte)PacketType.PlayerMovementUpdate);
+            _outmsg.Write(player.Id);
+            _outmsg.Write(player.Position);
+            foreach (ServerPlayer dummy in _mineserver.PlayerManager.PlayerList.Values)
             {
-                if (player.ID != dummy.ID)
+                if (player.Id != dummy.Id)
                 {
-                    netserver.SendMessage(outmsg, dummy.NetConn, NetDeliveryMethod.ReliableOrdered);
+                    _netserver.SendMessage(_outmsg, dummy.NetConn, NetDeliveryMethod.ReliableOrdered);
                 }
             }
         }
 
         public void SendNameSet(ServerPlayer player)
         {
-            outmsg = netserver.CreateMessage();
-            outmsg.Write((byte)PacketType.PlayerMovementUpdate);
-            outmsg.Write(player.ID);
-            outmsg.Write(player.Name);
-            foreach (ServerPlayer dummy in mineserver.PlayerManager.PlayerList.Values)
+            _outmsg = _netserver.CreateMessage();
+            _outmsg.Write((byte)PacketType.PlayerMovementUpdate);
+            _outmsg.Write(player.Id);
+            _outmsg.Write(player.Name);
+            foreach (ServerPlayer dummy in _mineserver.PlayerManager.PlayerList.Values)
             {
-                netserver.SendMessage(outmsg, dummy.NetConn, NetDeliveryMethod.ReliableOrdered);
+                _netserver.SendMessage(_outmsg, dummy.NetConn, NetDeliveryMethod.ReliableOrdered);
             }
         }
 
         public void SendDiscoverResponse(IPEndPoint endpoint)
         {
             // Create a response and write some example data to it
-            outmsg = netserver.CreateMessage();
-            outmsg.Write(mineserver.ServerName);
-            outmsg.Write(mineserver.PlayerManager.PlayerList.Count);
-            outmsg.Write(mineserver.Server.Configuration.MaximumConnections);
-            outmsg.Write(false);
+            _outmsg = _netserver.CreateMessage();
+            _outmsg.Write(_mineserver.ServerName);
+            _outmsg.Write(_mineserver.PlayerManager.PlayerList.Count);
+            _outmsg.Write(_mineserver.Server.Configuration.MaximumConnections);
+            _outmsg.Write(false);
 
             // Send the response to the sender of the request
-            netserver.SendDiscoveryResponse(outmsg, endpoint);
+            _netserver.SendDiscoveryResponse(_outmsg, endpoint);
         }
     }
 }

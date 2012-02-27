@@ -1,14 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Globalization;
 using Lidgren.Network;
 using System.Threading;
 using MineWorldData;
-using Microsoft.Xna.Framework;
 using EasyConfig;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Content;
 using System.Diagnostics;
 
 namespace MineWorldServer
@@ -30,7 +25,7 @@ namespace MineWorldServer
         public string ServerName;
 
         //Console part
-        public MineWorldConsole console;
+        public MineWorldConsole Console;
         private DateTime _lastKeyAvaible = DateTime.Now;
 
         public ConfigFile Configloader;
@@ -38,14 +33,14 @@ namespace MineWorldServer
         public MineWorldServer()
         {
             NetPeerConfiguration netConfig = new NetPeerConfiguration("MineWorld");
-            netConfig.Port = Constants.MINEWORLD_PORT;
+            netConfig.Port = Constants.MineworldPort;
             netConfig.MaximumConnections = 2;
             netConfig.EnableMessageType(NetIncomingMessageType.ConnectionApproval);
             netConfig.EnableMessageType(NetIncomingMessageType.DiscoveryRequest);
             netConfig.DisableMessageType(NetIncomingMessageType.UnconnectedData);
             Server = new NetServer(netConfig);
             GameWorld = new GameWorld(this);
-            console = new MineWorldConsole(this);
+            Console = new MineWorldConsole(this);
             ServerListener = new ServerListener(Server,this);
             ServerSender = new ServerSender(Server, this);
             Listener = new Thread(ServerListener.Start);
@@ -56,34 +51,34 @@ namespace MineWorldServer
 
         public void Start()
         {
-            console.SetTitle("MineWorldServer v" + Constants.MINEWORLDSERVER_VERSION.ToString());
-            console.ConsoleWrite("Starting server");
+            Console.SetTitle("MineWorldServer v" + Constants.MineworldserverVersion.ToString(CultureInfo.InvariantCulture));
+            Console.ConsoleWrite("Starting server");
 
-            console.ConsoleWrite("Loading settings");
+            Console.ConsoleWrite("Loading settings");
             LoadSettings();
 
-            console.ConsoleWrite("Generating map");
+            Console.ConsoleWrite("Generating map");
             MapManager.GenerateCubeMap(BlockTypes.Dirt);
 
-            console.ConsoleWrite("Starting network protocols");
+            Console.ConsoleWrite("Starting network protocols");
             Server.Start();
 
-            console.ConsoleWrite("Starting listener thread");
+            Console.ConsoleWrite("Starting listener thread");
             Listener.Start();
 
-            console.ConsoleWrite("Server ready");
+            Console.ConsoleWrite("Server ready");
             while (KeepServerRunning)
             {
                 // Handle console keypresses.
-                while (console.KeyAvailable())
+                while (Console.KeyAvailable())
                 {
                     // What if there is constant keyavaible ?
                     // This code makes sure the rest of the program can also run
                     TimeSpan timeSpanLastKeyAvaible = DateTime.Now - _lastKeyAvaible;
                     if (timeSpanLastKeyAvaible.Milliseconds < 2000)
                     {
-                        string input = console.ReadLine();
-                        console.ProcessInput(input);
+                        string input = Console.ReadLine();
+                        Console.ProcessInput(input);
                         _lastKeyAvaible = DateTime.Now;
                         break;
                     }
@@ -96,7 +91,7 @@ namespace MineWorldServer
             ServerName = Configloader.SettingGroups["Server"].Settings["Name"].GetValueAsString();
             if (ServerName == "")
             {
-                console.WriteError("Servername isnt set");
+                Console.WriteError("Servername isnt set");
             }
             Server.Configuration.MaximumConnections = Configloader.SettingGroups["Server"].Settings["Maxplayers"].GetValueAsInt();
             int size = Configloader.SettingGroups["Map"].Settings["Mapsize"].GetValueAsInt();
@@ -105,7 +100,7 @@ namespace MineWorldServer
 
         public bool VersionMatch(int version)
         {
-            if (Constants.MINEWORLDSERVER_VERSION == version)
+            if (Constants.MineworldserverVersion == version)
             {
                 return true;
             }
@@ -132,7 +127,7 @@ namespace MineWorldServer
                 KeepServerRunning = false;
 
                 Process mineworldserver = new Process();
-                mineworldserver.StartInfo.FileName = Environment.CurrentDirectory.ToString() + "/mineworldserver.exe";
+                mineworldserver.StartInfo.FileName = Environment.CurrentDirectory.ToString(CultureInfo.InvariantCulture) + "/mineworldserver.exe";
                 mineworldserver.Start();
 
                 Environment.Exit(0);

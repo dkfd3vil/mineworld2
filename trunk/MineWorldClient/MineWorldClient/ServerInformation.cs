@@ -1,30 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace MineWorld
+﻿namespace MineWorld
 {
     public class ServerInformation
     {
-        public string servername;
-        public string ipaddress;
-        public int playercount;
-        public int maxplayercount;
-        public bool lan;
+        public string Servername;
+        public string Ipaddress;
+        public int Playercount;
+        public int Maxplayercount;
+        public bool Lan;
 
         public ServerInformation(string name,string ip,int playerc, int playermax,bool la)
         {
-            servername = name;
-            ipaddress = ip;
-            playercount = playerc;
-            maxplayercount = playermax;
-            lan = la;
+            Servername = name;
+            Ipaddress = ip;
+            Playercount = playerc;
+            Maxplayercount = playermax;
+            Lan = la;
         }
 
         public string GetTag()
         {
-            return servername + " " + playercount.ToString() + "/" + maxplayercount.ToString();
+            return Servername + " " + Playercount + "/" + Maxplayercount;
         }
     }
 }

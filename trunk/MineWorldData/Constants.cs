@@ -1,24 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.GamerServices;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Media;
-
 namespace MineWorldData
 {
     public class Constants
     {
-        public const int LINDGREN_VERSION = 285;
-        public const int EASYCONFIG_VERSION = 61482;
-        public const int MINEWORLDCLIENT_VERSION = 0;
-        public const int MINEWORLDSERVER_VERSION = 0;
-        public const int MINEWORLDDATA_VERSION = 0;
-        public const int MINEWORLD_PORT = 5565;
+        public const int LindgrenVersion = 285;
+        public const int EasyconfigVersion = 61482;
+        public const int MineworldclientVersion = 0;
+        public const int MineworldserverVersion = 0;
+        public const int MineworlddataVersion = 0;
+        public const int MineworldPort = 5565;
     }
 
     public enum PacketType
@@ -73,7 +62,7 @@ namespace MineWorldData
         Piston = 33,
         Pistonextension = 34,
         Wool = 35,
-        unused1 = 36, //Block moved by piston
+        Unused1 = 36, //Block moved by piston
         Floweryellow = 37,
         Flowerred = 38,
         Brownmushroom = 39,
@@ -97,12 +86,12 @@ namespace MineWorldData
         Blockofdiamond = 57,
         Craftingtable = 58,
         Wheatseeds = 59,
-        unused2 = 60, //Dirt changes for seeds
+        Unused2 = 60, //Dirt changes for seeds
         Furnace = 61,
         Burningfurnace = 62,
         Signpost = 63,
         Snow = 78,
         //Max defined by minecraft
-        MAX = 122,
+        Max = 122,
     }
 }

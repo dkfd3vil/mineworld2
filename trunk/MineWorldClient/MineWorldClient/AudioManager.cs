@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.Xna.Framework.Media;
+﻿using Microsoft.Xna.Framework.Media;
 using Microsoft.Xna.Framework.Audio;
 
 namespace MineWorld
@@ -10,21 +6,17 @@ namespace MineWorld
     public class AudioManager
     {
         //Todo extend audiomanager to fit my needs
-        SoundEffectInstance soundinstance;
-        public float volume;
-
-        public AudioManager()
-        {
-        }
+        SoundEffectInstance _soundinstance;
+        public float Volume;
 
         public void SetVolume(int vol)
         {
-            volume = (float)vol;
+            Volume = vol;
         }
 
         public int GetVolume()
         {
-            return (int)(volume);
+            return (int)(Volume);
         }
 
         public void PlaySong(Song song,bool repeat)
@@ -33,7 +25,7 @@ namespace MineWorld
             {
                 MediaPlayer.Stop();
             }
-            MediaPlayer.Volume = volume;
+            MediaPlayer.Volume = Volume;
             MediaPlayer.IsRepeating = repeat;
             MediaPlayer.Play(song);
         }
@@ -45,9 +37,9 @@ namespace MineWorld
 
         public void PlaySound(SoundEffect sound)
         {
-            soundinstance = sound.CreateInstance();
-            soundinstance.Volume = volume;
-            soundinstance.Play();
+            _soundinstance = sound.CreateInstance();
+            _soundinstance.Volume = Volume;
+            _soundinstance.Play();
         }
     }
 }

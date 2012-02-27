@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections;
-using System.Linq;
-using System.Text;
-using Lidgren.Network;
-using Lidgren.Network.Xna;
+﻿using Lidgren.Network;
+using MineWorld.GameStateManagers;
+using MineWorld.Network;
+using MineWorld.World;
 using MineWorldData;
-using System.IO;
-using Microsoft.Xna.Framework;
 
-namespace MineWorld
+namespace MineWorld.Actor
 {
     public class PropertyBag
     {
@@ -21,15 +16,15 @@ namespace MineWorld
         public NetClient Client;
         public ClientListener ClientListener;
         public ClientSender ClientSender;
-        public NetIncomingMessage _msgBuffer;
+        public NetIncomingMessage MsgBuffer;
         public BlockTypes[, ,] Tempblockmap;
 
         public bool WireMode;
 
-        public PropertyBag(MineWorldClient Gamein,GameStateManager GameManagerin)
+        public PropertyBag(MineWorldClient gamein,GameStateManager gameManagerin)
         {
-            Game = Gamein;
-            GameManager = GameManagerin;
+            Game = gamein;
+            GameManager = gameManagerin;
             NetPeerConfiguration netconfig = new NetPeerConfiguration("MineWorld");
             netconfig.EnableMessageType(NetIncomingMessageType.DiscoveryResponse);
             Client = new NetClient(netconfig);

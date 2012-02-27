@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using Lidgren.Network;
 
 namespace MineWorldServer
@@ -9,10 +6,6 @@ namespace MineWorldServer
     public class PlayerManager
     {
         public Dictionary<NetConnection, ServerPlayer> PlayerList = new Dictionary<NetConnection, ServerPlayer>();
-
-        public PlayerManager()
-        {
-        }
 
         public void AddPlayer(ServerPlayer play)
         {

@@ -1,85 +1,82 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.Input;
+using MineWorld.GameStateManagers;
+using MineWorld.GameStateManagers.Helpers;
 using TomShane.Neoforce.Controls;
 
-namespace MineWorld
+namespace MineWorld.GameStates
 {
     public class SettingsState : BaseState
     {
-        GameStateManager gamemanager;
-        Manager guiman;
-        Window settingsmenu;
-        Button back;
-        TextBox playername;
-        ScrollBar volume;
+        readonly GameStateManager _gamemanager;
+        Manager _guiman;
+        Window _settingsmenu;
+        Button _back;
+        TextBox _playername;
+        ScrollBar _volume;
 
-        public SettingsState(GameStateManager manager, GameStates associatedState)
+        public SettingsState(GameStateManager manager, GameState associatedState)
             : base(manager, associatedState)
         {
-            gamemanager = manager;
+            _gamemanager = manager;
         }
 
         public override void LoadContent(ContentManager contentloader)
         {
-            guiman = new Manager(gamemanager.game, gamemanager.graphics, "Default");
-            guiman.Initialize();
+            _guiman = new Manager(_gamemanager.Game, _gamemanager.Graphics, "Default");
+            _guiman.Initialize();
 
-            settingsmenu = new Window(guiman);
-            settingsmenu.Init();
-            settingsmenu.Resizable = false;
-            settingsmenu.Movable = false;
-            settingsmenu.CloseButtonVisible = false;
-            settingsmenu.Text = "Settings Menu";
-            settingsmenu.Width = 300;
-            settingsmenu.Height = 400;
-            settingsmenu.Center();
-            settingsmenu.Visible = true;
-            settingsmenu.BorderVisible = true;
-            settingsmenu.Cursor = guiman.Skin.Cursors["Default"].Resource;
+            _settingsmenu = new Window(_guiman);
+            _settingsmenu.Init();
+            _settingsmenu.Resizable = false;
+            _settingsmenu.Movable = false;
+            _settingsmenu.CloseButtonVisible = false;
+            _settingsmenu.Text = "Settings Menu";
+            _settingsmenu.Width = 300;
+            _settingsmenu.Height = 400;
+            _settingsmenu.Center();
+            _settingsmenu.Visible = true;
+            _settingsmenu.BorderVisible = true;
+            _settingsmenu.Cursor = _guiman.Skin.Cursors["Default"].Resource;
 
-            back = new Button(guiman);
-            back.Init();
-            back.Text = "Go Back";
-            back.Width = 200;
-            back.Height = 50;
-            back.Left = 50;
-            back.Top = 300;
-            back.Anchor = Anchors.Bottom;
-            back.Parent = settingsmenu;
+            _back = new Button(_guiman);
+            _back.Init();
+            _back.Text = "Go Back";
+            _back.Width = 200;
+            _back.Height = 50;
+            _back.Left = 50;
+            _back.Top = 300;
+            _back.Anchor = Anchors.Bottom;
+            _back.Parent = _settingsmenu;
 
-            playername = new TextBox(guiman);
-            playername.Init();
-            playername.Text = gamemanager.Pbag.Player.Name;
-            playername.Width = 200;
-            playername.Height = 50;
-            playername.Left = 50;
-            playername.Top = 0;
-            playername.Anchor = Anchors.Bottom;
-            playername.Parent = settingsmenu;
+            _playername = new TextBox(_guiman);
+            _playername.Init();
+            _playername.Text = _gamemanager.Pbag.Player.Name;
+            _playername.Width = 200;
+            _playername.Height = 50;
+            _playername.Left = 50;
+            _playername.Top = 0;
+            _playername.Anchor = Anchors.Bottom;
+            _playername.Parent = _settingsmenu;
 
-            volume = new ScrollBar(guiman, Orientation.Horizontal);
-            volume.Init();
+            _volume = new ScrollBar(_guiman, Orientation.Horizontal);
+            _volume.Init();
             //Todo check why volume.value is reseting it to 50 :S
-            volume.Value = gamemanager.audiomanager.GetVolume();
-            volume.Range = 100;
-            volume.PageSize = 10;
-            volume.StepSize = 1;
-            volume.Width = 200;
-            volume.Height = 50;
-            volume.Left = 50;
-            volume.Top = 50;
-            volume.Anchor = Anchors.Bottom;
-            volume.Parent = settingsmenu;
+            _volume.Value = _gamemanager.Audiomanager.GetVolume();
+            _volume.Range = 100;
+            _volume.PageSize = 10;
+            _volume.StepSize = 1;
+            _volume.Width = 200;
+            _volume.Height = 50;
+            _volume.Left = 50;
+            _volume.Top = 50;
+            _volume.Anchor = Anchors.Bottom;
+            _volume.Parent = _settingsmenu;
 
-            guiman.Add(settingsmenu);
+            _guiman.Add(_settingsmenu);
 
-            gamemanager.game.IsMouseVisible = true;
+            _gamemanager.Game.IsMouseVisible = true;
         }
 
         public override void Unload()
@@ -88,26 +85,26 @@ namespace MineWorld
 
         public override void Update(GameTime gameTime, InputHelper input)
         {
-            guiman.Update(gameTime);
-            if (back.Pushed)
+            _guiman.Update(gameTime);
+            if (_back.Pushed)
             {
-                back.Pushed = false;
+                _back.Pushed = false;
 
                 //Save all settings when back is pushed
-                gamemanager.Pbag.Player.Name = playername.Text;
-                gamemanager.audiomanager.SetVolume(volume.Value);
+                _gamemanager.Pbag.Player.Name = _playername.Text;
+                _gamemanager.Audiomanager.SetVolume(_volume.Value);
 
                 //Also save it to the file
-                gamemanager.SaveSettings();
+                _gamemanager.SaveSettings();
 
-                gamemanager.SwitchState(GameStates.MainMenuState);
+                _gamemanager.SwitchState(GameState.MainMenuState);
             }
         }
 
         public override void Draw(GameTime gameTime, GraphicsDevice gDevice, SpriteBatch sBatch)
         {
-            guiman.BeginDraw(gameTime);
-            guiman.EndDraw();
+            _guiman.BeginDraw(gameTime);
+            _guiman.EndDraw();
         }
     }
 }

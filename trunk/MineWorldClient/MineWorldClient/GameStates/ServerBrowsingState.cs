@@ -1,93 +1,91 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
+using MineWorld.GameStateManagers;
+using MineWorld.GameStateManagers.Helpers;
 using TomShane.Neoforce.Controls;
-using MineWorldData;
 
-namespace MineWorld
+namespace MineWorld.GameStates
 {
     public class ServerBrowsingState : BaseState
     {
-        GameStateManager gamemanager;
-        Manager guiman;
-        Window serverbrowsingmenu;
-        ListBox serversbox;
-        Dictionary<string, ServerInformation> servers = new Dictionary<string,ServerInformation>();
-        Button join;
-        Button refresh;
-        Button back;
+        readonly GameStateManager _gamemanager;
+        Manager _guiman;
+        Window _serverbrowsingmenu;
+        ListBox _serversbox;
+        readonly Dictionary<string, ServerInformation> _servers = new Dictionary<string,ServerInformation>();
+        Button _join;
+        Button _refresh;
+        Button _back;
 
-        public ServerBrowsingState(GameStateManager manager, GameStates associatedState)
+        public ServerBrowsingState(GameStateManager manager, GameState associatedState)
             : base(manager, associatedState)
         {
-            gamemanager = manager;
+            _gamemanager = manager;
         }
 
         public override void LoadContent(ContentManager contentloader)
         {
-            guiman = new Manager(gamemanager.game, gamemanager.graphics, "Default");
-            guiman.Initialize();
+            _guiman = new Manager(_gamemanager.Game, _gamemanager.Graphics, "Default");
+            _guiman.Initialize();
 
-            serverbrowsingmenu = new Window(guiman);
-            serverbrowsingmenu.Init();
-            serverbrowsingmenu.Resizable = false;
-            serverbrowsingmenu.Movable = false;
-            serverbrowsingmenu.CloseButtonVisible = false;
-            serverbrowsingmenu.Text = "Server Browser";
-            serverbrowsingmenu.Width = 300;
-            serverbrowsingmenu.Height = 400;
-            serverbrowsingmenu.Center();
-            serverbrowsingmenu.Visible = true;
-            serverbrowsingmenu.BorderVisible = true;
+            _serverbrowsingmenu = new Window(_guiman);
+            _serverbrowsingmenu.Init();
+            _serverbrowsingmenu.Resizable = false;
+            _serverbrowsingmenu.Movable = false;
+            _serverbrowsingmenu.CloseButtonVisible = false;
+            _serverbrowsingmenu.Text = "Server Browser";
+            _serverbrowsingmenu.Width = 300;
+            _serverbrowsingmenu.Height = 400;
+            _serverbrowsingmenu.Center();
+            _serverbrowsingmenu.Visible = true;
+            _serverbrowsingmenu.BorderVisible = true;
 
-            serversbox = new ListBox(guiman);
-            serversbox.Init();
+            _serversbox = new ListBox(_guiman);
+            _serversbox.Init();
             //servers.SetPosition(50, 50);
-            serversbox.Left = 50;
-            serversbox.Top = 150;
-            serversbox.Width = 200;
-            serversbox.Height = 200;
-            serversbox.Anchor = Anchors.Bottom;
-            serversbox.Parent = serverbrowsingmenu;
+            _serversbox.Left = 50;
+            _serversbox.Top = 150;
+            _serversbox.Width = 200;
+            _serversbox.Height = 200;
+            _serversbox.Anchor = Anchors.Bottom;
+            _serversbox.Parent = _serverbrowsingmenu;
 
-            join = new Button(guiman);
-            join.Init();
-            join.Text = "Join";
-            join.Width = 200;
-            join.Height = 50;
-            join.Left = 50;
-            join.Top = 0;
-            join.Anchor = Anchors.Bottom;
-            join.Parent = serverbrowsingmenu;
+            _join = new Button(_guiman);
+            _join.Init();
+            _join.Text = "Join";
+            _join.Width = 200;
+            _join.Height = 50;
+            _join.Left = 50;
+            _join.Top = 0;
+            _join.Anchor = Anchors.Bottom;
+            _join.Parent = _serverbrowsingmenu;
 
-            refresh = new Button(guiman);
-            refresh.Init();
-            refresh.Text = "Refresh";
-            refresh.Width = 200;
-            refresh.Height = 50;
-            refresh.Left = 50;
-            refresh.Top = 50;
-            refresh.Anchor = Anchors.Bottom;
-            refresh.Parent = serverbrowsingmenu;
+            _refresh = new Button(_guiman);
+            _refresh.Init();
+            _refresh.Text = "Refresh";
+            _refresh.Width = 200;
+            _refresh.Height = 50;
+            _refresh.Left = 50;
+            _refresh.Top = 50;
+            _refresh.Anchor = Anchors.Bottom;
+            _refresh.Parent = _serverbrowsingmenu;
 
-            back = new Button(guiman);
-            back.Init();
-            back.Text = "Back";
-            back.Width = 200;
-            back.Height = 50;
-            back.Left = 50;
-            back.Top = 100;
-            back.Anchor = Anchors.Bottom;
-            back.Parent = serverbrowsingmenu;
+            _back = new Button(_guiman);
+            _back.Init();
+            _back.Text = "Back";
+            _back.Width = 200;
+            _back.Height = 50;
+            _back.Left = 50;
+            _back.Top = 100;
+            _back.Anchor = Anchors.Bottom;
+            _back.Parent = _serverbrowsingmenu;
 
-            guiman.Cursor = guiman.Skin.Cursors["Default"].Resource;
-            guiman.Add(serverbrowsingmenu);
+            _guiman.Cursor = _guiman.Skin.Cursors["Default"].Resource;
+            _guiman.Add(_serverbrowsingmenu);
 
-            gamemanager.game.IsMouseVisible = true;
+            _gamemanager.Game.IsMouseVisible = true;
         }
 
         public override void Unload()
@@ -96,59 +94,59 @@ namespace MineWorld
 
         public override void Update(GameTime gameTime, InputHelper input)
         {
-            guiman.Update(gameTime);
-            if (gamemanager.game.IsActive)
+            _guiman.Update(gameTime);
+            if (_gamemanager.Game.IsActive)
             {
-                if (join.Pushed)
+                if (_join.Pushed)
                 {
-                    join.Pushed = false;
+                    _join.Pushed = false;
                     //Make sure we have a valid selection
-                    if (serversbox.ItemIndex != -1)
+                    if (_serversbox.ItemIndex != -1)
                     {
                         string selectedserver;
-                        selectedserver = serversbox.Items[serversbox.ItemIndex].ToString();
+                        selectedserver = _serversbox.Items[_serversbox.ItemIndex].ToString();
 
-                        foreach (ServerInformation server in servers.Values)
+                        foreach (ServerInformation server in _servers.Values)
                         {
                             if (selectedserver == server.GetTag())
                             {
-                                gamemanager.Pbag.ClientSender.SendJoinGame(server.ipaddress);
-                                gamemanager.SwitchState(GameStates.LoadingState);
+                                _gamemanager.Pbag.ClientSender.SendJoinGame(server.Ipaddress);
+                                _gamemanager.SwitchState(GameState.LoadingState);
                             }
                         }
                     }
                 }
-                if (refresh.Pushed)
+                if (_refresh.Pushed)
                 {
-                    refresh.Pushed = false;
-                    serversbox.Items.Clear();
-                    servers.Clear();
-                    gamemanager.Pbag.ClientSender.DiscoverLocalServers();
+                    _refresh.Pushed = false;
+                    _serversbox.Items.Clear();
+                    _servers.Clear();
+                    _gamemanager.Pbag.ClientSender.DiscoverLocalServers();
                 }
-                if (back.Pushed)
+                if (_back.Pushed)
                 {
-                    back.Pushed = false;
-                    gamemanager.SwitchState(GameStates.MainMenuState);
+                    _back.Pushed = false;
+                    _gamemanager.SwitchState(GameState.MainMenuState);
                 }
             }
         }
 
         public void AddServer(ServerInformation server)
         {
-            servers.Add(server.GetTag(), server);
-            serversbox.Items.Add(server.GetTag());
+            _servers.Add(server.GetTag(), server);
+            _serversbox.Items.Add(server.GetTag());
         }
 
         public void RemoveServer(ServerInformation server)
         {
-            servers.Remove(server.GetTag());
-            serversbox.Items.Remove(server.GetTag());
+            _servers.Remove(server.GetTag());
+            _serversbox.Items.Remove(server.GetTag());
         }
 
         public override void Draw(GameTime gameTime, GraphicsDevice gDevice, SpriteBatch sBatch)
         {
-            guiman.BeginDraw(gameTime);
-            guiman.EndDraw();
+            _guiman.BeginDraw(gameTime);
+            _guiman.EndDraw();
         }
     }
 }

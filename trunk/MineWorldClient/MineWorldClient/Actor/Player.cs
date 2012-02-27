@@ -1,14 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Graphics;
+using MineWorld.Actor.Tools;
+using MineWorld.GameStateManagers.Helpers;
+using MineWorld.World.Block;
 using MineWorldData;
 using Microsoft.Xna.Framework.Content;
 
-namespace MineWorld
+namespace MineWorld.Actor
 {
     public class Player
     {
@@ -19,56 +19,55 @@ namespace MineWorld
         public int Myid;
         public string Name;
         public Camera Cam;
-        public bool mousehasfoccus;
+        public bool Mousehasfocus;
         public Vector3 Position;
-        public Vector3 vTestVector;
+        public Vector3 VTestVector;
         public float Speed = 0.5f;
         public float Sensitivity = 1;
-        public Vector3 vAim;
-        public Vector3 vAimBlock;
-        public VertexPositionTexture[] rFaceMarker;
-        public Vector3 vPlayerVel;
-        public bool bUnderwater;
+        public Vector3 VAim;
+        public Vector3 VAimBlock;
+        public VertexPositionTexture[] RFaceMarker;
+        public Vector3 VPlayerVel;
+        public bool BUnderwater;
         public bool NoClip = true;
-        public int selectedblock = 0;
-        public BlockTypes selectedblocktype = BlockTypes.Air;
+        public int Selectedblock;
+        public BlockTypes Selectedblocktype = BlockTypes.Air;
 
         public Tool LeftHand;
         public Tool RightHand;
 
-        private PropertyBag game;
+        private readonly PropertyBag _game;
 
         //Drawing related vars
-        SpriteFont myFont;
-        Effect effect;
-        Texture2D tGui;
-        Texture2D tWaterOverlay;
-        Texture2D tVignette;
+        Effect _effect;
+        Texture2D _tGui;
+        Texture2D _tWaterOverlay;
+        Texture2D _tVignette;
 
         //Constructor
         public Player(PropertyBag gameIn)
         {
             Cam = new Camera(gameIn, new Vector3(0, 64, 0), new Vector3(0, 0, 0));
-            game = gameIn;
+            _game = gameIn;
         }
 
         public void Load(ContentManager conmanager)
         {
-            effect = conmanager.Load<Effect>("Effects/DefaultEffect");
-            myFont = conmanager.Load<SpriteFont>("Fonts/DefaultFont");
-            tGui = conmanager.Load<Texture2D>("Textures/gui");
-            tWaterOverlay = conmanager.Load<Texture2D>("Textures/water");
-            tVignette = conmanager.Load<Texture2D>("Textures/vignette");
+            _effect = conmanager.Load<Effect>("Effects/DefaultEffect");
+            conmanager.Load<SpriteFont>("Fonts/DefaultFont");
+            _tGui = conmanager.Load<Texture2D>("Textures/gui");
+            _tWaterOverlay = conmanager.Load<Texture2D>("Textures/water");
+            _tVignette = conmanager.Load<Texture2D>("Textures/vignette");
 
             //Lets give our player 2 tools 1 for each hand
-            LeftHand = new BlockAdder(this, game.WorldManager);
-            RightHand = new BlockRemover(this, game.WorldManager);
+            LeftHand = new BlockAdder(this, _game.WorldManager);
+            RightHand = new BlockRemover(this, _game.WorldManager);
             //LeftHand = new Stacker(this, game.WorldManager);
         }
 
         public void Update(GameTime gtime, InputHelper input)
         {
-            if (game.GameManager.game.IsActive)
+            if (_game.GameManager.Game.IsActive)
             {
                 if (NoClip) //If noclipped
                 {
@@ -166,18 +165,18 @@ namespace MineWorld
             }
 
             //Re-initialize aim and aimblock vectors
-            vAim = new Vector3();
-            vAimBlock = new Vector3();
+            VAim = new Vector3();
+            VAimBlock = new Vector3();
 
             //Check along a path stemming from the camera's forward if there is a collision
             for (float i = 0; i <= 6; i += 0.01f)
             {
                 if (i < 5.5f)
                 {
-                    vAim = Cam.Position - Cam.Forward * i;
+                    VAim = Cam.Position - Cam.Forward * i;
                     try
                     {
-                        BaseBlock select = game.WorldManager.BlockAtPoint(vAim);
+                        BaseBlock select = _game.WorldManager.BlockAtPoint(VAim);
                         if (select.AimSolid)
                         {
                             break; //If there is, break the loop with the current aim vector
@@ -185,49 +184,49 @@ namespace MineWorld
                     }
                     catch
                     {
-                        vAim = new Vector3(-10, -10, -10);
+                        VAim = new Vector3(-10, -10, -10);
                         break;
                     }
                 }
                 else
                 {
-                    vAim = new Vector3(-10, -10, -10);
+                    VAim = new Vector3(-10, -10, -10);
                 }
             } //Otherwise set it to be an empty vector
 
-            if (vAim != new Vector3(-10, -10, -10))
+            if (VAim != new Vector3(-10, -10, -10))
             {
-                vAimBlock = new Vector3((int)Math.Floor(vAim.X), (int)Math.Floor(vAim.Y), (int)Math.Floor(vAim.Z)); //Get the aim block based off of that aim vector
+                VAimBlock = new Vector3((int)Math.Floor(VAim.X), (int)Math.Floor(VAim.Y), (int)Math.Floor(VAim.Z)); //Get the aim block based off of that aim vector
             }
 
             Cam.Position = Position;
 
-            if (game.GameManager.game.IsActive)
+            if (_game.GameManager.Game.IsActive)
             {
-                if (mousehasfoccus)
+                if (Mousehasfocus)
                 {
                     if (!input.IsCurPress(Keys.LeftAlt))
                     {
                         Cam.Rotate( //Rotate the camera based off of mouse position, set mouse position to be screen center
-                            MathHelper.ToRadians((input.MousePosition.Y - game.GameManager.device.DisplayMode.Height / 2) * Sensitivity * 0.1f),
-                            MathHelper.ToRadians((input.MousePosition.X - game.GameManager.device.DisplayMode.Width / 2) * Sensitivity * 0.1f),
+                            MathHelper.ToRadians((input.MousePosition.Y - _game.GameManager.Device.DisplayMode.Height / 2) * Sensitivity * 0.1f),
+                            MathHelper.ToRadians((input.MousePosition.X - _game.GameManager.Device.DisplayMode.Width / 2) * Sensitivity * 0.1f),
                             0.0f
                             );
-                        Mouse.SetPosition(game.GameManager.device.DisplayMode.Width / 2, game.GameManager.device.DisplayMode.Height / 2);
+                        Mouse.SetPosition(_game.GameManager.Device.DisplayMode.Width / 2, _game.GameManager.Device.DisplayMode.Height / 2);
                     }
                     else
                     {
-                        mousehasfoccus = false;
+                        Mousehasfocus = false;
                     }
                 }
                 else
                 {
-                    mousehasfoccus = true;
+                    Mousehasfocus = true;
                 }
             }
             else
             {
-                mousehasfoccus = false;
+                Mousehasfocus = false;
             }
 
             CreateFaceMarker(); //Create the face marker's vertices - I need to redo this method
@@ -252,45 +251,45 @@ namespace MineWorld
 
             if (input.MouseScrollWheelVelocity < 0f)
             {
-                selectedblock -= 1;
-                if (selectedblock < 0)
+                Selectedblock -= 1;
+                if (Selectedblock < 0)
                 {
-                    selectedblock = 0;
+                    Selectedblock = 0;
                 }
-                selectedblocktype = (BlockTypes)selectedblock;
+                Selectedblocktype = (BlockTypes)Selectedblock;
             }
 
             if (input.MouseScrollWheelVelocity > 0f)
             {
-                selectedblock += 1;
-                if (selectedblock > 63)
+                Selectedblock += 1;
+                if (Selectedblock > 63)
                 {
-                    selectedblock = 63;
+                    Selectedblock = 63;
                 }
-                selectedblocktype = (BlockTypes)selectedblock;
+                Selectedblocktype = (BlockTypes)Selectedblock;
             }
 
             //Update our camera
             Cam.Update();
             //Send our position to the server
-            game.ClientSender.SendMovementUpdate();
+            _game.ClientSender.SendMovementUpdate();
         }
 
 
         public void Draw(GameTime gameTime, GraphicsDevice gDevice, SpriteBatch sBatch)
         {
-            if (rFaceMarker != null)
+            if (RFaceMarker != null)
             {
                 //FACE MARKER
                 //Set world matrix to be default
-                effect.Parameters["World"].SetValue(Matrix.Identity);
+                _effect.Parameters["World"].SetValue(Matrix.Identity);
                 //Set the texture to be the gui texture
-                effect.Parameters["myTexture"].SetValue(tGui);
+                _effect.Parameters["myTexture"].SetValue(_tGui);
 
-                foreach (EffectPass pass in effect.CurrentTechnique.Passes)
+                foreach (EffectPass pass in _effect.CurrentTechnique.Passes)
                 {
                     pass.Apply();
-                    gDevice.DrawUserPrimitives<VertexPositionTexture>(PrimitiveType.TriangleList, rFaceMarker, 0, 2); //Draw the face marker
+                    gDevice.DrawUserPrimitives(PrimitiveType.TriangleList, RFaceMarker, 0, 2); //Draw the face marker
                 }
             }
 
@@ -299,22 +298,22 @@ namespace MineWorld
             //////////////////////
 
             sBatch.Begin(SpriteSortMode.BackToFront, BlendState.AlphaBlend, SamplerState.PointClamp, DepthStencilState.Default, RasterizerState.CullNone); //Start 2d rendering
-            if (bUnderwater) //If underwater, apply several overlays
+            if (BUnderwater) //If underwater, apply several overlays
             {
-                sBatch.Draw(tWaterOverlay, new Rectangle(0, 0, gDevice.DisplayMode.Width, gDevice.DisplayMode.Height), Color.DarkBlue);
-                sBatch.Draw(tWaterOverlay, new Rectangle(0, 0, gDevice.DisplayMode.Width, gDevice.DisplayMode.Height), Color.White);
-                sBatch.Draw(tVignette, new Rectangle(0, 0, gDevice.DisplayMode.Width, gDevice.DisplayMode.Height), Color.White);
+                sBatch.Draw(_tWaterOverlay, new Rectangle(0, 0, gDevice.DisplayMode.Width, gDevice.DisplayMode.Height), Color.DarkBlue);
+                sBatch.Draw(_tWaterOverlay, new Rectangle(0, 0, gDevice.DisplayMode.Width, gDevice.DisplayMode.Height), Color.White);
+                sBatch.Draw(_tVignette, new Rectangle(0, 0, gDevice.DisplayMode.Width, gDevice.DisplayMode.Height), Color.White);
             }
 
             //Cursor!
-            sBatch.Draw(tGui, new Rectangle(game.GameManager.graphics.PreferredBackBufferWidth / 2 - 16, game.GameManager.graphics.PreferredBackBufferHeight / 2 - 16, 32, 32), new Rectangle(0, 0, 32, 32), Color.White);
+            sBatch.Draw(_tGui, new Rectangle(_game.GameManager.Graphics.PreferredBackBufferWidth / 2 - 16, _game.GameManager.Graphics.PreferredBackBufferHeight / 2 - 16, 32, 32), new Rectangle(0, 0, 32, 32), Color.White);
 
             sBatch.End();
         }
 
         public bool GotSelection()
         {
-            if (vAim == new Vector3(-10, -10, -10))
+            if (VAim == new Vector3(-10, -10, -10))
             {
                 return false;
             }
@@ -362,89 +361,88 @@ namespace MineWorld
         {
             //Create the face marker's vertices - I need to redo this method
 
-            Vector3 vDifference = GetFacingBlock() - vAimBlock; //Get a difference vector to see where the facing block is local to the aim block
-            rFaceMarker = new VertexPositionTexture[6]; //Initialize the array of vectors - we only need 6 to make a square
+            Vector3 vDifference = GetFacingBlock() - VAimBlock; //Get a difference vector to see where the facing block is local to the aim block
+            RFaceMarker = new VertexPositionTexture[6]; //Initialize the array of vectors - we only need 6 to make a square
 
             //Check the differences and draw the face marker accordingly
             if (vDifference.X == -1)
             {
-                rFaceMarker[0] = new VertexPositionTexture(new Vector3(vAimBlock.X - 0.01f, vAimBlock.Y + 1, vAimBlock.Z), new Vector2(0.5f, 0));
-                rFaceMarker[1] = new VertexPositionTexture(new Vector3(vAimBlock.X - 0.01f, vAimBlock.Y + 1, vAimBlock.Z + 1), new Vector2(1, 0));
-                rFaceMarker[2] = new VertexPositionTexture(new Vector3(vAimBlock.X - 0.01f, vAimBlock.Y, vAimBlock.Z), new Vector2(0.5f, 1));
-                rFaceMarker[3] = new VertexPositionTexture(new Vector3(vAimBlock.X - 0.01f, vAimBlock.Y + 1, vAimBlock.Z + 1), new Vector2(1, 0));
-                rFaceMarker[4] = new VertexPositionTexture(new Vector3(vAimBlock.X - 0.01f, vAimBlock.Y, vAimBlock.Z + 1), new Vector2(1, 1));
-                rFaceMarker[5] = new VertexPositionTexture(new Vector3(vAimBlock.X - 0.01f, vAimBlock.Y, vAimBlock.Z), new Vector2(0.5f, 1));
+                RFaceMarker[0] = new VertexPositionTexture(new Vector3(VAimBlock.X - 0.01f, VAimBlock.Y + 1, VAimBlock.Z), new Vector2(0.5f, 0));
+                RFaceMarker[1] = new VertexPositionTexture(new Vector3(VAimBlock.X - 0.01f, VAimBlock.Y + 1, VAimBlock.Z + 1), new Vector2(1, 0));
+                RFaceMarker[2] = new VertexPositionTexture(new Vector3(VAimBlock.X - 0.01f, VAimBlock.Y, VAimBlock.Z), new Vector2(0.5f, 1));
+                RFaceMarker[3] = new VertexPositionTexture(new Vector3(VAimBlock.X - 0.01f, VAimBlock.Y + 1, VAimBlock.Z + 1), new Vector2(1, 0));
+                RFaceMarker[4] = new VertexPositionTexture(new Vector3(VAimBlock.X - 0.01f, VAimBlock.Y, VAimBlock.Z + 1), new Vector2(1, 1));
+                RFaceMarker[5] = new VertexPositionTexture(new Vector3(VAimBlock.X - 0.01f, VAimBlock.Y, VAimBlock.Z), new Vector2(0.5f, 1));
             }
             else if (vDifference.X == 1)
             {
-                rFaceMarker[0] = new VertexPositionTexture(new Vector3(vAimBlock.X + 1.01f, vAimBlock.Y + 1, vAimBlock.Z + 1), new Vector2(0.5f, 0));
-                rFaceMarker[1] = new VertexPositionTexture(new Vector3(vAimBlock.X + 1.01f, vAimBlock.Y + 1, vAimBlock.Z), new Vector2(1, 0));
-                rFaceMarker[2] = new VertexPositionTexture(new Vector3(vAimBlock.X + 1.01f, vAimBlock.Y, vAimBlock.Z + 1), new Vector2(0.5f, 1));
-                rFaceMarker[3] = new VertexPositionTexture(new Vector3(vAimBlock.X + 1.01f, vAimBlock.Y + 1, vAimBlock.Z), new Vector2(1, 0));
-                rFaceMarker[4] = new VertexPositionTexture(new Vector3(vAimBlock.X + 1.01f, vAimBlock.Y, vAimBlock.Z), new Vector2(1, 1));
-                rFaceMarker[5] = new VertexPositionTexture(new Vector3(vAimBlock.X + 1.01f, vAimBlock.Y, vAimBlock.Z + 1), new Vector2(0.5f, 1));
+                RFaceMarker[0] = new VertexPositionTexture(new Vector3(VAimBlock.X + 1.01f, VAimBlock.Y + 1, VAimBlock.Z + 1), new Vector2(0.5f, 0));
+                RFaceMarker[1] = new VertexPositionTexture(new Vector3(VAimBlock.X + 1.01f, VAimBlock.Y + 1, VAimBlock.Z), new Vector2(1, 0));
+                RFaceMarker[2] = new VertexPositionTexture(new Vector3(VAimBlock.X + 1.01f, VAimBlock.Y, VAimBlock.Z + 1), new Vector2(0.5f, 1));
+                RFaceMarker[3] = new VertexPositionTexture(new Vector3(VAimBlock.X + 1.01f, VAimBlock.Y + 1, VAimBlock.Z), new Vector2(1, 0));
+                RFaceMarker[4] = new VertexPositionTexture(new Vector3(VAimBlock.X + 1.01f, VAimBlock.Y, VAimBlock.Z), new Vector2(1, 1));
+                RFaceMarker[5] = new VertexPositionTexture(new Vector3(VAimBlock.X + 1.01f, VAimBlock.Y, VAimBlock.Z + 1), new Vector2(0.5f, 1));
             }
             else if (vDifference.Y == -1)
             {
-                rFaceMarker[0] = new VertexPositionTexture(new Vector3(vAimBlock.X + 1, vAimBlock.Y - 0.01f, vAimBlock.Z + 1), new Vector2(0.5f, 0));
-                rFaceMarker[1] = new VertexPositionTexture(new Vector3(vAimBlock.X + 1, vAimBlock.Y - 0.01f, vAimBlock.Z), new Vector2(1, 0));
-                rFaceMarker[2] = new VertexPositionTexture(new Vector3(vAimBlock.X, vAimBlock.Y - 0.01f, vAimBlock.Z + 1), new Vector2(0.5f, 1));
-                rFaceMarker[3] = new VertexPositionTexture(new Vector3(vAimBlock.X + 1, vAimBlock.Y - 0.01f, vAimBlock.Z), new Vector2(1, 0));
-                rFaceMarker[4] = new VertexPositionTexture(new Vector3(vAimBlock.X, vAimBlock.Y - 0.01f, vAimBlock.Z), new Vector2(1, 1));
-                rFaceMarker[5] = new VertexPositionTexture(new Vector3(vAimBlock.X, vAimBlock.Y - 0.01f, vAimBlock.Z + 1), new Vector2(0.5f, 1));
+                RFaceMarker[0] = new VertexPositionTexture(new Vector3(VAimBlock.X + 1, VAimBlock.Y - 0.01f, VAimBlock.Z + 1), new Vector2(0.5f, 0));
+                RFaceMarker[1] = new VertexPositionTexture(new Vector3(VAimBlock.X + 1, VAimBlock.Y - 0.01f, VAimBlock.Z), new Vector2(1, 0));
+                RFaceMarker[2] = new VertexPositionTexture(new Vector3(VAimBlock.X, VAimBlock.Y - 0.01f, VAimBlock.Z + 1), new Vector2(0.5f, 1));
+                RFaceMarker[3] = new VertexPositionTexture(new Vector3(VAimBlock.X + 1, VAimBlock.Y - 0.01f, VAimBlock.Z), new Vector2(1, 0));
+                RFaceMarker[4] = new VertexPositionTexture(new Vector3(VAimBlock.X, VAimBlock.Y - 0.01f, VAimBlock.Z), new Vector2(1, 1));
+                RFaceMarker[5] = new VertexPositionTexture(new Vector3(VAimBlock.X, VAimBlock.Y - 0.01f, VAimBlock.Z + 1), new Vector2(0.5f, 1));
             }
             else if (vDifference.Y == 1)
             {
-                rFaceMarker[0] = new VertexPositionTexture(new Vector3(vAimBlock.X + 1, vAimBlock.Y + 1.01f, vAimBlock.Z), new Vector2(0.5f, 0));
-                rFaceMarker[1] = new VertexPositionTexture(new Vector3(vAimBlock.X + 1, vAimBlock.Y + 1.01f, vAimBlock.Z + 1), new Vector2(1, 0));
-                rFaceMarker[2] = new VertexPositionTexture(new Vector3(vAimBlock.X, vAimBlock.Y + 1.01f, vAimBlock.Z), new Vector2(0.5f, 1));
-                rFaceMarker[3] = new VertexPositionTexture(new Vector3(vAimBlock.X + 1, vAimBlock.Y + 1.01f, vAimBlock.Z + 1), new Vector2(1, 0));
-                rFaceMarker[4] = new VertexPositionTexture(new Vector3(vAimBlock.X, vAimBlock.Y + 1.01f, vAimBlock.Z + 1), new Vector2(1, 1));
-                rFaceMarker[5] = new VertexPositionTexture(new Vector3(vAimBlock.X, vAimBlock.Y + 1.01f, vAimBlock.Z), new Vector2(0.5f, 1));
+                RFaceMarker[0] = new VertexPositionTexture(new Vector3(VAimBlock.X + 1, VAimBlock.Y + 1.01f, VAimBlock.Z), new Vector2(0.5f, 0));
+                RFaceMarker[1] = new VertexPositionTexture(new Vector3(VAimBlock.X + 1, VAimBlock.Y + 1.01f, VAimBlock.Z + 1), new Vector2(1, 0));
+                RFaceMarker[2] = new VertexPositionTexture(new Vector3(VAimBlock.X, VAimBlock.Y + 1.01f, VAimBlock.Z), new Vector2(0.5f, 1));
+                RFaceMarker[3] = new VertexPositionTexture(new Vector3(VAimBlock.X + 1, VAimBlock.Y + 1.01f, VAimBlock.Z + 1), new Vector2(1, 0));
+                RFaceMarker[4] = new VertexPositionTexture(new Vector3(VAimBlock.X, VAimBlock.Y + 1.01f, VAimBlock.Z + 1), new Vector2(1, 1));
+                RFaceMarker[5] = new VertexPositionTexture(new Vector3(VAimBlock.X, VAimBlock.Y + 1.01f, VAimBlock.Z), new Vector2(0.5f, 1));
             }
             else if (vDifference.Z == 1)
             {
-                rFaceMarker[0] = new VertexPositionTexture(new Vector3(vAimBlock.X, vAimBlock.Y + 1, vAimBlock.Z + 1.01f), new Vector2(0.5f, 0));
-                rFaceMarker[1] = new VertexPositionTexture(new Vector3(vAimBlock.X + 1, vAimBlock.Y + 1, vAimBlock.Z + 1.01f), new Vector2(1, 0));
-                rFaceMarker[2] = new VertexPositionTexture(new Vector3(vAimBlock.X, vAimBlock.Y, vAimBlock.Z + 1.01f), new Vector2(0.5f, 1));
-                rFaceMarker[3] = new VertexPositionTexture(new Vector3(vAimBlock.X + 1, vAimBlock.Y + 1, vAimBlock.Z + 1.01f), new Vector2(1, 0));
-                rFaceMarker[4] = new VertexPositionTexture(new Vector3(vAimBlock.X + 1, vAimBlock.Y, vAimBlock.Z + 1.01f), new Vector2(1, 1));
-                rFaceMarker[5] = new VertexPositionTexture(new Vector3(vAimBlock.X, vAimBlock.Y, vAimBlock.Z + 1.01f), new Vector2(0.5f, 1));
+                RFaceMarker[0] = new VertexPositionTexture(new Vector3(VAimBlock.X, VAimBlock.Y + 1, VAimBlock.Z + 1.01f), new Vector2(0.5f, 0));
+                RFaceMarker[1] = new VertexPositionTexture(new Vector3(VAimBlock.X + 1, VAimBlock.Y + 1, VAimBlock.Z + 1.01f), new Vector2(1, 0));
+                RFaceMarker[2] = new VertexPositionTexture(new Vector3(VAimBlock.X, VAimBlock.Y, VAimBlock.Z + 1.01f), new Vector2(0.5f, 1));
+                RFaceMarker[3] = new VertexPositionTexture(new Vector3(VAimBlock.X + 1, VAimBlock.Y + 1, VAimBlock.Z + 1.01f), new Vector2(1, 0));
+                RFaceMarker[4] = new VertexPositionTexture(new Vector3(VAimBlock.X + 1, VAimBlock.Y, VAimBlock.Z + 1.01f), new Vector2(1, 1));
+                RFaceMarker[5] = new VertexPositionTexture(new Vector3(VAimBlock.X, VAimBlock.Y, VAimBlock.Z + 1.01f), new Vector2(0.5f, 1));
             }
             else if (vDifference.Z == -1)
             {
-                rFaceMarker[0] = new VertexPositionTexture(new Vector3(vAimBlock.X + 1, vAimBlock.Y + 1, vAimBlock.Z - 0.01f), new Vector2(0.5f, 0));
-                rFaceMarker[1] = new VertexPositionTexture(new Vector3(vAimBlock.X, vAimBlock.Y + 1, vAimBlock.Z - 0.01f), new Vector2(1, 0));
-                rFaceMarker[2] = new VertexPositionTexture(new Vector3(vAimBlock.X + 1, vAimBlock.Y, vAimBlock.Z - 0.01f), new Vector2(0.5f, 1));
-                rFaceMarker[3] = new VertexPositionTexture(new Vector3(vAimBlock.X, vAimBlock.Y + 1, vAimBlock.Z - 0.01f), new Vector2(1, 0));
-                rFaceMarker[4] = new VertexPositionTexture(new Vector3(vAimBlock.X, vAimBlock.Y, vAimBlock.Z - 0.01f), new Vector2(1, 1));
-                rFaceMarker[5] = new VertexPositionTexture(new Vector3(vAimBlock.X + 1, vAimBlock.Y, vAimBlock.Z - 0.01f), new Vector2(0.5f, 1));
+                RFaceMarker[0] = new VertexPositionTexture(new Vector3(VAimBlock.X + 1, VAimBlock.Y + 1, VAimBlock.Z - 0.01f), new Vector2(0.5f, 0));
+                RFaceMarker[1] = new VertexPositionTexture(new Vector3(VAimBlock.X, VAimBlock.Y + 1, VAimBlock.Z - 0.01f), new Vector2(1, 0));
+                RFaceMarker[2] = new VertexPositionTexture(new Vector3(VAimBlock.X + 1, VAimBlock.Y, VAimBlock.Z - 0.01f), new Vector2(0.5f, 1));
+                RFaceMarker[3] = new VertexPositionTexture(new Vector3(VAimBlock.X, VAimBlock.Y + 1, VAimBlock.Z - 0.01f), new Vector2(1, 0));
+                RFaceMarker[4] = new VertexPositionTexture(new Vector3(VAimBlock.X, VAimBlock.Y, VAimBlock.Z - 0.01f), new Vector2(1, 1));
+                RFaceMarker[5] = new VertexPositionTexture(new Vector3(VAimBlock.X + 1, VAimBlock.Y, VAimBlock.Z - 0.01f), new Vector2(0.5f, 1));
             }
         }
 
         public Vector3 GetFacingBlock()
         {
             //Initialize vectors and a float which will be used to sort out which axis is most different
-            Vector3 vDifference = new Vector3();
+            Vector3 vDifference;
             Vector3 vFacingBlock = new Vector3();
             float tempcomp = 0;
-            vDifference = vAim - vAimBlock - new Vector3(0.5f, 0.5f, 0.5f); //Get aim vec local to aim block
+            vDifference = VAim - VAimBlock - new Vector3(0.5f, 0.5f, 0.5f); //Get aim vec local to aim block
 
             //This method works by getting on which axis the local aim position is greatest - i.e. which face the cursor is on
             if (Math.Abs(vDifference.X) > Math.Abs(tempcomp))
             {
                 tempcomp = vDifference.X;
-                vFacingBlock = new Vector3(vAimBlock.X + Math.Sign(vDifference.X), vAimBlock.Y, vAimBlock.Z);
+                vFacingBlock = new Vector3(VAimBlock.X + Math.Sign(vDifference.X), VAimBlock.Y, VAimBlock.Z);
             }
             if (Math.Abs(vDifference.Y) > Math.Abs(tempcomp))
             {
                 tempcomp = vDifference.Y;
-                vFacingBlock = new Vector3(vAimBlock.X, vAimBlock.Y + Math.Sign(vDifference.Y), vAimBlock.Z);
+                vFacingBlock = new Vector3(VAimBlock.X, VAimBlock.Y + Math.Sign(vDifference.Y), VAimBlock.Z);
             }
             if (Math.Abs(vDifference.Z) > Math.Abs(tempcomp))
             {
-                tempcomp = vDifference.Z;
-                vFacingBlock = new Vector3(vAimBlock.X, vAimBlock.Y, vAimBlock.Z + Math.Sign(vDifference.Z));
+                vFacingBlock = new Vector3(VAimBlock.X, VAimBlock.Y, VAimBlock.Z + Math.Sign(vDifference.Z));
             }
 
             return vFacingBlock;

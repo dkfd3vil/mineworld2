@@ -1,38 +1,34 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
 
-namespace MineWorld
+namespace MineWorld.Actor
 {
     public class ClientPlayer
     {
-        Model playermodel;
+        readonly Model _playermodel;
 
-        public int ID;
-        public string name;
-        public Vector3 position;
-        public Vector3 heading;
-        public float temprot = 0.0f;
-        public float scale = 0.1f;
+        public int Id;
+        public string Name;
+        public Vector3 Position;
+        public Vector3 Heading;
+        public float Temprot;
+        public float Scale = 0.1f;
 
         public ClientPlayer(ContentManager conmanager)
         {
             //Model
-            playermodel = conmanager.Load<Model>("Models/player");
+            _playermodel = conmanager.Load<Model>("Models/player");
         }
 
         public void Draw(Matrix view, Matrix projection)
         {
             // Copy any parent transforms.
-            Matrix[] transforms = new Matrix[playermodel.Bones.Count];
-            playermodel.CopyAbsoluteBoneTransformsTo(transforms);
+            Matrix[] transforms = new Matrix[_playermodel.Bones.Count];
+            _playermodel.CopyAbsoluteBoneTransformsTo(transforms);
 
             // Draw the model. A model can have multiple meshes, so loop.
-            foreach (ModelMesh mesh in playermodel.Meshes)
+            foreach (ModelMesh mesh in _playermodel.Meshes)
             {
                 // This is where the mesh orientation is set, as well 
                 // as our camera and projection.
@@ -40,9 +36,9 @@ namespace MineWorld
                 {
                     effectmodel.EnableDefaultLighting();
                     effectmodel.World = transforms[mesh.ParentBone.Index] * 
-                        Matrix.CreateScale(scale) *
-                        Matrix.CreateRotationY(temprot)
-                        * Matrix.CreateTranslation(position);
+                        Matrix.CreateScale(Scale) *
+                        Matrix.CreateRotationY(Temprot)
+                        * Matrix.CreateTranslation(Position);
                     effectmodel.View = view;
                     effectmodel.Projection = projection;
                 }

@@ -1,36 +1,33 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Media;
 using Microsoft.Xna.Framework.Graphics;
+using MineWorld.GameStateManagers;
+using MineWorld.GameStateManagers.Helpers;
 
-namespace MineWorld
+namespace MineWorld.GameStates
 {
     class TitleState : BaseState
     {
-        GameStateManager gamemanager;
-        Song introsong;
-        bool introstarted = false;
-        Texture2D background;
-        Rectangle size;
+        readonly GameStateManager _gamemanager;
+        Song _introsong;
+        bool _introstarted;
+        Texture2D _background;
+        Rectangle _size;
 
-        public TitleState(GameStateManager manager, GameStates associatedState)
+        public TitleState(GameStateManager manager, GameState associatedState)
             : base(manager, associatedState)
         {
-            gamemanager = manager;
+            _gamemanager = manager;
         }
 
         public override void LoadContent(ContentManager contentloader)
         {
-            gamemanager.game.IsMouseVisible = false;
-            introsong = contentloader.Load<Song>("Music/intro");
-            background = contentloader.Load<Texture2D>("Textures/States/titlestate");
-            size.Width = gamemanager.graphics.PreferredBackBufferWidth;
-            size.Height = gamemanager.graphics.PreferredBackBufferHeight;
+            _gamemanager.Game.IsMouseVisible = false;
+            _introsong = contentloader.Load<Song>("Music/intro");
+            _background = contentloader.Load<Texture2D>("Textures/States/titlestate");
+            _size.Width = _gamemanager.Graphics.PreferredBackBufferWidth;
+            _size.Height = _gamemanager.Graphics.PreferredBackBufferHeight;
         }
 
         public override void Unload()
@@ -39,17 +36,17 @@ namespace MineWorld
 
         public override void Update(GameTime gameTime, InputHelper input)
         {
-            if (!introstarted)
+            if (!_introstarted)
             {
-                gamemanager.audiomanager.PlaySong(introsong, false);
-                introstarted = true;
+                _gamemanager.Audiomanager.PlaySong(_introsong, false);
+                _introstarted = true;
             }
-            if (gamemanager.game.IsActive)
+            if (_gamemanager.Game.IsActive)
             {
                 if (input.AnyKeyPressed(true))
                 {
-                    gamemanager.audiomanager.StopPlaying();
-                    gamemanager.SwitchState(GameStates.MainMenuState);
+                    _gamemanager.Audiomanager.StopPlaying();
+                    _gamemanager.SwitchState(GameState.MainMenuState);
                 }
             }
         }
@@ -58,7 +55,7 @@ namespace MineWorld
         {
             gDevice.Clear(Color.Black);
             sBatch.Begin();
-            sBatch.Draw(background, size, Color.White);
+            sBatch.Draw(_background, _size, Color.White);
             sBatch.End();
         }
     }

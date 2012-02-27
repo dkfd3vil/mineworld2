@@ -1,21 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.Xna.Framework.Input;
+using System.Globalization;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Media;
-using System.Runtime.InteropServices;
 using EasyConfig;
+using MineWorld.Actor;
+using MineWorld.GameStateManagers.Helpers;
+using MineWorld.GameStates;
 using MineWorldData;
 
-namespace MineWorld
+namespace MineWorld.GameStateManagers
 {
-    public enum GameStates
+    public enum GameState
     {
         TitleState,
         MainMenuState,
@@ -28,91 +24,86 @@ namespace MineWorld
 
     public class GameStateManager
     {
-        public MineWorldClient game;
-        public GraphicsDeviceManager graphics;
-        public SpriteBatch spriteBatch;
-        public GraphicsDevice device;
+        public MineWorldClient Game;
+        public GraphicsDeviceManager Graphics;
+        public SpriteBatch SpriteBatch;
+        public GraphicsDevice Device;
 
-        public AudioManager audiomanager;
-        private InputHelper inputhelper;
-        public ConfigFile config;
-        public ContentManager conmanager;
+        public AudioManager Audiomanager;
+        private readonly InputHelper _inputhelper;
+        public ConfigFile Config;
+        public ContentManager Conmanager;
         public PropertyBag Pbag;
 
-        private TitleState titlestate;
-        private MainMenuState mainmenustate;
-        private LoadingState loadingstate;
-        private MainGameState maingamestate;
-        private ErrorState errorstate;
-        private SettingsState settingsstate;
-        private ServerBrowsingState serverbrowsingstate;
-        private BaseState[] screens;
+        private readonly ErrorState _errorstate;
+        private readonly ServerBrowsingState _serverbrowsingstate;
+        private readonly BaseState[] _screens;
 
-        private BaseState curScreen;
+        private BaseState _curScreen;
 
         public GameStateManager(GraphicsDeviceManager man,ContentManager cman,MineWorldClient gam)
         {
-            audiomanager = new AudioManager();
-            config = new ConfigFile("data/settings.ini");
-            inputhelper = new InputHelper();
-            game = gam;
-            conmanager = cman;
-            graphics = man;
-            device = graphics.GraphicsDevice;
-            spriteBatch = new SpriteBatch(device);
-            screens = new BaseState[]  
-            { 
-                titlestate = new TitleState(this,GameStates.TitleState),
-                mainmenustate = new MainMenuState(this,GameStates.MainMenuState),
-                loadingstate = new LoadingState(this,GameStates.LoadingState),
-                maingamestate = new MainGameState(this, GameStates.MainGameState),
-                errorstate = new ErrorState(this,GameStates.ErrorState),
-                settingsstate = new SettingsState(this,GameStates.SettingsState),
-                serverbrowsingstate = new ServerBrowsingState(this,GameStates.ServerBrowsingState),
-            };
+            Audiomanager = new AudioManager();
+            Config = new ConfigFile("data/settings.ini");
+            _inputhelper = new InputHelper();
+            Game = gam;
+            Conmanager = cman;
+            Graphics = man;
+            Device = Graphics.GraphicsDevice;
+            SpriteBatch = new SpriteBatch(Device);
+            _screens = new BaseState[]
+                           {
+                               new TitleState(this, GameState.TitleState),
+                               new MainMenuState(this, GameState.MainMenuState),
+                               new LoadingState(this, GameState.LoadingState),
+                               new MainGameState(this, GameState.MainGameState),
+                               new SettingsState(this, GameState.SettingsState),
+                               _serverbrowsingstate = new ServerBrowsingState(this, GameState.ServerBrowsingState),
+                               _errorstate = new ErrorState(this, GameState.ErrorState)
+                           };
             //curScreen = titlestate;
             Pbag = new PropertyBag(gam,this);
 
             //Set initial state in the manager itself
-            SwitchState(GameStates.TitleState);
+            SwitchState(GameState.TitleState);
         }
 
         public void LoadContent()
         {
             LoadSettings();
-            foreach (BaseState screen in screens)
-                screen.LoadContent(conmanager);
+            foreach (BaseState screen in _screens)
+                screen.LoadContent(Conmanager);
         }
 
         public void Update(GameTime gameTime)
         {
             Pbag.ClientListener.Update();
-            inputhelper.Update();
-            curScreen.Update(gameTime,inputhelper);
+            _inputhelper.Update();
+            _curScreen.Update(gameTime,_inputhelper);
         }
 
-        public void SwitchState(GameStates newState)
+        public void SwitchState(GameState newState)
         {
-            foreach (BaseState screen in screens)
+            foreach (BaseState screen in _screens)
             {
                 if (screen.AssociatedState == newState)
                 {
                     //This is true for the first time
-                    if (curScreen != null)
+                    if (_curScreen != null)
                     {
                         //Call unload for our currentscreen
-                        curScreen.Unload();
-                        curScreen.Contentloaded = false;
+                        _curScreen.Unload();
+                        _curScreen.Contentloaded = false;
                     }
 
                     //Switch our currentscreen to our new screen
-                    curScreen = screen;
+                    _curScreen = screen;
 
                     //If our new screen content isnt loaded yet call it
-                    if (curScreen.Contentloaded == false)
+                    if (_curScreen.Contentloaded == false)
                     {
-                        curScreen.LoadContent(conmanager);
-                        curScreen.Contentloaded = true;
+                        _curScreen.LoadContent(Conmanager);
+                        _curScreen.Contentloaded = true;
                     }
                     break;
                 }
@@ -121,75 +112,75 @@ namespace MineWorld
 
         public void SetErrorState(ErrorMsg msg)
         {
-            errorstate.SetError(msg);
-            SwitchState(GameStates.ErrorState);
+            _errorstate.SetError(msg);
+            SwitchState(GameState.ErrorState);
         }
 
-        public void temperrormsg(string text)
+        public void Temperrormsg(string text)
         {
-            errorstate.error = text;
-            SwitchState(GameStates.ErrorState);
+            _errorstate.Error = text;
+            SwitchState(GameState.ErrorState);
         }
 
         public void AddServer(ServerInformation server)
         {
-            serverbrowsingstate.AddServer(server);
+            _serverbrowsingstate.AddServer(server);
         }
 
         public void RemoveServer(ServerInformation server)
         {
-            serverbrowsingstate.RemoveServer(server);
+            _serverbrowsingstate.RemoveServer(server);
         }
 
         public void ExitGame()
         {
-            game.Exit();
+            Game.Exit();
         }
 
         public void Draw(GameTime gameTime)
         {
-            curScreen.Draw(gameTime,device,spriteBatch);
+            _curScreen.Draw(gameTime,Device,SpriteBatch);
         }
 
         public void LoadSettings()
         {
-            game.Window.Title = "MineWorldClient v" + Constants.MINEWORLDCLIENT_VERSION.ToString();
-            game.Window.AllowUserResizing = true;
-            game.Window.ClientSizeChanged += new EventHandler<EventArgs>(Window_ClientSizeChanged);
+            Game.Window.Title = "MineWorldClient v" + Constants.MineworldclientVersion.ToString(CultureInfo.InvariantCulture);
+            Game.Window.AllowUserResizing = true;
+            Game.Window.ClientSizeChanged += WindowClientSizeChanged;
 
-            graphics.PreferredBackBufferHeight = config.SettingGroups["Video"].Settings["Height"].GetValueAsInt();
-            graphics.PreferredBackBufferWidth = config.SettingGroups["Video"].Settings["Width"].GetValueAsInt();
-            graphics.IsFullScreen = config.SettingGroups["Video"].Settings["Fullscreen"].GetValueAsBool();
-            graphics.SynchronizeWithVerticalRetrace = config.SettingGroups["Video"].Settings["Vsync"].GetValueAsBool();
-            graphics.PreferMultiSampling = config.SettingGroups["Video"].Settings["Multisampling"].GetValueAsBool();
-            graphics.ApplyChanges();
+            Graphics.PreferredBackBufferHeight = Config.SettingGroups["Video"].Settings["Height"].GetValueAsInt();
+            Graphics.PreferredBackBufferWidth = Config.SettingGroups["Video"].Settings["Width"].GetValueAsInt();
+            Graphics.IsFullScreen = Config.SettingGroups["Video"].Settings["Fullscreen"].GetValueAsBool();
+            Graphics.SynchronizeWithVerticalRetrace = Config.SettingGroups["Video"].Settings["Vsync"].GetValueAsBool();
+            Graphics.PreferMultiSampling = Config.SettingGroups["Video"].Settings["Multisampling"].GetValueAsBool();
+            Graphics.ApplyChanges();
 
-            audiomanager.SetVolume(config.SettingGroups["Sound"].Settings["Volume"].GetValueAsInt());
+            Audiomanager.SetVolume(Config.SettingGroups["Sound"].Settings["Volume"].GetValueAsInt());
 
-            Pbag.Player.Name = config.SettingGroups["Player"].Settings["Name"].GetValueAsString();
+            Pbag.Player.Name = Config.SettingGroups["Player"].Settings["Name"].GetValueAsString();
 
-            Pbag.WorldManager.customtexturepath = config.SettingGroups["Game"].Settings["Customtexturepath"].GetValueAsString();
+            Pbag.WorldManager.Customtexturepath = Config.SettingGroups["Game"].Settings["Customtexturepath"].GetValueAsString();
         }
 
         public void SaveSettings()
         {
-            config.SettingGroups["Video"].Settings["Height"].SetValue(graphics.PreferredBackBufferHeight);
-            config.SettingGroups["Video"].Settings["Width"].SetValue(graphics.PreferredBackBufferWidth);
-            config.SettingGroups["Video"].Settings["Fullscreen"].SetValue(graphics.IsFullScreen);
-            config.SettingGroups["Video"].Settings["Vsync"].SetValue(graphics.SynchronizeWithVerticalRetrace);
-            config.SettingGroups["Video"].Settings["Multisampling"].SetValue(graphics.PreferMultiSampling);
+            Config.SettingGroups["Video"].Settings["Height"].SetValue(Graphics.PreferredBackBufferHeight);
+            Config.SettingGroups["Video"].Settings["Width"].SetValue(Graphics.PreferredBackBufferWidth);
+            Config.SettingGroups["Video"].Settings["Fullscreen"].SetValue(Graphics.IsFullScreen);
+            Config.SettingGroups["Video"].Settings["Vsync"].SetValue(Graphics.SynchronizeWithVerticalRetrace);
+            Config.SettingGroups["Video"].Settings["Multisampling"].SetValue(Graphics.PreferMultiSampling);
 
-            config.SettingGroups["Sound"].Settings["Volume"].SetValue(audiomanager.GetVolume());
+            Config.SettingGroups["Sound"].Settings["Volume"].SetValue(Audiomanager.GetVolume());
 
-            config.SettingGroups["Player"].Settings["Name"].SetValue(Pbag.Player.Name);
+            Config.SettingGroups["Player"].Settings["Name"].SetValue(Pbag.Player.Name);
 
-            config.Save("data/settings.ini");
+            Config.Save("data/settings.ini");
         }
 
-        void Window_ClientSizeChanged(object sender, EventArgs e)
+        void WindowClientSizeChanged(object sender, EventArgs e)
         {
-            graphics.PreferredBackBufferWidth = game.Window.ClientBounds.Width;
-            graphics.PreferredBackBufferHeight = game.Window.ClientBounds.Height;
+            Graphics.PreferredBackBufferWidth = Game.Window.ClientBounds.Width;
+            Graphics.PreferredBackBufferHeight = Game.Window.ClientBounds.Height;
         }
     }
 }

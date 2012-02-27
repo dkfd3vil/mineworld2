@@ -1,28 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MineWorld.Actor;
+using MineWorld.GameStateManagers;
+using MineWorld.GameStateManagers.Helpers;
+using MineWorld.World.Block;
+using MineWorld.World.Block.Special;
+using MineWorld.World.Skybox;
 using MineWorldData;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Input;
 
-namespace MineWorld
+namespace MineWorld.World
 {
     public class WorldManager
     {
         //Our manager
-        GameStateManager gamemanager;
+        readonly GameStateManager _gamemanager;
 
         //Our fTime
-        public float fTime = 0.201358f;
+        public float FTime = 0.201358f;
 
         //Our player for in the world
-        public Player player;
+        public Player Player;
 
         //Our other players
-        public Dictionary<int, ClientPlayer> playerlist = new Dictionary<int, ClientPlayer>();
+        public Dictionary<int, ClientPlayer> Playerlist = new Dictionary<int, ClientPlayer>();
 
         //Our block world
         public int Mapsize;
@@ -33,53 +37,53 @@ namespace MineWorld
         public BaseBlock[] Blocks;
 
         //Our sky
-        Sun Sun = new Sun();
-        Moon Moon = new Moon();
+        readonly Sun _sun = new Sun();
+        readonly Moon _moon = new Moon();
 
         //Our rasterstates
-        RasterizerState Wired;
-        RasterizerState Solid;
+        RasterizerState _wired;
+        RasterizerState _solid;
 
         //A bool to see if everything is loaded
-        public bool worldmaploaded = false;
+        public bool Worldmaploaded;
 
         //Custom texture path
-        public string customtexturepath = "";
+        public string Customtexturepath = "";
 
         //A bool for debug purpose
-        public bool Debug = false;
+        public bool Debug;
 
         public WorldManager(GameStateManager manager,Player player)
         {
-            this.gamemanager = manager;
-            this.player = player;
+            _gamemanager = manager;
+            Player = player;
         }
 
         public void Load(ContentManager conmanager)
         {
             //Load our blocks
-            Blocks = new BaseBlock[(int)BlockTypes.MAX];
+            Blocks = new BaseBlock[(int)BlockTypes.Max];
             CreateBlockTypes();
 
             //Load our sun and moon
-            Sun.Load(conmanager);
-            Moon.Load(conmanager);
+            _sun.Load(conmanager);
+            _moon.Load(conmanager);
 
             //Setup our rasterstates
-            Wired = new RasterizerState();
-            Wired.CullMode = CullMode.CullCounterClockwiseFace;
-            Wired.FillMode = FillMode.WireFrame;
-            Solid = new RasterizerState();
-            Solid.CullMode = CullMode.CullCounterClockwiseFace;
-            Solid.FillMode = FillMode.Solid;
+            _wired = new RasterizerState();
+            _wired.CullMode = CullMode.CullCounterClockwiseFace;
+            _wired.FillMode = FillMode.WireFrame;
+            _solid = new RasterizerState();
+            _solid.CullMode = CullMode.CullCounterClockwiseFace;
+            _solid.FillMode = FillMode.Solid;
         }
 
         public void Start()
         {
             //This is called when we got all the info we need and then we construct a world on it
             //Initialize the chunk array
-            ChunkX = (int)Mapsize / Chunk.Size;
-            ChunkZ = (int)Mapsize / Chunk.Size;
+            ChunkX = Mapsize / Chunk.Size;
+            ChunkZ = Mapsize / Chunk.Size;
 
             Chunks = new Chunk[ChunkX, ChunkZ];
 
@@ -87,36 +91,36 @@ namespace MineWorld
             {
                 for (int z = 0; z < ChunkZ; z++)
                 {
-                    Chunks[x, z] = new Chunk(x * Chunk.Size, z * Chunk.Size, this, gamemanager); //Create each chunk with its position and pass it the game object
+                    Chunks[x, z] = new Chunk(x * Chunk.Size, z * Chunk.Size, this, _gamemanager); //Create each chunk with its position and pass it the game object
                 }
             }
 
             //Lets create our map
             CreateSimpleMap();
 
-            worldmaploaded = true;
+            Worldmaploaded = true;
         }
 
         public void Update(GameTime gamefTime,InputHelper input)
         {
             //fTime increases at rate of 1 ingame day/night cycle per 20 minutes (actual value is 0 at dawn, 0.5pi at noon, pi at dusk, 1.5pi at midnight, and 0 or 2pi at dawn again)
-            fTime += (float)(Math.PI / 36000);
-            fTime %= (float)(MathHelper.TwoPi);
+            FTime += (float)(Math.PI / 36000);
+            FTime %= MathHelper.TwoPi;
 
             foreach (Chunk c in Chunks)
             {
-                c.Update(player.Position,fTime);
+                c.Update(Player.Position,FTime);
             }
 
             //Update our moon and sun for the correct offset
-            Sun.Update(fTime, gamemanager.Pbag.Player.Position);
-            Moon.Update(fTime, gamemanager.Pbag.Player.Position);
+            _sun.Update(FTime, _gamemanager.Pbag.Player.Position);
+            _moon.Update(FTime, _gamemanager.Pbag.Player.Position);
 
-            if (gamemanager.game.IsActive)
+            if (_gamemanager.Game.IsActive)
             {
                 if (input.IsNewPress((Keys)ClientKey.WireFrame))
                 {
-                    gamemanager.Pbag.WireMode = !gamemanager.Pbag.WireMode;
+                    _gamemanager.Pbag.WireMode = !_gamemanager.Pbag.WireMode;
                 }
             }
         }
@@ -137,13 +141,13 @@ namespace MineWorld
                 DepthBufferEnable = true
             };
 
-            if (gamemanager.Pbag.WireMode)
+            if (_gamemanager.Pbag.WireMode)
             {
-                gDevice.RasterizerState = Wired;
+                gDevice.RasterizerState = _wired;
             }
             else
             {
-                gDevice.RasterizerState = Solid;
+                gDevice.RasterizerState = _solid;
             }
 
 
@@ -154,17 +158,17 @@ namespace MineWorld
 
 
             //After the blocks make sure fillmode = solid once again
-            gDevice.RasterizerState = Solid;
+            gDevice.RasterizerState = _solid;
 
             //Draw the other players
-            foreach (ClientPlayer dummy in playerlist.Values)
+            foreach (ClientPlayer dummy in Playerlist.Values)
             {
-                dummy.Draw(player.Cam.View, player.Cam.Projection);
+                dummy.Draw(Player.Cam.View, Player.Cam.Projection);
             }
 
             //Draw our beautifull sky
-            Sun.Draw(gDevice);
-            Moon.Draw(gDevice);
+            _sun.Draw(gDevice);
+            _moon.Draw(gDevice);
         }
 
         public void CreateBlockTypes()
@@ -182,7 +186,7 @@ namespace MineWorld
             //20 - Glass
             Blocks[(int)BlockTypes.Glass] = new BaseBlock(new Vector2(1, 3), BlockModel.Cube, true, true, true, BlockTypes.Glass);
             //25 - Noteblock
-            Blocks[(int)BlockTypes.Noteblock] = new MusicBlock(new Vector2(10, 4), new Vector2(11, 4), new Vector2(11, 4), new Vector2(11, 4), new Vector2(11, 4), new Vector2(11, 4), BlockModel.Cube, true, false, true, BlockTypes.Noteblock, gamemanager.conmanager);
+            Blocks[(int)BlockTypes.Noteblock] = new MusicBlock(new Vector2(10, 4), new Vector2(11, 4), new Vector2(11, 4), new Vector2(11, 4), new Vector2(11, 4), new Vector2(11, 4), BlockModel.Cube, true, false, true, BlockTypes.Noteblock, _gamemanager.Conmanager);
             //78 - Snow
             Blocks[(int)BlockTypes.Snow] = new BaseBlock(new Vector2(2, 4), BlockModel.Slab, false, true, true, BlockTypes.Snow);
         }
@@ -280,10 +284,7 @@ namespace MineWorld
                 zb = ((int)pos.Z % Chunk.Size);
                 return c.GetBlockAtPoint(xb, yb, zb);
             }
-            else
-            {
-                return Blocks[(int)(BlockTypes.Air)];
-            }
+            return Blocks[(int)(BlockTypes.Air)];
         }
 
         public bool PointWithinMap(Vector3 pos)
@@ -320,7 +321,7 @@ namespace MineWorld
 
         public bool Everythingloaded()
         {
-            return worldmaploaded;
+            return Worldmaploaded;
         }
     }
 }

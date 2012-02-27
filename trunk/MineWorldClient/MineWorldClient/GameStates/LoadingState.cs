@@ -1,38 +1,36 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Input;
+using MineWorld.GameStateManagers;
+using MineWorld.GameStateManagers.Helpers;
 
-namespace MineWorld
+namespace MineWorld.GameStates
 {
     public class LoadingState : BaseState
     {
-        GameStateManager gamemanager;
-        Texture2D loadingimg;
-        float loadingangle;
-        Vector2 loadingorgin;
-        Vector2 loadinglocation;
-        Rectangle loadingrectangle;
+        readonly GameStateManager _gamemanager;
+        Texture2D _loadingimg;
+        float _loadingangle;
+        Vector2 _loadingorgin;
+        Vector2 _loadinglocation;
+        Rectangle _loadingrectangle;
 
 
-        public LoadingState(GameStateManager manager, GameStates associatedState)
+        public LoadingState(GameStateManager manager, GameState associatedState)
             : base(manager, associatedState)
         {
-            gamemanager = manager;
+            _gamemanager = manager;
         }
 
         public override void LoadContent(ContentManager contentloader)
         {
-            loadingimg = contentloader.Load<Texture2D>("Textures/States/loading");
-            loadingorgin = new Vector2(loadingimg.Width / 2, loadingimg.Height / 2);
-            loadinglocation = new Vector2(gamemanager.graphics.PreferredBackBufferWidth / 2, gamemanager.graphics.PreferredBackBufferHeight / 2);
-            loadingrectangle = new Rectangle(0, 0, loadingimg.Width, loadingimg.Height);
+            _loadingimg = contentloader.Load<Texture2D>("Textures/States/loading");
+            _loadingorgin = new Vector2(_loadingimg.Width / 2, _loadingimg.Height / 2);
+            _loadinglocation = new Vector2(_gamemanager.Graphics.PreferredBackBufferWidth / 2, _gamemanager.Graphics.PreferredBackBufferHeight / 2);
+            _loadingrectangle = new Rectangle(0, 0, _loadingimg.Width, _loadingimg.Height);
 
-            gamemanager.game.IsMouseVisible = false;
+            _gamemanager.Game.IsMouseVisible = false;
         }
 
         public override void Unload()
@@ -41,26 +39,26 @@ namespace MineWorld
 
         public override void Update(GameTime gameTime, InputHelper input)
         {
-            loadingangle += 0.01f;
+            _loadingangle += 0.01f;
             if (input.IsNewPress((Keys)ClientKey.Exit))
             {
-                gamemanager.SwitchState(GameStates.MainMenuState);
+                _gamemanager.SwitchState(GameState.MainMenuState);
             }
 
             //If everything is loaded then lets play
-            if (gamemanager.Pbag.WorldManager.Everythingloaded())
+            if (_gamemanager.Pbag.WorldManager.Everythingloaded())
             {
-                gamemanager.SwitchState(GameStates.MainGameState);
+                _gamemanager.SwitchState(GameState.MainGameState);
                 //gamemanager.Pbag.ClientSender.SendPlayerInWorld();
             }
         }
 
         public override void Draw(GameTime gameTime, GraphicsDevice gDevice, SpriteBatch sBatch)
         {
-            loadinglocation = new Vector2(gamemanager.graphics.PreferredBackBufferWidth / 2, gamemanager.graphics.PreferredBackBufferHeight / 2);
+            _loadinglocation = new Vector2(_gamemanager.Graphics.PreferredBackBufferWidth / 2, _gamemanager.Graphics.PreferredBackBufferHeight / 2);
             gDevice.Clear(Color.Black);
             sBatch.Begin();
-            sBatch.Draw(loadingimg, loadinglocation, loadingrectangle, Color.White, loadingangle, loadingorgin, 1.0f, SpriteEffects.None, 1);
+            sBatch.Draw(_loadingimg, _loadinglocation, _loadingrectangle, Color.White, _loadingangle, _loadingorgin, 1.0f, SpriteEffects.None, 1);
             sBatch.End();
         }
     }

@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
+using MineWorld.GameStateManagers;
+using MineWorld.GameStateManagers.Helpers;
 
-namespace MineWorld
+namespace MineWorld.GameStates
 {
     public enum ErrorMsg
     {
@@ -21,21 +19,21 @@ namespace MineWorld
 
     public class ErrorState : BaseState
     {
-        GameStateManager gamemanager;
-        SpriteFont myFont;
-        public string error;
-        Vector2 errorlocation;
+        readonly GameStateManager _gamemanager;
+        SpriteFont _myFont;
+        public string Error;
+        Vector2 _errorlocation;
 
-        public ErrorState(GameStateManager manager, GameStates associatedState)
+        public ErrorState(GameStateManager manager, GameState associatedState)
             : base(manager, associatedState)
         {
-            gamemanager = manager;
+            _gamemanager = manager;
         }
 
         public override void LoadContent(ContentManager contentloader)
         {
-            myFont = contentloader.Load<SpriteFont>("Fonts/DefaultFont");
-            gamemanager.game.IsMouseVisible = false;
+            _myFont = contentloader.Load<SpriteFont>("Fonts/DefaultFont");
+            _gamemanager.Game.IsMouseVisible = false;
         }
 
         public override void Unload()
@@ -48,37 +46,37 @@ namespace MineWorld
             {
                 case ErrorMsg.Banned:
                     {
-                        error = "You have been banned from the server";
+                        Error = "You have been banned from the server";
                         break;
                     }
                 case ErrorMsg.Kicked:
                     {
-                        error = "You have been kicked from the server";
+                        Error = "You have been kicked from the server";
                         break;
                     }
                 case ErrorMsg.ServerFull:
                     {
-                        error = "The server is full";
+                        Error = "The server is full";
                         break;
                     }
                 case ErrorMsg.VersionMismatch:
                     {
-                        error = "Client/Server version mismatch";
+                        Error = "Client/Server version mismatch";
                         break;
                     }
                 case ErrorMsg.ServerShutdown:
                     {
-                        error = "Server has shutdown";
+                        Error = "Server has shutdown";
                         break;
                     }
                 case ErrorMsg.ServerRestart:
                     {
-                        error = "Server is restarting";
+                        Error = "Server is restarting";
                         break;
                     }
                 case ErrorMsg.Unkown:
                     {
-                        error = "A unknown error has occured";
+                        Error = "A unknown error has occured";
                         break;
                     }
             }
@@ -86,21 +84,21 @@ namespace MineWorld
 
         public override void Update(GameTime gameTime, InputHelper input)
         {
-            if (gamemanager.game.IsActive)
+            if (_gamemanager.Game.IsActive)
             {
                 if (input.AnyKeyPressed(true))
                 {
-                    gamemanager.SwitchState(GameStates.MainMenuState);
+                    _gamemanager.SwitchState(GameState.MainMenuState);
                 }
             }
         }
 
         public override void Draw(GameTime gameTime, GraphicsDevice gDevice, SpriteBatch sBatch)
         {
-            errorlocation = new Vector2(gamemanager.graphics.PreferredBackBufferWidth / 2, gamemanager.graphics.PreferredBackBufferHeight / 2);
+            _errorlocation = new Vector2(_gamemanager.Graphics.PreferredBackBufferWidth / 2, _gamemanager.Graphics.PreferredBackBufferHeight / 2);
             gDevice.Clear(Color.Black);
             sBatch.Begin();
-            sBatch.DrawString(myFont,error,errorlocation,Color.White);
+            sBatch.DrawString(_myFont,Error,_errorlocation,Color.White);
             sBatch.End();
         }
     }
