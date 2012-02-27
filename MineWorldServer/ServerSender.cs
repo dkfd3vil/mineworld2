@@ -34,7 +34,7 @@ namespace MineWorldServer
             netserver.SendMessage(outmsg, player.NetConn, NetDeliveryMethod.ReliableOrdered);
         }
 
-        public void SendCurrentWorldSize(ServerPlayer player)
+        public void SendCurrentWorld(ServerPlayer player)
         {
             outmsg = netserver.CreateMessage();
             outmsg.Write((byte)PacketType.WorldMapSize);
@@ -122,6 +122,9 @@ namespace MineWorldServer
             // Create a response and write some example data to it
             outmsg = netserver.CreateMessage();
             outmsg.Write(mineserver.ServerName);
+            outmsg.Write(mineserver.PlayerManager.PlayerList.Count);
+            outmsg.Write(mineserver.Server.Configuration.MaximumConnections);
+            outmsg.Write(false);
 
             // Send the response to the sender of the request
             netserver.SendDiscoveryResponse(outmsg, endpoint);

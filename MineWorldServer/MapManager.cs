@@ -13,6 +13,8 @@ namespace MineWorldServer
         public int Mapsize;
         public int ChunkHeight;
         public int ChuckSize;
+        public int ChunkX;
+        public int ChunkZ;
 
         public MapManager()
         {
@@ -23,6 +25,8 @@ namespace MineWorldServer
         public void SetMapSize(int size)
         {
             Mapsize = size;
+            ChunkX = size / ChuckSize;
+            ChunkZ = size / ChuckSize;
         }
 
         public void GenerateCubeMap(BlockTypes type)
@@ -65,5 +69,29 @@ namespace MineWorldServer
 
             return pos;
         }
+
+        //public Chunk GetChunkAtPosition(int x, int z)
+        //{
+        //    Chunk c = Chunks[x / Chunk.Size, z / Chunk.Size];
+
+        //    return c;
+        //}
+
+        //public void SetBlock(int x, int y, int z, BlockTypes type)
+        //{
+        //    ////If its outside the map then ignore it
+        //    if (x < 0 || x >= Mapsize || y < 0 || y >= Chunk.Height || z < 0 || z >= Mapsize)
+        //    {
+        //        return;
+        //    }
+
+        //    Chunk c = GetChunkAtPosition(x, z);
+
+        //    int xb, yb, zb;
+        //    xb = (x % Chunk.Size);
+        //    yb = y;
+        //    zb = (z % Chunk.Size);
+        //    c.SetBlock(xb, yb, zb, Blocks[(int)type], true);
+        //}
     }
 }

@@ -6,6 +6,7 @@ using Lidgren.Network;
 using Lidgren.Network.Xna;
 using MineWorldData;
 using System.Threading;
+using Microsoft.Xna.Framework;
 
 namespace MineWorldServer
 {
@@ -35,7 +36,7 @@ namespace MineWorldServer
                             {
                                 NetConnectionStatus status = (NetConnectionStatus)packetin.ReadByte();
                                 //Player doesnt want to play anymore
-                                if (status == NetConnectionStatus.Disconnected)
+                                if (status == NetConnectionStatus.Disconnected || status == NetConnectionStatus.Disconnecting)
                                 {
                                     mineserver.console.ConsoleWrite(mineserver.PlayerManager.GetPlayerByConnection(_msgSender).Name + " Disconnected");
                                     mineserver.ServerSender.SendPlayerLeft(mineserver.PlayerManager.GetPlayerByConnection(_msgSender));
@@ -60,6 +61,7 @@ namespace MineWorldServer
                                 int version = packetin.ReadInt32();
                                 string name = packetin.ReadString();
 
+                                //If the version is any other then the server deny
                                 if(mineserver.VersionMatch(version) == false)
                                 {
                                     _msgSender.Deny("versionmismatch");
@@ -71,12 +73,13 @@ namespace MineWorldServer
                                 {
                                     name += dummy.ID;
                                 }
+
                                 dummy.Name = name;
                                 mineserver.PlayerManager.AddPlayer(dummy);
                                 _msgSender.Approve();
                                 Thread.Sleep(4000);
                                 mineserver.GameWorld.GenerateSpawnPosition(mineserver.PlayerManager.GetPlayerByConnection(_msgSender));
-                                mineserver.ServerSender.SendCurrentWorldSize(mineserver.PlayerManager.GetPlayerByConnection(_msgSender));
+                                mineserver.ServerSender.SendCurrentWorld(mineserver.PlayerManager.GetPlayerByConnection(_msgSender));
                                 mineserver.ServerSender.SendInitialUpdate(mineserver.PlayerManager.GetPlayerByConnection(_msgSender));
                                 mineserver.ServerSender.SendPlayerJoined(mineserver.PlayerManager.GetPlayerByConnection(_msgSender));
                                 mineserver.ServerSender.SendOtherPlayersInWorld(mineserver.PlayerManager.GetPlayerByConnection(_msgSender));
@@ -93,6 +96,12 @@ namespace MineWorldServer
                                         {
                                             mineserver.PlayerManager.GetPlayerByConnection(_msgSender).Position = packetin.ReadVector3();
                                             mineserver.ServerSender.SendMovementUpdate(mineserver.PlayerManager.GetPlayerByConnection(_msgSender));
+                                            break;
+                                        }
+                                    case PacketType.PlayerBlockSet:
+                                        {
+                                            Vector3 pos = packetin.ReadVector3();
+                                            mineserver.MapManager.WorldMap[(int)pos.X, (int)pos.Y, (int)pos.Z] = (BlockTypes)packetin.ReadByte();
                                             break;
                                         }
                                 }

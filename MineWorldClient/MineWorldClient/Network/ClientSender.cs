@@ -51,14 +51,13 @@ namespace MineWorld
         {
             outmsg = Client.CreateMessage();
             outmsg.Write((byte)PacketType.PlayerBlockSet);
-            outmsg.Write(Pbag.Player.Myid);
             outmsg.Write(pos);
             outmsg.Write((byte)type);
         }
 
-        public void DiscoverLocalServers(int port)
+        public void DiscoverLocalServers()
         {
-            Client.DiscoverLocalPeers(port);
+            Client.DiscoverLocalPeers(Constants.MINEWORLD_PORT);
         }
     }
 }

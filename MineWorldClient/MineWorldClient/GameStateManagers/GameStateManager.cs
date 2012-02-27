@@ -125,6 +125,12 @@ namespace MineWorld
             SwitchState(GameStates.ErrorState);
         }
 
+        public void temperrormsg(string text)
+        {
+            errorstate.error = text;
+            SwitchState(GameStates.ErrorState);
+        }
+
         public void AddServer(ServerInformation server)
         {
             serverbrowsingstate.AddServer(server);

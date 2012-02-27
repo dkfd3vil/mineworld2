@@ -34,6 +34,7 @@ namespace MineWorldData
         PlayerNameSet,
     }
 
+    //For more info check http://www.minecraftwiki.net/wiki/Data_values#Block_IDs_.28Minecraft_Official_Release.29
     public enum BlockTypes
     {
         Air = 0,
@@ -100,6 +101,8 @@ namespace MineWorldData
         Furnace = 61,
         Burningfurnace = 62,
         Signpost = 63,
-        MAX = 64,
+        Snow = 78,
+        //Max defined by minecraft
+        MAX = 122,
     }
 }
