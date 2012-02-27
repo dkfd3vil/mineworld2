@@ -1,30 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Lidgren.Network;
+﻿using Lidgren.Network;
 using Lidgren.Network.Xna;
+using MineWorld.Actor;
+using MineWorld.GameStates;
 using MineWorldData;
-using Microsoft.Xna.Framework;
 
-namespace MineWorld
+namespace MineWorld.Network
 {
     public class ClientListener
     {
-        PropertyBag Pbag;
-        NetClient Client;
+        readonly PropertyBag _pbag;
+        readonly NetClient _client;
         NetIncomingMessage _msgBuffer;
 
         public ClientListener(NetClient netc, PropertyBag pb)
         {
-            Client = netc;
-            Pbag = pb;
+            _client = netc;
+            _pbag = pb;
         }
 
         public void Update()
         {
             // Recieve messages from the server.
-            while ((_msgBuffer = Client.ReadMessage()) != null)
+            while ((_msgBuffer = _client.ReadMessage()) != null)
             {
                 NetIncomingMessageType msgType = _msgBuffer.MessageType;
 
@@ -41,32 +38,32 @@ namespace MineWorld
                                 {
                                     case "kicked":
                                         {
-                                            Pbag.GameManager.SetErrorState(ErrorMsg.Kicked);
+                                            _pbag.GameManager.SetErrorState(ErrorMsg.Kicked);
                                             break;
                                         }
                                     case "banned":
                                         {
-                                            Pbag.GameManager.SetErrorState(ErrorMsg.Banned);
+                                            _pbag.GameManager.SetErrorState(ErrorMsg.Banned);
                                             break;
                                         }
                                     case "serverfull":
                                         {
-                                            Pbag.GameManager.SetErrorState(ErrorMsg.ServerFull);
+                                            _pbag.GameManager.SetErrorState(ErrorMsg.ServerFull);
                                             break;
                                         }
                                     case "versionmismatch":
                                         {
-                                            Pbag.GameManager.SetErrorState(ErrorMsg.VersionMismatch);
+                                            _pbag.GameManager.SetErrorState(ErrorMsg.VersionMismatch);
                                             break;
                                         }
                                     case "shutdown":
                                         {
-                                            Pbag.GameManager.SetErrorState(ErrorMsg.ServerShutdown);
+                                            _pbag.GameManager.SetErrorState(ErrorMsg.ServerShutdown);
                                             break;
                                         }
                                     case "restart":
                                         {
-                                            Pbag.GameManager.SetErrorState(ErrorMsg.ServerRestart);
+                                            _pbag.GameManager.SetErrorState(ErrorMsg.ServerRestart);
                                             break;
                                         }
                                     case "exit":
@@ -76,7 +73,7 @@ namespace MineWorld
                                         }
                                     default:
                                         {
-                                            Pbag.GameManager.temperrormsg(reason);
+                                            _pbag.GameManager.Temperrormsg(reason);
                                             //Pbag.GameManager.SetErrorState(ErrorMsg.Unkown);
                                             break;
                                         }
@@ -92,7 +89,7 @@ namespace MineWorld
                             bool lan = _msgBuffer.ReadBoolean();
                             string ip = _msgBuffer.SenderEndpoint.Address.ToString();
                             ServerInformation newserver = new ServerInformation(name,ip,playercount,playermax,lan);
-                            Pbag.GameManager.AddServer(newserver);
+                            _pbag.GameManager.AddServer(newserver);
                             break;
                         }
                     case NetIncomingMessageType.ConnectionApproval:
@@ -106,39 +103,39 @@ namespace MineWorld
                             {
                                 case PacketType.WorldMapSize:
                                     {
-                                        Pbag.WorldManager.Mapsize = _msgBuffer.ReadInt32();
-                                        Pbag.WorldManager.Start();
+                                        _pbag.WorldManager.Mapsize = _msgBuffer.ReadInt32();
+                                        _pbag.WorldManager.Start();
                                         break;
                                     }
                                 case PacketType.PlayerInitialUpdate:
                                     {
-                                        Pbag.Player.Myid = _msgBuffer.ReadInt32();
-                                        Pbag.Player.Name = _msgBuffer.ReadString();
-                                        Pbag.Player.Position = _msgBuffer.ReadVector3();
+                                        _pbag.Player.Myid = _msgBuffer.ReadInt32();
+                                        _pbag.Player.Name = _msgBuffer.ReadString();
+                                        _pbag.Player.Position = _msgBuffer.ReadVector3();
                                         break;
                                     }
                                 case PacketType.PlayerJoined:
                                     {
-                                        ClientPlayer dummy = new ClientPlayer(Pbag.GameManager.conmanager);
-                                        dummy.ID = _msgBuffer.ReadInt32();
-                                        dummy.name = _msgBuffer.ReadString();
-                                        dummy.position = _msgBuffer.ReadVector3();
-                                        dummy.heading = _msgBuffer.ReadVector3();
-                                        Pbag.WorldManager.playerlist.Add(dummy.ID, dummy);
+                                        ClientPlayer dummy = new ClientPlayer(_pbag.GameManager.Conmanager);
+                                        dummy.Id = _msgBuffer.ReadInt32();
+                                        dummy.Name = _msgBuffer.ReadString();
+                                        dummy.Position = _msgBuffer.ReadVector3();
+                                        dummy.Heading = _msgBuffer.ReadVector3();
+                                        _pbag.WorldManager.Playerlist.Add(dummy.Id, dummy);
                                         break;
                                     }
                                 case PacketType.PlayerLeft:
                                     {
                                         int id = _msgBuffer.ReadInt32();
-                                        Pbag.WorldManager.playerlist.Remove(id);
+                                        _pbag.WorldManager.Playerlist.Remove(id);
                                         break;
                                     }
                                 case PacketType.PlayerMovementUpdate:
                                     {
                                         int id = _msgBuffer.ReadInt32();
-                                        if (Pbag.WorldManager.playerlist.ContainsKey(id))
+                                        if (_pbag.WorldManager.Playerlist.ContainsKey(id))
                                         {
-                                            Pbag.WorldManager.playerlist[id].position = _msgBuffer.ReadVector3();
+                                            _pbag.WorldManager.Playerlist[id].Position = _msgBuffer.ReadVector3();
                                         }
                                         break;
                                     }
@@ -146,16 +143,16 @@ namespace MineWorld
                                     {
                                         int id = _msgBuffer.ReadInt32();
                                         //Lets see if its my id or someones else id
-                                        if (Pbag.Player.Myid == id)
+                                        if (_pbag.Player.Myid == id)
                                         {
-                                            Pbag.Player.Name = _msgBuffer.ReadString();
+                                            _pbag.Player.Name = _msgBuffer.ReadString();
                                         }
                                         else
                                         {
                                             //Then its someones else its id
-                                            if (Pbag.WorldManager.playerlist.ContainsKey(id))
+                                            if (_pbag.WorldManager.Playerlist.ContainsKey(id))
                                             {
-                                                Pbag.WorldManager.playerlist[id].position = _msgBuffer.ReadVector3();
+                                                _pbag.WorldManager.Playerlist[id].Position = _msgBuffer.ReadVector3();
                                             }
                                         }
                                         break;

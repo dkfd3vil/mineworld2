@@ -1,17 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace MineWorldServer
 {
     public class MineWorldConsole
     {
-        MineWorldServer mineserver;
+        readonly MineWorldServer _mineserver;
 
         public MineWorldConsole(MineWorldServer mines)
         {
-            mineserver = mines;
+            _mineserver = mines;
             Console.TreatControlCAsInput = true;
         }
 
@@ -25,7 +22,7 @@ namespace MineWorldServer
                     {
                         if (inputsplitted.Length == 2)
                         {
-                            mineserver.PlayerManager.KickPlayerByName(inputsplitted[1]);
+                            _mineserver.PlayerManager.KickPlayerByName(inputsplitted[1]);
                         }
                         else
                         {
@@ -37,11 +34,11 @@ namespace MineWorldServer
                     {
                         if (inputsplitted.Length == 2)
                         {
-                            mineserver.ShutdownServer(int.Parse(inputsplitted[1]));
+                            _mineserver.ShutdownServer(int.Parse(inputsplitted[1]));
                         }
                         else
                         {
-                            mineserver.ShutdownServer(0);
+                            _mineserver.ShutdownServer(0);
                         }
                         break;
                     }
@@ -49,11 +46,11 @@ namespace MineWorldServer
                     {
                         if (inputsplitted.Length == 2)
                         {
-                            mineserver.RestartServer(int.Parse(inputsplitted[1]));
+                            _mineserver.RestartServer(int.Parse(inputsplitted[1]));
                         }
                         else
                         {
-                            mineserver.RestartServer(0);
+                            _mineserver.RestartServer(0);
                         }
                         break;
                     }

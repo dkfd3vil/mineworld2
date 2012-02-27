@@ -1,22 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.GamerServices;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Media;
 
-
-namespace MineWorld
+namespace MineWorld.Actor
 {
     public class Camera
     {
         // Properties
-        Vector3 pos, ang;
-        Matrix view, proj;
+        Vector3 _pos, _ang;
+        Matrix _view, _proj;
 
         const float PiOver2 = MathHelper.PiOver2;
         const float TwoPi = MathHelper.TwoPi;
@@ -29,24 +20,24 @@ namespace MineWorld
         /// <param name="ang">Camera angle</param>
         public Camera(PropertyBag game, Vector3 pos, Vector3 ang)
         {
-            this.pos = pos;
-            this.ang = ang;
-            this.SetPerspective(MathHelper.ToRadians(90),game.GameManager.device.Viewport.AspectRatio, 0.01f, 100000.0f);
+            _pos = pos;
+            _ang = ang;
+            SetPerspective(MathHelper.ToRadians(90),game.GameManager.Device.Viewport.AspectRatio, 0.01f, 100000.0f);
         }
 
         public void Update()
         {
             // Use modulus on angles to keep values between (0 - 2PI) radians
-            ang.X = MathHelper.Clamp(ang.X, -PiOver2 + 0.01f, PiOver2 - 0.01f);// Clamp pitch
-            ang.Y %= TwoPi;
-            ang.Z %= TwoPi;
+            _ang.X = MathHelper.Clamp(_ang.X, -PiOver2 + 0.01f, PiOver2 - 0.01f);// Clamp pitch
+            _ang.Y %= TwoPi;
+            _ang.Z %= TwoPi;
 
             // Create view matrix
-            view = Matrix.Identity *
-                   Matrix.CreateTranslation(-pos) *
-                   Matrix.CreateRotationZ(ang.Z) *
-                   Matrix.CreateRotationY(ang.Y) *
-                   Matrix.CreateRotationX(ang.X);
+            _view = Matrix.Identity *
+                   Matrix.CreateTranslation(-_pos) *
+                   Matrix.CreateRotationZ(_ang.Z) *
+                   Matrix.CreateRotationY(_ang.Y) *
+                   Matrix.CreateRotationX(_ang.X);
         }
 
         /// <summary>
@@ -54,8 +45,8 @@ namespace MineWorld
         /// </summary>
         public Vector3 Position
         {
-            get { return pos; }
-            set { pos = value; }
+            get { return _pos; }
+            set { _pos = value; }
         }
 
         /// <summary>
@@ -63,8 +54,8 @@ namespace MineWorld
         /// </summary>
         public Vector3 Angle
         {
-            get { return ang; }
-            set { ang = value; }
+            get { return _ang; }
+            set { _ang = value; }
         }
 
         /// <summary>
@@ -72,10 +63,10 @@ namespace MineWorld
         /// </summary>
         public float Pitch
         {
-            get { return ang.X; }
+            get { return _ang.X; }
             set
             {
-                ang.X = value;
+                _ang.X = value;
             }
         }
 
@@ -84,8 +75,8 @@ namespace MineWorld
         /// </summary>
         public float Yaw
         {
-            get { return ang.Y; }
-            set { ang.Y = value; }
+            get { return _ang.Y; }
+            set { _ang.Y = value; }
         }
 
         /// <summary>
@@ -93,8 +84,8 @@ namespace MineWorld
         /// </summary>
         public float Roll
         {
-            get { return ang.Z; }
-            set { ang.Z = value; }
+            get { return _ang.Z; }
+            set { _ang.Z = value; }
         }
 
         /// <summary>
@@ -106,9 +97,9 @@ namespace MineWorld
             {
                 return Vector3.Normalize(
                     new Vector3(
-                        -(float)(Math.Sin(ang.Z) * Math.Sin(ang.X) + Math.Cos(ang.Z) * Math.Sin(ang.Y) * Math.Cos(ang.X)),
-                        -(float)(-Math.Cos(ang.Z) * Math.Sin(ang.X) + Math.Sin(ang.Z) * Math.Sin(ang.Y) * Math.Cos(ang.X)),
-                        (float)(Math.Cos(ang.Y) * Math.Cos(ang.X))
+                        -(float)(Math.Sin(_ang.Z) * Math.Sin(_ang.X) + Math.Cos(_ang.Z) * Math.Sin(_ang.Y) * Math.Cos(_ang.X)),
+                        -(float)(-Math.Cos(_ang.Z) * Math.Sin(_ang.X) + Math.Sin(_ang.Z) * Math.Sin(_ang.Y) * Math.Cos(_ang.X)),
+                        (float)(Math.Cos(_ang.Y) * Math.Cos(_ang.X))
                     )
                 );
             }
@@ -122,7 +113,7 @@ namespace MineWorld
             get
             {
                 return Vector3.Normalize(
-                    Vector3.Cross(Vector3.Up, this.Forward)
+                    Vector3.Cross(Vector3.Up, Forward)
                 );
             }
         }
@@ -132,7 +123,7 @@ namespace MineWorld
         /// </summary>
         public Matrix View
         {
-            get { return view; }
+            get { return _view; }
         }
 
         /// <summary>
@@ -140,7 +131,7 @@ namespace MineWorld
         /// </summary>
         public Matrix Projection
         {
-            get { return proj; }
+            get { return _proj; }
         }
 
         /// <summary>
@@ -153,7 +144,7 @@ namespace MineWorld
         public void SetPerspective(float fov, float aspratio, float znear, float zfar)
         {
             // Create projection matrix
-            proj = Matrix.CreatePerspectiveFieldOfView(fov, aspratio, znear, zfar);
+            _proj = Matrix.CreatePerspectiveFieldOfView(fov, aspratio, znear, zfar);
         }
 
         /// <summary>
@@ -164,9 +155,9 @@ namespace MineWorld
         /// <param name="roll">Roll</param>
         public void Rotate(float pitch, float yaw, float roll)
         {
-            ang.X += pitch;
-            ang.Y += yaw;
-            ang.Z += roll;
+            _ang.X += pitch;
+            _ang.Y += yaw;
+            _ang.Z += roll;
         }
 
         /// <summary>
@@ -176,8 +167,8 @@ namespace MineWorld
         public override string ToString()
         {
             return String.Format("Position: [{0}, {1}, {2}]\nAngle: [{3}, {4}, {5}]",
-                Math.Floor(pos.X), Math.Floor(pos.Y), Math.Floor(pos.Z),
-                Math.Round(ang.X, 2), Math.Round(ang.Y, 2), Math.Round(ang.Z, 2)
+                Math.Floor(_pos.X), Math.Floor(_pos.Y), Math.Floor(_pos.Z),
+                Math.Round(_ang.X, 2), Math.Round(_ang.Y, 2), Math.Round(_ang.Z, 2)
             );
         }
 

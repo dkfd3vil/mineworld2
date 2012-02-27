@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Lidgren.Network;
+﻿using Lidgren.Network;
 using Lidgren.Network.Xna;
 using MineWorldData;
 using System.Threading;
@@ -12,14 +8,14 @@ namespace MineWorldServer
 {
     public class ServerListener
     {
-        MineWorldServer mineserver;
-        NetServer netserver;
+        readonly MineWorldServer _mineserver;
+        readonly NetServer _netserver;
         NetConnection _msgSender;
 
         public ServerListener(NetServer nets,MineWorldServer mines)
         {
-            mineserver = mines;
-            netserver = nets;
+            _mineserver = mines;
+            _netserver = nets;
         }
 
         public void Start()
@@ -27,7 +23,7 @@ namespace MineWorldServer
             NetIncomingMessage packetin;
             while (true)
             {
-                while ((packetin = netserver.ReadMessage()) != null)
+                while ((packetin = _netserver.ReadMessage()) != null)
                 {
                     _msgSender = packetin.SenderConnection;
                     switch (packetin.MessageType)
@@ -38,21 +34,21 @@ namespace MineWorldServer
                                 //Player doesnt want to play anymore
                                 if (status == NetConnectionStatus.Disconnected || status == NetConnectionStatus.Disconnecting)
                                 {
-                                    mineserver.console.ConsoleWrite(mineserver.PlayerManager.GetPlayerByConnection(_msgSender).Name + " Disconnected");
-                                    mineserver.ServerSender.SendPlayerLeft(mineserver.PlayerManager.GetPlayerByConnection(_msgSender));
-                                    mineserver.PlayerManager.RemovePlayer(mineserver.PlayerManager.GetPlayerByConnection(_msgSender));
+                                    _mineserver.Console.ConsoleWrite(_mineserver.PlayerManager.GetPlayerByConnection(_msgSender).Name + " Disconnected");
+                                    _mineserver.ServerSender.SendPlayerLeft(_mineserver.PlayerManager.GetPlayerByConnection(_msgSender));
+                                    _mineserver.PlayerManager.RemovePlayer(_mineserver.PlayerManager.GetPlayerByConnection(_msgSender));
                                 }
                                 break;
                             }
                         case NetIncomingMessageType.DiscoveryRequest:
                             {
-                                mineserver.ServerSender.SendDiscoverResponse(packetin.SenderEndpoint);
+                                _mineserver.ServerSender.SendDiscoverResponse(packetin.SenderEndpoint);
                                 break;
                             }
                         case NetIncomingMessageType.ConnectionApproval:
                             {
                                 //If the server is full then deny
-                                if (netserver.ConnectionsCount == netserver.Configuration.MaximumConnections)
+                                if (_netserver.ConnectionsCount == _netserver.Configuration.MaximumConnections)
                                 {
                                     _msgSender.Deny("serverfull");
                                     break;
@@ -62,28 +58,28 @@ namespace MineWorldServer
                                 string name = packetin.ReadString();
 
                                 //If the version is any other then the server deny
-                                if(mineserver.VersionMatch(version) == false)
+                                if(_mineserver.VersionMatch(version) == false)
                                 {
                                     _msgSender.Deny("versionmismatch");
                                     break;
                                 }
 
                                 ServerPlayer dummy = new ServerPlayer(_msgSender);
-                                if (mineserver.PlayerManager.NameExists(name))
+                                if (_mineserver.PlayerManager.NameExists(name))
                                 {
-                                    name += dummy.ID;
+                                    name += dummy.Id;
                                 }
 
                                 dummy.Name = name;
-                                mineserver.PlayerManager.AddPlayer(dummy);
+                                _mineserver.PlayerManager.AddPlayer(dummy);
                                 _msgSender.Approve();
                                 Thread.Sleep(4000);
-                                mineserver.GameWorld.GenerateSpawnPosition(mineserver.PlayerManager.GetPlayerByConnection(_msgSender));
-                                mineserver.ServerSender.SendCurrentWorld(mineserver.PlayerManager.GetPlayerByConnection(_msgSender));
-                                mineserver.ServerSender.SendInitialUpdate(mineserver.PlayerManager.GetPlayerByConnection(_msgSender));
-                                mineserver.ServerSender.SendPlayerJoined(mineserver.PlayerManager.GetPlayerByConnection(_msgSender));
-                                mineserver.ServerSender.SendOtherPlayersInWorld(mineserver.PlayerManager.GetPlayerByConnection(_msgSender));
-                                mineserver.console.ConsoleWrite(name + " Connected");
+                                _mineserver.GameWorld.GenerateSpawnPosition(_mineserver.PlayerManager.GetPlayerByConnection(_msgSender));
+                                _mineserver.ServerSender.SendCurrentWorld(_mineserver.PlayerManager.GetPlayerByConnection(_msgSender));
+                                _mineserver.ServerSender.SendInitialUpdate(_mineserver.PlayerManager.GetPlayerByConnection(_msgSender));
+                                _mineserver.ServerSender.SendPlayerJoined(_mineserver.PlayerManager.GetPlayerByConnection(_msgSender));
+                                _mineserver.ServerSender.SendOtherPlayersInWorld(_mineserver.PlayerManager.GetPlayerByConnection(_msgSender));
+                                _mineserver.Console.ConsoleWrite(name + " Connected");
                                 break;
                             }
                         case NetIncomingMessageType.Data:
@@ -94,14 +90,14 @@ namespace MineWorldServer
                                 {
                                     case PacketType.PlayerMovementUpdate:
                                         {
-                                            mineserver.PlayerManager.GetPlayerByConnection(_msgSender).Position = packetin.ReadVector3();
-                                            mineserver.ServerSender.SendMovementUpdate(mineserver.PlayerManager.GetPlayerByConnection(_msgSender));
+                                            _mineserver.PlayerManager.GetPlayerByConnection(_msgSender).Position = packetin.ReadVector3();
+                                            _mineserver.ServerSender.SendMovementUpdate(_mineserver.PlayerManager.GetPlayerByConnection(_msgSender));
                                             break;
                                         }
                                     case PacketType.PlayerBlockSet:
                                         {
                                             Vector3 pos = packetin.ReadVector3();
-                                            mineserver.MapManager.WorldMap[(int)pos.X, (int)pos.Y, (int)pos.Z] = (BlockTypes)packetin.ReadByte();
+                                            _mineserver.MapManager.WorldMap[(int)pos.X, (int)pos.Y, (int)pos.Z] = (BlockTypes)packetin.ReadByte();
                                             break;
                                         }
                                 }

@@ -1,82 +1,79 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
+using MineWorld.GameStateManagers;
+using MineWorld.GameStateManagers.Helpers;
 using TomShane.Neoforce.Controls;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace MineWorld
+namespace MineWorld.GameStates
 {
     class MainMenuState : BaseState
     {
-        GameStateManager gamemanager;
-        Manager guiman;
-        Window mainmenu;
-        Button play;
-        Button settings;
-        Button exit;
+        readonly GameStateManager _gamemanager;
+        Manager _guiman;
+        Window _mainmenu;
+        Button _play;
+        Button _settings;
+        Button _exit;
 
-        public MainMenuState(GameStateManager manager, GameStates associatedState)
+        public MainMenuState(GameStateManager manager, GameState associatedState)
             : base(manager, associatedState)
         {
-            gamemanager = manager;
+            _gamemanager = manager;
         }
 
         public override void LoadContent(ContentManager contentloader)
         {
-            guiman = new Manager(gamemanager.game, gamemanager.graphics, "Default");
-            guiman.Initialize();
+            _guiman = new Manager(_gamemanager.Game, _gamemanager.Graphics, "Default");
+            _guiman.Initialize();
 
-            mainmenu = new Window(guiman);
-            mainmenu.Init();
-            mainmenu.Resizable = false;
-            mainmenu.Movable = false;
-            mainmenu.CloseButtonVisible = false;
-            mainmenu.Text = "Main Menu";
-            mainmenu.Width = 300;
-            mainmenu.Height = 400;
-            mainmenu.Center();
-            mainmenu.Visible = true;
-            mainmenu.BorderVisible = true;
+            _mainmenu = new Window(_guiman);
+            _mainmenu.Init();
+            _mainmenu.Resizable = false;
+            _mainmenu.Movable = false;
+            _mainmenu.CloseButtonVisible = false;
+            _mainmenu.Text = "Main Menu";
+            _mainmenu.Width = 300;
+            _mainmenu.Height = 400;
+            _mainmenu.Center();
+            _mainmenu.Visible = true;
+            _mainmenu.BorderVisible = true;
             //mainmenu.Cursor = guiman.Skin.Cursors["Default"].Resource;
 
-            play = new Button(guiman);
-            play.Init();
-            play.Text = "Play";
-            play.Width = 200;
-            play.Height = 50;
-            play.Left = 50;
-            play.Top = 0;
-            play.Anchor = Anchors.Bottom;
-            play.Parent = mainmenu;
+            _play = new Button(_guiman);
+            _play.Init();
+            _play.Text = "Play";
+            _play.Width = 200;
+            _play.Height = 50;
+            _play.Left = 50;
+            _play.Top = 0;
+            _play.Anchor = Anchors.Bottom;
+            _play.Parent = _mainmenu;
 
-            settings = new Button(guiman);
-            settings.Init();
-            settings.Text = "Settings";
-            settings.Width = 200;
-            settings.Height = 50;
-            settings.Left = 50;
-            settings.Top = 50;
-            settings.Anchor = Anchors.Bottom;
-            settings.Parent = mainmenu;
+            _settings = new Button(_guiman);
+            _settings.Init();
+            _settings.Text = "Settings";
+            _settings.Width = 200;
+            _settings.Height = 50;
+            _settings.Left = 50;
+            _settings.Top = 50;
+            _settings.Anchor = Anchors.Bottom;
+            _settings.Parent = _mainmenu;
 
-            exit = new Button(guiman);
-            exit.Init();
-            exit.Text = "Exit";
-            exit.Width = 200;
-            exit.Height = 50;
-            exit.Left = 50;
-            exit.Top = 100;
-            exit.Anchor = Anchors.Bottom;
-            exit.Parent = mainmenu;
+            _exit = new Button(_guiman);
+            _exit.Init();
+            _exit.Text = "Exit";
+            _exit.Width = 200;
+            _exit.Height = 50;
+            _exit.Left = 50;
+            _exit.Top = 100;
+            _exit.Anchor = Anchors.Bottom;
+            _exit.Parent = _mainmenu;
 
-            guiman.Cursor = guiman.Skin.Cursors["Default"].Resource;
-            guiman.Add(mainmenu);
+            _guiman.Cursor = _guiman.Skin.Cursors["Default"].Resource;
+            _guiman.Add(_mainmenu);
 
-            gamemanager.game.IsMouseVisible = true;
+            _gamemanager.Game.IsMouseVisible = true;
         }
 
         public override void Unload()
@@ -85,33 +82,33 @@ namespace MineWorld
 
         public override void Update(GameTime gameTime, InputHelper input)
         {
-            guiman.Update(gameTime);
-            if (gamemanager.game.IsActive)
+            _guiman.Update(gameTime);
+            if (_gamemanager.Game.IsActive)
             {
-                if (play.Pushed)
+                if (_play.Pushed)
                 {
-                    play.Pushed = false;
+                    _play.Pushed = false;
                     //gamemanager.Pbag.ClientSender.SendJoinGame("127.0.0.1");
                     //gamemanager.SwitchState(GameStates.LoadingState);
-                    gamemanager.SwitchState(GameStates.ServerBrowsingState);
+                    _gamemanager.SwitchState(GameState.ServerBrowsingState);
                 }
-                if (settings.Pushed)
+                if (_settings.Pushed)
                 {
-                    settings.Pushed = false;
-                    gamemanager.SwitchState(GameStates.SettingsState);
+                    _settings.Pushed = false;
+                    _gamemanager.SwitchState(GameState.SettingsState);
                 }
-                if (exit.Pushed)
+                if (_exit.Pushed)
                 {
-                    exit.Pushed = false;
-                    gamemanager.ExitGame();
+                    _exit.Pushed = false;
+                    _gamemanager.ExitGame();
                 }
             }
         }
 
         public override void Draw(GameTime gameTime, GraphicsDevice gDevice, SpriteBatch sBatch)
         {
-            guiman.BeginDraw(gameTime);
-            guiman.EndDraw();
+            _guiman.BeginDraw(gameTime);
+            _guiman.EndDraw();
         }
     }
 }

@@ -1,63 +1,60 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Lidgren.Network;
+﻿using Lidgren.Network;
 using Lidgren.Network.Xna;
+using MineWorld.Actor;
 using MineWorldData;
 using Microsoft.Xna.Framework;
 
-namespace MineWorld
+namespace MineWorld.Network
 {
     public class ClientSender
     {
-        PropertyBag Pbag;
-        NetClient Client;
-        NetOutgoingMessage outmsg;
+        readonly PropertyBag _pbag;
+        readonly NetClient _client;
+        NetOutgoingMessage _outmsg;
 
         public ClientSender(NetClient netc, PropertyBag pb)
         {
-            Client = netc;
-            Pbag = pb;
+            _client = netc;
+            _pbag = pb;
         }
 
         public void SendJoinGame(string ip)
         {
             //IPEndPoint serverEndPoint
             // Create our connect message.
-            outmsg = Client.CreateMessage();
-            outmsg.Write(Constants.MINEWORLDCLIENT_VERSION);
-            outmsg.Write(Pbag.Player.Name);
-            Client.Connect(ip, Constants.MINEWORLD_PORT, outmsg);
+            _outmsg = _client.CreateMessage();
+            _outmsg.Write(Constants.MineworldclientVersion);
+            _outmsg.Write(_pbag.Player.Name);
+            _client.Connect(ip, Constants.MineworldPort, _outmsg);
         }
 
         public void SendPlayerInWorld()
         {
-            outmsg = Client.CreateMessage();
-            outmsg.Write((byte)PacketType.PlayerInWorld);
-            outmsg.Write(true);
-            Client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
+            _outmsg = _client.CreateMessage();
+            _outmsg.Write((byte)PacketType.PlayerInWorld);
+            _outmsg.Write(true);
+            _client.SendMessage(_outmsg, NetDeliveryMethod.ReliableOrdered);
         }
 
         public void SendMovementUpdate()
         {
-            outmsg = Client.CreateMessage();
-            outmsg.Write((byte)PacketType.PlayerMovementUpdate);
-            outmsg.Write(Pbag.Player.Position);
-            Client.SendMessage(outmsg, NetDeliveryMethod.ReliableOrdered);
+            _outmsg = _client.CreateMessage();
+            _outmsg.Write((byte)PacketType.PlayerMovementUpdate);
+            _outmsg.Write(_pbag.Player.Position);
+            _client.SendMessage(_outmsg, NetDeliveryMethod.ReliableOrdered);
         }
 
         public void SendBlockSet(BlockTypes type,Vector3 pos)
         {
-            outmsg = Client.CreateMessage();
-            outmsg.Write((byte)PacketType.PlayerBlockSet);
-            outmsg.Write(pos);
-            outmsg.Write((byte)type);
+            _outmsg = _client.CreateMessage();
+            _outmsg.Write((byte)PacketType.PlayerBlockSet);
+            _outmsg.Write(pos);
+            _outmsg.Write((byte)type);
         }
 
         public void DiscoverLocalServers()
         {
-            Client.DiscoverLocalPeers(Constants.MINEWORLD_PORT);
+            _client.DiscoverLocalPeers(Constants.MineworldPort);
         }
     }
 }

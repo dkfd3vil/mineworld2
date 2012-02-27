@@ -10,7 +10,7 @@ namespace MineWorld
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
-        static void Main(string[] args)
+        static void Main()
         {
             using (MineWorldClient game = new MineWorldClient())
             {

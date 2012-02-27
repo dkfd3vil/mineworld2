@@ -1,25 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using MineWorldData;
-using System.IO;
-using Microsoft.Xna.Framework;
-
-namespace MineWorldServer
+﻿namespace MineWorldServer
 {
     public class GameWorld
     {
-        MineWorldServer mineserver;
+        readonly MineWorldServer _mineserver;
 
         public GameWorld(MineWorldServer mines)
         {
-            mineserver = mines;
+            _mineserver = mines;
         }
 
         public void GenerateSpawnPosition(ServerPlayer player)
         {
-            player.Position = mineserver.MapManager.GenerateSpawnPosition();
+            player.Position = _mineserver.MapManager.GenerateSpawnPosition();
         }
     }
 }

@@ -1,23 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using MineWorld.GameStateManagers;
+using MineWorld.GameStateManagers.Helpers;
 
-namespace MineWorld
+namespace MineWorld.GameStates
 {
     public abstract class BaseState
     {
         public GameStateManager Manager;
-        public GameStates AssociatedState;
+        public GameStateManagers.GameState AssociatedState;
         public bool Contentloaded;
 
-        public BaseState(GameStateManager manager, GameStates associatedState)
+        protected BaseState(GameStateManager manager, GameStateManagers.GameState associatedState)
         {
-            this.Manager = manager;
-            this.AssociatedState = associatedState;
+            Manager = manager;
+            AssociatedState = associatedState;
         }
 
         public abstract void Unload();

@@ -1,7 +1,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
-namespace MineWorld
+namespace MineWorld.GameStateManagers.Helpers
 {
     /// <summary>
     ///   an enum of all available mouse buttons.
@@ -34,35 +34,16 @@ namespace MineWorld
         public void Update()
         {
             if (!_refreshData)
+            {
                 _refreshData = true;
-            if (_lastGamepadState == null && _currentGamepadState == null)
-            {
-                _lastGamepadState = _currentGamepadState = GamePad.GetState(_index);
             }
-            else
-            {
-                _lastGamepadState = _currentGamepadState;
-                _currentGamepadState = GamePad.GetState(_index);
-            }
+            _lastGamepadState = _currentGamepadState;
+            _currentGamepadState = GamePad.GetState(_index);
 #if (!XBOX)
-            if (_lastKeyboardState == null && _currentKeyboardState == null)
-            {
-                _lastKeyboardState = _currentKeyboardState = Keyboard.GetState();
-            }
-            else
-            {
-                _lastKeyboardState = _currentKeyboardState;
-                _currentKeyboardState = Keyboard.GetState();
-            }
-            if (_lastMouseState == null && _currentMouseState == null)
-            {
-                _lastMouseState = _currentMouseState = Mouse.GetState();
-            }
-            else
-            {
-                _lastMouseState = _currentMouseState;
-                _currentMouseState = Mouse.GetState();
-            }
+            _lastKeyboardState = _currentKeyboardState;
+            _currentKeyboardState = Keyboard.GetState();
+            _lastMouseState = _currentMouseState;
+            _currentMouseState = Mouse.GetState();
 #endif
         }
 
@@ -397,7 +378,7 @@ namespace MineWorld
             {
                 anykeypressed = true;
             }
-            else if (includemouse == true)
+            else if (includemouse)
             {
                 if (IsCurPress(MouseButtons.LeftButton))
                 {

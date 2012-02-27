@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
-namespace MineWorld
+namespace MineWorld.World
 {
     public class HeightMap
     {
@@ -32,21 +29,20 @@ namespace MineWorld
             {
                 for (int j = 0; j < Size; j++)
                 {
-                    Heights[i, j] += Perlin.Noise(f * i / (float)Size, f * j / (float)Size, 0);
+                    Heights[i, j] += Perlin.Noise(f * i / Size, f * j / Size, 0);
                 }
             }
         }
 
         public void Perturb(float f, float d)
         {
-            int u, v;
             float[,] temp = new float[Size, Size];
             for (int i = 0; i < Size; ++i)
             {
                 for (int j = 0; j < Size; ++j)
                 {
-                    u = i + (int)(Perlin.Noise(f * i / (float)Size, f * j / (float)Size, 0) * d);
-                    v = j + (int)(Perlin.Noise(f * i / (float)Size, f * j / (float)Size, 1) * d);
+                    int u = i + (int)(Perlin.Noise(f * i / Size, f * j / Size, 0) * d);
+                    int v = j + (int)(Perlin.Noise(f * i / Size, f * j / Size, 1) * d);
                     if (u < 0) u = 0; if (u >= Size) u = Size - 1;
                     if (v < 0) v = 0; if (v >= Size) v = Size - 1;
                     temp[i, j] = Heights[u, v];
@@ -61,7 +57,7 @@ namespace MineWorld
             {
                 for (int j = 1; j < Size - 1; j++)
                 {
-                    float d_max = 0.0f;
+                    float dMax = 0.0f;
                     int[] match = { 0, 0 };
 
                     for (int u = -1; u <= 1; u++)
@@ -70,21 +66,21 @@ namespace MineWorld
                         {
                             if (Math.Abs(u) + Math.Abs(v) > 0)
                             {
-                                float d_i = Heights[i, j] - Heights[i + u, j + v];
-                                if (d_i > d_max)
+                                float dI = Heights[i, j] - Heights[i + u, j + v];
+                                if (dI > dMax)
                                 {
-                                    d_max = d_i;
+                                    dMax = dI;
                                     match[0] = u; match[1] = v;
                                 }
                             }
                         }
                     }
 
-                    if (0 < d_max && d_max <= (smoothness / (float)Size))
+                    if (0 < dMax && dMax <= (smoothness / Size))
                     {
-                        float d_h = 0.5f * d_max;
-                        Heights[i, j] -= d_h;
-                        Heights[i + match[0], j + match[1]] += d_h;
+                        float dH = 0.5f * dMax;
+                        Heights[i, j] -= dH;
+                        Heights[i + match[0], j + match[1]] += dH;
                     }
                 }
             }

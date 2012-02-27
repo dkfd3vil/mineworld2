@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using MineWorldData;
+﻿using MineWorldData;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 
@@ -13,12 +9,12 @@ namespace MineWorld.World.Block
         public Texture2D Terrain;
         public BlockTypes Type;
         public Texture2D Icon;
-        public Vector2 uvMap;
+        public Vector2 UvMap;
 
         public BlockIcon(Texture2D ter, Vector2 pos, BlockTypes type)
         {
             Terrain = ter;
-            uvMap = pos;
+            UvMap = pos;
             Type = type;
             //icon = new Texture2D
         }

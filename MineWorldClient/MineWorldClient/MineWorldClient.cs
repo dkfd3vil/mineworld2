@@ -1,18 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.GamerServices;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Media;
-using System.Threading;
-using System.ComponentModel;
-using Lidgren.Network;
-using System.Net;
-using MineWorldData;
+using MineWorld.GameStateManagers;
 
 namespace MineWorld
 {
@@ -22,37 +9,36 @@ namespace MineWorld
     public class MineWorldClient : Game
     {
         //Global variable definitions
-        GameStateManager GameStateManager;
-        GraphicsDeviceManager Graphics;
+        GameStateManager _gameStateManager;
+        readonly GraphicsDeviceManager _graphics;
 
         public MineWorldClient()
         {
-            Graphics = new GraphicsDeviceManager(this);
+            _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
         }
 
         protected override void Initialize()
         {
-            //TODO Redo initialize of mineworldclient
-            GameStateManager = new GameStateManager(Graphics, Content, this);
+            _gameStateManager = new GameStateManager(_graphics, Content, this);
             base.Initialize();
         }
 
         protected override void LoadContent()
         {
-            GameStateManager.LoadContent();
+            _gameStateManager.LoadContent();
             base.LoadContent();
         }
 
         protected override void Update(GameTime gameTime)
         {
-            GameStateManager.Update(gameTime);
+            _gameStateManager.Update(gameTime);
             base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
         {
-            GameStateManager.Draw(gameTime);
+            _gameStateManager.Draw(gameTime);
             base.Draw(gameTime);
         }
     }
